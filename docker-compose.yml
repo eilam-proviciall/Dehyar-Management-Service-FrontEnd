@@ -1,0 +1,7 @@
+version: '0.1'
+services:
+  nextjs-app:
+    build: .
+    container_name: nextjs-container
+    ports:
+      - "8099:3000"

@@ -1,0 +1,25 @@
+# فولدرهایی که توسط Next.js ایجاد می‌شوند
+.next/
+out/
+
+# فولدرهای node_modules در هر جای پروژه
+node_modules/
+
+# فایل‌های محیطی که ممکن است حاوی اطلاعات حساس باشند
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# فایل‌های سیستمی مک
+.DS_Store
+
+# فولدرهایی که توسط ابزارهای ویرایشگر متن ایجاد می‌شوند
+.vscode/
+.idea/
+
+# فایل‌های لاگ
+*.log
+
+# فولدرهایی که توسط ابزارهای تست ایجاد می‌شوند
+coverage/
