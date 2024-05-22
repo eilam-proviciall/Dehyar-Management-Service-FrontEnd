@@ -33,6 +33,9 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
+import axios from "axios";
+import searchParams from "draft-js/lib/DraftEntity";
+import {router} from "next/client";
 
 // Util Imports
 
@@ -84,27 +87,33 @@ const Login = ({ mode }) => {
   )
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
+    const router = useRouter()
   const onSubmit = async data => {
     console.log('hi from new version')
+   const res = await axios.post('http://127.0.0.1:8000/api/v1/auth/login', {
+     "nid": "0200883442",
+     "password": "12435324"
+   })
+    console.log(res.statusText === "OK")
+    console.log(res)
     // const res = await signIn('credentials', {
     //   email: data.email,
     //   password: data.password,
     //   redirect: false
     // })
     //
-    // if (res && res.ok && res.error === null) {
-    //   // Vars
-    //   const redirectURL = searchParams.get('redirectTo') ?? '/'
-    //
-    //   router.replace(getLocalizedUrl(redirectURL, locale))
-    // } else {
-    //   if (res?.error) {
-    //     const error = JSON.parse(res.error)
-    //
-    //     setErrorState(error)
-    //   }
-    // }
+    if (res.statusText === "OK") {
+      // Vars
+      // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
+
+      await router.replace("dashboards/crm")
+    } else {
+      // if (res?.error) {
+      //   const error = JSON.parse(res.error)
+      //
+      //   setErrorState(error)
+      // }
+    }
   }
 
   return (
