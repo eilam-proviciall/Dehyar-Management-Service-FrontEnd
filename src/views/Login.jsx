@@ -19,7 +19,6 @@ import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
 
 // Third-party Imports
-import { signIn } from 'next-auth/react'
 import { Controller, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, minLength, string, email } from 'valibot'
@@ -36,7 +35,6 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const schema = object({
   email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
@@ -60,8 +58,6 @@ const Login = ({ mode }) => {
   const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
 
   // Hooks
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const { lang: locale } = useParams()
   const { settings } = useSettings()
 
@@ -90,24 +86,25 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false
-    })
-
-    if (res && res.ok && res.error === null) {
-      // Vars
-      const redirectURL = searchParams.get('redirectTo') ?? '/'
-
-      router.replace(getLocalizedUrl(redirectURL, locale))
-    } else {
-      if (res?.error) {
-        const error = JSON.parse(res.error)
-
-        setErrorState(error)
-      }
-    }
+    console.log('hi from new version')
+    // const res = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false
+    // })
+    //
+    // if (res && res.ok && res.error === null) {
+    //   // Vars
+    //   const redirectURL = searchParams.get('redirectTo') ?? '/'
+    //
+    //   router.replace(getLocalizedUrl(redirectURL, locale))
+    // } else {
+    //   if (res?.error) {
+    //     const error = JSON.parse(res.error)
+    //
+    //     setErrorState(error)
+    //   }
+    // }
   }
 
   return (
@@ -223,16 +220,6 @@ const Login = ({ mode }) => {
               </Typography>
             </div>
           </form>
-          <Divider className='gap-3'>or</Divider>
-          <Button
-            color='secondary'
-            className='self-center text-textPrimary'
-            startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />}
-            sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}
-            onClick={() => signIn('google')}
-          >
-            Sign in with Google
-          </Button>
         </div>
       </div>
     </div>
