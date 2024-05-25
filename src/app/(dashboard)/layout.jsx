@@ -17,13 +17,11 @@ import Customizer from '@core/components/customizer'
 import ScrollToTop from '@core/components/scroll-to-top'
 
 // Util Imports
-import { getDictionary } from '@/utils/getDictionary'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
 const Layout = async ({ children, params }) => {
   // Vars
   const direction = "rtl"
-  const dictionary = await getDictionary(params.lang)
   const mode = getMode()
   const systemMode = getSystemMode()
 
@@ -41,7 +39,7 @@ const Layout = async ({ children, params }) => {
           </VerticalLayout>
         }
         horizontalLayout={
-          <HorizontalLayout header={<Header dictionary={dictionary} />} footer={<HorizontalFooter />}>
+          <HorizontalLayout header={<Header  />} footer={<HorizontalFooter />}>
             {children}
           </HorizontalLayout>
         }

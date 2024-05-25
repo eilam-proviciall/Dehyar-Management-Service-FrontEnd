@@ -8,7 +8,7 @@ const MenuExampleProviders = props => {
 
   return (
     <VerticalNavProvider>
-      <ThemeProvider direction='ltr'>{children}</ThemeProvider>
+      <ThemeProvider direction='rtl'>{children}</ThemeProvider>
     </VerticalNavProvider>
   )
 }

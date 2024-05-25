@@ -7,7 +7,7 @@ import { getSystemMode } from '@core/utils/serverHelpers'
 
 const Layout = ({ children, params }) => {
   // Vars
-  const direction = i18n.langDirection[params.lang]
+  const direction = "rtl"
   const systemMode = getSystemMode()
 
   return (

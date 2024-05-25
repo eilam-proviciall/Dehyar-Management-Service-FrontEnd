@@ -7,7 +7,6 @@ import { useKBar } from 'kbar'
 import classnames from 'classnames'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const noResultData = [
   {

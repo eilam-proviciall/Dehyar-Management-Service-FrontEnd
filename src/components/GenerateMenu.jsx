@@ -9,7 +9,6 @@ import {SubMenu as HorizontalSubMenu, MenuItem as HorizontalMenuItem} from '@men
 import {SubMenu as VerticalSubMenu, MenuItem as VerticalMenuItem, MenuSection} from '@menu/vertical-menu'
 
 // Util Imports
-import {getLocalizedUrl} from '@/utils/i18n'
 
 // Generate a menu from the menu data array
 export const GenerateVerticalMenu = ({menuData}) => {
@@ -113,9 +112,6 @@ export const GenerateHorizontalMenu = ({menuData}) => {
             }
 
             // Localize the href
-            const href = menuItem.href?.startsWith('http')
-                ? menuItem.href
-                : menuItem.href && getLocalizedUrl(menuItem.href, locale)
 
             // If the current item is not a sub menu, return a MenuItem component
             const {icon, prefix, suffix, ...rest} = menuItem
@@ -129,7 +125,7 @@ export const GenerateHorizontalMenu = ({menuData}) => {
                     prefix={menuItemPrefix}
                     suffix={menuItemSuffix}
                     {...rest}
-                    href={href}
+                    href={menuItem.href}
                     {...(Icon && {icon: Icon})}
                 >
                     {menuItem.label}

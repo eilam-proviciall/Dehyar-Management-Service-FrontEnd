@@ -20,7 +20,6 @@ import useVerticalNav from '@menu/hooks/useVerticalNav'
 import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const LogoText = styled.span`
   font-size: 1.25rem;
@@ -71,8 +70,7 @@ const Logo = ({ component = false }) => {
     /* @ts-ignore */
     <LogoWrapper
       className='flex items-center min-bs-[24px]'
-      {...(!component && { href: getLocalizedUrl('/', locale) })}
-    >
+     href={"/"}>
       <MaterializeLogo />
       <LogoText
         ref={logoTextRef}

@@ -32,8 +32,6 @@ import themeConfig from '@configs/themeConfig'
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
 
-// Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -133,7 +131,7 @@ const ShortcutsDropdown = ({ shortcuts }) => {
                           className='[&:not(:last-of-type):not(:nth-last-of-type(2))]:border-be odd:border-ie'
                         >
                           <Link
-                            href={getLocalizedUrl(shortcut.url, locale)}
+                            href={menuItem.href}
                             className='flex items-center flex-col p-6 gap-3 bs-full hover:bg-actionHover'
                           >
                             <CustomAvatar size={50} className='bg-actionSelected text-textPrimary'>
