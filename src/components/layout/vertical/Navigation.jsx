@@ -53,7 +53,7 @@ const MenuToggleSvg = (
 
 const Navigation = props => {
   // Props
-  const { dictionary, mode, systemMode } = props
+  const {  mode, systemMode } = props
 
   // Hooks
   const verticalNavOptions = useVerticalNav()
@@ -129,7 +129,7 @@ const Navigation = props => {
         )}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
-      <VerticalMenu dictionary={dictionary} scrollMenu={scrollMenu} />
+      <VerticalMenu  scrollMenu={scrollMenu} />
     </VerticalNav>
   )
 }

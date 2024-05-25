@@ -7,8 +7,6 @@ export const removeFilesAndFolders = async () => {
   consola.start('Removing unused files and folders related to i18n...')
 
   const pathsToDelete = [
-    'src/configs/i18n.js',
-    'src/utils/i18n.js',
     'src/utils/getDictionary.js',
     'src/data/dictionaries'
   ]

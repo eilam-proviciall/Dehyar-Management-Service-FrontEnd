@@ -2,9 +2,6 @@
 import Providers from '@components/Providers'
 import BlankLayout from '@layouts/BlankLayout'
 
-// Config Imports
-import { i18n } from '@configs/i18n'
-
 // Util Imports
 import { getSystemMode } from '@core/utils/serverHelpers'
 

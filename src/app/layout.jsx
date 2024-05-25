@@ -4,8 +4,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // Component Imports
 
 // Config Imports
-import { i18n } from '@configs/i18n'
-
 // Style Imports
 import '@/app/globals.css'
 
@@ -19,7 +17,7 @@ export const metadata = {
 
 const RootLayout = ({ children, params }) => {
   // Vars
-  const direction = i18n.langDirection[params.lang]
+  const direction = "rtl"
 
   return (
     <html id='__next' lang={params.lang} dir={direction}>

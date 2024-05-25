@@ -16,16 +16,13 @@ import HorizontalFooter from '@components/layout/horizontal/Footer'
 import Customizer from '@core/components/customizer'
 import ScrollToTop from '@core/components/scroll-to-top'
 
-// Config Imports
-import { i18n } from '@configs/i18n'
-
 // Util Imports
 import { getDictionary } from '@/utils/getDictionary'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
 const Layout = async ({ children, params }) => {
   // Vars
-  const direction = i18n.langDirection[params.lang]
+  const direction = "rtl"
   const dictionary = await getDictionary(params.lang)
   const mode = getMode()
   const systemMode = getSystemMode()
@@ -36,7 +33,7 @@ const Layout = async ({ children, params }) => {
         systemMode={systemMode}
         verticalLayout={
           <VerticalLayout
-            navigation={<Navigation dictionary={dictionary} mode={mode} systemMode={systemMode} />}
+            navigation={<Navigation mode={mode} systemMode={systemMode} />}
             navbar={<Navbar />}
             footer={<VerticalFooter />}
           >
@@ -54,7 +51,7 @@ const Layout = async ({ children, params }) => {
           <i className='ri-arrow-up-line' />
         </Button>
       </ScrollToTop>
-      <Customizer dir={direction} />
+      <Customizer dir={direction} disableDirection />
     </Providers>
   )
 }
