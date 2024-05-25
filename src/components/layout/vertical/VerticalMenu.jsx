@@ -71,6 +71,7 @@ const VerticalMenu = ({ scrollMenu }) => {
           suffix={<Chip label='3' size='small' color='error' />}
         >
           <MenuItem href={`/dashboards/crm`}>crm</MenuItem>
+          <MenuItem href={`/apps/user/list`}>ایجاد کاربر</MenuItem>
         </SubMenu>
       </Menu>
 
