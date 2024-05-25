@@ -36,6 +36,7 @@ import { useSettings } from '@core/hooks/useSettings'
 import axios from "axios";
 import searchParams from "draft-js/lib/DraftEntity";
 import {router} from "next/client";
+import Cookies from "js-cookie";
 
 // Util Imports
 
@@ -94,8 +95,8 @@ const Login = ({ mode }) => {
      "nid": "0200883442",
      "password": "12435324"
    })
-    console.log(res.statusText === "OK")
-    console.log(res)
+    // console.log(res.statusText === "OK")
+    // console.log(res)
     // const res = await signIn('credentials', {
     //   email: data.email,
     //   password: data.password,
@@ -103,9 +104,10 @@ const Login = ({ mode }) => {
     // })
     //
     if (res.statusText === "OK") {
+        Cookies.set('token', res.data.data.access_token)
+
       // Vars
       // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
-
       await router.replace("dashboards/crm")
     } else {
       // if (res?.error) {

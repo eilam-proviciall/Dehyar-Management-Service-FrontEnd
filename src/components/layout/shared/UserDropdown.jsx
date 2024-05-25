@@ -89,13 +89,13 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         className='mis-2'
       >
-        <Avatar
-          ref={anchorRef}
-          alt={session?.user?.name || ''}
-          src={session?.user?.image || ''}
-          onClick={handleDropdownOpen}
-          className='cursor-pointer bs-[38px] is-[38px]'
-        />
+        {/*<Avatar*/}
+        {/*  ref={anchorRef}*/}
+        {/*  alt={session?.user?.name || ''}*/}
+        {/*  src={session?.user?.image || ''}*/}
+        {/*  onClick={handleDropdownOpen}*/}
+        {/*  className='cursor-pointer bs-[38px] is-[38px]'*/}
+        {/*/>*/}
       </Badge>
       <Popper
         open={open}
@@ -116,48 +116,48 @@ const UserDropdown = () => {
               elevation={settings.skin === 'bordered' ? 0 : 8}
               {...(settings.skin === 'bordered' && { className: 'border' })}
             >
-              <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
-                <MenuList>
-                  <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />
-                    <div className='flex items-start flex-col'>
-                      <Typography variant='body2' className='font-medium' color='text.primary'>
-                        {session?.user?.name || ''}
-                      </Typography>
-                      <Typography variant='caption'>{session?.user?.email || ''}</Typography>
-                    </div>
-                  </div>
-                  <Divider className='mlb-1' />
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
-                    <i className='ri-user-3-line' />
-                    <Typography color='text.primary'>My Profile</Typography>
-                  </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
-                    <i className='ri-settings-4-line' />
-                    <Typography color='text.primary'>Settings</Typography>
-                  </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
-                    <i className='ri-money-dollar-circle-line' />
-                    <Typography color='text.primary'>Pricing</Typography>
-                  </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/faq')}>
-                    <i className='ri-question-line' />
-                    <Typography color='text.primary'>FAQ</Typography>
-                  </MenuItem>
-                  <div className='flex items-center plb-1.5 pli-4'>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      color='error'
-                      size='small'
-                      endIcon={<i className='ri-logout-box-r-line' />}
-                      onClick={handleUserLogout}
-                    >
-                      Logout
-                    </Button>
-                  </div>
-                </MenuList>
-              </ClickAwayListener>
+              {/*<ClickAwayListener onClickAway={e => handleDropdownClose(e)}>*/}
+              {/*  <MenuList>*/}
+              {/*    <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>*/}
+              {/*      <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />*/}
+              {/*      <div className='flex items-start flex-col'>*/}
+              {/*        <Typography variant='body2' className='font-medium' color='text.primary'>*/}
+              {/*          {session?.user?.name || ''}*/}
+              {/*        </Typography>*/}
+              {/*        <Typography variant='caption'>{session?.user?.email || ''}</Typography>*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*    <Divider className='mlb-1' />*/}
+              {/*    <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>*/}
+              {/*      <i className='ri-user-3-line' />*/}
+              {/*      <Typography color='text.primary'>My Profile</Typography>*/}
+              {/*    </MenuItem>*/}
+              {/*    <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>*/}
+              {/*      <i className='ri-settings-4-line' />*/}
+              {/*      <Typography color='text.primary'>Settings</Typography>*/}
+              {/*    </MenuItem>*/}
+              {/*    <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/pricing')}>*/}
+              {/*      <i className='ri-money-dollar-circle-line' />*/}
+              {/*      <Typography color='text.primary'>Pricing</Typography>*/}
+              {/*    </MenuItem>*/}
+              {/*    <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/faq')}>*/}
+              {/*      <i className='ri-question-line' />*/}
+              {/*      <Typography color='text.primary'>FAQ</Typography>*/}
+              {/*    </MenuItem>*/}
+              {/*    <div className='flex items-center plb-1.5 pli-4'>*/}
+              {/*      <Button*/}
+              {/*        fullWidth*/}
+              {/*        variant='contained'*/}
+              {/*        color='error'*/}
+              {/*        size='small'*/}
+              {/*        endIcon={<i className='ri-logout-box-r-line' />}*/}
+              {/*        onClick={handleUserLogout}*/}
+              {/*      >*/}
+              {/*        Logout*/}
+              {/*      </Button>*/}
+              {/*    </div>*/}
+              {/*  </MenuList>*/}
+              {/*</ClickAwayListener>*/}
             </Paper>
           </Fade>
         )}
