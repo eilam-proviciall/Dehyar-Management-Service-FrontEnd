@@ -37,6 +37,7 @@ import axios from "axios";
 import searchParams from "draft-js/lib/DraftEntity";
 import {router} from "next/client";
 import Cookies from "js-cookie";
+import Box from "@mui/material/Box";
 
 // Util Imports
 
@@ -90,11 +91,11 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
     const router = useRouter()
   const onSubmit = async data => {
-    console.log('hi from new version')
-   const res = await axios.post('http://127.0.0.1:8000/api/v1/auth/login', {
-     "nid": "0200883442",
-     "password": "12435324"
-   })
+   //  console.log('hi from new version')
+   // const res = await axios.post('http://127.0.0.1:8000/api/v1/auth/login', {
+   //   "nid": "0200883442",
+   //   "password": "12435324"
+   // })
     // console.log(res.statusText === "OK")
     // console.log(res)
     // const res = await signIn('credentials', {
@@ -103,56 +104,33 @@ const Login = ({ mode }) => {
     //   redirect: false
     // })
     //
-    if (res.statusText === "OK") {
-        Cookies.set('token', res.data.data.access_token)
+    // if (res.statusText === "OK") {
+        // Cookies.set('token', res.data.data.access_token)
 
       // Vars
       // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
       await router.replace("dashboards/crm")
-    } else {
+    // } else {
       // if (res?.error) {
       //   const error = JSON.parse(res.error)
       //
       //   setErrorState(error)
       // }
-    }
+    // }
   }
 
   return (
-    <div className='flex bs-full justify-center'>
-      <div
-        className={classnames(
-          'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
-          {
-            'border-ie': settings.skin === 'bordered'
-          }
-        )}
-      >
-        <div className='pli-6 max-lg:mbs-40 lg:mbe-24'>
-          <img
-            src={characterIllustration}
-            alt='character-illustration'
-            className='max-bs-[673px] max-is-full bs-auto'
-          />
-        </div>
-        <img src={authBackground} className='absolute bottom-[4%] z-[-1] is-full max-md:hidden' />
-      </div>
-      <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
+    <div className='flex  justify-center items-center min-h-screen'>
+      <div className='flex justify-center items-center  bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
         <div className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]'>
           <Logo component />
         </div>
         <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset]'>
           <div>
-            <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}!👋🏻`}</Typography>
-            <Typography>Please sign-in to your account and start the adventure</Typography>
+            <Box sx={{ mb: 6,textAlign : "center" }}>
+              <Typography variant='h4'>{`خوش آمدید به سامانه `} <span style={{color : "red"}}>{themeConfig.templateName}</span></Typography>
+            </Box>
           </div>
-          <Alert icon={false} className='bg-[var(--mui-palette-primary-lightOpacity)]'>
-            <Typography variant='body2' color='primary'>
-              Email: <span className='font-medium'>admin@materialize.com</span> / Pass:{' '}
-              <span className='font-medium'>admin</span>
-            </Typography>
-          </Alert>
-
           <form
             noValidate
             method='post'
@@ -170,7 +148,7 @@ const Login = ({ mode }) => {
                   fullWidth
                   autoFocus
                   type='email'
-                  label='Email'
+                  label='کدملی'
                   onChange={e => {
                     field.onChange(e.target.value)
                     errorState !== null && setErrorState(null)
@@ -190,7 +168,7 @@ const Login = ({ mode }) => {
                 <TextField
                   {...field}
                   fullWidth
-                  label='Password'
+                  label='رمز عبور'
                   id='login-password'
                   type={isPasswordShown ? 'text' : 'password'}
                   onChange={e => {
@@ -216,20 +194,14 @@ const Login = ({ mode }) => {
               )}
             />
             <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
-              <FormControlLabel control={<Checkbox defaultChecked />} label='Remember me' />
+              <FormControlLabel control={<Checkbox defaultChecked />} label='به خاطر سپردن' />
               <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
-                Forgot password?
+                فراموشی رمز عبور
               </Typography>
             </div>
             <Button fullWidth variant='contained' type='submit'>
               Log In
             </Button>
-            <div className='flex justify-center items-center flex-wrap gap-2'>
-              <Typography>New on our platform?</Typography>
-              <Typography component={Link} href='/register' color='primary'>
-                Create an account
-              </Typography>
-            </div>
           </form>
         </div>
       </div>
