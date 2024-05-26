@@ -1,58 +1,84 @@
 'use client';
-import React, {useMemo, useState} from 'react';
-import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
-import {db} from "@/fake-db/apps/user-list";
+import React, { useMemo, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import { db } from "@/fake-db/apps/user-list";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import {selectedEvent} from "@/redux-store/slices/calendar";
+import { selectedEvent } from "@/redux-store/slices/calendar";
 
 const UserListTable = props => {
-    const tableData = db
-    // Props
+    const tableData = useMemo(() => db, []); // Memoize table data
     const {
-        mdAbove,
-        leftSidebarOpen,
-        calendarStore,
-        calendarsColor,
-        calendarApi,
         dispatch,
-        handleLeftSidebarToggle,
         handleAddEventSidebarToggle
-    } = props
+    } = props;
+
     const handleSidebarToggleSidebar = () => {
-        dispatch(selectedEvent(null))
-        handleAddEventSidebarToggle()
+        dispatch(selectedEvent(null));
+        handleAddEventSidebarToggle();
     }
+
+    const [expandedRows, setExpandedRows] = useState({});
+
+    const handleExpandClick = (rowId) => {
+        setExpandedRows(prevState => ({
+            ...prevState,
+            [rowId]: !prevState[rowId]
+        }));
+    };
 
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'fullName', //access nested data with dot notation
-                header: 'First Name',
+                accessorKey: 'fullName',
+                header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'country', //normal accessorKey
-                header: 'Address',
+                accessorKey: 'nationalId',
+                header: 'کدملی',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            },
+
+            {
+                accessorKey: 'dehyaries',
+                header: 'دهیاری‌ها',
                 size: 200,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell, row }) => {
+                    const dehyaries = cell.getValue();
+                    const rowId = row.id;
+                    const isExpanded = !!expandedRows[rowId];
+
+                    if (Array.isArray(dehyaries) && dehyaries.length <= 2) {
+                        return <div style={{ textAlign: 'right' }}>{dehyaries.join(', ')}</div>;
+                    }
+
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {isExpanded ? dehyaries.join(', ') : `${dehyaries.slice(0, 2).join(', ')}...`}
+                            <Button onClick={() => handleExpandClick(rowId)} size="small">
+                                {isExpanded ? 'کمتر' : 'بیشتر'}
+                            </Button>
+                        </div>
+                    );
+                }
             },
             {
                 accessorKey: 'role',
-                header: 'role',
+                header: 'نقش',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
-
         ],
-        [],
+        [expandedRows]
     );
+
     const table = useMaterialReactTable({
         columns,
-        data: tableData, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
-        renderTopToolbarCustomActions: ({table}) => (
+        data: tableData,
+        renderTopToolbarCustomActions: ({ table }) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -67,16 +93,14 @@ const UserListTable = props => {
                     onClick={handleSidebarToggleSidebar}
                     startIcon={<i className='ri-add-line' />}
                 >
-                    Add Event
+                    افزودن کاربر
                 </Button>
             </Box>
         ),
-
     });
+
     return (
-        <>
-            <MaterialReactTable table={table}/>
-        </>
+        <MaterialReactTable table={table} />
     );
 }
 
