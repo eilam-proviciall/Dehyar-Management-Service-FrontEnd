@@ -19,22 +19,22 @@ const UserList = ({ userData }) => {
     const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
     const dispatch = useDispatch()
     return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <UserListCards />
-      </Grid>
-      <Grid item xs={12}>
-        <UserListTable tableData={userData} />
-          <createUserSidebar
-              dispatch={dispatch}
-              calendarApi={calendarApi}
-              calendarStore={calendarStore}
-              addEventSidebarOpen={addEventSidebarOpen}
-              handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-          />
-      </Grid>
-    </Grid>
-  )
+        <Grid container spacing={6}>
+            <Grid item xs={12}>
+                <UserListCards />
+            </Grid>
+            <Grid item xs={12}>
+                <UserListTable tableData={userData} />
+                <createUserSidebar
+                    dispatch={dispatch}
+                    calendarApi={calendarApi}
+                    calendarStore={calendarStore}
+                    addEventSidebarOpen={addEventSidebarOpen}
+                    handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+                />
+            </Grid>
+        </Grid>
+    )
 }
 
 export default UserList

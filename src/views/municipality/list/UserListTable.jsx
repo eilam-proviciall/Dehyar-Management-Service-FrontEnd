@@ -4,12 +4,25 @@ import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import {db} from "@/fake-db/apps/user-list";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import {selectedEvent} from "@/redux-store/slices/calendar";
 
-function UserListTable() {
+const UserListTable = props => {
     const tableData = db
-    const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
-
-    const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
+    // Props
+    const {
+        mdAbove,
+        leftSidebarOpen,
+        calendarStore,
+        calendarsColor,
+        calendarApi,
+        dispatch,
+        handleLeftSidebarToggle,
+        handleAddEventSidebarToggle
+    } = props
+    const handleSidebarToggleSidebar = () => {
+        dispatch(selectedEvent(null))
+        handleAddEventSidebarToggle()
+    }
 
     const columns = useMemo(
         () => [
@@ -48,9 +61,13 @@ function UserListTable() {
                     flexWrap: 'wrap',
                 }}
             >
-                <Button variant="contained" onClick={handleSidebarToggleSidebar}
-                        startIcon={<i className='ri-add-line' />}>
-                    افزودن کاربر
+                <Button
+                    fullWidth
+                    variant='contained'
+                    onClick={handleSidebarToggleSidebar}
+                    startIcon={<i className='ri-add-line' />}
+                >
+                    Add Event
                 </Button>
             </Box>
         ),
