@@ -6,6 +6,7 @@ import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Box from "@mui/material/Box";
 import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
 import CreateApp from "@components/dialogs/create-app";
+import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
 
 function DehyariList(props) {
     const tableData = useMemo(() => db, []); // Memoize table data
@@ -17,10 +18,6 @@ function DehyariList(props) {
         variant: 'contained',
         children: 'صدور حکم جدید'
 
-    }
-    const handleSidebarToggleSidebar = () => {
-        dispatch(selectedEvent(null));
-        handleAddEventSidebarToggle();
     }
 
     const [expandedRows, setExpandedRows] = useState({});
@@ -92,7 +89,7 @@ function DehyariList(props) {
                     flexWrap: 'wrap',
                 }}
             >
-                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={CreateApp} />
+                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog} />
             </Box>
         ),
     });
