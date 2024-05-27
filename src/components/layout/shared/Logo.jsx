@@ -69,7 +69,7 @@ const Logo = ({ component = false }) => {
     // eslint-disable-next-line lines-around-comment
     /* @ts-ignore */
     <LogoWrapper
-      className='flex items-center min-bs-[24px]'
+      className=' items-center min-bs-[24px]'
      href={"/"}>
       <MaterializeLogo />
       <LogoText
@@ -77,8 +77,9 @@ const Logo = ({ component = false }) => {
         isHovered={isHovered}
         isCollapsed={layout === 'collapsed'}
         transitionDuration={transitionDuration}
+        style={{whiteSpace:"nowrap"}}
       >
-        {themeConfig.templateName}
+          {themeConfig.templateName}
       </LogoText>
     </LogoWrapper>
   )
