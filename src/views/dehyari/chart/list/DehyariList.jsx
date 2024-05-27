@@ -1,18 +1,23 @@
-'use client';
-import React, { useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
-import { db } from "@/fake-db/apps/user-list";
+import React, {useMemo, useState} from 'react';
+import {db} from "@/fake-db/apps/user-list";
+import {selectedEvent} from "@/redux-store/slices/calendar";
 import Button from "@mui/material/Button";
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Box from "@mui/material/Box";
-import { selectedEvent } from "@/redux-store/slices/calendar";
+import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
+import CreateApp from "@components/dialogs/create-app";
 
-const UserListTable = props => {
+function DehyariList(props) {
     const tableData = useMemo(() => db, []); // Memoize table data
     const {
         dispatch,
         handleAddEventSidebarToggle
     } = props;
+    const buttonProps = {
+        variant: 'contained',
+        children: 'صدور حکم جدید'
 
+    }
     const handleSidebarToggleSidebar = () => {
         dispatch(selectedEvent(null));
         handleAddEventSidebarToggle();
@@ -26,9 +31,6 @@ const UserListTable = props => {
             [rowId]: !prevState[rowId]
         }));
     };
-    const elementProps = {
-
-    }
 
     const columns = useMemo(
         () => [
@@ -36,30 +38,30 @@ const UserListTable = props => {
                 accessorKey: 'fullName',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nationalId',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
 
             {
                 accessorKey: 'dehyaries',
                 header: 'دهیاری‌ها',
                 size: 200,
-                Cell: ({ cell, row }) => {
+                Cell: ({cell, row}) => {
                     const dehyaries = cell.getValue();
                     const rowId = row.id;
                     const isExpanded = !!expandedRows[rowId];
 
                     if (Array.isArray(dehyaries) && dehyaries.length <= 2) {
-                        return <div style={{ textAlign: 'right' }}>{dehyaries.join(', ')}</div>;
+                        return <div style={{textAlign: 'right'}}>{dehyaries.join(', ')}</div>;
                     }
 
                     return (
-                        <div style={{ textAlign: 'right' }}>
+                        <div style={{textAlign: 'right'}}>
                             {isExpanded ? dehyaries.join(', ') : `${dehyaries.slice(0, 2).join(', ')}...`}
                             <Button onClick={() => handleExpandClick(rowId)} size="small">
                                 {isExpanded ? 'کمتر' : 'بیشتر'}
@@ -72,15 +74,16 @@ const UserListTable = props => {
                 accessorKey: 'role',
                 header: 'نقش',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
         ],
         [expandedRows]
     );
+
     const table = useMaterialReactTable({
         columns,
         data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
+        renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -89,21 +92,15 @@ const UserListTable = props => {
                     flexWrap: 'wrap',
                 }}
             >
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
-                >
-                    افزودن کاربر
-                </Button>
+                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={CreateApp} />
             </Box>
         ),
     });
-
     return (
-        <MaterialReactTable table={table} />
+        <div>
+            <MaterialReactTable table={table}/>
+        </div>
     );
 }
 
-export default UserListTable;
+export default DehyariList;

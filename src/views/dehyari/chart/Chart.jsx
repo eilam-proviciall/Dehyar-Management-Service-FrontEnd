@@ -10,6 +10,7 @@ import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
 import StatusBar from "@views/dehyari/chart/StatusBar";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import DehyariList from "@views/dehyari/chart/list/DehyariList";
 
 function Chart(props) {
     const [data, setData] = useState([
@@ -194,6 +195,7 @@ function Chart(props) {
                     </Box>
                 </Box>
             </div>
+            <DehyariList />
         </div>
     );
 }

@@ -15,6 +15,7 @@ const OpenDialogOnElementClick = props => {
 
   // Handle onClick event
   const handleOnClick = e => {
+    console.log('hi')
     elementOnClick && elementOnClick(e)
     setOpen(true)
   }
