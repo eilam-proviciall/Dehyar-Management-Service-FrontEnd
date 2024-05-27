@@ -24,13 +24,13 @@ export const OrgChartComponent = (props) => {
                 .container(d3Container.current)
                 .data(props.data)
                 .nodeWidth(() => 200)
-                .nodeHeight(() => 120)
+                .nodeHeight(() => 90)
                 .onNodeClick((d) => {
                     props.onNodeClick(d);
                 })
                 .buttonContent(({ node }) => {
                     return `<div class="node-button">
-                    <span style="font-size:9px">
+                    <span style="font-size:9px ">
                     ${node.children ? `<i class="fas fa-angle-up"></i>` : `<i class="fas fa-angle-down"></i>`}
                     </span> 
                     ${node.data._directSubordinates} 

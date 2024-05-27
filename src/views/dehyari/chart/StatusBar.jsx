@@ -6,12 +6,13 @@ import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
 import TotalVisits from "@views/pages/widget-examples/statistics/TotalVisits";
+import FamillyStatus from "@views/dehyari/chart/FamillyStatus";
 
 function StatusBar(props) {
     return (
         <div>
             <Box item xs={12} sm={6} mb={4} lg={3}>
-                <Card>
+                <Card >
                     <CardContent>
                         <div className='flex items-center justify-between gap-3'>
                             <div className='flex gap-1'>
@@ -42,7 +43,7 @@ function StatusBar(props) {
                         <div className='flex items-center justify-between gap-3'>
                             <div className='flex gap-1'>
                                 <Typography className='font-medium' color='text.primary'>
-                                   پست سازمانی:
+                                   باید از خودمون دربیاریم:
                                 </Typography>
                                 <Typography>{4}</Typography>
                             </div>
@@ -89,7 +90,7 @@ function StatusBar(props) {
                 </Card>
             </Box>
             <Box item xs={12} sm={6} lg={3}>
-                <TotalVisits/>
+                <FamillyStatus/>
             </Box>
         </div>
     );

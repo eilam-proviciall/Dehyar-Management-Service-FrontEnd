@@ -9,6 +9,7 @@ import TotalVisits from "@views/pages/widget-examples/statistics/TotalVisits";
 import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
 import StatusBar from "@views/dehyari/chart/StatusBar";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function Chart(props) {
     const [data, setData] = useState([
@@ -141,6 +142,7 @@ function Chart(props) {
 
     ]);
     let addNodeChildFunc = null;
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
     function addNode() {
         const node = {
@@ -159,14 +161,25 @@ function Chart(props) {
     return (
         <div>
             <div>
-                <Box display="flex" justifyContent="center">
+                <Box display="flex" sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+                     justifyContent="center" alignItems="stretch">
                     <Box width={{xs: '100%', md: '70%'}}>
-                        <Card style={{backgroundColor: '#fff'}}>
+                        <Card  sx={{
+                            backgroundColor: '#fff',
+                            flexGrow: 1,
+                            height: {
+                                xs: "90vh",
+                                sm: "110vh",
+                                md: '90vh',
+                                lg: '50vh',
+                                xl:"60vh"
+                            }
+                        }} >
                             <CardContent>
-                                <Typography variant="h5" component="div">
-                                    نمودار فروش ماهانه
+                                <Typography variant="h3" style={{ textAlign: 'center', marginBottom: '20px',color: 'black' }}>
+                                    چارت سازمانی
                                 </Typography>
-                                <div style={{height: '70vh'}}>
+                                <div >
                                     <OrgChartComponent
                                         setClick={(click) => (addNodeChildFunc = click)}
                                         onNodeClick={onNodeClick}
@@ -176,7 +189,7 @@ function Chart(props) {
                             </CardContent>
                         </Card>
                     </Box>
-                    <Box width={{ xs: '100%', md: '30%' }} pb={2} ml={4}>
+                    <Box width={{ xs: '100%', md: '30%' }}  pt={{sm:5 ,md: 0}} ml={{md:4}}>
                            <StatusBar />
                     </Box>
                 </Box>
