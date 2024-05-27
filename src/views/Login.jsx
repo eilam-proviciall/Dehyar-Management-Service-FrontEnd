@@ -109,7 +109,7 @@ const Login = ({ mode }) => {
 
       // Vars
       // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
-      await router.replace("dashboards/crm")
+      await router.replace("/municipality/list")
     // } else {
       // if (res?.error) {
       //   const error = JSON.parse(res.error)
