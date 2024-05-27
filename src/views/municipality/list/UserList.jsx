@@ -6,10 +6,9 @@ import Grid from '@mui/material/Grid'
 import UserListTable from './UserListTable'
 import UserListCards from './UserListCards'
 import {useDispatch, useSelector} from "react-redux";
-import createUserSidebar from "@views/municipality/list/createUserSidebar";
 import {useState} from "react";
-
-const UserList = ({ userData }) => {
+import CreateMunicipalityUserSidebar from "./CreateMunicipalityUserSidebar"
+const UserList = ({userData}) => {
     const [calendarApi, setCalendarApi] = useState(null)
     const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
     const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
@@ -21,17 +20,22 @@ const UserList = ({ userData }) => {
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
-                <UserListCards />
+                <UserListCards/>
             </Grid>
             <Grid item xs={12}>
-                <UserListTable tableData={userData} />
-                {/*<createUserSidebar*/}
-                {/*    dispatch={dispatch}*/}
-                {/*    calendarApi={calendarApi}*/}
-                {/*    calendarStore={calendarStore}*/}
-                {/*    addEventSidebarOpen={addEventSidebarOpen}*/}
-                {/*    handleAddEventSidebarToggle={handleAddEventSidebarToggle}*/}
-                {/*/>*/}
+                <UserListTable
+                    tableData={userData}
+                    dispatch={dispatch}
+                    handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+                />
+                <CreateMunicipalityUserSidebar
+                    dispatch={dispatch}
+                    calendarApi={calendarApi}
+                    calendarStore={calendarStore}
+                    addEventSidebarOpen={addEventSidebarOpen}
+                    handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+                />
+
             </Grid>
         </Grid>
     )

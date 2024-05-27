@@ -106,10 +106,10 @@ const Login = ({ mode }) => {
     //
     // if (res.statusText === "OK") {
         // Cookies.set('token', res.data.data.access_token)
-
+    console.log('sdsd')
       // Vars
       // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
-      await router.replace("dashboards/crm")
+      await router.replace("/municipality/list")
     // } else {
       // if (res?.error) {
       //   const error = JSON.parse(res.error)

@@ -1,39 +1,29 @@
-import {NextResponse} from 'next/server';
-import {ensurePrefix, withoutSuffix} from '@/utils/string';
-import Cookies from "js-cookie";
+import { NextResponse } from 'next/server';
+import { withoutSuffix } from '@/utils/string';
 
-const HOME_PAGE_URL = '/dashboards/crm';
+const HOME_PAGE_URL = '/municipality/list';
 
 const _redirect = (url, request) => {
-    const _url = ensurePrefix(url, `${process.env.BASEPATH}`);
-    const redirectUrl = new URL(_url, request.url).toString();
+    const redirectUrl = new URL(url, request.url).toString();
     return NextResponse.redirect(redirectUrl);
 };
 
 export async function middleware(request) {
     const pathname = request.nextUrl.pathname;
 
-    const token = Cookies.get('token');
+    const token = request.cookies.get('token'); // دسترسی به کوکی‌ها از طریق request.cookies
     const isUserLoggedIn = !!token;
 
     const guestRoutes = ['login'];
     const sharedRoutes = ['shared-route'];
     const privateRoute = ![...guestRoutes, ...sharedRoutes].some(route => pathname.endsWith(route));
 
-    // if (!isUserLoggedIn && privateRoute) {
-    //     let redirectUrl = '/login';
-    //     if (pathname !== '/') {
-    //         const searchParamsStr = new URLSearchParams({redirectTo: withoutSuffix(pathname, '/')}).toString();
-    //         redirectUrl += `?${searchParamsStr}`;
-    //     }
-    //     return _redirect(redirectUrl, request);
-    // }
 
     const isRequestedRouteIsGuestRoute = guestRoutes.some(route => pathname.endsWith(route));
 
-    if (isUserLoggedIn && isRequestedRouteIsGuestRoute) {
-        return _redirect(HOME_PAGE_URL, request);
-    }
+    // if (isUserLoggedIn && isRequestedRouteIsGuestRoute) {
+    //     return _redirect(HOME_PAGE_URL, request);
+    // }
 
     if (pathname === '/') {
         return _redirect(HOME_PAGE_URL, request);
@@ -41,7 +31,6 @@ export async function middleware(request) {
 
     return NextResponse.next();
 }
-
 
 export const config = {
     matcher: [
