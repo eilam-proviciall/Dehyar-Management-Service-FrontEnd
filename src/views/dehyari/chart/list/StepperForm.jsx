@@ -113,8 +113,8 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Username'
-                                placeholder='johnDoe'
+                                label='پست سازمانی'
+                                placeholder='کارشناس امور اداری'
                                 value={formData.username}
                                 onChange={e => setFormData({ ...formData, username: e.target.value })}
                             />
@@ -122,9 +122,9 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                type='email'
-                                label='Email'
-                                placeholder='johndoe@gmail.com'
+                                type='text'
+                                label='کدملی'
+                                placeholder='کد ملی'
                                 value={formData.email}
                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                             />
@@ -132,55 +132,14 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Password'
-                                placeholder='············'
-                                id='stepper-alternative-password'
-                                type={formData.isPasswordShown ? 'text' : 'password'}
-                                value={formData.password}
-                                onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                                size='small'
-                                                edge='end'
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={e => e.preventDefault()}
-                                                aria-label='toggle password visibility'
-                                            >
-                                                <i className={formData.isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
+                                type='text'
+                                label='دهیاری های تحت پوشش'
+                                placeholder='دهیاری های تحت پوشش'
+                                value={formData.email}
+                                onChange={e => setFormData({ ...formData, email: e.target.value })}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                label='Confirm Password'
-                                placeholder='············'
-                                id='stepper-alternative-confirm-password'
-                                type={formData.isConfirmPasswordShown ? 'text' : 'password'}
-                                value={formData.confirmPassword}
-                                onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                                size='small'
-                                                edge='end'
-                                                onClick={handleClickShowConfirmPassword}
-                                                onMouseDown={e => e.preventDefault()}
-                                                aria-label='toggle confirm password visibility'
-                                            >
-                                                <i className={formData.isConfirmPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                        </Grid>
+
                     </>
                 )
             case 1:
@@ -189,8 +148,8 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='First Name'
-                                placeholder='John'
+                                label='نام و نام خانوادگی'
+                                placeholder='نام و نام خانوادگی'
                                 value={formData.firstName}
                                 onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                             />
@@ -198,8 +157,26 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Last Name'
-                                placeholder='Doe'
+                                label='نام پدر'
+                                placeholder='نام پدر'
+                                value={formData.lastName}
+                                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='تاریخ تولد'
+                                placeholder='تاریخ تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='شماره شناسنامه'
+                                placeholder='شماره شناسنامه'
                                 value={formData.lastName}
                                 onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                             />
@@ -208,33 +185,64 @@ const StepperForm = () => {
                             <FormControl fullWidth>
                                 <InputLabel>Country</InputLabel>
                                 <Select
-                                    label='Country'
+                                    label='جنسیت'
                                     value={formData.country}
                                     onChange={e => setFormData({ ...formData, country: e.target.value })}
                                 >
-                                    <MenuItem value='UK'>UK</MenuItem>
-                                    <MenuItem value='USA'>USA</MenuItem>
-                                    <MenuItem value='Australia'>Australia</MenuItem>
-                                    <MenuItem value='Germany'>Germany</MenuItem>
+                                    <MenuItem value='UK'>مرد</MenuItem>
+                                    <MenuItem value='USA'>زن</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <FormControl fullWidth>
-                                <InputLabel>Language</InputLabel>
+                                <InputLabel>Country</InputLabel>
+                                <Select
+                                    label='وضعیت تاهل'
+                                    value={formData.country}
+                                    onChange={e => setFormData({ ...formData, country: e.target.value })}
+                                >
+                                    <MenuItem value='UK'>مرد</MenuItem>
+                                    <MenuItem value='USA'>زن</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='محل تولد'
+                                placeholder='محل تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                                <InputLabel>وضعیت ایثار گری</InputLabel>
                                 <Select
                                     multiple
-                                    label='Language'
+                                    label='وضعیت ایثار گری'
                                     value={formData.language}
                                     onChange={e => setFormData({ ...formData, language: e.target.value })}
                                 >
-                                    <MenuItem value='English'>English</MenuItem>
-                                    <MenuItem value='French'>French</MenuItem>
-                                    <MenuItem value='Spanish'>Spanish</MenuItem>
-                                    <MenuItem value='Portuguese'>Portuguese</MenuItem>
-                                    <MenuItem value='Italian'>Italian</MenuItem>
-                                    <MenuItem value='German'>German</MenuItem>
-                                    <MenuItem value='Arabic'>Arabic</MenuItem>
+                                    <MenuItem value='English'>جانباز</MenuItem>
+                                    <MenuItem value='French'>رزمنده</MenuItem>
+                                    <MenuItem value='French'>آزاده</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                                <InputLabel>نظام وظیفه</InputLabel>
+                                <Select
+                                    multiple
+                                    label='نظام وظیفه'
+                                    value={formData.language}
+                                    onChange={e => setFormData({ ...formData, language: e.target.value })}
+                                >
+                                    <MenuItem value='English'>دیپلم</MenuItem>
+                                    <MenuItem value='French'>سیکل</MenuItem>
+                                    <MenuItem value='French'>کارشناسی ارشد</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -246,25 +254,31 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Facebook'
-                                placeholder='https://www.facebook.com/johndoe'
+                                label='نوع قرار داد'
+                                placeholder='نوع قرار داد'
                                 value={formData.facebook}
                                 onChange={e => setFormData({ ...formData, facebook: e.target.value })}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                label='Twitter'
-                                placeholder='https://www.twitter.com/johndoe'
-                                value={formData.twitter}
-                                onChange={e => setFormData({ ...formData, twitter: e.target.value })}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel>وضعیت استخدام</InputLabel>
+                                <Select
+                                    multiple
+                                    label='وضعیت استخدام'
+                                    value={formData.language}
+                                    onChange={e => setFormData({ ...formData, language: e.target.value })}
+                                >
+                                    <MenuItem value='English'>آزمون</MenuItem>
+                                    <MenuItem value='French'>بدون ازمون</MenuItem>
+                                    <MenuItem value='French'>دهیاری</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Instagram'
+                                label='موضوع قرارداد'
                                 placeholder='https://www.instagram.com/johndoe'
                                 value={formData.instagram}
                                 onChange={e => setFormData({ ...formData, instagram: e.target.value })}
@@ -273,8 +287,35 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label='Github'
-                                placeholder='https://www.github.com/johndoe'
+                                label='شرح قرار داد'
+                                placeholder='شرح قرار داد'
+                                value={formData.github}
+                                onChange={e => setFormData({ ...formData, github: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='تاریخ اجرا'
+                                placeholder='تاریخ اجرا'
+                                value={formData.github}
+                                onChange={e => setFormData({ ...formData, github: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='شماره قرارداد'
+                                placeholder='شماره قرارداد'
+                                value={formData.github}
+                                onChange={e => setFormData({ ...formData, github: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='شماره حکم'
+                                placeholder='تاریخ حکم'
                                 value={formData.github}
                                 onChange={e => setFormData({ ...formData, github: e.target.value })}
                             />
