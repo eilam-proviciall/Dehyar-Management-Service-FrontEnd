@@ -176,8 +176,8 @@ function Chart(props) {
                             }
                         }} >
                             <CardContent>
-                                <Typography variant="h3" style={{ textAlign: 'center', marginBottom: '20px',color: 'black' }}>
-                                    چارت سازمانی
+                                <Typography variant="h4" style={{ textAlign: 'center', marginBottom: '20px',color: 'black' }}>
+                                    ساختار تشکیلاتی دهیاری
                                 </Typography>
                                 <div >
                                     <OrgChartComponent
