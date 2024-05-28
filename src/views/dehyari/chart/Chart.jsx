@@ -194,7 +194,9 @@ function Chart(props) {
                     </Box>
                 </Box>
             </div>
-            <DehyariList />
+            <Box mt={5}>
+                <DehyariList />
+            </Box>
         </div>
     );
 }

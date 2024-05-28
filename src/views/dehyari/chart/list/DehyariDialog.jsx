@@ -78,10 +78,8 @@ const DehyariDialog = ({ open, setOpen }) => {
     return (
         <Dialog fullWidth maxWidth='md' open={open} onClose={handleClose} scroll='body'>
             <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16 '>
-                Create App
-                <Typography component='span' className='flex flex-col text-center'>
-                    Provide data with this form to create your app.
-                </Typography>
+                ثبت اطلاعات پرسنلی
+
             </DialogTitle>
             <DialogContent className='pbs-0 sm:pli-16 sm:pbe-16'>
                 <IconButton onClick={handleClose} className='absolute block-start-4 inline-end-4'>

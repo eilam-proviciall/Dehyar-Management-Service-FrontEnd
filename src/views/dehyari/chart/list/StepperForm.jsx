@@ -34,15 +34,15 @@ import StepperCustomDot from '@components/stepper-dot'
 // Vars
 const steps = [
     {
-        title: 'Account Details',
-        subtitle: 'Enter your account details'
+        title: 'مشخصات کاربری',
+        // subtitle: 'Enter your account details'
     },
     {
-        title: 'Personal Info',
+        title: 'اطلاعات شناسنامه ای',
         subtitle: 'Setup Information'
     },
     {
-        title: 'Social Links',
+        title: 'اطلاعات قرارداد',
         subtitle: 'Add Social Links'
     }
 ]
@@ -338,7 +338,6 @@ const StepperForm = () => {
                                     <div className='step-label'>
                                         <div>
                                             <Typography className='step-title'>{label.title}</Typography>
-                                            <Typography className='step-subtitle'>{label.subtitle}</Typography>
                                         </div>
                                     </div>
                                 </StepLabel>

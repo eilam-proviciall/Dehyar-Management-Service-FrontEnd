@@ -5,8 +5,6 @@ function Page(props) {
     return (
         <div>
        <Chart />
-
-
         </div>
     );
 }
