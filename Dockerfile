@@ -1,49 +1,50 @@
-# Install dependencies only when needed
-FROM node:16-alpine AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+# Base image for building
+FROM node:18-alpine AS base
+
+# Install necessary packages
 RUN apk add --no-cache libc6-compat
+
+# Set working directory
 WORKDIR /app
-ENV NODE_ENV production
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN yarn global add pnpm && pnpm i --frozen-lockfile
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# Copy Other dependencies
+# Copy the rest of the files to ensure all necessary files are present
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Ensure the directory exists and the file is present
+RUN ls -la src/assets/iconify-icons
 
-RUN pnpm build
+# Install dependencies
+RUN npm install
 
-# If using npm comment out above and use below instead
-# RUN npm run build
+# Install tsx globally to use it in build scripts
+RUN npm install -g tsx
 
-# Production image, copy all the files and run next
-FROM node:16-alpine AS runner
+# Run the icon build script
+RUN npm run build:icons
+
+# Build the Next.js project
+RUN npm run build
+
+# Production image
+FROM node:18-alpine AS runner
+
 WORKDIR /app
 
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Set environment variables
+ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy built assets from the build stage
+COPY --from=base /app/package.json ./package.json
+COPY --from=base /app/package-lock.json ./package-lock.json
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/.next ./.next
+COPY --from=base /app/public ./public
 
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-
-USER nextjs
-
+# Expose the necessary port
 EXPOSE 3000
 
-ENV PORT 3000
-
-CMD ["node", "server.js"]
+# Start the application
+CMD ["npm", "start"]
