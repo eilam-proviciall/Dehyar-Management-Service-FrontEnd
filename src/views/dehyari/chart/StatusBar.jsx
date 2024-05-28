@@ -5,7 +5,6 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
-import TotalVisits from "@views/pages/widget-examples/statistics/TotalVisits";
 import FamillyStatus from "@views/dehyari/chart/FamillyStatus";
 
 function StatusBar(props) {
@@ -89,9 +88,9 @@ function StatusBar(props) {
                     </CardContent>
                 </Card>
             </Box>
-            <Box item xs={12} sm={6} lg={3}>
-                <FamillyStatus/>
-            </Box>
+            {/*<Box item xs={12} sm={6} lg={3}>*/}
+                {/*<FamillyStatus/>*/}
+            {/*</Box>*/}
         </div>
     );
 }
