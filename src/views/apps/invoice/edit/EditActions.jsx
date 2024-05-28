@@ -23,7 +23,6 @@ import AddPaymentDrawer from '@views/apps/invoice/shared/AddPaymentDrawer'
 import SendInvoiceDrawer from '@views/apps/invoice/shared/SendInvoiceDrawer'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
 
 const EditActions = ({ id }) => {
   // States
