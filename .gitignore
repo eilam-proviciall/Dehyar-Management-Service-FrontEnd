@@ -1,25 +1,59 @@
-# فولدرهایی که توسط Next.js ایجاد می‌شوند
+# Node modules
+/node_modules
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# Next.js
 .next/
 out/
+build/
 
-# فولدرهای node_modules در هر جای پروژه
-node_modules/
+# Production
+/build
 
-# فایل‌های محیطی که ممکن است حاوی اطلاعات حساس باشند
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Miscellaneous
+.DS_Store
+*.pem
+
+# Local env files
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# فایل‌های سیستمی مک
-.DS_Store
+# Next.js build output
+.next/
+out/
+build/
 
-# فولدرهایی که توسط ابزارهای ویرایشگر متن ایجاد می‌شوند
+# Static and build directories
+/static
+/public/static
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/
+
+# Editor directories and files
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# فایل‌های لاگ
-*.log
-
-# فولدرهایی که توسط ابزارهای تست ایجاد می‌شوند
-coverage/
+# macOS files
+.DS_Store
