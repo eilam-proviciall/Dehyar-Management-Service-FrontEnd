@@ -88,9 +88,9 @@ function StatusBar(props) {
                     </CardContent>
                 </Card>
             </Box>
-            <Box item xs={12} sm={6} lg={3}>
-                <FamillyStatus/>
-            </Box>
+            {/*<Box item xs={12} sm={6} lg={3}>*/}
+                {/*<FamillyStatus/>*/}
+            {/*</Box>*/}
         </div>
     );
 }
