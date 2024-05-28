@@ -1,21 +1,26 @@
 # Base image for building
 FROM node:18-alpine AS base
 
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+# Install necessary packages
 RUN apk add --no-cache libc6-compat
+
+# Set working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
+
+# Copy the rest of the files to ensure all necessary files are present
+COPY . .
+
+# Ensure the directory exists and the file is present
+RUN ls -la src/assets/iconify-icons
 
 # Install dependencies
 RUN npm install
 
 # Install tsx globally to use it in build scripts
 RUN npm install -g tsx
-
-# Copy the rest of the files
-COPY . .
 
 # Run the icon build script
 RUN npm run build:icons
@@ -38,9 +43,8 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/.next ./.next
 COPY --from=base /app/public ./public
 
+# Expose the necessary port
 EXPOSE 3000
-
-ENV NODE_ENV production
 
 # Start the application
 CMD ["npm", "start"]

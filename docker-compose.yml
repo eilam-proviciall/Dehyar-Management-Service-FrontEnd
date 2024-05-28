@@ -2,6 +2,6 @@ version: '1.0.0'
 services:
   nextjs-app:
     build: .
-    container_name: nextjs-container
+    container_name: dms-front-container
     ports:
       - "8099:3000"
