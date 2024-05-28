@@ -1,26 +1,46 @@
-FROM ubuntu:20.04
+# Base image for building
+FROM node:18-alpine AS base
 
-# Install required packages
-RUN apt-get update && apt-get install -y curl ca-certificates bash build-essential
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-# Set NVM directory and create it
-ENV NVM_DIR /usr/local/nvm
-RUN mkdir -p $NVM_DIR
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# Install NVM
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash -x
+# Install dependencies
+RUN npm install
 
-# Source NVM and install Node
-ENV NODE_VERSION 20.12.2
-RUN . $NVM_DIR/nvm.sh && nvm install $NODE_VERSION
-RUN . $NVM_DIR/nvm.sh && nvm use $NODE_VERSION
-RUN . $NVM_DIR/nvm.sh && nvm alias default $NODE_VERSION
+# Install tsx globally to use it in build scripts
+RUN npm install -g tsx
 
-# Set PATH
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+# Copy the rest of the files
+COPY . .
+
+# Run the icon build script
+RUN npm run build:icons
+
+# Build the Next.js project
+RUN npm run build
+
+# Production image
+FROM node:18-alpine AS runner
 
 WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
+
+# Set environment variables
+ENV NODE_ENV production
+
+# Copy built assets from the build stage
+COPY --from=base /app/package.json ./package.json
+COPY --from=base /app/package-lock.json ./package-lock.json
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/.next ./.next
+COPY --from=base /app/public ./public
+
+EXPOSE 3000
+
+ENV NODE_ENV production
+
+# Start the application
 CMD ["npm", "start"]
