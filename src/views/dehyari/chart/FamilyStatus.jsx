@@ -20,13 +20,17 @@ const LinearProgress = styled(MuiLinearProgress)(() => ({
     }
 }))
 
-const FamillyStatus = () => {
+const FamilyStatus = () => {
     return (
         <Card>
             <CardContent className='flex justify-between items-start'>
                 <div className='flex flex-col'>
-                    <Typography>تعداد خانوار</Typography>
-                    <Typography variant='h4'>42.5هزار نفر</Typography>
+                    <Typography>Total Visits</Typography>
+                    <Typography variant='h4'>42.5k</Typography>
+                </div>
+                <div className='flex items-center text-success'>
+                    <Typography color='success.main'>+18.2%</Typography>
+                    <i className='ri-arrow-up-s-line text-xl'></i>
                 </div>
             </CardContent>
             <CardContent className='flex flex-col gap-[1.3125rem]'>
@@ -36,9 +40,9 @@ const FamillyStatus = () => {
                             <CustomAvatar size={24} variant='rounded' skin='light' className='rounded' color='warning'>
                                 <i className='ri-pie-chart-2-line text-base' />
                             </CustomAvatar>
-                            <Typography>مرد</Typography>
+                            <Typography>Order</Typography>
                         </div>
-                        <Typography variant='h4'>63.5%</Typography>
+                        <Typography variant='h4'>23.5%</Typography>
                         <Typography>2,890</Typography>
                     </div>
                     <Divider flexItem orientation='vertical' sx={{ '& .MuiDivider-wrapper': { p: 0, py: 2 } }}>
@@ -48,13 +52,13 @@ const FamillyStatus = () => {
                     </Divider>
                     <div className='flex flex-col items-end gap-2'>
                         <div className='flex items-center gap-x-2'>
-                            <Typography>زن</Typography>
+                            <Typography>Visits</Typography>
                             <CustomAvatar size={24} variant='rounded' skin='light' className='rounded' color='primary'>
                                 <i className='ri-mac-line text-base' />
                             </CustomAvatar>
                         </div>
-                        <Typography variant='h4'>36.5%</Typography>
-                        <Typography>890</Typography>
+                        <Typography variant='h4'>23.5%</Typography>
+                        <Typography>2,890</Typography>
                     </div>
                 </div>
                 <LinearProgress value={26} color='warning' variant='determinate' className='bs-2' />
@@ -63,4 +67,4 @@ const FamillyStatus = () => {
     )
 }
 
-export default FamillyStatus
+export default FamilyStatus

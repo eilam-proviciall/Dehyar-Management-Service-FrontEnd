@@ -72,15 +72,6 @@ const Logo = ({ component = false }) => {
       className=' items-center min-bs-[24px]'
      href={"/"}>
       <MaterializeLogo />
-      <LogoText
-        ref={logoTextRef}
-        isHovered={isHovered}
-        isCollapsed={layout === 'collapsed'}
-        transitionDuration={transitionDuration}
-        style={{whiteSpace:"nowrap"}}
-      >
-          {themeConfig.templateName}
-      </LogoText>
     </LogoWrapper>
   )
 }

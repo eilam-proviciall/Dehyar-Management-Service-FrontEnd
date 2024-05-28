@@ -1,6 +1,6 @@
 const Logo = props => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 201.86 202.34">
+        <svg style={{width:50}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 201.86 202.34">
             <defs>
                 <style>{`.cls-1{fill:#e9bb64;}.cls-2{fill:#015295;}`}</style>
             </defs>
