@@ -42,10 +42,10 @@ import Box from "@mui/material/Box";
 // Util Imports
 
 const schema = object({
-  email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
+  email: string([minLength(1, 'این فیلد الزامی است')]),
   password: string([
-    minLength(1, 'This field is required'),
-    minLength(5, 'Password must be at least 5 characters long')
+    minLength(1, 'این فیلد الزامی است'),
+    minLength(5, 'رمز عبور باید حداقل دارای ۵ کاراکتر باشد')
   ])
 })
 
@@ -73,7 +73,7 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@materialize.com',
+      email: 'alimoradi2008',
       password: 'admin'
     }
   })
@@ -128,7 +128,7 @@ const Login = ({ mode }) => {
         <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset]'>
           <div>
             <Box sx={{ mb: 6,textAlign : "center" }}>
-              <Typography variant='h4'>{`خوش آمدید به سامانه `} <span style={{color : "red"}}>{themeConfig.templateName}</span></Typography>
+              <Typography variant='h4'> <span>{themeConfig.templateName}</span></Typography>
             </Box>
           </div>
           <form
@@ -148,7 +148,7 @@ const Login = ({ mode }) => {
                   fullWidth
                   autoFocus
                   type='email'
-                  label='کدملی'
+                  label='نام کاربری'
                   onChange={e => {
                     field.onChange(e.target.value)
                     errorState !== null && setErrorState(null)
