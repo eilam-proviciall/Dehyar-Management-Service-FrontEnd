@@ -50,7 +50,7 @@ function Chart(props) {
         },
         {
             "name": "علی مرادی",
-            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/female.jpg",
+            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/general.jpg",
             "area": "Corporate",
             "profileUrl": "http://example.com/employee/profile",
             "office": "CEO office",
@@ -67,8 +67,8 @@ function Chart(props) {
             "_totalSubordinates": 413
         },
         {
-            "name": "خانم رهنما",
-            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/female.jpg",
+            "name": "زهرا رهنما",
+            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/general.jpg",
             "area": "Corporate",
             "profileUrl": "http://example.com/employee/profile",
             "office": "CEO office",
@@ -85,8 +85,8 @@ function Chart(props) {
             "_totalSubordinates": 142
         },
         {
-            "name": "آقای دهقانی",
-            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/female.jpg",
+            "name": "محمد دهقانی",
+            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/general.jpg",
             "area": "Corporate",
             "profileUrl": "http://example.com/employee/profile",
             "office": "CEO office",
@@ -103,8 +103,8 @@ function Chart(props) {
             "_totalSubordinates": 142
         },
         {
-            "name": "برنامه نویس جدید",
-            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/female.jpg",
+            "name": "لقمان اوند",
+            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/general.jpg",
             "area": "Corporate",
             "profileUrl": "http://example.com/employee/profile",
             "office": "CEO office",
@@ -121,8 +121,8 @@ function Chart(props) {
             "_totalSubordinates": 144
         },
         {
-            "name": "برنامه نویس جدید",
-            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/female.jpg",
+            "name": "محسن موحد",
+            "imageUrl": "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/general.jpg",
             "area": "Corporate",
             "profileUrl": "http://example.com/employee/profile",
             "office": "CEO office",
@@ -153,10 +153,7 @@ function Chart(props) {
         addNodeChildFunc(node);
     }
 
-    function onNodeClick(nodeId) {
-        // console.log('d3', d3.event);
-        alert('clicked ' + nodeId);
-    }
+
 
     return (
         <div>
@@ -182,7 +179,6 @@ function Chart(props) {
                                 <div >
                                     <OrgChartComponent
                                         setClick={(click) => (addNodeChildFunc = click)}
-                                        onNodeClick={onNodeClick}
                                         data={data}
                                     />
                                 </div>

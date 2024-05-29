@@ -25,8 +25,8 @@ export const OrgChartComponent = (props) => {
                 .data(props.data)
                 .nodeWidth(() => 200)
                 .nodeHeight(() => 90)
-                .onNodeClick((d) => {
-                    props.onNodeClick(d);
+                .onNodeClick((node) => {
+                    `                    ${node.data._directSubordinates}`
                 })
                 .buttonContent(({ node }) => {
                     return `<div class="node-button">
