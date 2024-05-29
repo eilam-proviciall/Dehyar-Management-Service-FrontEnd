@@ -217,6 +217,15 @@ const StepperForm = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='محل صدور شناسنامه'
+                                placeholder='محل تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <FormControl fullWidth>
                                 <InputLabel>وضعیت ایثار گری</InputLabel>
                                 <Select
@@ -278,6 +287,22 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                label='تاریخ شروع قرار داد'
+                                placeholder='https://www.instagram.com/johndoe'
+                                value={formData.instagram}
+                                onChange={e => setFormData({ ...formData, instagram: e.target.value })}
+                            />
+                        </Grid><Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='تاریخ پایان قرار داد'
+                                placeholder='https://www.instagram.com/johndoe'
+                                value={formData.instagram}
+                                onChange={e => setFormData({ ...formData, instagram: e.target.value })}
+                            />
+                        </Grid><Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
                                 label='موضوع قرارداد'
                                 placeholder='https://www.instagram.com/johndoe'
                                 value={formData.instagram}
@@ -297,6 +322,15 @@ const StepperForm = () => {
                             <TextField
                                 fullWidth
                                 label='تاریخ اجرا'
+                                placeholder='تاریخ اجرا'
+                                value={formData.github}
+                                onChange={e => setFormData({ ...formData, github: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label='تاریخ صدور'
                                 placeholder='تاریخ اجرا'
                                 value={formData.github}
                                 onChange={e => setFormData({ ...formData, github: e.target.value })}
