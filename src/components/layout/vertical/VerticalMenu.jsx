@@ -65,15 +65,8 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-fill' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <SubMenu
-            label='dashboards'
-          icon={<i className='ri-home-smile-line' />}
-          suffix={<Chip label='3' size='small' color='error' />}
-        >
-          <MenuItem href={`/dashboards/crm`}>crm</MenuItem>
-          <MenuItem href={`/municipality/list`}>ایجاد کاربر</MenuItem>
-          <MenuItem href={`/dehyari`}>چارت سازمانی</MenuItem>
-        </SubMenu>
+        <MenuItem href={`/municipality/list`}>ایجاد کاربر</MenuItem>
+        <MenuItem href={`/dehyari`}>چارت سازمانی</MenuItem>
       </Menu>
 
     </ScrollWrapper>

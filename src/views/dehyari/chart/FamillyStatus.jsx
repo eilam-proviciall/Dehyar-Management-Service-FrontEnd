@@ -23,8 +23,8 @@ const LinearProgress = styled(MuiLinearProgress)(() => ({
 const FamillyStatus = () => {
     return (
         <Card>
-            <CardContent className='flex justify-between items-start'>
-                <div className='flex flex-col'>
+            <CardContent className='flex justify-center items-start'>
+                <div className='flex flex-col ' style={{textAlign: "center",justifyContent:"center"}}>
                     <Typography>تعداد خانوار</Typography>
                     <Typography variant='h4'>42.5هزار نفر</Typography>
                 </div>
