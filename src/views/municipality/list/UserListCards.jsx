@@ -34,7 +34,7 @@ const data = [
     subtitle: ''
   },
   {
-    title: 'یه چی باید بذاریم',
+    title: 'شهردار',
     value: '237',
     avatarIcon: 'ri-user-search-line',
     avatarColor: 'warning',

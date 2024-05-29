@@ -200,7 +200,7 @@ const Login = ({ mode }) => {
               </Typography>
             </div>
             <Button fullWidth variant='contained' type='submit'>
-              Log In
+              ورود
             </Button>
           </form>
         </div>

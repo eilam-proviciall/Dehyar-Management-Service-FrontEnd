@@ -5,6 +5,7 @@ import { db } from "@/fake-db/apps/user-list";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { selectedEvent } from "@/redux-store/slices/calendar";
+import Chip from "@mui/material/Chip";
 
 const UserListTable = props => {
     const tableData = useMemo(() => db, []); // Memoize table data
@@ -26,9 +27,18 @@ const UserListTable = props => {
             [rowId]: !prevState[rowId]
         }));
     };
-    const elementProps = {
-
-    }
+    const getChipColor = (role) => {
+        switch (role) {
+            case 'مسئول امور مالی':
+                return 'success';
+            case 'بخشدار':
+                return 'primary';
+            case 'ناظر فنی':
+                return 'warning';
+            default:
+                return 'default';
+        }
+    };
 
     const columns = useMemo(
         () => [
@@ -72,11 +82,20 @@ const UserListTable = props => {
                 accessorKey: 'role',
                 header: 'نقش',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => {
+                    const role = cell.getValue();
+                    const color = getChipColor(role);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            <Chip label={role} color={color} />
+                        </div>
+                    );
+                },
             },
         ],
         [expandedRows]
     );
+
     const table = useMaterialReactTable({
         columns,
         data: tableData,
@@ -99,6 +118,9 @@ const UserListTable = props => {
                 </Button>
             </Box>
         ),
+        muiTableBodyRowProps: () => ({
+            style: { height: '10px' } // تنظیم ارتفاع هر سطر با استفاده از استایل‌های inline
+        }),
     });
 
     return (
