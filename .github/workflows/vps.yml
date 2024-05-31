@@ -26,4 +26,4 @@ jobs:
         run: rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete . root@82.115.17.24:/root/DMS/Dehyar-Management-Service-FrontEnd
 
       - name: Run Docker Compose
-        run: ssh -o StrictHostKeyChecking=no root@82.115.17.24 "cd /root/DMS/Dehyar-Management-Service-FrontEnd && docker compose up -d --build --no-cache"
+        run: ssh -o StrictHostKeyChecking=no root@82.115.17.24 "cd /root/DMS/Dehyar-Management-Service-FrontEnd && docker compose up -d --build"
