@@ -18,8 +18,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Create destination directory
+        run: ssh -o StrictHostKeyChecking=no root@82.115.17.24 "mkdir -p /root/DMS/Dehyar-Management-Service-FrontEnd"
+
       - name: Sync files to VPS
-        run: rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete . root@82.115.17.24:/home/DMS/Dehyar-Management-Service-FrontEnd
+        run: rsync -avz -e "ssh -o StrictHostKeyChecking=no" --delete . root@82.115.17.24:/root/DMS/Dehyar-Management-Service-FrontEnd
 
       - name: Run Docker Compose
-        run: ssh -o StrictHostKeyChecking=no root@82.115.17.24 "cd /home/DMS/Dehyar-Management-Service-FrontEnd && docker-compose up -d --build"
+        run: ssh -o StrictHostKeyChecking=no root@82.115.17.24 "cd /root/DMS/Dehyar-Management-Service-FrontEnd && docker-compose up -d --build"
