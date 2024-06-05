@@ -177,10 +177,10 @@ function Chart(props) {
                             flexGrow: 1,
                             height: {
                                 xs: "90vh",
-                                sm: "110vh",
-                                md: '90vh',
-                                lg: '50vh',
-                                xl:"60vh"
+                                sm: "60vh",
+                                md: '62vh',
+                                lg: '38vw',
+                                xl:"65vh"
                             }
                         }} >
 
