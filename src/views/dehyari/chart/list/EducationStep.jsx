@@ -1,27 +1,27 @@
 import React, {useState} from 'react';
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Repeater from "@core/components/Repeater";
 import Box from "@mui/material/Box";
 import {Collapse, Icon} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
 
-function ChildrenStep(props) {
-    const [childrens, setChildrens] = useState(1)
+function EducationStep(props) {
+    const [educations, setEducations] = useState(1)
 
     return (
         <>
             <Grid item xs={12} sm={12} spacing={30}>
 
-                <Repeater count={childrens}>
+                <Repeater count={educations}>
                     {i => {
                         const Tag = i === 0 ? Box : Collapse
                         return (
@@ -38,60 +38,28 @@ function ChildrenStep(props) {
                                                         <TextField
                                                             size="small"
                                                             fullWidth
-                                                            label='کد ملی'
+                                                            label='مدرک تحصیلی'
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <TextField
                                                             size="small"
                                                             fullWidth
-                                                            label='نام و نام خانوادگی'
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={3}>
-                                                        <FormControl fullWidth size="small">
-                                                            <InputLabel>جنسیت</InputLabel>
-                                                            <Select
-                                                                label='جنسیت'
-                                                            >
-                                                                <MenuItem value='UK'>مرد</MenuItem>
-                                                                <MenuItem value='USA'>زن</MenuItem>
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label='تاریخ تولد'
+                                                            label='رشته تحصیلی'
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <TextField
                                                             size="small"
                                                             fullWidth
-                                                            label='تاریخ ازدواج'
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label='پایان معافیت تحصیلی'
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label='تاریخ وفات'
+                                                            label='تاریخ اخذ مدرک تحصیلی'
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <IconButton sx={{ml: 15}} color="error"
                                                                     aria-label="delete"
                                                                     size="large"
-                                                                    onClick={() => childrens >1 && setChildrens(childrens - 1)}
+                                                                    onClick={() => educations >1 && setEducations(educations - 1)}
                                                         >
                                                             <DeleteIcon fontSize="inherit"/>
                                                         </IconButton>
@@ -111,14 +79,15 @@ function ChildrenStep(props) {
                         size='small'
                         variant='contained'
                         startIcon={<Icon icon='mdi:plus' fontSize="20"/>}
-                        onClick={() => setChildrens(childrens + 1)}
+                        onClick={() => setEducations(educations + 1)}
                     >
                         افزودن
                     </Button>
                 </Grid>
             </Grid>
+
         </>
     );
 }
 
-export default ChildrenStep;
+export default EducationStep;
