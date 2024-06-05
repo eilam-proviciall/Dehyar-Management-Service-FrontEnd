@@ -1,13 +1,9 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { OrgChart } from 'd3-org-chart';
-import styled from 'styled-components';
-import '../../../style/chart.css'; // وارد کردن فایل CSS
-
-
-
+import '../../../style/chart.css';
 export const OrgChartComponent = (props) => {
     const d3Container = useRef(null);
-    let chart = null;
+    const [chart, setChart] = useState(null);
 
     const addNode = (node) => {
         chart.addNode(node);
@@ -17,16 +13,15 @@ export const OrgChartComponent = (props) => {
 
     useLayoutEffect(() => {
         if (props.data && d3Container.current) {
-            if (!chart) {
-                chart = new OrgChart();
-            }
-            chart
+            const newChart = new OrgChart();
+            setChart(newChart);
+            newChart
                 .container(d3Container.current)
                 .data(props.data)
                 .nodeWidth(() => 200)
                 .nodeHeight(() => 90)
                 .onNodeClick((node) => {
-                    `                    ${node.data._directSubordinates}`
+                    `${node.data._directSubordinates}`;
                 })
                 .buttonContent(({ node }) => {
                     return `<div class="node-button">
@@ -51,8 +46,9 @@ export const OrgChartComponent = (props) => {
                 .render();
         }
     }, [props.data]);
-
     return (
-            <div ref={d3Container} />
+        <>
+            <div ref={d3Container} className="chart-container" />
+        </>
     );
 };

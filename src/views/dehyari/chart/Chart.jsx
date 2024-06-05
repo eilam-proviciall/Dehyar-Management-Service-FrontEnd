@@ -10,6 +10,12 @@ import LinearProgress from "@mui/material/LinearProgress";
 import StatusBar from "@views/dehyari/chart/StatusBar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DehyariList from "@views/dehyari/chart/list/DehyariList";
+import {SpeedDial, SpeedDialAction, SpeedDialIcon} from "@mui/lab";
+import EditIcon from "@mui/icons-material/Edit";
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import PrintIcon from "@mui/icons-material/Print";
+import ShareIcon from "@mui/icons-material/Share";
 
 function Chart(props) {
     const [data, setData] = useState([
@@ -154,7 +160,12 @@ function Chart(props) {
     }
 
 
-
+    const actions = [
+        { icon: <FileCopyIcon />, name: 'Copy' , position:"left" },
+        { icon: <SaveIcon />, name: 'Save' , position:"right"},
+        { icon: <PrintIcon />, name: 'Print' , position:"top"},
+        { icon: <ShareIcon />, name: 'Share', position:"bottom" },
+    ];
     return (
         <div>
             <div>
@@ -172,10 +183,28 @@ function Chart(props) {
                                 xl:"60vh"
                             }
                         }} >
+
                             <CardContent>
-                                <Typography variant="h4" style={{ textAlign: 'center', marginBottom: '20px',color: 'black' }}>
-                                    ساختار تشکیلاتی دهیاری
-                                </Typography>
+                                <div>
+                                    <Box sx={{ height: 50, transform: 'translateZ(0px)', flexGrow: 1 }}>
+                                        <SpeedDial
+                                            ariaLabel="SpeedDial openIcon example"
+                                            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                                            icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+                                            direction="left"
+
+                                        >
+                                            {actions.map((action) => (
+                                                <SpeedDialAction
+                                                    key={action.name}
+                                                    icon={action.icon}
+                                                    tooltipTitle={action.name}
+                                                    onClick={() => changeLayout(action.position)}
+                                                />
+                                            ))}
+                                        </SpeedDial>
+                                    </Box>
+                                </div>
                                 <div >
                                     <OrgChartComponent
                                         setClick={(click) => (addNodeChildFunc = click)}
@@ -183,7 +212,9 @@ function Chart(props) {
                                     />
                                 </div>
                             </CardContent>
+
                         </Card>
+
                     </Box>
                     <Box width={{ xs: '100%', md: '30%' }}  pt={{sm:5 ,md: 0}} ml={{md:4}}>
                            <StatusBar />

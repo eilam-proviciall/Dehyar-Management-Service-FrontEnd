@@ -1,14 +1,18 @@
 import React, {useMemo, useState} from 'react';
-import {selectedEvent} from "@/redux-store/slices/calendar";
 import Button from "@mui/material/Button";
-import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import {
+    MaterialReactTable,
+    MRT_ActionMenuItem,
+    useMaterialReactTable,
+} from 'material-react-table';
 import Box from "@mui/material/Box";
 import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
-import CreateApp from "@components/dialogs/create-app";
 import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
 import {db} from "@/fake-db/dehyari/ahkam";
 import Chip from "@mui/material/Chip";
-
+import { Divider } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonOffOutlinedIcon from '@mui/icons-material/PersonOffOutlined';
 function DehyariList(props) {
     const tableData = useMemo(() => db, []); // Memoize table data
     const {
@@ -47,7 +51,7 @@ function DehyariList(props) {
                 header: 'پست سازمانی',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-            },{
+            }, {
                 accessorKey: 'fullName',
                 header: 'نام و نام خانوادگی',
                 size: 150,
@@ -58,16 +62,16 @@ function DehyariList(props) {
                 header: 'کدملی',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-            },{
+            }, {
                 accessorKey: 'contractType',
                 header: 'نوع قرار داد',
                 size: 150,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     const role = cell.getValue();
                     const color = getChipColor(role);
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={role} color={color} />
+                        <div style={{textAlign: 'right'}}>
+                            <Chip label={role} color={color}/>
                         </div>
                     );
                 },
@@ -77,22 +81,32 @@ function DehyariList(props) {
                 accessorKey: 'operation',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     const role = cell.getValue();
                     const color = getChipColor(role);
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={role} color={color} />
+                        <div style={{textAlign: 'right'}}>
+                            <Chip label={role} color={color}/>
                         </div>
                     );
-                },            },
+                },
+            },
         ],
         [expandedRows]
     );
 
+    let renderTopToolbarCustomActions;
     const table = useMaterialReactTable({
         columns,
         data: tableData,
+        enableCellActions: true,
+        enableClickToCopy: 'context-menu',
+        enableEditing: true,
+        editDisplayMode: 'cell',
+        renderCellActionMenuItems: ({ closeMenu, table, internalMenuItems }) => [
+            ...internalMenuItems,
+            <Divider key="divider" ma />,
+        ],
         renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
@@ -102,7 +116,7 @@ function DehyariList(props) {
                     flexWrap: 'wrap',
                 }}
             >
-                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog} />
+                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog}/>
             </Box>
         ),
     });
