@@ -33,23 +33,24 @@ import Box from "@mui/material/Box";
 import {Collapse, Icon} from "@mui/material";
 import ChildrenStep from "@views/dehyari/chart/list/ChildrenStep";
 import EducationStep from "@views/dehyari/chart/list/EducationStep";
+import InsuranceStep from "@views/dehyari/chart/list/InsuranceStep";
 
 // Vars
 const steps = [
     {
         title: 'مشخصات کاربری',
-        // subtitle: 'Enter your account details'
     },
     {
         title: 'اطلاعات فرزندان',
-        subtitle: 'Setup Information'
-    },{
+    },
+    {
         title: 'سوابق تحصیلی',
-        subtitle: 'Setup Information'
+    },
+    {
+        title: 'سوابق بیمه ای',
     },
     {
         title: 'اطلاعات قرارداد',
-        subtitle: 'Add Social Links'
     }
 ]
 
@@ -167,231 +168,129 @@ const StepperForm = () => {
             case 3:
                 return (
                     <>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='نام و نام خانوادگی'
-                                placeholder='نام و نام خانوادگی'
-                                value={formData.firstName}
-                                onChange={e => setFormData({...formData, firstName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='نام پدر'
-                                placeholder='نام پدر'
-                                value={formData.lastName}
-                                onChange={e => setFormData({...formData, lastName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='تاریخ تولد'
-                                placeholder='تاریخ تولد'
-                                value={formData.lastName}
-                                onChange={e => setFormData({...formData, lastName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='شماره شناسنامه'
-                                placeholder='شماره شناسنامه'
-                                value={formData.lastName}
-                                onChange={e => setFormData({...formData, lastName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Country</InputLabel>
-                                <Select
-                                    label='جنسیت'
-                                    value={formData.country}
-                                    onChange={e => setFormData({...formData, country: e.target.value})}
-                                >
-                                    <MenuItem value='UK'>مرد</MenuItem>
-                                    <MenuItem value='USA'>زن</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Country</InputLabel>
-                                <Select
-                                    label='وضعیت تاهل'
-                                    value={formData.country}
-                                    onChange={e => setFormData({...formData, country: e.target.value})}
-                                >
-                                    <MenuItem value='UK'>مرد</MenuItem>
-                                    <MenuItem value='USA'>زن</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='محل تولد'
-                                placeholder='محل تولد'
-                                value={formData.lastName}
-                                onChange={e => setFormData({...formData, lastName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='محل صدور شناسنامه'
-                                placeholder='محل تولد'
-                                value={formData.lastName}
-                                onChange={e => setFormData({...formData, lastName: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>وضعیت ایثار گری</InputLabel>
-                                <Select
-                                    multiple
-                                    label='وضعیت ایثار گری'
-                                    value={formData.language}
-                                    onChange={e => setFormData({...formData, language: e.target.value})}
-                                >
-                                    <MenuItem value='English'>جانباز</MenuItem>
-                                    <MenuItem value='French'>رزمنده</MenuItem>
-                                    <MenuItem value='French'>آزاده</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>نظام وظیفه</InputLabel>
-                                <Select
-                                    multiple
-                                    label='نظام وظیفه'
-                                    value={formData.language}
-                                    onChange={e => setFormData({...formData, language: e.target.value})}
-                                >
-                                    <MenuItem value='English'>دیپلم</MenuItem>
-                                    <MenuItem value='French'>سیکل</MenuItem>
-                                    <MenuItem value='French'>کارشناسی ارشد</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                        <InsuranceStep />
                     </>
                 )
             case 4:
                 return (
-                    <>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='نوع قرار داد'
-                                placeholder='نوع قرار داد'
-                                value={formData.facebook}
-                                onChange={e => setFormData({...formData, facebook: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>وضعیت استخدام</InputLabel>
-                                <Select
-                                    multiple
-                                    label='وضعیت استخدام'
-                                    value={formData.language}
-                                    onChange={e => setFormData({...formData, language: e.target.value})}
-                                >
-                                    <MenuItem value='English'>آزمون</MenuItem>
-                                    <MenuItem value='French'>بدون ازمون</MenuItem>
-                                    <MenuItem value='French'>دهیاری</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='تاریخ شروع قرار داد'
-                                placeholder='https://www.instagram.com/johndoe'
-                                value={formData.instagram}
-                                onChange={e => setFormData({...formData, instagram: e.target.value})}
-                            />
-                        </Grid><Grid item xs={12} sm={6}>
+                <>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             size="small"
-                            label='تاریخ پایان قرار داد'
-                            placeholder='https://www.instagram.com/johndoe'
-                            value={formData.instagram}
-                            onChange={e => setFormData({...formData, instagram: e.target.value})}
-                        />
-                    </Grid><Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            label='موضوع قرارداد'
-                            placeholder='https://www.instagram.com/johndoe'
-                            value={formData.instagram}
-                            onChange={e => setFormData({...formData, instagram: e.target.value})}
+                            label='نام و نام خانوادگی'
+                            placeholder='نام و نام خانوادگی'
+                            value={formData.firstName}
+                            onChange={e => setFormData({...formData, firstName: e.target.value})}
                         />
                     </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='شرح قرار داد'
-                                placeholder='شرح قرار داد'
-                                value={formData.github}
-                                onChange={e => setFormData({...formData, github: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='تاریخ اجرا'
-                                placeholder='تاریخ اجرا'
-                                value={formData.github}
-                                onChange={e => setFormData({...formData, github: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='تاریخ صدور'
-                                placeholder='تاریخ اجرا'
-                                value={formData.github}
-                                onChange={e => setFormData({...formData, github: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='شماره قرارداد'
-                                placeholder='شماره قرارداد'
-                                value={formData.github}
-                                onChange={e => setFormData({...formData, github: e.target.value})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label='شماره حکم'
-                                placeholder='تاریخ حکم'
-                                value={formData.github}
-                                onChange={e => setFormData({...formData, github: e.target.value})}
-                            />
-                        </Grid>
-                    </>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            size="small"
+                            label='نام پدر'
+                            placeholder='نام پدر'
+                            value={formData.lastName}
+                            onChange={e => setFormData({...formData, lastName: e.target.value})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            size="small"
+                            label='تاریخ تولد'
+                            placeholder='تاریخ تولد'
+                            value={formData.lastName}
+                            onChange={e => setFormData({...formData, lastName: e.target.value})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            size="small"
+                            label='شماره شناسنامه'
+                            placeholder='شماره شناسنامه'
+                            value={formData.lastName}
+                            onChange={e => setFormData({...formData, lastName: e.target.value})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <InputLabel>Country</InputLabel>
+                            <Select
+                                label='جنسیت'
+                                value={formData.country}
+                                onChange={e => setFormData({...formData, country: e.target.value})}
+                            >
+                                <MenuItem value='UK'>مرد</MenuItem>
+                                <MenuItem value='USA'>زن</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>وضعیت تاهل</InputLabel>
+                            <Select
+                                label='وضعیت تاهل'
+                                value={formData.country}
+                                onChange={e => setFormData({...formData, country: e.target.value})}
+                            >
+                                <MenuItem value='UK'>مرد</MenuItem>
+                                <MenuItem value='USA'>زن</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            size="small"
+                            label='محل تولد'
+                            placeholder='محل تولد'
+                            value={formData.lastName}
+                            onChange={e => setFormData({...formData, lastName: e.target.value})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            size="small"
+                            label='محل صدور شناسنامه'
+                            placeholder='محل تولد'
+                            value={formData.lastName}
+                            onChange={e => setFormData({...formData, lastName: e.target.value})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>وضعیت ایثار گری</InputLabel>
+                            <Select
+                                multiple
+                                label='وضعیت ایثار گری'
+                                value={formData.language}
+                                onChange={e => setFormData({...formData, language: e.target.value})}
+                            >
+                                <MenuItem value='English'>جانباز</MenuItem>
+                                <MenuItem value='French'>رزمنده</MenuItem>
+                                <MenuItem value='French'>آزاده</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>نظام وظیفه</InputLabel>
+                            <Select
+                                multiple
+                                label='نظام وظیفه'
+                                value={formData.language}
+                                onChange={e => setFormData({...formData, language: e.target.value})}
+                            >
+                                <MenuItem value='English'>دیپلم</MenuItem>
+                                <MenuItem value='French'>سیکل</MenuItem>
+                                <MenuItem value='French'>کارشناسی ارشد</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </>
                 )
             default:
                 return 'Unknown step'
