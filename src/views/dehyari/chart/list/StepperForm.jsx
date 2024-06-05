@@ -31,6 +31,7 @@ import StepperCustomDot from '@components/stepper-dot'
 import Repeater from "../../../../@core/components/Repeater";
 import Box from "@mui/material/Box";
 import {Collapse, Icon} from "@mui/material";
+import ChildrenStep from "@views/dehyari/chart/list/ChildrenStep";
 
 // Vars
 const steps = [
@@ -39,6 +40,9 @@ const steps = [
         // subtitle: 'Enter your account details'
     },
     {
+        title: 'اطلاعات فرزندان',
+        subtitle: 'Setup Information'
+    },{
         title: 'اطلاعات شناسنامه ای',
         subtitle: 'Setup Information'
     },
@@ -51,7 +55,6 @@ const steps = [
 const StepperForm = () => {
     // States
     const [activeStep, setActiveStep] = useState(0)
-    const [childrens, setChildrens] = useState(1)
 
     const [formData, setFormData] = useState({
         username: '',
@@ -115,6 +118,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='پست سازمانی'
                                 placeholder='کارشناس امور اداری'
                                 value={formData.username}
@@ -124,6 +128,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 type='text'
                                 label='کدملی'
                                 placeholder='کد ملی'
@@ -134,6 +139,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 type='text'
                                 label='دهیاری های تحت پوشش'
                                 placeholder='دهیاری های تحت پوشش'
@@ -148,9 +154,16 @@ const StepperForm = () => {
             case 1:
                 return (
                     <>
+                        <ChildrenStep />
+                    </>
+                )
+            case 2:
+                return (
+                    <>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='نام و نام خانوادگی'
                                 placeholder='نام و نام خانوادگی'
                                 value={formData.firstName}
@@ -160,6 +173,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='نام پدر'
                                 placeholder='نام پدر'
                                 value={formData.lastName}
@@ -169,6 +183,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='تاریخ تولد'
                                 placeholder='تاریخ تولد'
                                 value={formData.lastName}
@@ -178,6 +193,128 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
+                                label='شماره شناسنامه'
+                                placeholder='شماره شناسنامه'
+                                value={formData.lastName}
+                                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>جنسیت</InputLabel>
+                                <Select
+                                    label='جنسیت'
+                                    value={formData.country}
+                                    onChange={e => setFormData({...formData, country: e.target.value})}
+                                >
+                                    <MenuItem value='UK'>مرد</MenuItem>
+                                    <MenuItem value='USA'>زن</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>وضعیت تاهل</InputLabel>
+                                <Select
+                                    label='وضعیت تاهل'
+                                    value={formData.country}
+                                    onChange={e => setFormData({...formData, country: e.target.value})}
+                                >
+                                    <MenuItem value='UK'>مرد</MenuItem>
+                                    <MenuItem value='USA'>زن</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label='محل تولد'
+                                placeholder='محل تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label='محل صدور شناسنامه'
+                                placeholder='محل تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>وضعیت ایثار گری</InputLabel>
+                                <Select
+                                    multiple
+                                    label='وضعیت ایثار گری'
+                                    value={formData.language}
+                                    onChange={e => setFormData({...formData, language: e.target.value})}
+                                >
+                                    <MenuItem value='English'>جانباز</MenuItem>
+                                    <MenuItem value='French'>رزمنده</MenuItem>
+                                    <MenuItem value='French'>آزاده</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>نظام وظیفه</InputLabel>
+                                <Select
+                                    multiple
+                                    label='نظام وظیفه'
+                                    value={formData.language}
+                                    onChange={e => setFormData({...formData, language: e.target.value})}
+                                >
+                                    <MenuItem value='English'>دیپلم</MenuItem>
+                                    <MenuItem value='French'>سیکل</MenuItem>
+                                    <MenuItem value='French'>کارشناسی ارشد</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </>
+                )
+            case 3:
+                return (
+                    <>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label='نام و نام خانوادگی'
+                                placeholder='نام و نام خانوادگی'
+                                value={formData.firstName}
+                                onChange={e => setFormData({...formData, firstName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label='نام پدر'
+                                placeholder='نام پدر'
+                                value={formData.lastName}
+                                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label='تاریخ تولد'
+                                placeholder='تاریخ تولد'
+                                value={formData.lastName}
+                                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
                                 label='شماره شناسنامه'
                                 placeholder='شماره شناسنامه'
                                 value={formData.lastName}
@@ -213,6 +350,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='محل تولد'
                                 placeholder='محل تولد'
                                 value={formData.lastName}
@@ -222,6 +360,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='محل صدور شناسنامه'
                                 placeholder='محل تولد'
                                 value={formData.lastName}
@@ -258,75 +397,15 @@ const StepperForm = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Card>
-                                <CardContent>
-                                    <Repeater count={childrens}>
-                                        {i => {
-                                            const Tag = i === 0 ? Box : Collapse
-                                            return (
-                                                <Tag key={i}
-                                                     className='repeater-wrapper' {...(i !== 0 ? {in: true} : {})}>
-
-                                                    <Grid container>
-                                                        <Grid item lg={12} md={5} xs={12}
-                                                              sx={{px: 4, my: {lg: 0, xs: 4}}} pt={3}>
-                                                            <Typography variant='subtitle2' className='col-title'
-                                                                        sx={{
-                                                                            mb: {md: 2, xs: 0},
-                                                                            color: 'text.primary'
-                                                                        }}>
-                                                                ثبت وضعیت
-                                                            </Typography>
-                                                            <Grid container spacing={2}>
-                                                                <Grid item xs={4}>
-                                                                    <Select fullWidth size='small'
-                                                                            defaultValue='رمه گردان'>
-                                                                        <MenuItem value='رمه گردان'>رمه گردان</MenuItem>
-                                                                        <MenuItem value='کوچرو'>کوچرو</MenuItem>
-                                                                        <MenuItem value='نیم کوچر'>نیم کوچر</MenuItem>
-                                                                    </Select>
-                                                                </Grid>
-
-                                                                <Grid item xs={4}>
-                                                                    <TextField
-                                                                        fullWidth
-                                                                        size='small'
-                                                                        label='توضیحات'
-                                                                        variant='outlined'
-                                                                    />
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                </Tag>
-                                            )
-                                        }}
-                                    </Repeater>
-                                    <Grid item xs={12} sx={{px: 0}} pt={5}>
-                                        <Button
-                                            size='small'
-                                            variant='contained'
-                                            startIcon={<Icon icon='mdi:plus' fontSize="20"/>}
-                                            onClick={() => setChildrens(childrens + 1)}
-                                        >
-                                            افزودن
-                                        </Button>
-                                    </Grid>
-
-                                </CardContent>
-                            </Card>
-
-                        </Grid>
                     </>
                 )
-            case 2:
+            case 4:
                 return (
                     <>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='نوع قرار داد'
                                 placeholder='نوع قرار داد'
                                 value={formData.facebook}
@@ -351,6 +430,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='تاریخ شروع قرار داد'
                                 placeholder='https://www.instagram.com/johndoe'
                                 value={formData.instagram}
@@ -359,6 +439,7 @@ const StepperForm = () => {
                         </Grid><Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
+                            size="small"
                             label='تاریخ پایان قرار داد'
                             placeholder='https://www.instagram.com/johndoe'
                             value={formData.instagram}
@@ -367,6 +448,7 @@ const StepperForm = () => {
                     </Grid><Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
+                            size="small"
                             label='موضوع قرارداد'
                             placeholder='https://www.instagram.com/johndoe'
                             value={formData.instagram}
@@ -376,6 +458,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='شرح قرار داد'
                                 placeholder='شرح قرار داد'
                                 value={formData.github}
@@ -385,6 +468,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='تاریخ اجرا'
                                 placeholder='تاریخ اجرا'
                                 value={formData.github}
@@ -394,6 +478,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='تاریخ صدور'
                                 placeholder='تاریخ اجرا'
                                 value={formData.github}
@@ -403,6 +488,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='شماره قرارداد'
                                 placeholder='شماره قرارداد'
                                 value={formData.github}
@@ -412,6 +498,7 @@ const StepperForm = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
+                                size="small"
                                 label='شماره حکم'
                                 placeholder='تاریخ حکم'
                                 value={formData.github}
@@ -465,7 +552,6 @@ const StepperForm = () => {
                                         <Typography className='font-medium' color='text.primary'>
                                             {steps[activeStep].title}
                                         </Typography>
-                                        <Typography variant='body2'>{steps[activeStep].subtitle}</Typography>
                                     </Grid>
                                     {renderStepContent(activeStep)}
                                     <Grid item xs={12} className='flex justify-between'>

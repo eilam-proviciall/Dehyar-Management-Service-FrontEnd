@@ -180,7 +180,7 @@ function Chart(props) {
                                 sm: "60vh",
                                 md: '62vh',
                                 lg: '38vw',
-                                xl:"65vh"
+                                xl:"60vh"
                             }
                         }} >
 
