@@ -84,6 +84,13 @@ const StepperForm = () => {
                 endOfStudyExemption: '',
                 deathDate: ''
             }
+        ],
+        educations: [
+            {
+                degree: '',
+                fieldOfStudy: '',
+                graduationDate: ''
+            }
         ]
     });
 
@@ -97,12 +104,23 @@ const StepperForm = () => {
 
     const handleChildChange = (index, e) => {
         const { name, value } = e.target;
-        console.log({ name, value })
         const updatedChildren = [...formData.children];
+        console.log(index,{ name, value })
         updatedChildren[index][name] = value;
         setFormData({
             ...formData,
             children: updatedChildren
+        });
+    };
+
+    const handleEducationChange = (index, e) => {
+        const { name, value } = e.target;
+        console.log({ name, value })
+        const updatedEducations = [...formData.educations];
+        updatedEducations[index][name] = value;
+        setFormData({
+            ...formData,
+            educations: updatedEducations
         });
     };
 
@@ -140,6 +158,13 @@ const StepperForm = () => {
                     marriageDate: '',
                     endOfStudyExemption: '',
                     deathDate: ''
+                }
+            ],
+            educations: [
+                {
+                    degree: '',
+                    fieldOfStudy: '',
+                    graduationDate: ''
                 }
             ]
         });
@@ -208,9 +233,11 @@ const StepperForm = () => {
                 );
             case 2:
                 return (
-                    <>
-                        <EducationStep />
-                    </>
+                    <EducationStep
+                        formData={formData}
+                        handleEducationChange={handleEducationChange}
+                        setFormData={setFormData}
+                    />
                 );
             case 3:
                 return (
@@ -439,4 +466,4 @@ const StepperForm = () => {
     );
 };
 
-export default StepperForm
+export default StepperForm;
