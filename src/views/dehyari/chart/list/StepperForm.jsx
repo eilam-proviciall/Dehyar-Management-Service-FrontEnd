@@ -91,6 +91,14 @@ const StepperForm = () => {
                 fieldOfStudy: '',
                 graduationDate: ''
             }
+        ],
+        insurances: [
+            {
+                workplace: '',
+                insurancePeriod: '',
+                insuranceType: '',
+                employmentDate: ''
+            }
         ]
     });
 
@@ -105,23 +113,35 @@ const StepperForm = () => {
     const handleChildChange = (index, e) => {
         const { name, value } = e.target;
         const updatedChildren = [...formData.children];
-        console.log(index,{ name, value })
         updatedChildren[index][name] = value;
         setFormData({
             ...formData,
             children: updatedChildren
         });
+        console.log(formData.children)
+
     };
 
     const handleEducationChange = (index, e) => {
         const { name, value } = e.target;
-        console.log({ name, value })
         const updatedEducations = [...formData.educations];
         updatedEducations[index][name] = value;
         setFormData({
             ...formData,
             educations: updatedEducations
         });
+        console.log(formData.educations)
+    };
+
+    const handleInsuranceChange = (index, e) => {
+        const { name, value } = e.target;
+        const updatedInsurances = [...formData.insurances];
+        updatedInsurances[index][name] = value;
+        setFormData({
+            ...formData,
+            insurances: updatedInsurances
+        });
+        console.log(formData.insurances)
     };
 
     const handleClickShowPassword = () =>
@@ -165,6 +185,14 @@ const StepperForm = () => {
                     degree: '',
                     fieldOfStudy: '',
                     graduationDate: ''
+                }
+            ],
+            insurances: [
+                {
+                    workplace: '',
+                    insurancePeriod: '',
+                    insuranceType: '',
+                    employmentDate: ''
                 }
             ]
         });
@@ -241,9 +269,11 @@ const StepperForm = () => {
                 );
             case 3:
                 return (
-                    <>
-                        <InsuranceStep />
-                    </>
+                    <InsuranceStep
+                        formData={formData}
+                        handleInsuranceChange={handleInsuranceChange}
+                        setFormData={setFormData}
+                    />
                 );
             case 4:
                 return (
@@ -467,3 +497,4 @@ const StepperForm = () => {
 };
 
 export default StepperForm;
+
