@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import {useContext, useState} from 'react'
 
 // Next Imports
 import Link from 'next/link'
@@ -38,6 +38,7 @@ import searchParams from "draft-js/lib/DraftEntity";
 import {router} from "next/client";
 import Cookies from "js-cookie";
 import Box from "@mui/material/Box";
+import {AuthContext} from "@/contexts/AuthContext";
 
 // Util Imports
 
@@ -65,6 +66,7 @@ const Login = ({ mode }) => {
   // Hooks
   const { lang: locale } = useParams()
   const { settings } = useSettings()
+  const auth = useContext(AuthContext);
 
   const {
     control,
@@ -91,32 +93,14 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
     const router = useRouter()
   const onSubmit = async data => {
-   //  console.log('hi from new version')
-   // const res = await axios.post('http://127.0.0.1:8000/api/v1/auth/login', {
-   //   "nid": "0200883442",
-   //   "password": "12435324"
-   // })
-    // console.log(res.statusText === "OK")
-    // console.log(res)
-    // const res = await signIn('credentials', {
-    //   email: data.email,
-    //   password: data.password,
-    //   redirect: false
-    // })
-    //
-    // if (res.statusText === "OK") {
-        // Cookies.set('token', res.data.data.access_token)
+    await auth.login({
+      "nid": "0200883442",
+      "password": "12435324"
+    }, () => {
+
+    })
     console.log('sdsd')
-      // Vars
-      // const redirectURL = searchParams.get('redirectTo') ?? 'dashboards/crm'
-      await router.replace("/municipality/list")
-    // } else {
-      // if (res?.error) {
-      //   const error = JSON.parse(res.error)
-      //
-      //   setErrorState(error)
-      // }
-    // }
+
   }
 
   return (

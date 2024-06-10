@@ -18,7 +18,6 @@ export const metadata = {
 const RootLayout = ({ children, params }) => {
   // Vars
   const direction = "rtl"
-
   return (
     <html id='__next' lang={params.lang} dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>{children}</body>

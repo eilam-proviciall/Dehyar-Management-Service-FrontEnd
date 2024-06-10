@@ -3,17 +3,17 @@ import Providers from '@components/Providers'
 import BlankLayout from '@layouts/BlankLayout'
 
 // Config Imports
-
 // Util Imports
-import { getSystemMode } from '@core/utils/serverHelpers'
+import {getSystemMode} from '@core/utils/serverHelpers'
 
-const Layout = ({ children, params }) => {
+const Layout = ({children, params}) => {
     // Vars
     const systemMode = getSystemMode()
+    console.log(23)
 
     return (
         <Providers direction={"rtl"}>
-            <BlankLayout systemMode={systemMode}>{children}</BlankLayout>
+                <BlankLayout systemMode={systemMode}>{children}</BlankLayout>
         </Providers>
     )
 }

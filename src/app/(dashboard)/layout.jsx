@@ -18,12 +18,15 @@ import ScrollToTop from '@core/components/scroll-to-top'
 
 // Util Imports
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
+import axios from "axios";
+import {useEffect} from "react";
 
 const Layout = async ({ children, params }) => {
   // Vars
   const direction = "rtl"
   const mode = getMode()
   const systemMode = getSystemMode()
+    console.log(23)
 
   return (
     <Providers direction={direction}>
