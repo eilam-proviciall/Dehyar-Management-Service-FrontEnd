@@ -75,8 +75,8 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'alimoradi2008',
-      password: 'admin'
+      email: '0200883442',
+      password: '12435324'
     }
   })
 
@@ -93,14 +93,9 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
     const router = useRouter()
   const onSubmit = async data => {
-    await auth.login({
-      "nid": "0200883442",
-      "password": "12435324"
-    }, () => {
+      await auth.login(data, () => {
 
     })
-    console.log('sdsd')
-
   }
 
   return (
