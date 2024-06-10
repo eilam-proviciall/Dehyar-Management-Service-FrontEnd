@@ -28,9 +28,6 @@ import DirectionalIcon from '@components/DirectionalIcon'
 // Styled Component Imports
 import StepperWrapper from '@core/styles/stepper'
 import StepperCustomDot from '@components/stepper-dot'
-import Repeater from "../../../../@core/components/Repeater";
-import Box from "@mui/material/Box";
-import {Collapse, Icon} from "@mui/material";
 import ChildrenStep from "@views/dehyari/chart/list/ChildrenStep";
 import EducationStep from "@views/dehyari/chart/list/EducationStep";
 import InsuranceStep from "@views/dehyari/chart/list/InsuranceStep";
@@ -61,19 +58,17 @@ const StepperForm = () => {
         jobTitle: '',
         nationalCode: '',
         coveredVillages: '',
-        email: '',
-        password: '',
         isPasswordShown: false,
         confirmPassword: '',
         isConfirmPasswordShown: false,
         firstName: '',
         lastName: '',
+        militaryService: '',
+        veteranStatus: '',
+        maritalStatus: '',
+        birthPlace: '',
+        issuancePlace: '',
         country: '',
-        language: [],
-        twitter: '',
-        facebook: '',
-        instagram: '',
-        github: '',
         children: [
             {
                 nationalCode: '',
@@ -164,11 +159,6 @@ const StepperForm = () => {
             firstName: '',
             lastName: '',
             country: '',
-            language: [],
-            twitter: '',
-            facebook: '',
-            instagram: '',
-            github: '',
             children: [
                 {
                     nationalCode: '',
@@ -376,16 +366,15 @@ const StepperForm = () => {
                             <FormControl fullWidth size="small">
                                 <InputLabel>وضعیت ایثار گری</InputLabel>
                                 <Select
-                                    multiple
                                     label="وضعیت ایثار گری"
                                     name="veteranStatus"
                                     value={formData.veteranStatus}
                                     onChange={handleInputChange}
                                 >
-                                    <MenuItem value="martyr">شهید</MenuItem>
-                                    <MenuItem value="injured">جانباز</MenuItem>
-                                    <MenuItem value="warrior">رزمنده</MenuItem>
-                                    <MenuItem value="free">آزاده</MenuItem>
+                                    <MenuItem value="1">شهید</MenuItem>
+                                    <MenuItem value="2">جانباز</MenuItem>
+                                    <MenuItem value="3">رزمنده</MenuItem>
+                                    <MenuItem value="4">آزاده</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -393,15 +382,14 @@ const StepperForm = () => {
                             <FormControl fullWidth size="small">
                                 <InputLabel>نظام وظیفه</InputLabel>
                                 <Select
-                                    multiple
                                     label="نظام وظیفه"
                                     name="militaryService"
-                                    value={formData.militaryService}
+                                    value={formData.militaryService }
                                     onChange={handleInputChange}
                                 >
-                                    <MenuItem value="exempted">معاف</MenuItem>
-                                    <MenuItem value="completed">انجام شده</MenuItem>
-                                    <MenuItem value="ongoing">در حال انجام</MenuItem>
+                                    <MenuItem value="0">معاف</MenuItem>
+                                    <MenuItem value="1">انجام شده</MenuItem>
+                                    <MenuItem value="2">در حال انجام</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
