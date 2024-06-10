@@ -31,6 +31,8 @@ import StepperCustomDot from '@components/stepper-dot'
 import ChildrenStep from "@views/dehyari/chart/list/ChildrenStep";
 import EducationStep from "@views/dehyari/chart/list/EducationStep";
 import InsuranceStep from "@views/dehyari/chart/list/InsuranceStep";
+import {useFetchCities} from "@/hooks/useFetchCities";
+import Autocomplete from "@mui/material/Autocomplete";
 
 // Vars
 const steps = [
@@ -66,7 +68,7 @@ const StepperForm = () => {
         militaryService: '',
         veteranStatus: '',
         maritalStatus: '',
-        birthPlace: '',
+        birthPlace: null,
         issuancePlace: '',
         country: '',
         children: [
@@ -104,7 +106,8 @@ const StepperForm = () => {
             [name]: value
         });
     };
-
+    const { cities, isLoading, error } = useFetchCities();
+    // console.log(cities)
     const handleChildChange = (index, e) => {
         const { name, value } = e.target;
         const updatedChildren = [...formData.children];
@@ -237,6 +240,29 @@ const StepperForm = () => {
                                 name="coveredVillages"
                                 value={formData.coveredVillages}
                                 onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Autocomplete
+                                options={cities}
+                                getOptionLabel={(option) =>`${option.approved_name}`}
+                                value={formData.birthPlace || null}
+                                onChange={(event, newValue) => {
+                                    setFormData((prevFormData) => ({
+                                        ...prevFormData,
+                                        birthPlace: newValue ? newValue.name : ''
+                                    }));
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        size="small"
+                                        label="محل تولد"
+                                        placeholder="محل تولد"
+                                        name="birthPlace"
+                                    />
+                                )}
                             />
                         </Grid>
                     </>

@@ -9,6 +9,7 @@ import '@/app/globals.css'
 
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
+import axios from "axios";
 
 export const metadata = {
   title: 'Materialize - Material Next.js Admin Template',
