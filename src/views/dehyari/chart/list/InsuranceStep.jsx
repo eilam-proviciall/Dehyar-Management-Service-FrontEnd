@@ -52,20 +52,13 @@ function InsuranceStep({formData, handleInsuranceChange, setFormData, cities}) {
                                             <Grid item lg={12} md={5} xs={12} sx={{px: 4, my: {lg: 0, xs: 4}}} pt={3}>
                                                 <Grid container spacing={2}>
                                                     <Grid item xs={12} sm={3}>
-                                                        <Autocomplete
-                                                            options={cities}
-                                                            getOptionLabel={(option) => `${option.approved_name}`}
-                                                            value={formData.birthPlace || null}
-                                                            onChange={(e, newValue) => handleInsuranceChange(i, newValue, "workplace")}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    fullWidth
-                                                                    size="small"
-                                                                    label="محل خدمت"
-                                                                    name="workplace"
-                                                                />
-                                                            )}
+                                                        <TextField
+                                                            size="small"
+                                                            fullWidth
+                                                            label="دهیاری محل خدمت"
+                                                            name="insurancePeriod"
+                                                            value={formData.insurances[i].insurancePeriod}
+                                                            onChange={(e) => handleInsuranceChange(i, e.target.value, "insurancePeriod")}
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>

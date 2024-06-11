@@ -553,6 +553,17 @@
                                         onChange={(e) => handleInputChange(e.target.value, e.target.name)}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        label="عنوان قرارداد"
+                                        placeholder="عنوان قرارداد"
+                                        name="fullName"
+                                        value={formData.fullName}
+                                        onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                    />
+                                </Grid>
                             </>
                         )
                 default:
