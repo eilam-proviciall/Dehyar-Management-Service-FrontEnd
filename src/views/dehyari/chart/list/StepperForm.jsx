@@ -108,8 +108,9 @@ const StepperForm = () => {
     };
     const { cities, isLoading, error } = useFetchCities();
     // console.log(cities)
-    const handleChildChange = (index, e) => {
-        const { name, value } = e.target;
+    const handleChildChange = (index, value,name) => {
+        console.log(name, value);
+
         const updatedChildren = [...formData.children];
         updatedChildren[index][name] = value;
         setFormData({
@@ -120,7 +121,7 @@ const StepperForm = () => {
 
     };
 
-    const handleEducationChange = (index, e) => {
+    const handleEducationChange = (index, e ,type =null) => {
         const { name, value } = e.target;
         const updatedEducations = [...formData.educations];
         updatedEducations[index][name] = value;

@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Repeater from "@core/components/Repeater";
 import Box from "@mui/material/Box";
-import {Collapse, Icon} from "@mui/material";
+import { Collapse, Icon } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,9 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from "@mui/material/IconButton";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 function ChildrenStep({ formData, handleChildChange, setFormData }) {
     const handleAddChild = () => {
@@ -61,7 +64,7 @@ function ChildrenStep({ formData, handleChildChange, setFormData }) {
                                                             label="کد ملی"
                                                             name="nationalCode"
                                                             value={formData.children[i].nationalCode}
-                                                            onChange={(e) => handleChildChange(i, e)}
+                                                            onChange={(e) => handleChildChange(i, e.target.value , "nationalCode")}
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
@@ -71,7 +74,7 @@ function ChildrenStep({ formData, handleChildChange, setFormData }) {
                                                             label="نام و نام خانوادگی"
                                                             name="fullName"
                                                             value={formData.children[i].fullName}
-                                                            onChange={(e) => handleChildChange(i, e)}
+                                                            onChange={(e) => handleChildChange(i,  e.target.value , "fullName")}
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
@@ -81,7 +84,7 @@ function ChildrenStep({ formData, handleChildChange, setFormData }) {
                                                                 label="جنسیت"
                                                                 name="gender"
                                                                 value={formData.children[i].gender}
-                                                                onChange={(e) => handleChildChange(i, e)}
+                                                                onChange={(e) => handleChildChange(i,  e.target.value ,"gender")}
                                                             >
                                                                 <MenuItem value="male">مرد</MenuItem>
                                                                 <MenuItem value="female">زن</MenuItem>
@@ -89,43 +92,76 @@ function ChildrenStep({ formData, handleChildChange, setFormData }) {
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="تاریخ تولد"
-                                                            name="birthDate"
-                                                            value={formData.children[i].birthDate}
-                                                            onChange={(e) => handleChildChange(i, e)}
+                                                        <DatePicker
+                                                            scrollSensitive={true}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            onChange={(e) => handleChildChange(i,  e.unix , 'birthDate')}
+                                                            render={
+                                                                <TextField
+                                                                    size="small"
+                                                                    fullWidth
+                                                                    label="تاریخ تولد"
+                                                                    name="birthDate"
+                                                                    value={formData.children[i].birthDate}
+                                                                />
+                                                            }
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="تاریخ ازدواج"
-                                                            name="marriageDate"
-                                                            value={formData.children[i].marriageDate}
-                                                            onChange={(e) => handleChildChange(i, e)}
+                                                        <DatePicker
+                                                            scrollSensitive={true}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            onChange={(e) => handleChildChange(i,  e.unix , 'marriageDate')}
+                                                            render={
+                                                                <TextField
+                                                                    size="small"
+                                                                    fullWidth
+                                                                    label="تاریخ ازدواج"
+                                                                    name="marriageDate"
+                                                                    value={formData.children[i].marriageDate}
+                                                                />
+                                                            }
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="پایان معافیت تحصیلی"
-                                                            name="endOfStudyExemption"
-                                                            value={formData.children[i].endOfStudyExemption}
-                                                            onChange={(e) => handleChildChange(i, e)}
+                                                        <DatePicker
+                                                            scrollSensitive={true}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            onChange={(e) => handleChildChange(i,  e.unix , 'endOfStudyExemption')}
+                                                            render={
+                                                                <TextField
+                                                                    size="small"
+                                                                    fullWidth
+                                                                    label="پایان معافیت تحصیلی"
+                                                                    name="endOfStudyExemption"
+                                                                    value={formData.children[i].endOfStudyExemption}
+                                                                />
+                                                            }
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="تاریخ وفات"
-                                                            name="deathDate"
-                                                            value={formData.children[i].deathDate}
-                                                            onChange={(e) => handleChildChange(i, e)}
+
+                                                        <DatePicker
+                                                            scrollSensitive={true}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            onChange={(e) => handleChildChange(i,  e.unix , 'deathDate')}
+                                                            render={
+                                                                <TextField
+                                                                    size="small"
+                                                                    fullWidth
+                                                                    label="تاریخ وفات"
+                                                                    name="deathDate"
+                                                                    value={formData.children[i].deathDate}
+                                                                />
+                                                            }
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
