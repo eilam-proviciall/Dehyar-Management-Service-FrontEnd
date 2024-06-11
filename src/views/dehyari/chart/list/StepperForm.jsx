@@ -36,6 +36,7 @@
     import persian from "react-date-object/calendars/persian";
     import persian_fa from "react-date-object/locales/persian_fa";
     import DatePicker from "react-multi-date-picker";
+    import Box from "@mui/material/Box";
 
     // Vars
     const steps = [
@@ -43,7 +44,7 @@
             title: 'مشخصات کاربری',
         },
         {
-            title: 'اطلاعات فرزندان',
+            title: 'مشخصات شخصی',
         },
         {
             title: 'سوابق تحصیلی',
@@ -52,8 +53,10 @@
             title: 'سوابق بیمه ای',
         },
         {
+            title: 'اطلاعات فرزندان',
+        },{
             title: 'اطلاعات قرارداد',
-        }
+        },
     ]
 
     const StepperForm = () => {
@@ -95,7 +98,9 @@
                     workplace: '',
                     insurancePeriod: '',
                     insuranceType: '',
-                    employmentDate: ''
+                    employmentStartDate : '',
+                    employmentEndtDate : '',
+
                 }
             ]
         });
@@ -237,31 +242,6 @@
                         </>
                     );
                 case 1:
-                    return (
-                        <ChildrenStep
-                            formData={formData}
-                            handleChildChange={handleChildChange}
-                            setFormData={setFormData}
-                        />
-                    );
-                case 2:
-                    return (
-                        <EducationStep
-                            formData={formData}
-                            handleEducationChange={handleEducationChange}
-                            setFormData={setFormData}
-                        />
-                    );
-                case 3:
-                    return (
-                        <InsuranceStep
-                            formData={formData}
-                            handleInsuranceChange={handleInsuranceChange}
-                            setFormData={setFormData}
-                            cities={cities}
-                        />
-                    );
-                case 4:
                     return (
                         <>
                             <Grid item xs={12} sm={6}>
@@ -425,7 +405,144 @@
                                 </FormControl>
                             </Grid>
                         </>
+
                     );
+                case 2:
+                    return (
+                        <EducationStep
+                            formData={formData}
+                            handleEducationChange={handleEducationChange}
+                            setFormData={setFormData}
+                        />
+                    );
+                case 3:
+                    return (
+                        <InsuranceStep
+                            formData={formData}
+                            handleInsuranceChange={handleInsuranceChange}
+                            setFormData={setFormData}
+                            cities={cities}
+                        />
+                    );
+                case 4:
+                    return (
+                        <ChildrenStep
+                            formData={formData}
+                            handleChildChange={handleChildChange}
+                            setFormData={setFormData}
+                        />
+                    );
+                    case 5:
+                        return (
+                            <>
+                                <Grid item xs={12} sm={6}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>نوع قرارداد قرارداد</InputLabel>
+                                        <Select
+                                            label="نوع قرارداد قرارداد"
+                                            name="contraactType"
+                                            value={formData.contraactType}
+                                            onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                        >
+                                            <MenuItem value="1">تمام وقت</MenuItem>
+                                            <MenuItem value="2">تمام وقت مشترک</MenuItem>
+                                            <MenuItem value="3">پاره وقت - ۱۷روز کارکرد</MenuItem>
+                                            <MenuItem value="4">۱۹ روز کارکرد</MenuItem>
+                                            <MenuItem value="5">۲۱ روز کارکرد</MenuItem>
+                                            <MenuItem value="6">۲۴ روز کارکرد</MenuItem>
+                                            <MenuItem value="7">۲۷ روز کارکرد</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>وضعیت استخدام</InputLabel>
+                                        <Select
+                                            label="وضعیت استخدام"
+                                            name="employmentStatus"
+                                            value={formData.employmentStatus}
+                                            onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                        >
+                                            <MenuItem value="1">آزمون</MenuItem>
+                                            <MenuItem value="2">بدون آزمون</MenuItem>
+                                            <MenuItem value="3">دهیاری</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Box sx={{ width: '120%' }}>
+                                        <DatePicker
+                                            scrollSensitive={true}
+                                            calendar={persian}
+                                            locale={persian_fa}
+                                            calendarPosition="bottom-right"
+                                            onChange={(e) => handleInputChange(e.unix, "contractStart")}
+                                            render={
+                                                <TextField
+                                                    fullWidth
+                                                    size="small"
+                                                    label="شروع قرارداد"
+                                                    name="contractStart"
+                                                    placeholder="شروع قرارداد"
+                                                    value={formData.contractStart}
+                                                />
+                                            }
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <DatePicker
+                                        style={{width:"100%"}}
+                                        scrollSensitive={true}
+                                        calendar={persian}
+                                        locale={persian_fa}
+                                        calendarPosition="bottom-right"
+                                        onChange={(e) => handleInputChange(e.unix, "contractEnd")}
+                                        render={
+                                            <TextField
+                                                fullWidth
+                                                size="small"
+                                                label="پایان قرارداد"
+                                                name="contractEnd"
+                                                placeholder="پایان قرارداد"
+                                                value={formData.contractEnd}
+                                            />
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <DatePicker
+                                        style={{width:"100%"}}
+                                        scrollSensitive={true}
+                                        calendar={persian}
+                                        locale={persian_fa}
+                                        calendarPosition="bottom-right"
+                                        onChange={(e) => handleInputChange(e.unix, "contractEnd")}
+                                        render={
+                                            <TextField
+                                                fullWidth
+                                                size="small"
+                                                label="تاریخ اجرا"
+                                                name="contractEnd"
+                                                placeholder="تاریخ اجرا"
+                                                value={formData.contractEnd}
+                                            />
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        label="شرح قرارداد"
+                                        placeholder="شرح قرارداد"
+                                        name="fullName"
+                                        value={formData.fullName}
+                                        onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                    />
+                                </Grid>
+                            </>
+                        )
                 default:
                     return 'Unknown step';
             }

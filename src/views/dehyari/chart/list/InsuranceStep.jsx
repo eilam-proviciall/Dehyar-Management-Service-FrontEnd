@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Grid from "@mui/material/Grid";
 import Repeater from "@core/components/Repeater";
 import Box from "@mui/material/Box";
@@ -14,7 +14,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import DatePicker from "react-multi-date-picker";
 
-function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
+function InsuranceStep({formData, handleInsuranceChange, setFormData, cities}) {
     const handleAddInsurance = () => {
         setFormData({
             ...formData,
@@ -45,28 +45,28 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                     {i => {
                         const Tag = i === 0 ? Box : Collapse;
                         return (
-                            <Tag key={i} className="repeater-wrapper" {...(i !== 0 ? { in: true } : {})}>
-                                <Card sx={{ mb: 2 }}>
+                            <Tag key={i} className="repeater-wrapper" {...(i !== 0 ? {in: true} : {})}>
+                                <Card sx={{mb: 2}}>
                                     <CardContent>
                                         <Grid container>
-                                            <Grid item lg={12} md={5} xs={12} sx={{ px: 4, my: { lg: 0, xs: 4 } }} pt={3}>
+                                            <Grid item lg={12} md={5} xs={12} sx={{px: 4, my: {lg: 0, xs: 4}}} pt={3}>
                                                 <Grid container spacing={2}>
                                                     <Grid item xs={12} sm={3}>
-                                                            <Autocomplete
-                                                                options={cities}
-                                                                getOptionLabel={(option) =>`${option.approved_name}`}
-                                                                value={formData.birthPlace || null}
-                                                                onChange={(e,newValue) => handleInsuranceChange(i, newValue,"workplace")}
-                                                                renderInput={(params) => (
-                                                                    <TextField
-                                                                        {...params}
-                                                                        fullWidth
-                                                                        size="small"
-                                                                        label="محل خدمت"
-                                                                        name="workplace"
-                                                                    />
-                                                                )}
-                                                            />
+                                                        <Autocomplete
+                                                            options={cities}
+                                                            getOptionLabel={(option) => `${option.approved_name}`}
+                                                            value={formData.birthPlace || null}
+                                                            onChange={(e, newValue) => handleInsuranceChange(i, newValue, "workplace")}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    label="محل خدمت"
+                                                                    name="workplace"
+                                                                />
+                                                            )}
+                                                        />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <TextField
@@ -75,17 +75,7 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                                                             label="سابقه بیمه (ماه)"
                                                             name="insurancePeriod"
                                                             value={formData.insurances[i].insurancePeriod}
-                                                            onChange={(e) => handleInsuranceChange(i, e.target.value,"insurancePeriod")}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={3}>
-                                                        <TextField
-                                                            size="small"
-                                                            fullWidth
-                                                            label="نوع بیمه"
-                                                            name="insuranceType"
-                                                            value={formData.insurances[i].insuranceType}
-                                                            onChange={(e) => handleInsuranceChange(i, e)}
+                                                            onChange={(e) => handleInsuranceChange(i, e.target.value, "insurancePeriod")}
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
@@ -94,13 +84,31 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                                                             calendar={persian}
                                                             locale={persian_fa}
                                                             calendarPosition="bottom-right"
-                                                            onChange={(e) => handleInsuranceChange(i, e.unix,"employmentDate")}
+                                                            onChange={(e) => handleInsuranceChange(i, e.unix, "employmentStartDate")}
                                                             render={
                                                                 <TextField
                                                                     size="small"
                                                                     fullWidth
-                                                                    label="تاریخ استخدام"
-                                                                    name="employmentDate"
+                                                                    label="تاریخ شروع"
+                                                                    name="employmentStartDate"
+                                                                    value={formData.insurances[i].employmentDate}
+                                                                />
+                                                            }
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={3}>
+                                                        <DatePicker
+                                                            scrollSensitive={true}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            onChange={(e) => handleInsuranceChange(i, e.unix, "employmentEndDate")}
+                                                            render={
+                                                                <TextField
+                                                                    size="small"
+                                                                    fullWidth
+                                                                    label="تاریخ پایان"
+                                                                    name="employmentEndDate"
                                                                     value={formData.insurances[i].employmentDate}
                                                                 />
                                                             }
@@ -108,13 +116,13 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <IconButton
-                                                            sx={{ ml: 15 }}
+                                                            sx={{ml: 15}}
                                                             color="error"
                                                             aria-label="delete"
                                                             size="large"
                                                             onClick={() => handleRemoveInsurance(i)}
                                                         >
-                                                            <DeleteIcon fontSize="inherit" />
+                                                            <DeleteIcon fontSize="inherit"/>
                                                         </IconButton>
                                                     </Grid>
                                                 </Grid>
@@ -126,11 +134,11 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                         );
                     }}
                 </Repeater>
-                <Grid item xs={12} sx={{ px: 0 }} pt={5}>
+                <Grid item xs={12} sx={{px: 0}} pt={5}>
                     <Button
                         size="small"
                         variant="contained"
-                        startIcon={<Icon icon="mdi:plus" fontSize="20" />}
+                        startIcon={<Icon icon="mdi:plus" fontSize="20"/>}
                         onClick={handleAddInsurance}
                     >
                         افزودن
