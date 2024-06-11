@@ -121,8 +121,7 @@ const StepperForm = () => {
 
     };
 
-    const handleEducationChange = (index, e ,type =null) => {
-        const { name, value } = e.target;
+    const handleEducationChange = (index, value,name) => {
         const updatedEducations = [...formData.educations];
         updatedEducations[index][name] = value;
         setFormData({
@@ -132,8 +131,7 @@ const StepperForm = () => {
         console.log(formData.educations)
     };
 
-    const handleInsuranceChange = (index, e) => {
-        const { name, value } = e.target;
+    const handleInsuranceChange = (index, value,name) => {
         const updatedInsurances = [...formData.insurances];
         updatedInsurances[index][name] = value;
         setFormData({
@@ -290,6 +288,7 @@ const StepperForm = () => {
                         formData={formData}
                         handleInsuranceChange={handleInsuranceChange}
                         setFormData={setFormData}
+                        cities={cities}
                     />
                 );
             case 4:
