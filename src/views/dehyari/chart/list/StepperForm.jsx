@@ -105,21 +105,15 @@
                 ...formData,
                 [name]: value
             });
-            console.log(formData)
         };
         const { cities, isLoading, error } = useFetchCities();
-        // console.log(cities)
         const handleChildChange = (index, value,name) => {
-            console.log(name, value);
-
             const updatedChildren = [...formData.children];
             updatedChildren[index][name] = value;
             setFormData({
                 ...formData,
                 children: updatedChildren
             });
-            console.log(formData.children)
-
         };
 
         const handleEducationChange = (index, value,name) => {
@@ -129,7 +123,6 @@
                 ...formData,
                 educations: updatedEducations
             });
-            console.log(formData.educations)
         };
 
         const handleInsuranceChange = (index, value,name) => {
@@ -139,7 +132,6 @@
                 ...formData,
                 insurances: updatedInsurances
             });
-            console.log(formData.insurances)
         };
 
         const handleClickShowPassword = () =>
