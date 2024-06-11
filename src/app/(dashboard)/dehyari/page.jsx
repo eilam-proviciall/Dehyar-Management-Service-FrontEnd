@@ -28,7 +28,7 @@ function Page(props) {
     }, []);
     return (
         <div>
-       <Chart />
+            <Chart/>
         </div>
     );
 }
