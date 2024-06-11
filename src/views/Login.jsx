@@ -175,7 +175,7 @@ const Login = ({ mode }) => {
             <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
               <FormControlLabel control={<Checkbox defaultChecked />} label='به خاطر سپردن' />
               <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
-                گیت هاب اکشن
+                فراموشی رمز عبور
               </Typography>
             </div>
             <Button fullWidth variant='contained' type='submit'>
