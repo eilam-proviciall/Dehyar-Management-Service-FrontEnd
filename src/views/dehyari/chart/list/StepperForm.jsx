@@ -205,19 +205,10 @@
                     return (
                         <>
                             <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="پست سازمانی"
-                                    placeholder="پست سازمانی"
-                                    name="jobTitle"
-                                    value={formData.jobTitle}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                />
                                 <FormControl fullWidth size="small">
-                                    <InputLabel>نوع قرارداد قرارداد</InputLabel>
+                                    <InputLabel>نوع قرارداد </InputLabel>
                                     <Select
-                                        label="نوع قرارداد قرارداد"
+                                        label="نوع قرارداد "
                                         name="jobTitle"
                                         value={formData.jobTitle}
                                         onChange={(e) => handleInputChange(e.target.value, e.target.name)}
