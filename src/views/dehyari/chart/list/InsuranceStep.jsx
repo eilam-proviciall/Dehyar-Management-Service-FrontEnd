@@ -56,7 +56,7 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                                                                 options={cities}
                                                                 getOptionLabel={(option) =>`${option.approved_name}`}
                                                                 value={formData.birthPlace || null}
-                                                                onChange={(e,newValue) => handleInsuranceChange(i, newValue.hierarchy_code,"workplace")}
+                                                                onChange={(e,newValue) => handleInsuranceChange(i, newValue,"workplace")}
                                                                 renderInput={(params) => (
                                                                     <TextField
                                                                         {...params}
@@ -89,7 +89,6 @@ function InsuranceStep({ formData, handleInsuranceChange, setFormData,cities}) {
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-
                                                         <DatePicker
                                                             scrollSensitive={true}
                                                             calendar={persian}

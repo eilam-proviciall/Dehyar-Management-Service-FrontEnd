@@ -25,28 +25,27 @@ const Layout = async ({children, params}) => {
     const direction = "rtl"
     const mode = getMode()
     const systemMode = getSystemMode()
-    console.log(23)
 
     return (
         <Providers direction={direction}>
             <AuthProvider>
-                <LayoutWrapper
-                    systemMode={systemMode}
-                    verticalLayout={
-                        <VerticalLayout
-                            navigation={<Navigation mode={mode} systemMode={systemMode}/>}
-                            navbar={<Navbar/>}
-                            footer={<VerticalFooter/>}
-                        >
-                            {children}
-                        </VerticalLayout>
-                    }
-                    horizontalLayout={
-                        <HorizontalLayout header={<Header/>} footer={<HorizontalFooter/>}>
-                            {children}
-                        </HorizontalLayout>
-                    }
-                />
+                    <LayoutWrapper
+                        systemMode={systemMode}
+                        verticalLayout={
+                            <VerticalLayout
+                                navigation={<Navigation mode={mode} systemMode={systemMode}/>}
+                                navbar={<Navbar/>}
+                                footer={<VerticalFooter/>}
+                            >
+                                {children}
+                            </VerticalLayout>
+                        }
+                        horizontalLayout={
+                            <HorizontalLayout header={<Header/>} footer={<HorizontalFooter/>}>
+                                {children}
+                            </HorizontalLayout>
+                        }
+                    />
                 <ScrollToTop className='mui-fixed'>
                     <Button variant='contained'
                             className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'>
