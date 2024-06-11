@@ -209,11 +209,27 @@
                                     fullWidth
                                     size="small"
                                     label="پست سازمانی"
-                                    placeholder="کارشناس امور اداری"
+                                    placeholder="پست سازمانی"
                                     name="jobTitle"
                                     value={formData.jobTitle}
                                     onChange={(e) => handleInputChange(e.target.value, e.target.name)}
                                 />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>نوع قرارداد قرارداد</InputLabel>
+                                    <Select
+                                        label="نوع قرارداد قرارداد"
+                                        name="jobTitle"
+                                        value={formData.jobTitle}
+                                        onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                    >
+                                        <MenuItem value="1">دهیار</MenuItem>
+                                        <MenuItem value="2">کارشناس امور حقوقی و قراردادها - مشترک</MenuItem>
+                                        <MenuItem value="3">مسئول امور مالی</MenuItem>
+                                        <MenuItem value="4">مسئول فنی عمرانی و خدمات روستا</MenuItem>
+                                        <MenuItem value="5">کارگر خدماتی</MenuItem>
+                                        <MenuItem value="6">راننده</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -228,16 +244,21 @@
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    type="text"
-                                    label="دهیاری های تحت پوشش"
-                                    placeholder="دهیاری های تحت پوشش"
-                                    name="coveredVillages"
-                                    value={formData.coveredVillages}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                />
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>دهیاری های تحت پوشش</InputLabel>
+                                    <Select
+                                        label="دهیاری های تحت پوشش"
+                                        name="coveredVillages"
+                                        value={formData.coveredVillages}
+                                        onChange={(e) => handleInputChange(e.target.value, e.target.name)}
+                                    >
+                                        <MenuItem value="1">چم جنگل</MenuItem>
+                                        <MenuItem value="2">چم شیر</MenuItem>
+                                        <MenuItem value="3">سرکان</MenuItem>
+                                        <MenuItem value="4">سیاه سیاه</MenuItem>
+                                        <MenuItem value="5">15 خرداد</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </>
                     );
