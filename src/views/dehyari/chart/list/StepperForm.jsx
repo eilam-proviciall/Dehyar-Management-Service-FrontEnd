@@ -1,8 +1,7 @@
-// StepperForm.jsx
 'use client'
 
 // React Imports
-import React, {useState} from 'react'
+import { useState } from 'react'
 
 // MUI Imports
 import {
@@ -24,7 +23,7 @@ import {
 } from '@mui/material'
 
 // Third-party Imports
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 
 // Component Imports
 import DirectionalIcon from '@components/DirectionalIcon'
@@ -33,22 +32,22 @@ import StepperCustomDot from '@components/stepper-dot'
 import ChildrenStep from "@views/dehyari/chart/list/ChildrenStep"
 import EducationStep from "@views/dehyari/chart/list/EducationStep"
 import InsuranceStep from "@views/dehyari/chart/list/InsuranceStep"
-import {useFetchCities} from "@/hooks/useFetchCities"
+import { useFetchCities } from "@/hooks/useFetchCities"
 import DatePicker from "react-multi-date-picker"
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
-import {minLength, object, string} from 'valibot'
-import {Controller, useForm} from "react-hook-form"
-import {valibotResolver} from "@hookform/resolvers/valibot"
+import { minLength, object, string } from 'valibot'
+import { Controller, useForm } from "react-hook-form"
+import { valibotResolver } from "@hookform/resolvers/valibot"
 
 // Vars
 const steps = [
-    {title: 'مشخصات کاربری'},
-    {title: 'مشخصات شخصی'},
-    {title: 'سوابق تحصیلی'},
-    {title: 'سوابق بیمه ای'},
-    {title: 'اطلاعات فرزندان'},
-    {title: 'اطلاعات قرارداد'},
+    { title: 'مشخصات کاربری' },
+    { title: 'مشخصات شخصی' },
+    { title: 'سوابق تحصیلی' },
+    { title: 'سوابق بیمه ای' },
+    { title: 'اطلاعات فرزندان' },
+    { title: 'اطلاعات قرارداد' },
 ]
 
 const defaultFormData = {
@@ -61,7 +60,7 @@ const defaultFormData = {
     militaryService: '',
     veteranStatus: '',
     maritalStatus: '',
-    birthPlace: null,
+    birthPlace: '',
     issuancePlace: '',
     country: '',
     children: [{
@@ -73,7 +72,7 @@ const defaultFormData = {
         endOfStudyExemption: '',
         deathDate: ''
     }],
-    educations: [{degree: '', fieldOfStudy: '', graduationDate: ''}],
+    educations: [{ degree: '', fieldOfStudy: '', graduationDate: '' }],
     insurances: [{
         workplace: '',
         insurancePeriod: '',
@@ -85,31 +84,50 @@ const defaultFormData = {
 
 const StepperForm = () => {
     const [activeStep, setActiveStep] = useState(0)
-    const [formData, setFormData] = useState(defaultFormData)
-    const {cities, isLoading, error} = useFetchCities()
+    const { cities, isLoading, error } = useFetchCities()
 
-    const handleInputChange = (value, name) => {
-        setFormData({...formData, [name]: value})
-    }
+    const userSchemaStep1 = object({
+        jobTitle: string([minLength(1, 'این فیلد الزامی است')]),
+        nationalCode: string([minLength(1, 'این فیلد الزامی است')]),
+        coveredVillages: string([minLength(1, 'این فیلد الزامی است')]),
+    });
 
-    const handleArrayChange = (index, value, name, arrayName) => {
-        const updatedArray = [...formData[arrayName]]
-        updatedArray[index][name] = value
-        setFormData({...formData, [arrayName]: updatedArray})
-    }
+    const userSchemaStep2 = object({
+        fullName: string([minLength(1, 'این فیلد الزامی است')]),
+        fatherName: string([minLength(1, 'این فیلد الزامی است')]),
+        personalId: string([minLength(1, 'این فیلد الزامی است')]),
+        gender: string([minLength(1, 'این فیلد الزامی است')]),
+        maritalStatus: string([minLength(1, 'این فیلد الزامی است')]),
+        birthPlace: string([minLength(1, 'این فیلد الزامی است')]),
+        issuancePlace: string([minLength(1, 'این فیلد الزامی است')]),
+        veteranStatus: string([minLength(1, 'این فیلد الزامی است')]),
+        militaryService: string([minLength(1, 'این فیلد الزامی است')]),
+    });
+
+    const { control: controlStep1, handleSubmit: handleSubmitStep1, formState: { errors: errorsStep1 } } = useForm({
+        resolver: valibotResolver(userSchemaStep1),
+        defaultValues: defaultFormData
+    });
+
+    const { control: controlStep2, handleSubmit: handleSubmitStep2, formState: { errors: errorsStep2 } } = useForm({
+        resolver: valibotResolver(userSchemaStep2),
+        defaultValues: defaultFormData
+    });
 
     const handleReset = () => {
         setActiveStep(0)
         setFormData(defaultFormData)
     }
 
-
-    const handleNext = () => {
-        handleSubmit(() => {
+    const handleNextStep1 = () => {
+        handleSubmitStep1(() => {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
-            if (activeStep === steps.length - 1) {
-                toast.success('Form Submitted');
-            }
+        })();
+    }
+
+    const handleNextStep2 = () => {
+        handleSubmitStep2(() => {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
         })();
     }
 
@@ -117,340 +135,276 @@ const StepperForm = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
     }
 
-    const userSchema = object({
-        nationalCode: string([minLength(1, 'این فیلد الزامی است')]),
-    })
-
-    const {control, handleSubmit, formState: {errors}, reset} = useForm({
-        resolver: valibotResolver(userSchema),
-        defaultValues: defaultFormData
-    })
-
     const renderStepContent = (activeStep) => {
         switch (activeStep) {
             case 0:
                 return (
                     <>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>نوع قرارداد </InputLabel>
-                                <Select
-                                    label="نوع قرارداد "
-                                    name="jobTitle"
-                                    value={formData.jobTitle}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">دهیار</MenuItem>
-                                    <MenuItem value="2">کارشناس امور حقوقی و قراردادها - مشترک</MenuItem>
-                                    <MenuItem value="3">مسئول امور مالی</MenuItem>
-                                    <MenuItem value="4">مسئول فنی عمرانی و خدمات روستا</MenuItem>
-                                    <MenuItem value="5">کارگر خدماتی</MenuItem>
-                                    <MenuItem value="6">راننده</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Controller
-                                name="nationalCode"
-                                control={control}
-                                render={({field}) => (
-                                    <TextField
-                                        fullWidth
-                                        size="small"
-                                        type="text"
-                                        label="کدملی"
-                                        placeholder="کد ملی"
-                                        name="nationalCode"
-                                        value={formData.nationalCode}
-                                        onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                        error={!!errors.nationalCode}
-                                        helperText={errors.nationalCode ? errors.nationalCode.message : ''}
+                        <Grid container spacing={5}>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>نوع قرارداد </InputLabel>
+                                    <Controller
+                                        name="jobTitle"
+                                        control={controlStep1}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="نوع قرارداد"
+                                                error={!!errorsStep1.jobTitle}
+                                            >
+                                                <MenuItem value="1">دهیار</MenuItem>
+                                                <MenuItem value="2">کارشناس امور حقوقی و قراردادها - مشترک</MenuItem>
+                                                <MenuItem value="3">مسئول امور مالی</MenuItem>
+                                                <MenuItem value="4">مسئول فنی عمرانی و خدمات روستا</MenuItem>
+                                                <MenuItem value="5">کارگر خدماتی</MenuItem>
+                                                <MenuItem value="6">راننده</MenuItem>
+                                            </Select>
+                                        )}
                                     />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>دهیاری های تحت پوشش</InputLabel>
-                                <Select
-                                    label="دهیاری های تحت پوشش"
-                                    name="coveredVillages"
-                                    value={formData.coveredVillages}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">چم جنگل</MenuItem>
-                                    <MenuItem value="2">چم شیر</MenuItem>
-                                    <MenuItem value="3">سرکان</MenuItem>
-                                    <MenuItem value="4">سیاه سیاه</MenuItem>
-                                    <MenuItem value="5">15 خرداد</MenuItem>
-                                </Select>
-                            </FormControl>
+                                    {errorsStep1.jobTitle && <Typography color="error">{errorsStep1.jobTitle.message}</Typography>}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="nationalCode"
+                                    control={controlStep1}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            type="text"
+                                            label="کدملی"
+                                            placeholder="کد ملی"
+                                            error={!!errorsStep1.nationalCode}
+                                            helperText={errorsStep1.nationalCode ? errorsStep1.nationalCode.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>دهیاری های تحت پوشش</InputLabel>
+                                    <Controller
+                                        name="coveredVillages"
+                                        control={controlStep1}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="دهیاری های تحت پوشش"
+                                                error={!!errorsStep1.coveredVillages}
+                                            >
+                                                <MenuItem value="1">چم جنگل</MenuItem>
+                                                <MenuItem value="2">چم شیر</MenuItem>
+                                                <MenuItem value="3">سرکان</MenuItem>
+                                                <MenuItem value="4">سیاه سیاه</MenuItem>
+                                                <MenuItem value="5">15 خرداد</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errorsStep1.coveredVillages && <Typography color="error">{errorsStep1.coveredVillages.message}</Typography>}
+                                </FormControl>
+                            </Grid>
                         </Grid>
                     </>
                 )
             case 1:
                 return (
                     <>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="نام و نام خانوادگی"
-                                placeholder="نام و نام خانوادگی"
-                                name="fullName"
-                                value={formData.fullName}
-                                onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="نام پدر"
-                                placeholder="نام پدر"
-                                name="fatherName"
-                                value={formData.fatherName}
-                                onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <DatePicker
-                                scrollSensitive={true}
-                                calendar={persian}
-                                locale={persian_fa}
-                                calendarPosition="bottom-right"
-                                onChange={(e) => handleInputChange(e.unix, "birthDate")}
-                                render={
-                                    <TextField
-                                        fullWidth
-                                        size="small"
-                                        label="تاریخ تولد"
-                                        name="birthDate"
-                                        placeholder="تاریخ تولد"
-                                        value={formData.birthDate}
-                                    />
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="شماره شناسنامه"
-                                name="personalId"
-                                placeholder="شماره شناسنامه"
-                                value={formData.personalId}
-                                onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>جنسیت</InputLabel>
-                                <Select
-                                    label="جنسیت"
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">مرد</MenuItem>
-                                    <MenuItem value="0">زن</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>وضعیت تاهل</InputLabel>
-                                <Select
-                                    label="وضعیت تاهل"
-                                    name="maritalStatus"
-                                    value={formData.maritalStatus}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="0">مجرد</MenuItem>
-                                    <MenuItem value="1">متاهل</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Autocomplete
-                                options={cities}
-                                getOptionLabel={(option) => `${option.approved_name}`}
-                                value={formData.birthPlace || null}
-                                onChange={(event, newValue) => handleInputChange(newValue, "birthPlace")}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        size="small"
-                                        label="محل تولد"
-                                        name="birthPlace"
-                                        placeholder="محل تولد"
-                                    />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Autocomplete
-                                options={cities}
-                                getOptionLabel={(option) => `${option.approved_name}`}
-                                value={formData.issuancePlace || null}
-                                onChange={(event, newValue) => handleInputChange(newValue, "issuancePlace")}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        fullWidth
-                                        size="small"
-                                        label="محل صدور شناسنامه"
-                                        name="issuancePlace"
-                                        placeholder="محل صدور"
-                                    />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>وضعیت ایثار گری</InputLabel>
-                                <Select
-                                    label="وضعیت ایثار گری"
-                                    name="veteranStatus"
-                                    value={formData.veteranStatus}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">شهید</MenuItem>
-                                    <MenuItem value="2">جانباز</MenuItem>
-                                    <MenuItem value="3">رزمنده</MenuItem>
-                                    <MenuItem value="4">آزاده</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>نظام وظیفه</InputLabel>
-                                <Select
-                                    label="نظام وظیفه"
-                                    name="militaryService"
-                                    value={formData.militaryService}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="0">معاف</MenuItem>
-                                    <MenuItem value="1">انجام شده</MenuItem>
-                                    <MenuItem value="2">در حال انجام</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </>
-                )
-            case 2:
-                return <EducationStep formData={formData} handleEducationChange={handleArrayChange}
-                                      setFormData={setFormData}/>
-            case 3:
-                return <InsuranceStep formData={formData} handleInsuranceChange={handleArrayChange}
-                                      setFormData={setFormData} cities={cities}/>
-            case 4:
-                return <ChildrenStep formData={formData} handleChildChange={handleArrayChange}
-                                     setFormData={setFormData}/>
-            case 5:
-                return (
-                    <>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>نوع قرارداد</InputLabel>
-                                <Select
-                                    label="نوع قرارداد"
-                                    name="contractType"
-                                    value={formData.contractType}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">تمام وقت</MenuItem>
-                                    <MenuItem value="2">تمام وقت مشترک</MenuItem>
-                                    <MenuItem value="3">پاره وقت - ۱۷روز کارکرد</MenuItem>
-                                    <MenuItem value="4">۱۹ روز کارکرد</MenuItem>
-                                    <MenuItem value="5">۲۱ روز کارکرد</MenuItem>
-                                    <MenuItem value="6">۲۴ روز کارکرد</MenuItem>
-                                    <MenuItem value="7">۲۷ روز کارکرد</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>وضعیت استخدام</InputLabel>
-                                <Select
-                                    label="وضعیت استخدام"
-                                    name="employmentStatus"
-                                    value={formData.employmentStatus}
-                                    onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                                >
-                                    <MenuItem value="1">آزمون</MenuItem>
-                                    <MenuItem value="2">بدون آزمون</MenuItem>
-                                    <MenuItem value="3">دهیاری</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Box sx={{width: '120%'}}>
+                        <Grid container spacing={5}>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="fullName"
+                                    control={controlStep2}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            label="نام و نام خانوادگی"
+                                            placeholder="نام و نام خانوادگی"
+                                            error={!!errorsStep2.fullName}
+                                            helperText={errorsStep2.fullName ? errorsStep2.fullName.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="fatherName"
+                                    control={controlStep2}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            label="نام پدر"
+                                            placeholder="نام پدر"
+                                            error={!!errorsStep2.fatherName}
+                                            helperText={errorsStep2.fatherName ? errorsStep2.fatherName.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <DatePicker
                                     scrollSensitive={true}
                                     calendar={persian}
                                     locale={persian_fa}
                                     calendarPosition="bottom-right"
-                                    onChange={(e) => handleInputChange(e.unix, "contractStart")}
+                                    onChange={(e) => handleInputChange(e.unix, "birthDate")}
                                     render={
                                         <TextField
                                             fullWidth
                                             size="small"
-                                            label="شروع قرارداد"
-                                            name="contractStart"
-                                            placeholder="شروع قرارداد"
-                                            value={formData.contractStart}
+                                            label="تاریخ تولد"
+                                            name="birthDate"
+                                            placeholder="تاریخ تولد"
+                                            error={!!errorsStep2.birthDate}
+                                            helperText={errorsStep2.birthDate ? errorsStep2.birthDate.message : ''}
                                         />
                                     }
                                 />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <DatePicker
-                                style={{width: "100%"}}
-                                scrollSensitive={true}
-                                calendar={persian}
-                                locale={persian_fa}
-                                calendarPosition="bottom-right"
-                                onChange={(e) => handleInputChange(e.unix, "contractEnd")}
-                                render={
-                                    <TextField
-                                        fullWidth
-                                        size="small"
-                                        label="پایان قرارداد"
-                                        name="contractEnd"
-                                        placeholder="پایان قرارداد"
-                                        value={formData.contractEnd}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="personalId"
+                                    control={controlStep2}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            label="شماره شناسنامه"
+                                            placeholder="شماره شناسنامه"
+                                            error={!!errorsStep2.personalId}
+                                            helperText={errorsStep2.personalId ? errorsStep2.personalId.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>جنسیت</InputLabel>
+                                    <Controller
+                                        name="gender"
+                                        control={controlStep2}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="جنسیت"
+                                                error={!!errorsStep2.gender}
+                                            >
+                                                <MenuItem value="1">مرد</MenuItem>
+                                                <MenuItem value="0">زن</MenuItem>
+                                            </Select>
+                                        )}
                                     />
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="شرح قرارداد"
-                                placeholder="شرح قرارداد"
-                                name="contractDescription"
-                                value={formData.contractDescription}
-                                onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="عنوان قرارداد"
-                                placeholder="عنوان قرارداد"
-                                name="contractTitle"
-                                value={formData.contractTitle}
-                                onChange={(e) => handleInputChange(e.target.value, e.target.name)}
-                            />
+                                    {errorsStep2.gender && <Typography color="error">{errorsStep2.gender.message}</Typography>}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>وضعیت تاهل</InputLabel>
+                                    <Controller
+                                        name="maritalStatus"
+                                        control={controlStep2}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="وضعیت تاهل"
+                                                error={!!errorsStep2.maritalStatus}
+                                            >
+                                                <MenuItem value="0">مجرد</MenuItem>
+                                                <MenuItem value="1">متاهل</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errorsStep2.maritalStatus && <Typography color="error">{errorsStep2.maritalStatus.message}</Typography>}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="birthPlace"
+                                    control={controlStep2}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            label="محل تولد"
+                                            placeholder="محل تولد"
+                                            error={!!errorsStep2.birthPlace}
+                                            helperText={errorsStep2.birthPlace ? errorsStep2.birthPlace.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="issuancePlace"
+                                    control={controlStep2}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            fullWidth
+                                            size="small"
+                                            label="محل صدور شناسنامه"
+                                            placeholder="محل صدور"
+                                            error={!!errorsStep2.issuancePlace}
+                                            helperText={errorsStep2.issuancePlace ? errorsStep2.issuancePlace.message : ''}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>وضعیت ایثارگری</InputLabel>
+                                    <Controller
+                                        name="veteranStatus"
+                                        control={controlStep2}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="وضعیت ایثارگری"
+                                                error={!!errorsStep2.veteranStatus}
+                                            >
+                                                <MenuItem value="1">شهید</MenuItem>
+                                                <MenuItem value="2">جانباز</MenuItem>
+                                                <MenuItem value="3">رزمنده</MenuItem>
+                                                <MenuItem value="4">آزاده</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errorsStep2.veteranStatus && <Typography color="error">{errorsStep2.veteranStatus.message}</Typography>}
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>نظام وظیفه</InputLabel>
+                                    <Controller
+                                        name="militaryService"
+                                        control={controlStep2}
+                                        render={({ field }) => (
+                                            <Select
+                                                {...field}
+                                                label="نظام وظیفه"
+                                                error={!!errorsStep2.militaryService}
+                                            >
+                                                <MenuItem value="0">معاف</MenuItem>
+                                                <MenuItem value="1">انجام شده</MenuItem>
+                                                <MenuItem value="2">در حال انجام</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                    {errorsStep2.militaryService && <Typography color="error">{errorsStep2.militaryService.message}</Typography>}
+                                </FormControl>
+                            </Grid>
                         </Grid>
                     </>
                 )
+            // سایر مراحل
             default:
                 return 'Unknown step'
         }
@@ -511,10 +465,10 @@ const StepperForm = () => {
                                         </Button>
                                         <Button
                                             variant="contained"
-                                            onClick={handleNext}
+                                            onClick={activeStep === 0 ? handleNextStep1 : handleNextStep2}
                                             endIcon={
                                                 activeStep === steps.length - 1 ? (
-                                                    <i className="ri-check-line"/>
+                                                    <i className="ri-check-line" />
                                                 ) : (
                                                     <DirectionalIcon
                                                         ltrIconClass="ri-arrow-right-line"
