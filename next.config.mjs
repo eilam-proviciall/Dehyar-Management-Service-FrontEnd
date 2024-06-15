@@ -5,8 +5,8 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
-        source: '/',
-        destination: '/en',
+        source: '/en',
+        destination: '/login',
         permanent: true,
         locale: false
       }

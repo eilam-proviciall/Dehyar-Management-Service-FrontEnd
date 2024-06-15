@@ -29,7 +29,7 @@ export async function middleware(request) {
     //     return _redirect(HOME_PAGE_URL, request);
     // }
 
-    return NextResponse.next();
+    // return NextResponse.next();
 }
 
 export const config = {
