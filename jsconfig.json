@@ -45,6 +45,9 @@
       ],
       "@reducers/*": [
         "./src/reducers/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
       ]
     }
   },

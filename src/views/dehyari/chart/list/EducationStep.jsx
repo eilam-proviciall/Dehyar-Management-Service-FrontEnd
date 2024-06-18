@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from "@mui/material/Grid";
 import Repeater from "@core/components/Repeater";
 import Box from "@mui/material/Box";
-import {Collapse, Icon} from "@mui/material";
+import { Collapse, Icon, FormHelperText } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
@@ -16,95 +16,31 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
+import DirectionalIcon from "@components/DirectionalIcon";
 
-function EducationStep({formData, handleEducationChange, setFormData}) {
+const EducationStep = ({ formData, handleEducationChange, setFormData }) => {
+    const { control, handleSubmit, setValue, trigger, formState: { errors } } = useForm({
+        defaultValues: {
+            educations: formData.educations
+        }
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "educations"
+    });
+
     const handleAddEducation = () => {
-        setFormData({
-            ...formData,
-            educations: [
-                ...formData.educations,
-                {
-                    degree: '',
-                    fieldOfStudy: '',
-                    graduationDate: ''
-                }
-            ]
+        append({
+            degree: '',
+            fieldOfStudy: '',
+            graduationDate: ''
         });
     };
-    const education_degree = [
-        {
-            "title": "بی سواد",
-            "value": 41
-        },
-        {
-            "title": "سکل",
-            "value": 42
-        },
-        {
-            "title": "دیپلم",
-            "value": 43
-        },
-        {
-            "title": "کاردانی",
-            "value": 44
-        },
-        {
-            "title": "کارشناسی",
-            "value": 45
-        },
-        {
-            "title": "کارشناسی ارشد",
-            "value": 46
-        },
-        {
-            "title": "دکترا",
-            "value": 47
-        }
-    ]
-    const field_of_study = [
-        {
-            "title": "مهندسی نرم‌افزار",
-            "value": 51
-        },
-        {
-            "title": "مهندسی برق",
-            "value": 52
-        },
-        {
-            "title": "مهندسی مکانیک",
-            "value": 53
-        },
-        {
-            "title": "پزشکی",
-            "value": 54
-        },
-        {
-            "title": "حقوق",
-            "value": 55
-        },
-        {
-            "title": "مدیریت",
-            "value": 56
-        },
-        {
-            "title": "اقتصاد",
-            "value": 57
-        },
-        {
-            "title": "ریاضی",
-            "value": 58
-        },
-        {
-            "title": "فیزیک",
-            "value": 59
-        },
-        {
-            "title": "شیمی",
-            "value": 60
-        }
-    ];
 
     const handleRemoveEducation = (index) => {
+        remove(index);
         const updatedEducations = formData.educations.filter((_, i) => i !== index);
         setFormData({
             ...formData,
@@ -112,80 +48,145 @@ function EducationStep({formData, handleEducationChange, setFormData}) {
         });
     };
 
+    const onSubmit = (data) => {
+        setFormData({
+            ...formData,
+            educations: data.educations
+        });
+    };
+
+    const education_degree = [
+        { "title": "بی سواد", "value": 41 },
+        { "title": "سکل", "value": 42 },
+        { "title": "دیپلم", "value": 43 },
+        { "title": "کاردانی", "value": 44 },
+        { "title": "کارشناسی", "value": 45 },
+        { "title": "کارشناسی ارشد", "value": 46 },
+        { "title": "دکترا", "value": 47 }
+    ];
+
+    const field_of_study = [
+        { "title": "مهندسی نرم‌افزار", "value": 51 },
+        { "title": "مهندسی برق", "value": 52 },
+        { "title": "مهندسی مکانیک", "value": 53 },
+        { "title": "پزشکی", "value": 54 },
+        { "title": "حقوق", "value": 55 },
+        { "title": "مدیریت", "value": 56 },
+        { "title": "اقتصاد", "value": 57 },
+        { "title": "ریاضی", "value": 58 },
+        { "title": "فیزیک", "value": 59 },
+        { "title": "شیمی", "value": 60 }
+    ];
+
     return (
-        <>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12} spacing={30}>
-                <Repeater count={formData.educations.length}>
+                <Repeater count={fields.length}>
                     {i => {
                         const Tag = i === 0 ? Box : Collapse;
                         return (
-                            <Tag key={i} className="repeater-wrapper" {...(i !== 0 ? {in: true} : {})}>
-                                <Card sx={{mb: 2}}>
+                            <Tag key={fields[i].id} className="repeater-wrapper" {...(i !== 0 ? { in: true } : {})}>
+                                <Card sx={{ mb: 2 }}>
                                     <CardContent>
                                         <Grid container>
-                                            <Grid item lg={12} md={5} xs={12} sx={{px: 4, my: {lg: 0, xs: 4}}} pt={3}>
+                                            <Grid item lg={12} md={5} xs={12} sx={{ px: 4, my: { lg: 0, xs: 4 } }} pt={3}>
                                                 <Grid container spacing={2}>
                                                     <Grid item xs={12} sm={3}>
-                                                        <FormControl fullWidth size="small">
+                                                        <FormControl fullWidth size="small" error={!!errors.educations?.[i]?.degree}>
                                                             <InputLabel>مدرک تحصیلی</InputLabel>
-                                                            <Select
-                                                                label="مدرک تحصیلی"
-                                                                name="degree"
-                                                                value={formData.educations[i].degree}
-                                                                onChange={(e) => handleEducationChange(i, e.target.value , "degree")}
-                                                            >
-                                                                {education_degree.map((degree) => (
-                                                                    <MenuItem key={degree.value} value={degree.value}>
-                                                                        {degree.title}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
+                                                            <Controller
+                                                                name={`educations.${i}.degree`}
+                                                                control={control}
+                                                                rules={{ required: "این فیلد الزامی است" }}
+                                                                render={({ field }) => (
+                                                                    <Select
+                                                                        {...field}
+                                                                        label="مدرک تحصیلی"
+                                                                        onChange={(e) => {
+                                                                            field.onChange(e);
+                                                                            handleEducationChange(i, e.target.value, "degree");
+                                                                        }}
+                                                                        value={formData.educations[i].degree}
+                                                                    >
+                                                                        {education_degree.map((degree) => (
+                                                                            <MenuItem key={degree.value} value={degree.value}>
+                                                                                {degree.title}
+                                                                            </MenuItem>
+                                                                        ))}
+                                                                    </Select>
+                                                                )}
+                                                            />
+                                                            {errors.educations?.[i]?.degree && <FormHelperText>{errors.educations[i].degree.message}</FormHelperText>}
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <FormControl fullWidth size="small">
+                                                        <FormControl fullWidth size="small" error={!!errors.educations?.[i]?.fieldOfStudy}>
                                                             <InputLabel>رشته تحصیلی</InputLabel>
-                                                            <Select
-                                                                label="رشته تحصیلی"
-                                                                name="fieldOfStudy"
-                                                                value={formData.educations[i].fieldOfStudy}
-                                                                onChange={(e) => handleEducationChange(i, e.target.value , "fieldOfStudy")}
-                                                            >
-                                                                {field_of_study.map((field) => (
-                                                                    <MenuItem key={field.value} value={field.value}>
-                                                                        {field.title}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
+                                                            <Controller
+                                                                name={`educations.${i}.fieldOfStudy`}
+                                                                control={control}
+                                                                rules={{ required: "این فیلد الزامی است" }}
+                                                                render={({ field }) => (
+                                                                    <Select
+                                                                        {...field}
+                                                                        label="رشته تحصیلی"
+                                                                        onChange={(e) => {
+                                                                            field.onChange(e);
+                                                                            handleEducationChange(i, e.target.value, "fieldOfStudy");
+                                                                        }}
+                                                                        value={formData.educations[i].fieldOfStudy}
+                                                                    >
+                                                                        {field_of_study.map((field) => (
+                                                                            <MenuItem key={field.value} value={field.value}>
+                                                                                {field.title}
+                                                                            </MenuItem>
+                                                                        ))}
+                                                                    </Select>
+                                                                )}
+                                                            />
+                                                            {errors.educations?.[i]?.fieldOfStudy && <FormHelperText>{errors.educations[i].fieldOfStudy.message}</FormHelperText>}
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
-                                                        <DatePicker
-                                                            scrollSensitive={true}
-                                                            calendar={persian}
-                                                            locale={persian_fa}
-                                                            calendarPosition="bottom-right"
-                                                            onChange={(e) => handleEducationChange(i, e.unix, 'graduationDate')}
-                                                            render={
-                                                                <TextField
-                                                                    size="small"
-                                                                    fullWidth
-                                                                    label="تاریخ اخذ مدرک تحصیلی"
-                                                                    name="graduationDate"
+                                                        <Controller
+                                                            name={`educations.${i}.graduationDate`}
+                                                            control={control}
+                                                            rules={{ required: "این فیلد الزامی است" }}
+                                                            render={({ field }) => (
+                                                                <DatePicker
+                                                                    {...field}
+                                                                    scrollSensitive={true}
+                                                                    calendar={persian}
+                                                                    locale={persian_fa}
+                                                                    calendarPosition="bottom-right"
+                                                                    onChange={(e) => {
+                                                                        field.onChange(e.unix);
+                                                                        handleEducationChange(i, e.unix, 'graduationDate');
+                                                                    }}
                                                                     value={formData.educations[i].graduationDate}
+                                                                    render={
+                                                                        <TextField
+                                                                            size="small"
+                                                                            fullWidth
+                                                                            label="تاریخ اخذ مدرک تحصیلی"
+                                                                            name="graduationDate"
+                                                                            error={!!errors.educations?.[i]?.graduationDate}
+                                                                            helperText={errors.educations?.[i]?.graduationDate ? errors.educations[i].graduationDate.message : ''}
+                                                                        />
+                                                                    }
                                                                 />
-                                                            }
+                                                            )}
                                                         />
                                                     </Grid>
                                                     <Grid item xs={12} sm={3}>
                                                         <IconButton
-                                                            sx={{ml: 15}}
+                                                            sx={{ ml: 15 }}
                                                             color="error"
                                                             aria-label="delete"
                                                             size="large"
                                                             onClick={() => handleRemoveEducation(i)}
                                                         >
-                                                            <DeleteIcon fontSize="inherit"/>
+                                                            <DeleteIcon fontSize="inherit" />
                                                         </IconButton>
                                                     </Grid>
                                                 </Grid>
@@ -197,19 +198,36 @@ function EducationStep({formData, handleEducationChange, setFormData}) {
                         );
                     }}
                 </Repeater>
-                <Grid item xs={12} sx={{px: 0}} pt={5}>
+                <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                     <Button
                         size="small"
                         variant="contained"
-                        startIcon={<Icon icon="mdi:plus" fontSize="20"/>}
+                        startIcon={<Icon icon="mdi:plus" fontSize="20" />}
                         onClick={handleAddEducation}
                     >
                         افزودن
                     </Button>
                 </Grid>
+                <Grid item xs={12} className='flex justify-between' pt={5}>
+                    <Button
+                        variant='outlined'
+                        onClick={handleBack}
+                        color='secondary'
+                        startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
+                    >
+                        مرحله قبل
+                    </Button>
+                    <Button
+                        variant='contained'
+                        type='submit'
+                        endIcon={<DirectionalIcon ltrIconClass='ri-arrow-right-line' rtlIconClass='ri-arrow-left-line' />}
+                    >
+                        مرحله بعد
+                    </Button>
+                </Grid>
             </Grid>
-        </>
+        </form>
     );
-}
+};
 
 export default EducationStep;

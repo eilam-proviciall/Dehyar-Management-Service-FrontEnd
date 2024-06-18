@@ -1,20 +1,34 @@
-import React, {useMemo, useState} from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Button from "@mui/material/Button";
-import {
-    MaterialReactTable,
-    MRT_ActionMenuItem,
-    useMaterialReactTable,
-} from 'material-react-table';
+import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import Box from "@mui/material/Box";
 import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
 import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
-import {db} from "@/fake-db/dehyari/ahkam";
 import Chip from "@mui/material/Chip";
 import { Divider } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
-import PersonOffOutlinedIcon from '@mui/icons-material/PersonOffOutlined';
+import axios from "axios";
+import { humanResources } from "@/Services/humanResources";
+import jobTitles from '@data/jobTitles.json';
+
 function DehyariList(props) {
-    const tableData = useMemo(() => db, []); // Memoize table data
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axios.get(humanResources(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+            },
+        }).then((response) => {
+            console.log(response.data);
+            setData(response.data);
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
+    }, []);
+
+    const tableData = useMemo(() => data, [data]);
     const {
         dispatch,
         handleAddEventSidebarToggle
@@ -22,8 +36,7 @@ function DehyariList(props) {
     const buttonProps = {
         variant: 'contained',
         children: 'ثبت اطلاعات پرسنلی'
-
-    }
+    };
 
     const [expandedRows, setExpandedRows] = useState({});
 
@@ -33,6 +46,7 @@ function DehyariList(props) {
             [rowId]: !prevState[rowId]
         }));
     };
+
     const getChipColor = (role) => {
         switch (role) {
             case 'ناقض':
@@ -47,55 +61,55 @@ function DehyariList(props) {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'position',
+                accessorKey: 'job_type_id',
                 header: 'پست سازمانی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-            }, {
-                accessorKey: 'fullName',
-                header: 'نام و نام خانوادگی',
-                size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{jobTitles[cell.getValue()]}</div>,
             },
             {
-                accessorKey: 'nationalID',
+                accessorKey: 'full_name',
+                header: 'نام و نام خانوادگی',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            },
+            {
+                accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-            }, {
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            },
+            {
                 accessorKey: 'contractType',
                 header: 'نوع قرار داد',
                 size: 150,
-                Cell: ({cell}) => {
+                Cell: ({ cell }) => {
                     const role = cell.getValue();
                     const color = getChipColor(role);
                     return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={role} color={color}/>
+                        <div style={{ textAlign: 'right' }}>
+                            <Chip label={role} color={color} />
                         </div>
                     );
                 },
             },
-
-            {
-                accessorKey: 'operation',
-                header: 'عملیات',
-                size: 150,
-                Cell: ({cell}) => {
-                    const role = cell.getValue();
-                    const color = getChipColor(role);
-                    return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={role} color={color}/>
-                        </div>
-                    );
-                },
-            },
+            // {
+            //     accessorKey: 'operation',
+            //     header: 'عملیات',
+            //     size: 150,
+            //     Cell: ({ cell }) => {
+            //         const role = cell.getValue();
+            //         const color = getChipColor(role);
+            //         return (
+            //             <div style={{ textAlign: 'right' }}>
+            //                 <Chip label={role} color={color} />
+            //             </div>
+            //         );
+            //     },
+            // },
         ],
         [expandedRows]
     );
 
-    let renderTopToolbarCustomActions;
     const table = useMaterialReactTable({
         columns,
         data: tableData,
@@ -107,7 +121,7 @@ function DehyariList(props) {
             ...internalMenuItems,
             <Divider key="divider" ma />,
         ],
-        renderTopToolbarCustomActions: ({table}) => (
+        renderTopToolbarCustomActions: ({ table }) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -116,13 +130,18 @@ function DehyariList(props) {
                     flexWrap: 'wrap',
                 }}
             >
-                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog}/>
+                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog} />
             </Box>
         ),
     });
+
+    if (loading) {
+        return <div>در حال بارگذاری...</div>;
+    }
+
     return (
         <div>
-            <MaterialReactTable table={table}/>
+            <MaterialReactTable table={table} />
         </div>
     );
 }

@@ -19,7 +19,8 @@ import {
     StepLabel,
     Stepper,
     TextField,
-    Typography
+    Typography,
+    FormHelperText
 } from '@mui/material'
 
 // Third-party Imports
@@ -39,6 +40,9 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import { minLength, object, string } from 'valibot'
 import { Controller, useForm } from "react-hook-form"
 import { valibotResolver } from "@hookform/resolvers/valibot"
+
+//Data
+import jobTitles from '@data/jobTitles.json';
 
 // Vars
 const steps = [
@@ -80,11 +84,18 @@ const defaultFormData = {
         employmentStartDate: '',
         employmentEndtDate: ''
     }],
+    contractType: '',
+    employmentStatus: '',
+    contractStart: '',
+    contractEnd: '',
+    descriptionContract: '',
+    titleContract: ''
 }
 
 const StepperForm = () => {
     const [activeStep, setActiveStep] = useState(0)
     const { cities, isLoading, error } = useFetchCities()
+    const [formData, setFormData] = useState(defaultFormData)
 
     const userSchemaStep1 = object({
         jobTitle: string([minLength(1, 'این فیلد الزامی است')]),
@@ -104,14 +115,9 @@ const StepperForm = () => {
         militaryService: string([minLength(1, 'این فیلد الزامی است')]),
     });
 
-    const { control: controlStep1, handleSubmit: handleSubmitStep1, formState: { errors: errorsStep1 } } = useForm({
-        resolver: valibotResolver(userSchemaStep1),
-        defaultValues: defaultFormData
-    });
-
-    const { control: controlStep2, handleSubmit: handleSubmitStep2, formState: { errors: errorsStep2 } } = useForm({
-        resolver: valibotResolver(userSchemaStep2),
-        defaultValues: defaultFormData
+    const { control, handleSubmit, setValue, formState: { errors }, trigger } = useForm({
+        resolver: valibotResolver(activeStep === 0 ? userSchemaStep1 : userSchemaStep2),
+        defaultValues: formData
     });
 
     const handleReset = () => {
@@ -119,56 +125,77 @@ const StepperForm = () => {
         setFormData(defaultFormData)
     }
 
-    const handleNextStep1 = () => {
-        handleSubmitStep1(() => {
+    const handleNext = async () => {
+        // const isStepValid = await handleSubmit(onSubmit)();
+        // if (isStepValid) {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        })();
-    }
-
-    const handleNextStep2 = () => {
-        handleSubmitStep2(() => {
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        })();
+        // }
     }
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
     }
 
-    const renderStepContent = (activeStep) => {
-        switch (activeStep) {
+    const handleInputChange = (name, value) => {
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+        setValue(name, value);
+        trigger(name); // Trigger validation on change
+    };
+
+    const handleSubmitForm = () => {
+        // Send formData to API
+        fetch('/api/endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                toast.success('Form submitted successfully!');
+                handleReset();
+            })
+            .catch(error => {
+                toast.error('Form submission failed!');
+            });
+    };
+
+    const renderStepContent = (step) => {
+        switch (step) {
             case 0:
                 return (
-                    <>
+                    <form key={0} onSubmit={handleSubmit(handleNext)}>
                         <Grid container spacing={5}>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
-                                    <InputLabel>نوع قرارداد </InputLabel>
+                                <FormControl fullWidth size="small" error={!!errors.jobTitle}>
+                                    <InputLabel>پست سازمانی</InputLabel>
                                     <Controller
                                         name="jobTitle"
-                                        control={controlStep1}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
-                                                label="نوع قرارداد"
-                                                error={!!errorsStep1.jobTitle}
+                                                label="پست سازمانی"
+                                                onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                                                value={formData.jobTitle}
                                             >
-                                                <MenuItem value="1">دهیار</MenuItem>
-                                                <MenuItem value="2">کارشناس امور حقوقی و قراردادها - مشترک</MenuItem>
-                                                <MenuItem value="3">مسئول امور مالی</MenuItem>
-                                                <MenuItem value="4">مسئول فنی عمرانی و خدمات روستا</MenuItem>
-                                                <MenuItem value="5">کارگر خدماتی</MenuItem>
-                                                <MenuItem value="6">راننده</MenuItem>
+                                                {Object.entries(jobTitles).map(([value, label]) => (
+                                                    <MenuItem key={value} value={value}>{label}</MenuItem>
+                                                ))}
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep1.jobTitle && <Typography color="error">{errorsStep1.jobTitle.message}</Typography>}
+                                    {errors.jobTitle && <FormHelperText>{errors.jobTitle.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="nationalCode"
-                                    control={controlStep1}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -177,23 +204,26 @@ const StepperForm = () => {
                                             type="text"
                                             label="کدملی"
                                             placeholder="کد ملی"
-                                            error={!!errorsStep1.nationalCode}
-                                            helperText={errorsStep1.nationalCode ? errorsStep1.nationalCode.message : ''}
+                                            error={!!errors.nationalCode}
+                                            helperText={errors.nationalCode ? errors.nationalCode.message : ''}
+                                            onChange={(e) => handleInputChange('nationalCode', e.target.value)}
+                                            value={formData.nationalCode}
                                         />
                                     )}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.coveredVillages}>
                                     <InputLabel>دهیاری های تحت پوشش</InputLabel>
                                     <Controller
                                         name="coveredVillages"
-                                        control={controlStep1}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
                                                 label="دهیاری های تحت پوشش"
-                                                error={!!errorsStep1.coveredVillages}
+                                                onChange={(e) => handleInputChange('coveredVillages', e.target.value)}
+                                                value={formData.coveredVillages}
                                             >
                                                 <MenuItem value="1">چم جنگل</MenuItem>
                                                 <MenuItem value="2">چم شیر</MenuItem>
@@ -203,20 +233,37 @@ const StepperForm = () => {
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep1.coveredVillages && <Typography color="error">{errorsStep1.coveredVillages.message}</Typography>}
+                                    {errors.coveredVillages && <FormHelperText>{errors.coveredVillages.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
+                            <Grid item xs={12} className='flex justify-between'>
+                                <Button
+                                    variant='outlined'
+                                    disabled
+                                    color='secondary'
+                                    startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
+                                >
+                                    مرحله قبل
+                                </Button>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                    endIcon={<DirectionalIcon ltrIconClass='ri-arrow-right-line' rtlIconClass='ri-arrow-left-line' />}
+                                >
+                                    مرحله بعد
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </>
+                    </form>
                 )
             case 1:
                 return (
-                    <>
+                    <form key={1} onSubmit={handleSubmit(handleNext)}>
                         <Grid container spacing={5}>
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="fullName"
-                                    control={controlStep2}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -224,8 +271,10 @@ const StepperForm = () => {
                                             size="small"
                                             label="نام و نام خانوادگی"
                                             placeholder="نام و نام خانوادگی"
-                                            error={!!errorsStep2.fullName}
-                                            helperText={errorsStep2.fullName ? errorsStep2.fullName.message : ''}
+                                            error={!!errors.fullName}
+                                            helperText={errors.fullName ? errors.fullName.message : ''}
+                                            onChange={(e) => handleInputChange('fullName', e.target.value)}
+                                            value={formData.fullName}
                                         />
                                     )}
                                 />
@@ -233,7 +282,7 @@ const StepperForm = () => {
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="fatherName"
-                                    control={controlStep2}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -241,8 +290,10 @@ const StepperForm = () => {
                                             size="small"
                                             label="نام پدر"
                                             placeholder="نام پدر"
-                                            error={!!errorsStep2.fatherName}
-                                            helperText={errorsStep2.fatherName ? errorsStep2.fatherName.message : ''}
+                                            error={!!errors.fatherName}
+                                            helperText={errors.fatherName ? errors.fatherName.message : ''}
+                                            onChange={(e) => handleInputChange('fatherName', e.target.value)}
+                                            value={formData.fatherName}
                                         />
                                     )}
                                 />
@@ -253,7 +304,8 @@ const StepperForm = () => {
                                     calendar={persian}
                                     locale={persian_fa}
                                     calendarPosition="bottom-right"
-                                    onChange={(e) => handleInputChange(e.unix, "birthDate")}
+                                    onChange={(date) => handleInputChange('birthDate', date.unix())}
+                                    value={formData.birthDate}
                                     render={
                                         <TextField
                                             fullWidth
@@ -261,8 +313,8 @@ const StepperForm = () => {
                                             label="تاریخ تولد"
                                             name="birthDate"
                                             placeholder="تاریخ تولد"
-                                            error={!!errorsStep2.birthDate}
-                                            helperText={errorsStep2.birthDate ? errorsStep2.birthDate.message : ''}
+                                            error={!!errors.birthDate}
+                                            helperText={errors.birthDate ? errors.birthDate.message : ''}
                                         />
                                     }
                                 />
@@ -270,7 +322,7 @@ const StepperForm = () => {
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="personalId"
-                                    control={controlStep2}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -278,56 +330,60 @@ const StepperForm = () => {
                                             size="small"
                                             label="شماره شناسنامه"
                                             placeholder="شماره شناسنامه"
-                                            error={!!errorsStep2.personalId}
-                                            helperText={errorsStep2.personalId ? errorsStep2.personalId.message : ''}
+                                            error={!!errors.personalId}
+                                            helperText={errors.personalId ? errors.personalId.message : ''}
+                                            onChange={(e) => handleInputChange('personalId', e.target.value)}
+                                            value={formData.personalId}
                                         />
                                     )}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.gender}>
                                     <InputLabel>جنسیت</InputLabel>
                                     <Controller
                                         name="gender"
-                                        control={controlStep2}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
                                                 label="جنسیت"
-                                                error={!!errorsStep2.gender}
+                                                onChange={(e) => handleInputChange('gender', e.target.value)}
+                                                value={formData.gender}
                                             >
                                                 <MenuItem value="1">مرد</MenuItem>
                                                 <MenuItem value="0">زن</MenuItem>
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep2.gender && <Typography color="error">{errorsStep2.gender.message}</Typography>}
+                                    {errors.gender && <FormHelperText>{errors.gender.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.maritalStatus}>
                                     <InputLabel>وضعیت تاهل</InputLabel>
                                     <Controller
                                         name="maritalStatus"
-                                        control={controlStep2}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
                                                 label="وضعیت تاهل"
-                                                error={!!errorsStep2.maritalStatus}
+                                                onChange={(e) => handleInputChange('maritalStatus', e.target.value)}
+                                                value={formData.maritalStatus}
                                             >
                                                 <MenuItem value="0">مجرد</MenuItem>
                                                 <MenuItem value="1">متاهل</MenuItem>
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep2.maritalStatus && <Typography color="error">{errorsStep2.maritalStatus.message}</Typography>}
+                                    {errors.maritalStatus && <FormHelperText>{errors.maritalStatus.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="birthPlace"
-                                    control={controlStep2}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -335,8 +391,10 @@ const StepperForm = () => {
                                             size="small"
                                             label="محل تولد"
                                             placeholder="محل تولد"
-                                            error={!!errorsStep2.birthPlace}
-                                            helperText={errorsStep2.birthPlace ? errorsStep2.birthPlace.message : ''}
+                                            error={!!errors.birthPlace}
+                                            helperText={errors.birthPlace ? errors.birthPlace.message : ''}
+                                            onChange={(e) => handleInputChange('birthPlace', e.target.value)}
+                                            value={formData.birthPlace}
                                         />
                                     )}
                                 />
@@ -344,7 +402,7 @@ const StepperForm = () => {
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     name="issuancePlace"
-                                    control={controlStep2}
+                                    control={control}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
@@ -352,23 +410,26 @@ const StepperForm = () => {
                                             size="small"
                                             label="محل صدور شناسنامه"
                                             placeholder="محل صدور"
-                                            error={!!errorsStep2.issuancePlace}
-                                            helperText={errorsStep2.issuancePlace ? errorsStep2.issuancePlace.message : ''}
+                                            error={!!errors.issuancePlace}
+                                            helperText={errors.issuancePlace ? errors.issuancePlace.message : ''}
+                                            onChange={(e) => handleInputChange('issuancePlace', e.target.value)}
+                                            value={formData.issuancePlace}
                                         />
                                     )}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.veteranStatus}>
                                     <InputLabel>وضعیت ایثارگری</InputLabel>
                                     <Controller
                                         name="veteranStatus"
-                                        control={controlStep2}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
                                                 label="وضعیت ایثارگری"
-                                                error={!!errorsStep2.veteranStatus}
+                                                onChange={(e) => handleInputChange('veteranStatus', e.target.value)}
+                                                value={formData.veteranStatus}
                                             >
                                                 <MenuItem value="1">شهید</MenuItem>
                                                 <MenuItem value="2">جانباز</MenuItem>
@@ -377,20 +438,21 @@ const StepperForm = () => {
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep2.veteranStatus && <Typography color="error">{errorsStep2.veteranStatus.message}</Typography>}
+                                    {errors.veteranStatus && <FormHelperText>{errors.veteranStatus.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth size="small">
+                                <FormControl fullWidth size="small" error={!!errors.militaryService}>
                                     <InputLabel>نظام وظیفه</InputLabel>
                                     <Controller
                                         name="militaryService"
-                                        control={controlStep2}
+                                        control={control}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
                                                 label="نظام وظیفه"
-                                                error={!!errorsStep2.militaryService}
+                                                onChange={(e) => handleInputChange('militaryService', e.target.value)}
+                                                value={formData.militaryService}
                                             >
                                                 <MenuItem value="0">معاف</MenuItem>
                                                 <MenuItem value="1">انجام شده</MenuItem>
@@ -398,13 +460,189 @@ const StepperForm = () => {
                                             </Select>
                                         )}
                                     />
-                                    {errorsStep2.militaryService && <Typography color="error">{errorsStep2.militaryService.message}</Typography>}
+                                    {errors.militaryService && <FormHelperText>{errors.militaryService.message}</FormHelperText>}
                                 </FormControl>
                             </Grid>
+                            <Grid item xs={12} className='flex justify-between'>
+                                <Button
+                                    variant='outlined'
+                                    onClick={handleBack}
+                                    color='secondary'
+                                    startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
+                                >
+                                    مرحله قبل
+                                </Button>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                    endIcon={<DirectionalIcon ltrIconClass='ri-arrow-right-line' rtlIconClass='ri-arrow-left-line' />}
+                                >
+                                    مرحله بعد
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                )
+            case 2:
+                return (
+                    <EducationStep
+                        formData={formData}
+                        handleEducationChange={(value, name) => handleInputChange(name, value)}
+                        setFormData={setFormData}
+                    />
+                );
+            case 3:
+                return (
+                    <InsuranceStep
+                        formData={formData}
+                        handleInsuranceChange={(value, name) => handleInputChange(name, value)}
+                        setFormData={setFormData}
+                        cities={cities}
+                    />
+                );
+            case 4:
+                return (
+                    <ChildrenStep
+                        formData={formData}
+                        handleChildChange={(value, name) => handleInputChange(name, value)}
+                        setFormData={setFormData}
+                    />
+                );
+            case 5:
+                return (
+                    <>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>نوع قرارداد قرارداد</InputLabel>
+                                <Select
+                                    label="نوع قرارداد قرارداد"
+                                    name="contractType"
+                                    value={formData.contractType}
+                                    onChange={(e) => handleInputChange('contractType', e.target.value)}
+                                >
+                                    <MenuItem value="1">تمام وقت</MenuItem>
+                                    <MenuItem value="2">تمام وقت مشترک</MenuItem>
+                                    <MenuItem value="3">پاره وقت - ۱۷روز کارکرد</MenuItem>
+                                    <MenuItem value="4">۱۹ روز کارکرد</MenuItem>
+                                    <MenuItem value="5">۲۱ روز کارکرد</MenuItem>
+                                    <MenuItem value="6">۲۴ روز کارکرد</MenuItem>
+                                    <MenuItem value="7">۲۷ روز کارکرد</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel>وضعیت استخدام</InputLabel>
+                                <Select
+                                    label="وضعیت استخدام"
+                                    name="employmentStatus"
+                                    value={formData.employmentStatus}
+                                    onChange={(e) => handleInputChange('employmentStatus', e.target.value)}
+                                >
+                                    <MenuItem value="1">آزمون</MenuItem>
+                                    <MenuItem value="2">بدون آزمون</MenuItem>
+                                    <MenuItem value="3">دهیاری</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Box sx={{ width: '120%' }}>
+                                <DatePicker
+                                    scrollSensitive={true}
+                                    calendar={persian}
+                                    locale={persian_fa}
+                                    calendarPosition="bottom-right"
+                                    onChange={(date) => handleInputChange('contractStart', date.unix())}
+                                    value={formData.contractStart}
+                                    render={
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label="شروع قرارداد"
+                                            name="contractStart"
+                                            placeholder="شروع قرارداد"
+                                        />
+                                    }
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <DatePicker
+                                style={{width:"100%"}}
+                                scrollSensitive={true}
+                                calendar={persian}
+                                locale={persian_fa}
+                                calendarPosition="bottom-right"
+                                onChange={(date) => handleInputChange('contractEnd', date.unix())}
+                                value={formData.contractEnd}
+                                render={
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        label="پایان قرارداد"
+                                        name="contractEnd"
+                                        placeholder="پایان قرارداد"
+                                    />
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <DatePicker
+                                style={{width:"100%"}}
+                                scrollSensitive={true}
+                                calendar={persian}
+                                locale={persian_fa}
+                                calendarPosition="bottom-right"
+                                onChange={(date) => handleInputChange('executionDate', date.unix())}
+                                value={formData.executionDate}
+                                render={
+                                    <TextField
+                                        fullWidth
+                                        size="small"
+                                        label="تاریخ اجرا"
+                                        name="executionDate"
+                                        placeholder="تاریخ اجرا"
+                                    />
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="شرح قرارداد"
+                                placeholder="شرح قرارداد"
+                                name="descriptionContract"
+                                value={formData.descriptionContract}
+                                onChange={(e) => handleInputChange('descriptionContract', e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="عنوان قرارداد"
+                                placeholder="عنوان قرارداد"
+                                name="titleContract"
+                                value={formData.titleContract}
+                                onChange={(e) => handleInputChange('titleContract', e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} className='flex justify-between'>
+                            <Button
+                                variant='outlined'
+                                onClick={handleBack}
+                                color='secondary'
+                                startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
+                            >
+                                مرحله قبل
+                            </Button>
+                            <Button variant='contained' type='submit' endIcon={<i className='ri-check-line' />}>
+                                تایید نهایی
+                            </Button>
                         </Grid>
                     </>
                 )
-            // سایر مراحل
             default:
                 return 'Unknown step'
         }
@@ -436,53 +674,13 @@ const StepperForm = () => {
                                 <Button variant="contained" onClick={handleReset}>
                                     Reset
                                 </Button>
+                                <Button variant="contained" onClick={handleSubmitForm} color="primary">
+                                    Submit
+                                </Button>
                             </div>
                         </>
                     ) : (
-                        <>
-                            <form onSubmit={(e) => e.preventDefault()}>
-                                <Grid container spacing={5}>
-                                    <Grid item xs={12}>
-                                        <Typography className="font-medium" color="text.primary">
-                                            {steps[activeStep].title}
-                                        </Typography>
-                                    </Grid>
-                                    {renderStepContent(activeStep)}
-                                    <Grid item xs={12} className="flex justify-between">
-                                        <Button
-                                            variant="outlined"
-                                            disabled={activeStep === 0}
-                                            onClick={handleBack}
-                                            color="secondary"
-                                            startIcon={
-                                                <DirectionalIcon
-                                                    ltrIconClass="ri-arrow-left-line"
-                                                    rtlIconClass="ri-arrow-right-line"
-                                                />
-                                            }
-                                        >
-                                            مرحله قبل
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            onClick={activeStep === 0 ? handleNextStep1 : handleNextStep2}
-                                            endIcon={
-                                                activeStep === steps.length - 1 ? (
-                                                    <i className="ri-check-line" />
-                                                ) : (
-                                                    <DirectionalIcon
-                                                        ltrIconClass="ri-arrow-right-line"
-                                                        rtlIconClass="ri-arrow-left-line"
-                                                    />
-                                                )
-                                            }
-                                        >
-                                            {activeStep === steps.length - 1 ? 'تایید نهایی' : 'مرحله بعد'}
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </>
+                        renderStepContent(activeStep)
                     )}
                 </CardContent>
             </Card>
