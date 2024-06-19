@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
 
-const StepContract = () => {
+const StepContract = ({ validation }) => {
     const { register, watch, formState: { errors } } = useFormContext()
 
     return (
@@ -17,7 +17,7 @@ const StepContract = () => {
                         size="small"
                         label="شرح قرارداد"
                         placeholder="شرح قرارداد"
-                        {...register('descriptionContract', { required: 'این فیلد الزامی است' })}
+                        {...register('descriptionContract', validation.descriptionContract)}
                         value={watch('descriptionContract')}
                         error={!!errors.descriptionContract}
                         helperText={errors.descriptionContract && errors.descriptionContract.message}
@@ -29,7 +29,7 @@ const StepContract = () => {
                         size="small"
                         label="عنوان قرارداد"
                         placeholder="عنوان قرارداد"
-                        {...register('titleContract', { required: 'این فیلد الزامی است' })}
+                        {...register('titleContract', validation.titleContract)}
                         value={watch('titleContract')}
                         error={!!errors.titleContract}
                         helperText={errors.titleContract && errors.titleContract.message}
@@ -45,7 +45,7 @@ const StepContract = () => {
                     <FormControl fullWidth size="small">
                         <InputLabel>نوع قرارداد</InputLabel>
                         <Select
-                            {...register('contractType', { required: 'این فیلد الزامی است' })}
+                            {...register('contractType', validation.contractType)}
                             label="نوع قرارداد"
                             value={watch('contractType')}
                             error={!!errors.contractType}
@@ -65,7 +65,7 @@ const StepContract = () => {
                     <FormControl fullWidth size="small">
                         <InputLabel>وضعیت استخدام</InputLabel>
                         <Select
-                            {...register('employmentStatus', { required: 'این فیلد الزامی است' })}
+                            {...register('employmentStatus', validation.employmentStatus)}
                             label="وضعیت استخدام"
                             value={watch('employmentStatus')}
                             error={!!errors.employmentStatus}

@@ -10,6 +10,7 @@ import StepChildren from './StepChildren'
 import StepContract from './StepContract'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import SaveIcon from '@mui/icons-material/Save'
+import validationSchemas from './validationSchemas'
 
 const Forms = ({ invoiceData }) => {
     const methods = useForm({
@@ -49,14 +50,36 @@ const Forms = ({ invoiceData }) => {
                     <Grid item xs={12} md={9}>
                         <Card>
                             <CardContent className='sm:!p-12'>
+                                <form onSubmit={methods.handleSubmit(onSubmit)}>
                                     <Grid container spacing={6}>
-                                        <StepJobDetails invoiceData={invoiceData} />
-                                        <StepPersonalDetails />
-                                        <StepEducation />
-                                        <StepInsurance />
-                                        <StepChildren />
-                                        <StepContract />
+                                        <StepJobDetails invoiceData={invoiceData} validation={validationSchemas.jobDetails} />
+                                        <StepPersonalDetails validation={validationSchemas.personalDetails} />
+                                        <StepEducation validation={validationSchemas.education} />
+                                        <StepInsurance validation={validationSchemas.insurance} />
+                                        <StepChildren validation={validationSchemas.children} />
+                                        <StepContract validation={validationSchemas.contract} />
                                     </Grid>
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        startIcon={<SaveIcon />}
+                                        onClick={onSubmit}
+                                        style={{
+                                            backgroundColor: '#1976d2', // رنگ آبی جذاب
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            textTransform: 'none',
+                                            borderRadius: '8px',
+                                            padding: '10px 20px',
+                                            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+                                            marginTop: '20px',
+                                        }}
+                                    >
+                                        ذخیره
+                                    </Button>
+                                </form>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -65,26 +88,6 @@ const Forms = ({ invoiceData }) => {
                             <Grid item xs={12}>
                                 <Card>
                                     <CardContent className='flex flex-col gap-4'>
-                                        <Button
-                                            type="submit"
-                                            fullWidth
-                                            variant="contained"
-                                            color="primary"
-                                            startIcon={<SaveIcon />}
-                                            onClick={methods.handleSubmit(onSubmit)}
-                                            style={{
-                                                backgroundColor: '#1976d2', // رنگ آبی جذاب
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                                textTransform: 'none',
-                                                borderRadius: '8px',
-                                                padding: '10px 20px',
-                                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-                                                marginTop: '20px',
-                                            }}
-                                        >
-                                            ذخیره
-                                        </Button>
                                         <Button
                                             fullWidth
                                             variant="contained"

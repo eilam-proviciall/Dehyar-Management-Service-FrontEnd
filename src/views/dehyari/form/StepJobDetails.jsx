@@ -3,7 +3,7 @@ import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Ty
 import jobTitles from '@data/jobTitles.json'
 import { useFormContext } from 'react-hook-form'
 
-const StepJobDetails = ({ invoiceData }) => {
+const StepJobDetails = ({ invoiceData, validation }) => {
     const { register, watch, formState: { errors } } = useFormContext()
 
     return (
@@ -42,7 +42,7 @@ const StepJobDetails = ({ invoiceData }) => {
                     <FormControl fullWidth size="small">
                         <InputLabel>پست سازمانی</InputLabel>
                         <Select
-                            {...register('jobTitle', { required: 'این فیلد الزامی است' })}
+                            {...register('jobTitle', validation.jobTitle)}
                             label="پست سازمانی"
                             value={watch('jobTitle')}
                             error={!!errors.jobTitle}
@@ -58,7 +58,7 @@ const StepJobDetails = ({ invoiceData }) => {
                     <FormControl fullWidth size="small">
                         <InputLabel>دهیاری های تحت پوشش</InputLabel>
                         <Select
-                            {...register('coveredVillages', { required: 'این فیلد الزامی است' })}
+                            {...register('coveredVillages', validation.coveredVillages)}
                             label="دهیاری های تحت پوشش"
                             value={watch('coveredVillages')}
                             error={!!errors.coveredVillages}
@@ -76,12 +76,12 @@ const StepJobDetails = ({ invoiceData }) => {
                     <TextField
                         fullWidth
                         size="small"
-                        label="نام و نام خانوادگی"
-                        placeholder="نام و نام خانوادگی"
-                        {...register('fullName', { required: 'این فیلد الزامی است' })}
-                        value={watch('fullName')}
-                        error={!!errors.fullName}
-                        helperText={errors.fullName && errors.fullName.message}
+                        label="کد ملی"
+                        placeholder="کد ملی"
+                        {...register('nationalCode', validation.nationalCode)}
+                        value={watch('nationalCode')}
+                        error={!!errors.nationalCode}
+                        helperText={errors.nationalCode && errors.nationalCode.message}
                     />
                 </Grid>
             </Grid>
