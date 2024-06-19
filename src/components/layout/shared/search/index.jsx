@@ -58,7 +58,7 @@ const NavSearch = () => {
   const { lang: locale } = useParams()
 
   // Vars
-  // Search Actions Data with 'perform' method
+  // Search Actions.jsx Data with 'perform' method
   const searchActions = data.map(item => ({
     ...item,
     url: undefined, // Remove the 'url' key

@@ -208,23 +208,6 @@ const EducationStep = ({ formData, handleEducationChange, setFormData }) => {
                         افزودن
                     </Button>
                 </Grid>
-                <Grid item xs={12} className='flex justify-between' pt={5}>
-                    <Button
-                        variant='outlined'
-                        onClick={handleBack}
-                        color='secondary'
-                        startIcon={<DirectionalIcon ltrIconClass='ri-arrow-left-line' rtlIconClass='ri-arrow-right-line' />}
-                    >
-                        مرحله قبل
-                    </Button>
-                    <Button
-                        variant='contained'
-                        type='submit'
-                        endIcon={<DirectionalIcon ltrIconClass='ri-arrow-right-line' rtlIconClass='ri-arrow-left-line' />}
-                    >
-                        مرحله بعد
-                    </Button>
-                </Grid>
             </Grid>
         </form>
     );
