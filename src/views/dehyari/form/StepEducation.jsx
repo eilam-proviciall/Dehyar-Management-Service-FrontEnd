@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
 import { useFormContext, useFieldArray } from 'react-hook-form'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DatePicker from 'react-multi-date-picker'
@@ -8,7 +8,7 @@ import persian_fa from 'react-date-object/locales/persian_fa'
 import Button from "@mui/material/Button";
 
 const StepEducation = () => {
-    const { control, register, watch, setValue } = useFormContext()
+    const { control, register, watch, setValue, formState: { errors } } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'educations'
@@ -52,9 +52,10 @@ const StepEducation = () => {
                                         <FormControl fullWidth size="small">
                                             <InputLabel>مدرک تحصیلی</InputLabel>
                                             <Select
-                                                {...register(`educations.${index}.degree`)}
+                                                {...register(`educations.${index}.degree`, { required: 'این فیلد الزامی است' })}
                                                 label="مدرک تحصیلی"
                                                 value={watch(`educations.${index}.degree`)}
+                                                error={!!errors?.educations?.[index]?.degree}
                                             >
                                                 {educationDegrees.map(degree => (
                                                     <MenuItem key={degree.value} value={degree.value}>
@@ -62,15 +63,17 @@ const StepEducation = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
+                                            {errors?.educations?.[index]?.degree && <Typography color="error">{errors.educations[index].degree.message}</Typography>}
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={3}>
                                         <FormControl fullWidth size="small">
                                             <InputLabel>رشته تحصیلی</InputLabel>
                                             <Select
-                                                {...register(`educations.${index}.fieldOfStudy`)}
+                                                {...register(`educations.${index}.fieldOfStudy`, { required: 'این فیلد الزامی است' })}
                                                 label="رشته تحصیلی"
                                                 value={watch(`educations.${index}.fieldOfStudy`)}
+                                                error={!!errors?.educations?.[index]?.fieldOfStudy}
                                             >
                                                 {fieldsOfStudy.map(field => (
                                                     <MenuItem key={field.value} value={field.value}>
@@ -78,6 +81,7 @@ const StepEducation = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
+                                            {errors?.educations?.[index]?.fieldOfStudy && <Typography color="error">{errors.educations[index].fieldOfStudy.message}</Typography>}
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12} sm={3}>
@@ -88,6 +92,9 @@ const StepEducation = () => {
                                             onChange={(date) => setValue(`educations.${index}.graduationDate`, date.unix)}
                                             value={watch(`educations.${index}.graduationDate`)}
                                             render={<TextField fullWidth size="small" label="تاریخ اخذ مدرک تحصیلی" />}
+                                            {...register(`educations.${index}.graduationDate`, { required: 'این فیلد الزامی است' })}
+                                            error={!!errors?.educations?.[index]?.graduationDate}
+                                            helperText={errors?.educations?.[index]?.graduationDate && errors.educations[index].graduationDate.message}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3}>

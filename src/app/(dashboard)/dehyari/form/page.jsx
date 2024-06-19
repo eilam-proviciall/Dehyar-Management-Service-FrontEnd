@@ -9,14 +9,8 @@ async function Page(props) {
 
     return (
         <div>
-            <Grid container spacing={6}>
-                <Grid item xs={12} md={9}>
                     <Forms invoiceData={data}/>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    {/*<Actions/>*/}
-                </Grid>
-            </Grid>
+
         </div>
     );
 }

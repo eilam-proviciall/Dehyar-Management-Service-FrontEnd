@@ -8,7 +8,7 @@ import persian_fa from 'react-date-object/locales/persian_fa'
 import Button from "@mui/material/Button";
 
 const StepInsurance = () => {
-    const { control, register, watch, setValue } = useFormContext()
+    const { control, register, watch, setValue, formState: { errors } } = useFormContext()
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'insurances'
@@ -30,8 +30,10 @@ const StepInsurance = () => {
                                             size="small"
                                             fullWidth
                                             label="دهیاری محل خدمت"
-                                            {...register(`insurances.${index}.workplace`)}
+                                            {...register(`insurances.${index}.workplace`, { required: 'این فیلد الزامی است' })}
                                             value={watch(`insurances.${index}.workplace`)}
+                                            error={!!errors?.insurances?.[index]?.workplace}
+                                            helperText={errors?.insurances?.[index]?.workplace && errors.insurances[index].workplace.message}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3}>
@@ -39,8 +41,10 @@ const StepInsurance = () => {
                                             size="small"
                                             fullWidth
                                             label="سابقه بیمه (ماه)"
-                                            {...register(`insurances.${index}.insurancePeriod`)}
+                                            {...register(`insurances.${index}.insurancePeriod`, { required: 'این فیلد الزامی است' })}
                                             value={watch(`insurances.${index}.insurancePeriod`)}
+                                            error={!!errors?.insurances?.[index]?.insurancePeriod}
+                                            helperText={errors?.insurances?.[index]?.insurancePeriod && errors.insurances[index].insurancePeriod.message}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3}>
@@ -51,6 +55,9 @@ const StepInsurance = () => {
                                             onChange={(date) => setValue(`insurances.${index}.employmentStartDate`, date.unix)}
                                             value={watch(`insurances.${index}.employmentStartDate`)}
                                             render={<TextField fullWidth size="small" label="تاریخ شروع" />}
+                                            {...register(`insurances.${index}.employmentStartDate`, { required: 'این فیلد الزامی است' })}
+                                            error={!!errors?.insurances?.[index]?.employmentStartDate}
+                                            helperText={errors?.insurances?.[index]?.employmentStartDate && errors.insurances[index].employmentStartDate.message}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3}>
@@ -61,6 +68,9 @@ const StepInsurance = () => {
                                             onChange={(date) => setValue(`insurances.${index}.employmentEndDate`, date.unix)}
                                             value={watch(`insurances.${index}.employmentEndDate`)}
                                             render={<TextField fullWidth size="small" label="تاریخ پایان" />}
+                                            {...register(`insurances.${index}.employmentEndDate`, { required: 'این فیلد الزامی است' })}
+                                            error={!!errors?.insurances?.[index]?.employmentEndDate}
+                                            helperText={errors?.insurances?.[index]?.employmentEndDate && errors.insurances[index].employmentEndDate.message}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={3}>

@@ -4,7 +4,7 @@ import jobTitles from '@data/jobTitles.json'
 import { useFormContext } from 'react-hook-form'
 
 const StepJobDetails = ({ invoiceData }) => {
-    const { register, watch } = useFormContext()
+    const { register, watch, formState: { errors } } = useFormContext()
 
     return (
         <>
@@ -41,23 +41,35 @@ const StepJobDetails = ({ invoiceData }) => {
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>پست سازمانی</InputLabel>
-                        <Select {...register('jobTitle')} label="پست سازمانی" value={watch('jobTitle')}>
+                        <Select
+                            {...register('jobTitle', { required: 'این فیلد الزامی است' })}
+                            label="پست سازمانی"
+                            value={watch('jobTitle')}
+                            error={!!errors.jobTitle}
+                        >
                             {Object.entries(jobTitles).map(([value, label]) => (
                                 <MenuItem key={value} value={value}>{label}</MenuItem>
                             ))}
                         </Select>
+                        {errors.jobTitle && <Typography color="error">{errors.jobTitle.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel>دهیاری های تحت پوشش</InputLabel>
-                        <Select {...register('coveredVillages')} label="دهیاری های تحت پوشش" value={watch('coveredVillages')}>
+                        <Select
+                            {...register('coveredVillages', { required: 'این فیلد الزامی است' })}
+                            label="دهیاری های تحت پوشش"
+                            value={watch('coveredVillages')}
+                            error={!!errors.coveredVillages}
+                        >
                             <MenuItem value="1">چم جنگل</MenuItem>
                             <MenuItem value="2">چم شیر</MenuItem>
                             <MenuItem value="3">سرکان</MenuItem>
                             <MenuItem value="4">سیاه سیاه</MenuItem>
                             <MenuItem value="5">15 خرداد</MenuItem>
                         </Select>
+                        {errors.coveredVillages && <Typography color="error">{errors.coveredVillages.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -66,8 +78,10 @@ const StepJobDetails = ({ invoiceData }) => {
                         size="small"
                         label="نام و نام خانوادگی"
                         placeholder="نام و نام خانوادگی"
-                        {...register('fullName')}
+                        {...register('fullName', { required: 'این فیلد الزامی است' })}
                         value={watch('fullName')}
+                        error={!!errors.fullName}
+                        helperText={errors.fullName && errors.fullName.message}
                     />
                 </Grid>
             </Grid>

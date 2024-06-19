@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
-import { Grid, Card, CardContent } from '@mui/material'
+import { FormProvider, useForm } from 'react-hook-form'
+import { Card, CardContent, Grid, Button } from '@mui/material'
 import StepJobDetails from './StepJobDetails'
 import StepPersonalDetails from './StepPersonalDetails'
 import StepEducation from './StepEducation'
 import StepInsurance from './StepInsurance'
 import StepChildren from './StepChildren'
 import StepContract from './StepContract'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+import SaveIcon from '@mui/icons-material/Save'
 
 const Forms = ({ invoiceData }) => {
     const methods = useForm({
@@ -37,21 +38,80 @@ const Forms = ({ invoiceData }) => {
         }
     })
 
+    const onSubmit = data => {
+        console.log('Form Data:', data)
+    }
+
     return (
-        <FormProvider {...methods}>
-            <Card>
-                <CardContent className='sm:!p-12'>
-                    <Grid container spacing={6}>
-                        <StepJobDetails invoiceData={invoiceData} />
-                        <StepPersonalDetails />
-                        <StepEducation />
-                        <StepInsurance />
-                        <StepChildren />
-                        <StepContract />
+        <>
+            <Grid container spacing={6}>
+                <FormProvider {...methods}>
+                    <Grid item xs={12} md={9}>
+                        <Card>
+                            <CardContent className='sm:!p-12'>
+                                    <Grid container spacing={6}>
+                                        <StepJobDetails invoiceData={invoiceData} />
+                                        <StepPersonalDetails />
+                                        <StepEducation />
+                                        <StepInsurance />
+                                        <StepChildren />
+                                        <StepContract />
+                                    </Grid>
+                            </CardContent>
+                        </Card>
                     </Grid>
-                </CardContent>
-            </Card>
-        </FormProvider>
+                    <Grid item xs={12} md={3}>
+                        <Grid container spacing={6}>
+                            <Grid item xs={12}>
+                                <Card>
+                                    <CardContent className='flex flex-col gap-4'>
+                                        <Button
+                                            type="submit"
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
+                                            startIcon={<SaveIcon />}
+                                            onClick={methods.handleSubmit(onSubmit)}
+                                            style={{
+                                                backgroundColor: '#1976d2', // رنگ آبی جذاب
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                                textTransform: 'none',
+                                                borderRadius: '8px',
+                                                padding: '10px 20px',
+                                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+                                                marginTop: '20px',
+                                            }}
+                                        >
+                                            ذخیره
+                                        </Button>
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="error"
+                                            startIcon={<PictureAsPdfIcon />}
+                                        >
+                                            حکم کارگزینی
+                                        </Button>
+                                        <Button
+                                            fullWidth
+                                            color='secondary'
+                                            variant='outlined'
+                                            className='capitalize'
+                                        >
+                                            اطلاعات پرسنلی
+                                        </Button>
+                                        <Button fullWidth color='secondary' variant='outlined' className='capitalize'>
+                                            پروفایل
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </FormProvider>
+            </Grid>
+        </>
     )
 }
 
