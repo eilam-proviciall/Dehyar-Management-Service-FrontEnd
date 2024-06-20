@@ -77,8 +77,17 @@ const Forms = ({invoiceData}) => {
             execute_start: 345435, // Assuming execute_start is the same as contractStart
             description_contract: data.descriptionContract,
             title_contract: data.titleContract,
-            // educations: data.educations,
-            // insurances: data.insurances,
+            educations: data.educations.map(education => ({
+                education_degree: education.degree,
+                education_field: 2651,
+                education_date: education.graduationDate
+            })),
+            insurances: data.insurances.map(insurance => ({
+                city: 1311,
+                month: 23,
+                start_date: 345345345,
+                end_date: 345345345
+            })),
             children: data.children.map(child => ({
                 nid: child.nationalCode,
                 full_name: child.fullName,
