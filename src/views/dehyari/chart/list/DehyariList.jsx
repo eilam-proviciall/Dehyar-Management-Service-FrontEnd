@@ -1,20 +1,46 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import Button from "@mui/material/Button";
-import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Box from "@mui/material/Box";
 import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
 import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
 import Chip from "@mui/material/Chip";
-import { Divider } from '@mui/material';
+import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import jobTitles from '@data/jobTitles.json';
 import contractType from "@data/contractType.json";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function DehyariList(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const options = [
+        'None',
+        'Atria',
+        'Callisto',
+        'Dione',
+        'Ganymede',
+        'Hangouts Call',
+        'Luna',
+        'Oberon',
+        'Phobos',
+        'Pyxis',
+        'Sedna',
+        'Titania',
+        'Triton',
+        'Umbriel',
+    ];
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     useEffect(() => {
         axios.get(humanResources(), {
             headers: {
@@ -37,15 +63,6 @@ function DehyariList(props) {
     const buttonProps = {
         variant: 'contained',
         children: 'ثبت اطلاعات پرسنلی'
-    };
-
-    const [expandedRows, setExpandedRows] = useState({});
-
-    const handleExpandClick = (rowId) => {
-        setExpandedRows(prevState => ({
-            ...prevState,
-            [rowId]: !prevState[rowId]
-        }));
     };
 
     const getChipColor = (role) => {
@@ -85,65 +102,72 @@ function DehyariList(props) {
                 size: 150,
                 Cell: ({ cell }) => {
                     const role = cell.getValue();
-                    const color = getChipColor(role);
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            <Chip label={contractType[cell.getValue()]} color="primary" />
+                            <Chip label={contractType[role]} color="primary" />
                         </div>
                     );
                 },
             },
-            // {
-            //     accessorKey: 'operation',
-            //     header: 'عملیات',
-            //     size: 150,
-            //     Cell: ({ cell }) => {
-            //         const role = cell.getValue();
-            //         const color = getChipColor(role);
-            //         return (
-            //             <div style={{ textAlign: 'right' }}>
-            //                 <Chip label={role} color={color} />
-            //             </div>
-            //         );
-            //     },
-            // },
+            {
+                accessorKey: '3453',
+                header: 'عملیات',
+                size: 150,
+                Cell: ({ row }) => (
+                    <div>
+                        <IconButton
+                            aria-label="more"
+                            id="long-button"
+                            aria-controls={open ? 'long-menu' : undefined}
+                            aria-expanded={open ? 'true' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'long-button',
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            {options.map((option) => (
+                                <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+                                    {option}
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </div>
+                ),
+            },
         ],
-        [expandedRows]
+        [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: tableData,
-        enableCellActions: true,
-        enableClickToCopy: 'context-menu',
-        enableEditing: true,
-        editDisplayMode: 'cell',
-        renderCellActionMenuItems: ({ closeMenu, table, internalMenuItems }) => [
-            ...internalMenuItems,
-            <Divider key="divider" ma />,
-        ],
-        renderTopToolbarCustomActions: ({ table }) => (
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: '16px',
-                    padding: '8px',
-                    flexWrap: 'wrap',
-                }}
-            >
-                <OpenDialogOnElementClick element={Button} elementProps={buttonProps} dialog={DehyariDialog} />
-            </Box>
-        ),
-    });
+    const handleEdit = (row) => {
+        console.info('Edit', row);
+        setAnchorEl(null);
+        // افزودن لاجیک ویرایش در اینجا
+    };
+
+    const handleDelete = (row) => {
+        console.info('Delete', row);
+        setAnchorEl(null);
+        // افزودن لاجیک حذف در اینجا
+    };
 
     if (loading) {
         return <div>در حال بارگذاری...</div>;
     }
 
     return (
-        <div>
-            <MaterialReactTable table={table} />
-        </div>
+        <MaterialReactTable
+            columns={columns}
+            data={tableData}
+        />
     );
 }
 
