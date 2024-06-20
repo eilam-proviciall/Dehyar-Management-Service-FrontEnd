@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
+import contractType from "@data/contractType.json";
 
 const StepContract = ({ validation }) => {
     const { register, watch, formState: { errors } } = useFormContext()
@@ -50,13 +51,9 @@ const StepContract = ({ validation }) => {
                             value={watch('contractType')}
                             error={!!errors.contractType}
                         >
-                            <MenuItem value="1">تمام وقت</MenuItem>
-                            <MenuItem value="2">تمام وقت مشترک</MenuItem>
-                            <MenuItem value="3">پاره وقت - ۱۷روز کارکرد</MenuItem>
-                            <MenuItem value="4">۱۹ روز کارکرد</MenuItem>
-                            <MenuItem value="5">۲۱ روز کارکرد</MenuItem>
-                            <MenuItem value="6">۲۴ روز کارکرد</MenuItem>
-                            <MenuItem value="7">۲۷ روز کارکرد</MenuItem>
+                            {Object.entries(contractType).map(([value, label]) => (
+                                <MenuItem key={value} value={value}>{label}</MenuItem>
+                            ))}
                         </Select>
                         {errors.contractType && <Typography color="error">{errors.contractType.message}</Typography>}
                     </FormControl>

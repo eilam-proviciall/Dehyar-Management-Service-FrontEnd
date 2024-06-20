@@ -9,6 +9,7 @@ import { Divider } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import jobTitles from '@data/jobTitles.json';
+import contractType from "@data/contractType.json";
 
 function DehyariList(props) {
     const [data, setData] = useState([]);
@@ -79,7 +80,7 @@ function DehyariList(props) {
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'contractType',
+                accessorKey: 'contract_type',
                 header: 'نوع قرار داد',
                 size: 150,
                 Cell: ({ cell }) => {
@@ -87,7 +88,7 @@ function DehyariList(props) {
                     const color = getChipColor(role);
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            <Chip label={role} color={color} />
+                            <Chip label={contractType[cell.getValue()]} color="primary" />
                         </div>
                     );
                 },
