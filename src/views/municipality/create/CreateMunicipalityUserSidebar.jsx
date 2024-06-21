@@ -1,17 +1,16 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { useMediaQuery } from '@mui/material';
-
+import React, {useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {
     Box,
     Drawer,
-    Select,
-    MenuItem,
-    TextField,
-    IconButton,
-    Typography,
     FormControl,
-    InputLabel
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    useMediaQuery
 } from '@mui/material';
 
 import SidebarFooter from './SidebarFooter';
@@ -22,12 +21,25 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 // Import other role field components
 
-const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
-    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '' } });
-    const { values, setValues, handleSidebarClose, handleDeleteButtonClick, onSubmit, resetToStoredValues } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle);
+const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle}) => {
+    const {control, setValue, clearErrors, handleSubmit, formState: {errors}} = useForm({defaultValues: {title: ''}});
+    const {
+        values,
+        setValues,
+        handleSidebarClose,
+        handleDeleteButtonClick,
+        onSubmit,
+        resetToStoredValues
+    } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle);
     const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-    const { cities, isLoading, error } = useFetchCities()
-    console.log(cities)
+    const [shouldFetchCities, setShouldFetchCities] = useState(false);
+    const {cities, isLoading, error} = useFetchCities(shouldFetchCities);
+    useEffect(() => {
+        console.log('change')
+        if (values.role === "14") {
+            setShouldFetchCities(true);
+        }
+    }, [values.role]);
     const renderRoleFields = () => {
         switch (values.role) {
             case "14":
@@ -38,23 +50,27 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                             control={control}
                             rules={{ required: true }}
                             render={({ field: { value, onChange } }) => (
-                                <Autocomplete
-                                    options={cities}
-                                    getOptionLabel={(option) => `${option.state.approved_name} - ${option.approved_name}`}
-                                    onChange={(event, newValue) => {
-                                        onChange(newValue);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label='شهر'
-                                            value={value}
-                                            onChange={onChange}
-                                            error={!!errors.city}
-                                            helperText={errors.city ? 'شهر الزامی است' : ''}
-                                        />
-                                    )}
-                                />
+                                isLoading ? (
+                                    <Typography variant='body1'>در حال بارگذاری...</Typography>
+                                ) : (
+                                    <Autocomplete
+                                        options={cities}
+                                        getOptionLabel={(option) => `${option.state.approved_name} - ${option.approved_name}`}
+                                        onChange={(event, newValue) => {
+                                            onChange(newValue);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label='شهر'
+                                                value={value}
+                                                onChange={onChange}
+                                                error={!!errors.personalField1}
+                                                helperText={errors.personalField1 ? 'شهر الزامی است' : ''}
+                                            />
+                                        )}
+                                    />
+                                )
                             )}
                         />
                     </FormControl>
@@ -65,8 +81,8 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         <Controller
                             name='businessField1'
                             control={control}
-                            rules={{ required: true }}
-                            render={({ field: { value, onChange } }) => (
+                            rules={{required: true}}
+                            render={({field: {value, onChange}}) => (
                                 <TextField
                                     label='Business Field 1'
                                     value={value}
@@ -89,23 +105,23 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             anchor='right'
             open={addEventSidebarOpen}
             onClose={handleSidebarClose}
-            ModalProps={{ keepMounted: true }}
-            sx={{ '& .MuiDrawer-paper': { width: ['100%', 400] } }}
+            ModalProps={{keepMounted: true}}
+            sx={{'& .MuiDrawer-paper': {width: ['100%', 400]}}}
         >
             <Box className='flex justify-between items-center sidebar-header pli-5 plb-4 border-be'>
                 <Typography variant='h5'>افزودن کاربر جدید</Typography>
                 {calendarStore.selectedEvent && calendarStore.selectedEvent.title.length ? (
-                    <Box className='flex items-center' sx={{ gap: 1 }}>
+                    <Box className='flex items-center' sx={{gap: 1}}>
                         <IconButton size='small' onClick={handleDeleteButtonClick}>
-                            <i className='ri-delete-bin-7-line text-2xl' />
+                            <i className='ri-delete-bin-7-line text-2xl'/>
                         </IconButton>
                         <IconButton size='small' onClick={handleSidebarClose}>
-                            <i className='ri-close-line text-2xl' />
+                            <i className='ri-close-line text-2xl'/>
                         </IconButton>
                     </Box>
                 ) : (
                     <IconButton size='small' onClick={handleSidebarClose}>
-                        <i className='ri-close-line text-2xl' />
+                        <i className='ri-close-line text-2xl'/>
                     </IconButton>
                 )}
             </Box>
@@ -115,8 +131,8 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         <Controller
                             name='title'
                             control={control}
-                            rules={{ required: true }}
-                            render={({ field: { value, onChange } }) => (
+                            rules={{required: true}}
+                            render={({field: {value, onChange}}) => (
                                 <TextField
                                     label='نام و نام خانوادگی'
                                     value={value}
@@ -131,8 +147,8 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         <Controller
                             name='nid'
                             control={control}
-                            rules={{ required: true }}
-                            render={({ field: { value, onChange } }) => (
+                            rules={{required: true}}
+                            render={({field: {value, onChange}}) => (
                                 <TextField
                                     label='کد ملی'
                                     value={value}
@@ -149,14 +165,14 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                             label='نقش'
                             value={values.role}
                             labelId='event-role'
-                            onChange={e => setValues({ ...values, role: e.target.value })}
+                            onChange={e => setValues({...values, role: e.target.value})}
                         >
                             {Object.entries(roles).map(([value, label]) => (
                                 <MenuItem key={value} value={value}>{label}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    { renderRoleFields()}
+                    {renderRoleFields()}
                     <SidebarFooter
                         isUpdate={calendarStore.selectedEvent && calendarStore.selectedEvent.title.length}
                         onReset={resetToStoredValues}
