@@ -9,27 +9,12 @@ const _redirect = (url, request) => {
 };
 
 export async function middleware(request) {
-    // const pathname = request.nextUrl.pathname;
-    //
-    // const token = request.cookies.get('token'); // دسترسی به کوکی‌ها از طریق request.cookies
-    // const isUserLoggedIn = !!token;
-    //
-    // const guestRoutes = ['login'];
-    // const sharedRoutes = ['shared-route'];
-    // const privateRoute = ![...guestRoutes, ...sharedRoutes].some(route => pathname.endsWith(route));
-    //
-    //
-    // const isRequestedRouteIsGuestRoute = guestRoutes.some(route => pathname.endsWith(route));
-    //
-    // // if (isUserLoggedIn && isRequestedRouteIsGuestRoute) {
-    // //     return _redirect(HOME_PAGE_URL, request);
-    // // }
-    //
-    // if (pathname === '/') {
-    //     return _redirect(HOME_PAGE_URL, request);
+    const token = request.cookies.get('token');
+    console.log("token")
+    // چک کردن وجود توکن
+    // if (!token) {
+    //     return NextResponse.redirect(new URL('/login', req.url));
     // }
-
-    // return NextResponse.next();
 }
 
 export const config = {

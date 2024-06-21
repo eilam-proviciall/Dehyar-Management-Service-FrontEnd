@@ -1,60 +1,56 @@
 "use client";
-import {createContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import {login, me} from "@/Services/Auth/AuthService";
+import {toast} from "react-toastify";
 
 // Auth Context
-const AuthContext = createContext({
-    user: null,
-    loading: false,
-    setUser: () => null,
-    setLoading: () => Boolean,
-    login: () => Promise.resolve(),
-    logout: () => Promise.resolve(),
-});
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
 const HOME_PAGE_URL = '/municipality/list';
 
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
         const initAuth = async () => {
-            console.log('init');
             if (typeof window !== 'undefined') {
                 const storedToken = window.localStorage.getItem('token');
-                console.log(storedToken);
                 if (storedToken) {
-                    setLoading(true);
                     try {
                         const response = await axios.get(me(), {
                             headers: {
                                 Authorization: `Bearer ${storedToken}`,
                             },
                         });
-                        console.log(response);
-                        // setUser(response.data.user);
+                        setUser(response.data.user);
                     } catch (error) {
-                        console.error('Error fetching user data:', error);
-                        localStorage.removeItem('token');
-                        setUser(null);
+                        toast.error('اطلاعات نادرست است');
+                         setUser(null);
                         if (router.pathname !== '/login') {
                             router.push('/login');
                         }
                     } finally {
                         setLoading(false);
                     }
+                } else {
+                    if (router.pathname !== '/login') {
+                        router.push('/login');
+                    }
+                    setLoading(false);
                 }
             }
         };
 
         initAuth();
-    }, [router]); // اضافه کردن router به وابستگی های useEffect
+    }, [router]);
 
     const handleLogin = async (params) => {
-        console.log(params);
         try {
             const res = await axios.post(login(), {
                 nid: params.email,
@@ -63,11 +59,18 @@ const AuthProvider = ({children}) => {
             const {access_token} = res.data.data;
             if (typeof window !== 'undefined') {
                 window.localStorage.setItem('token', access_token);
+                toast.success('ورود با موفقیت انجام شد', {
+                    position: "top-center",
+                    duration: 3000
+                });
             }
+            setUser(res.data.user);
             router.push(HOME_PAGE_URL);
         } catch (error) {
-            alert('اطلاعات مورد نظر صحیح نمیباشد');
-            console.error('Error during login:', error);
+            toast.error('اطلاعات وارد شده صحیح نمیباشد',{
+                position:"top-center",
+                duration: 3000
+            });
         } finally {
             setLoading(false);
         }
