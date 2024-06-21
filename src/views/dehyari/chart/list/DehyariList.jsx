@@ -150,13 +150,11 @@ function DehyariList(props) {
     const handleEdit = (row) => {
         console.info('Edit', row);
         setAnchorEl(null);
-        // افزودن لاجیک ویرایش در اینجا
     };
 
     const handleDelete = (row) => {
         console.info('Delete', row);
         setAnchorEl(null);
-        // افزودن لاجیک حذف در اینجا
     };
 
     if (loading) {

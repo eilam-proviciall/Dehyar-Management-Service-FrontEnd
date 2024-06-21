@@ -13,6 +13,8 @@ import SaveIcon from '@mui/icons-material/Save'
 import validationSchemas from './validationSchemas'
 import axios from "axios";
 import {humanResources} from "@/Services/humanResources";
+import MyDocument from "@components/MyDocument";
+import {pdf} from "@react-pdf/renderer";
 
 const Forms = ({invoiceData}) => {
     const methods = useForm({
@@ -98,8 +100,6 @@ const Forms = ({invoiceData}) => {
                 end_academic_deferment: 345345345
             }))
         };
-
-        console.log("formattedData")
         axios.post(humanResources(),
             formattedData
             , {
@@ -108,7 +108,20 @@ const Forms = ({invoiceData}) => {
                 },
             }).then((res) => console.log(res))
     }
+    const handleDownload = async () => {
+        console.log("start download")
+        const doc = <MyDocument />;
+        const asPdf = pdf([]); // Creating an instance of pdf
+        asPdf.updateContainer(doc);
+        const blob = await asPdf.toBlob();
 
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'document.pdf';
+        a.click();
+        URL.revokeObjectURL(url); // Clean up the URL object
+    };
     return (
         <>
             <Grid container spacing={6}>
@@ -158,6 +171,7 @@ const Forms = ({invoiceData}) => {
                                             variant="contained"
                                             color="error"
                                             startIcon={<PictureAsPdfIcon/>}
+                                            onClick={handleDownload}
                                         >
                                             حکم کارگزینی
                                         </Button>
