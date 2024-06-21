@@ -116,11 +116,21 @@ const Forms = ({invoiceData}) => {
         const blob = await asPdf.toBlob();
 
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'document.pdf';
-        a.click();
-        URL.revokeObjectURL(url); // Clean up the URL object
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.border = 'none';
+        iframe.src = url;
+
+        document.body.appendChild(iframe);
+
+        iframe.onload = () => {
+            iframe.contentWindow.print();
+            document.body.removeChild(iframe);
+        };
     };
     return (
         <>
