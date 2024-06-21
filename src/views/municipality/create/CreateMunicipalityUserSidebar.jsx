@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useDispatch } from 'react-redux';
 import { useMediaQuery } from '@mui/material';
 
 import {
@@ -13,85 +11,78 @@ import {
     IconButton,
     Typography,
     FormControl,
-    InputLabel,
-    Button
+    InputLabel
 } from '@mui/material';
 
-import { addEvent, deleteEvent, updateEvent, selectedEvent } from '@/redux-store/slices/calendar';
-// import { capitalize } from '@/utils/utility';
 import SidebarFooter from './SidebarFooter';
+import useMunicipalityUserForm from '@hooks/useMunicipalityUserForm';
+import roles from "@data/roles.json";
+import {useFetchCities} from "@hooks/useFetchCities";
+import Autocomplete from "@mui/material/Autocomplete";
 
-const defaultState = {
-    title: '',
-    nid: '',
-    calendar: 'Business'
-};
+// Import other role field components
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
-    const [values, setValues] = useState(defaultState);
-    const dispatch = useDispatch();
-    const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '' } });
-
-    const resetToStoredValues = useCallback(() => {
-        if (calendarStore.selectedEvent !== null) {
-            const event = calendarStore.selectedEvent;
-            setValue('title', event.title || '');
-            setValue('nid', event.nid || '');
-            setValues({
-                title: event.title || '',
-                nid: event.nid || '',
-                calendar: event.extendedProps.calendar || 'Business',
-            });
+    const { values, setValues, handleSidebarClose, handleDeleteButtonClick, onSubmit, resetToStoredValues } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle);
+    const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
+    const { cities, isLoading, error } = useFetchCities()
+    console.log(cities)
+    const renderRoleFields = () => {
+        switch (values.role) {
+            case "14":
+                return (
+                    <FormControl fullWidth className='mbe-5'>
+                        <Controller
+                            name='personalField1'
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field: { value, onChange } }) => (
+                                <Autocomplete
+                                    options={cities}
+                                    getOptionLabel={(option) => `${option.state.approved_name} - ${option.approved_name}`}
+                                    onChange={(event, newValue) => {
+                                        onChange(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label='شهر'
+                                            value={value}
+                                            onChange={onChange}
+                                            error={!!errors.city}
+                                            helperText={errors.city ? 'شهر الزامی است' : ''}
+                                        />
+                                    )}
+                                />
+                            )}
+                        />
+                    </FormControl>
+                );
+            case "13":
+                return (
+                    <FormControl fullWidth className='mbe-5'>
+                        <Controller
+                            name='businessField1'
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field: { value, onChange } }) => (
+                                <TextField
+                                    label='Business Field 1'
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!!errors.businessField1}
+                                    helperText={errors.businessField1 ? 'This field is required' : ''}
+                                />
+                            )}
+                        />
+                    </FormControl>
+                );
+            // Add other cases for different roles
+            default:
+                return null;
         }
-    }, [setValue, calendarStore.selectedEvent]);
-
-    const resetToEmptyValues = useCallback(() => {
-        setValue('title', '');
-        setValue('nid', '');
-        setValues(defaultState);
-    }, [setValue]);
-
-    const handleSidebarClose = () => {
-        setValues(defaultState);
-        clearErrors();
-        dispatch(selectedEvent(null));
-        handleAddEventSidebarToggle();
     };
-
-    const onSubmit = data => {
-        const modifiedEvent = {
-            title: data.title,
-            nid: data.nid,
-            extendedProps: {
-                calendar: capitalize(values.calendar),
-            }
-        };
-
-        if (!calendarStore.selectedEvent || !calendarStore.selectedEvent.title.length) {
-            dispatch(addEvent(modifiedEvent));
-        } else {
-            dispatch(updateEvent({ ...modifiedEvent, id: calendarStore.selectedEvent.id }));
-        }
-
-        handleSidebarClose();
-    };
-
-    const handleDeleteButtonClick = () => {
-        if (calendarStore.selectedEvent) {
-            dispatch(deleteEvent(calendarStore.selectedEvent.id));
-        }
-        handleSidebarClose();
-    };
-
-    useEffect(() => {
-        if (calendarStore.selectedEvent !== null) {
-            resetToStoredValues();
-        } else {
-            resetToEmptyValues();
-        }
-    }, [addEventSidebarOpen, resetToStoredValues, resetToEmptyValues, calendarStore.selectedEvent]);
 
     return (
         <Drawer
@@ -118,10 +109,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                     </IconButton>
                 )}
             </Box>
-            <PerfectScrollbar
-                options={isBelowSmScreen ? {} : { wheelPropagation: false, suppressScrollX: true }}
-                className='sidebar-body p-5'
-            >
+            <Box className='sidebar-body p-5'>
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
                     <FormControl fullWidth className='mbe-5'>
                         <Controller
@@ -134,7 +122,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                                     value={value}
                                     onChange={onChange}
                                     error={!!errors.title}
-                                    helperText={errors.title ? 'This field is required' : ''}
+                                    helperText={errors.title ? 'نام و نام خانوادگی الزامی است' : ''}
                                 />
                             )}
                         />
@@ -150,33 +138,32 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                                     value={value}
                                     onChange={onChange}
                                     error={!!errors.nid}
-                                    helperText={errors.nid ? 'This field is required' : ''}
+                                    helperText={errors.nid ? 'کدملی الزامی است' : ''}
                                 />
                             )}
                         />
                     </FormControl>
                     <FormControl fullWidth className='mbe-5'>
-                        <InputLabel id='event-calendar'>نقش</InputLabel>
+                        <InputLabel id='event-role'>نقش</InputLabel>
                         <Select
-                            label='Calendar'
-                            value={values.calendar}
-                            labelId='event-calendar'
-                            onChange={e => setValues({ ...values, calendar: e.target.value })}
+                            label='نقش'
+                            value={values.role}
+                            labelId='event-role'
+                            onChange={e => setValues({ ...values, role: e.target.value })}
                         >
-                            <MenuItem value='Personal'>امور مالی</MenuItem>
-                            <MenuItem value='Business'>ناظر فنی</MenuItem>
-                            <MenuItem value='Family'>دفتر امور روستایی</MenuItem>
-                            <MenuItem value='Holiday'>بخشدار</MenuItem>
-                            <MenuItem value='ETC'>دهیار</MenuItem>
+                            {Object.entries(roles).map(([value, label]) => (
+                                <MenuItem key={value} value={value}>{label}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
+                    { renderRoleFields()}
                     <SidebarFooter
                         isUpdate={calendarStore.selectedEvent && calendarStore.selectedEvent.title.length}
                         onReset={resetToStoredValues}
                         onSubmit={onSubmit}
                     />
                 </form>
-            </PerfectScrollbar>
+            </Box>
         </Drawer>
     );
 };
