@@ -7,7 +7,7 @@ import UserListTable from './UserListTable'
 import UserListCards from './UserListCards'
 import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
-import CreateMunicipalityUserSidebar from "./CreateMunicipalityUserSidebar"
+import CreateMunicipalityUserSidebar from "../create/CreateMunicipalityUserSidebar"
 const UserList = ({userData}) => {
     const [calendarApi, setCalendarApi] = useState(null)
     const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)

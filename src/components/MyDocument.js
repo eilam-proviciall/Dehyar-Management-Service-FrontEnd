@@ -2,7 +2,9 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
 // Load custom font from Google Fonts
-Font.register({ family: "iranSans", src: "./iranSans.ttf" });
+Font.register(
+    { family: "iranSans", src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSans-Regular.ttf` }
+);
 
 
 // Create styles
@@ -11,7 +13,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 10,
         fontFamily: 'iranSans',
-        // direction: 'rtl'
+        direction: 'rtl'
     },
     table: {
         display: 'table',
