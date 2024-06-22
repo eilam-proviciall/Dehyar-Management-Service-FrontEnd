@@ -28,7 +28,7 @@ const AuthProvider = ({children}) => {
                                 Authorization: `Bearer ${storedToken}`,
                             },
                         });
-                        setUser(response.data.user);
+                        setUser(response.data.data.user.original);
                     } catch (error) {
                         toast.error('اطلاعات نادرست است');
                          setUser(null);
@@ -59,14 +59,15 @@ const AuthProvider = ({children}) => {
             const {access_token} = res.data.data;
             if (typeof window !== 'undefined') {
                 window.localStorage.setItem('token', access_token);
-                toast.success('ورود با موفقیت انجام شد', {
-                    position: "top-center",
-                    duration: 3000
-                });
+
             }
-            setUser(res.data.user);
+            toast.success('ورود با موفقیت انجام شد', {
+                position: "top-center",
+                duration: 3000
+            });
             router.push(HOME_PAGE_URL);
         } catch (error) {
+            console.log(error);
             toast.error('اطلاعات وارد شده صحیح نمیباشد',{
                 position:"top-center",
                 duration: 3000

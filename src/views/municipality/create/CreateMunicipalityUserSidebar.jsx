@@ -1,28 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {
-    Box,
-    Drawer,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    useMediaQuery
-} from '@mui/material';
-
-import SidebarFooter from './SidebarFooter';
-import useMunicipalityUserForm from '@hooks/useMunicipalityUserForm';
-import roles from "@data/roles.json";
+import useMunicipalityUserForm from "@hooks/useMunicipalityUserForm";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useEffect, useState} from "react";
 import {useFetchCities} from "@hooks/useFetchCities";
-import Autocomplete from "@mui/material/Autocomplete";
-
-// Import other role field components
-
-const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle}) => {
-    const {control, setValue, clearErrors, handleSubmit, formState: {errors}} = useForm({defaultValues: {title: ''}});
+import {useFetchVillageInformationList} from "@hooks/useFetchVillageInformationList";
+import {useAuth} from "@/contexts/AuthContext";
+import {Drawer} from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import {Controller, useForm} from "react-hook-form";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import SidebarFooter from "@views/municipality/create/SidebarFooter";
+import RoleFields from "./RoleFields"
+import roles from  "@data/roles"
+const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
+    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '' } });
     const {
         values,
         setValues,
@@ -33,95 +29,41 @@ const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, hand
     } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle);
     const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
     const [shouldFetchCities, setShouldFetchCities] = useState(false);
-    const {cities, isLoading, error} = useFetchCities(shouldFetchCities);
+    const [shouldFetchVillages, setFetchVillages] = useState(false);
+    const { cities, isLoading, error } = useFetchCities(shouldFetchCities);
+    const { villages, isVillageLoading, VillageError } = useFetchVillageInformationList(shouldFetchVillages);
+    const { user } = useAuth();
+
     useEffect(() => {
-        console.log('change')
         if (values.role === "14") {
             setShouldFetchCities(true);
+        } if (values.role === "13") {
+            setFetchVillages(true);
         }
     }, [values.role]);
-    const renderRoleFields = () => {
-        switch (values.role) {
-            case "14":
-                return (
-                    <FormControl fullWidth className='mbe-5'>
-                        <Controller
-                            name='personalField1'
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field: { value, onChange } }) => (
-                                isLoading ? (
-                                    <Typography variant='body1'>در حال بارگذاری...</Typography>
-                                ) : (
-                                    <Autocomplete
-                                        options={cities}
-                                        getOptionLabel={(option) => `${option.state.approved_name} - ${option.approved_name}`}
-                                        onChange={(event, newValue) => {
-                                            onChange(newValue);
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label='شهر'
-                                                value={value}
-                                                onChange={onChange}
-                                                error={!!errors.personalField1}
-                                                helperText={errors.personalField1 ? 'شهر الزامی است' : ''}
-                                            />
-                                        )}
-                                    />
-                                )
-                            )}
-                        />
-                    </FormControl>
-                );
-            case "13":
-                return (
-                    <FormControl fullWidth className='mbe-5'>
-                        <Controller
-                            name='businessField1'
-                            control={control}
-                            rules={{required: true}}
-                            render={({field: {value, onChange}}) => (
-                                <TextField
-                                    label='Business Field 1'
-                                    value={value}
-                                    onChange={onChange}
-                                    error={!!errors.businessField1}
-                                    helperText={errors.businessField1 ? 'This field is required' : ''}
-                                />
-                            )}
-                        />
-                    </FormControl>
-                );
-            // Add other cases for different roles
-            default:
-                return null;
-        }
-    };
 
     return (
         <Drawer
             anchor='right'
             open={addEventSidebarOpen}
             onClose={handleSidebarClose}
-            ModalProps={{keepMounted: true}}
-            sx={{'& .MuiDrawer-paper': {width: ['100%', 400]}}}
+            ModalProps={{ keepMounted: true }}
+            sx={{ '& .MuiDrawer-paper': { width: ['100%', 400] } }}
         >
             <Box className='flex justify-between items-center sidebar-header pli-5 plb-4 border-be'>
                 <Typography variant='h5'>افزودن کاربر جدید</Typography>
                 {calendarStore.selectedEvent && calendarStore.selectedEvent.title.length ? (
-                    <Box className='flex items-center' sx={{gap: 1}}>
+                    <Box className='flex items-center' sx={{ gap: 1 }}>
                         <IconButton size='small' onClick={handleDeleteButtonClick}>
-                            <i className='ri-delete-bin-7-line text-2xl'/>
+                            <i className='ri-delete-bin-7-line text-2xl' />
                         </IconButton>
                         <IconButton size='small' onClick={handleSidebarClose}>
-                            <i className='ri-close-line text-2xl'/>
+                            <i className='ri-close-line text-2xl' />
                         </IconButton>
                     </Box>
                 ) : (
                     <IconButton size='small' onClick={handleSidebarClose}>
-                        <i className='ri-close-line text-2xl'/>
+                        <i className='ri-close-line text-2xl' />
                     </IconButton>
                 )}
             </Box>
@@ -131,8 +73,8 @@ const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, hand
                         <Controller
                             name='title'
                             control={control}
-                            rules={{required: true}}
-                            render={({field: {value, onChange}}) => (
+                            rules={{ required: true }}
+                            render={({ field: { value, onChange } }) => (
                                 <TextField
                                     label='نام و نام خانوادگی'
                                     value={value}
@@ -147,8 +89,8 @@ const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, hand
                         <Controller
                             name='nid'
                             control={control}
-                            rules={{required: true}}
-                            render={({field: {value, onChange}}) => (
+                            rules={{ required: true }}
+                            render={({ field: { value, onChange } }) => (
                                 <TextField
                                     label='کد ملی'
                                     value={value}
@@ -165,14 +107,20 @@ const CreateMunicipalityUserSidebar = ({calendarStore, addEventSidebarOpen, hand
                             label='نقش'
                             value={values.role}
                             labelId='event-role'
-                            onChange={e => setValues({...values, role: e.target.value})}
+                            onChange={e => setValues({ ...values, role: e.target.value })}
                         >
                             {Object.entries(roles).map(([value, label]) => (
                                 <MenuItem key={value} value={value}>{label}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    {renderRoleFields()}
+                    <RoleFields
+                        role={values.role}
+                        control={control}
+                        errors={errors}
+                        isLoading={values.role === "14" ? isLoading : isVillageLoading}
+                        options={values.role === "14" ? cities : villages}
+                    />
                     <SidebarFooter
                         isUpdate={calendarStore.selectedEvent && calendarStore.selectedEvent.title.length}
                         onReset={resetToStoredValues}
