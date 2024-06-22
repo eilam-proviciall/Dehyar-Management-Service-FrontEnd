@@ -1,10 +1,15 @@
 import FormControl from "@mui/material/FormControl";
-import {Controller} from "react-hook-form";
+import { Controller } from "react-hook-form";
 import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
 const RoleFields = ({ role, control, errors, isLoading, options }) => {
+
+    if (role && (!options || options.length === 0)) {
+        return <Typography variant='body1'>داده‌ای یافت نشد</Typography>;
+    }
+
     switch (role) {
         case "14":
             return (
@@ -19,7 +24,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                             ) : (
                                 <Autocomplete
                                     options={options}
-                                    getOptionLabel={(option) => `${option.state.approved_name} - ${option.approved_name}`}
+                                    getOptionLabel={(option) => `${option.state?.approved_name || ''} - ${option.approved_name}`}
                                     onChange={(event, newValue) => {
                                         onChange(newValue);
                                     }}
@@ -51,6 +56,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
                             ) : (
                                 <Autocomplete
+                                    multiple
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
@@ -77,4 +83,5 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
             return null;
     }
 };
-export default RoleFields
+
+export default RoleFields;
