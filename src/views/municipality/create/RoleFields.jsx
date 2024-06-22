@@ -15,7 +15,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
             return (
                 <FormControl fullWidth className='mbe-5'>
                     <Controller
-                        name='personalField1'
+                        name='city'
                         control={control}
                         rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
@@ -26,8 +26,9 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                     options={options}
                                     getOptionLabel={(option) => `${option.state?.approved_name || ''} - ${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        onChange(newValue);
+                                        onChange(newValue.hierarchy_code);
                                     }}
+                                    getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
@@ -48,7 +49,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
             return (
                 <FormControl fullWidth className='mbe-5'>
                     <Controller
-                        name='personalField1'
+                        name='villages'
                         control={control}
                         rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
@@ -60,7 +61,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        onChange(newValue);
+                                        onChange(newValue.map(item => item.hierarchy_code));
                                     }}
                                     renderInput={(params) => (
                                         <TextField

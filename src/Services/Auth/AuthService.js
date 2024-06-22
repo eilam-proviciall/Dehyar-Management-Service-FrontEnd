@@ -8,5 +8,9 @@ const login = () => {
     return `${BaseUrl}/auth/login`
 }
 
+const register = () => {
+    return `${BaseUrl}/user`
+}
 
-export {me,login}
+
+export {me,login,register}
