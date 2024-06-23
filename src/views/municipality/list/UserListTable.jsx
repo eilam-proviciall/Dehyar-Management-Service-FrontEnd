@@ -1,14 +1,29 @@
 'use client';
-import React, { useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
-import { db } from "@/fake-db/apps/user-list";
+import React, {useEffect, useMemo, useState} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { selectedEvent } from "@/redux-store/slices/calendar";
+import {selectedEvent} from "@/redux-store/slices/calendar";
 import Chip from "@mui/material/Chip";
+import axios from "axios";
+import {user} from "@/Services/Auth/AuthService";
+import roles from "@data/roles.json"
 
 const UserListTable = props => {
-    const tableData = useMemo(() => db, []); // Memoize table data
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const data = axios.get(`${user()}?order_by=geo_region`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then((response) => {
+            console.log(response.data.data)
+            setUsers(response.data.data[0])
+        })
+    }, []);
+    console.log(users)
+    const tableData = useMemo(() => users, [users]); // Memoize table data
     const {
         dispatch,
         handleAddEventSidebarToggle
@@ -43,51 +58,50 @@ const UserListTable = props => {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'fullName',
+                accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({row}) => {
+                    const {first_name, last_name} = row.original;
+                    return <div style={{textAlign: 'right'}}>{`${first_name} ${last_name}`}</div>;
+                },
             },
             {
-                accessorKey: 'nationalId',
+                accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
 
             {
-                accessorKey: 'dehyaries',
+                accessorKey: 'covered_village',
                 header: 'دهیاری‌ها',
                 size: 200,
-                Cell: ({ cell, row }) => {
+                Cell: ({cell, row}) => {
                     const dehyaries = cell.getValue();
                     const rowId = row.id;
                     const isExpanded = !!expandedRows[rowId];
 
-                    if (Array.isArray(dehyaries) && dehyaries.length <= 2) {
-                        return <div style={{ textAlign: 'right' }}>{dehyaries.join(', ')}</div>;
-                    }
-
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            {isExpanded ? dehyaries.join(', ') : `${dehyaries.slice(0, 2).join(', ')}...`}
-                            <Button onClick={() => handleExpandClick(rowId)} size="small">
-                                {isExpanded ? 'کمتر' : 'بیشتر'}
-                            </Button>
+                        <div style={{textAlign: 'right'}}>
+                            {/*{isExpanded ? dehyaries.join(', ') : `${dehyaries.slice(0, 2).join(', ')}...`}*/}
+                            {/*<Button onClick={() => handleExpandClick(rowId)} size="small">*/}
+                            {/*    {isExpanded ? 'کمتر' : 'بیشتر'}*/}
+                            {/*</Button>*/}
+                            {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
                         </div>
                     );
                 }
             },
             {
-                accessorKey: 'role',
+                accessorKey: 'work_group',
                 header: 'نقش',
                 size: 150,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     const role = cell.getValue();
-                    const color = getChipColor(role);
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={role} color={color} />
+                        <div style={{textAlign: 'right'}}>
+                            <Chip label={roles[role]} color="primary"/>
                         </div>
                     );
                 },
@@ -99,7 +113,7 @@ const UserListTable = props => {
     const table = useMaterialReactTable({
         columns,
         data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
+        renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -112,19 +126,19 @@ const UserListTable = props => {
                     fullWidth
                     variant='contained'
                     onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
+                    startIcon={<i className='ri-add-line'/>}
                 >
                     افزودن کاربر
                 </Button>
             </Box>
         ),
         muiTableBodyRowProps: () => ({
-            style: { height: '10px' } // تنظیم ارتفاع هر سطر با استفاده از استایل‌های inline
+            style: {height: '10px'} // تنظیم ارتفاع هر سطر با استفاده از استایل‌های inline
         }),
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable table={table}/>
     );
 }
 

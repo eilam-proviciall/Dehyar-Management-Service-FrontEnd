@@ -67,11 +67,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         } else if (values.role === "13") {
             processedData.villages = data.villages;
         }
-        console.log(processedData);
         const response = axios.post(register(), processedData,
             {headers: {Authorization: `Bearer ${window.localStorage.getItem('token')}`}})
-            .then((res) => console.log(res))
-        //
+            .then((response) =>{
+                console.log(response)
+            }).catch((error)=>{
+                console.log(error)
+
+            })
+
         handleSidebarClose();
     };
 
