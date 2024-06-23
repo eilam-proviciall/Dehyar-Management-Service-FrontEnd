@@ -2,7 +2,8 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {deleteEvent, selectedEvent} from '@/redux-store/slices/calendar';
 import axios from "axios";
-import {register} from "@/Services/Auth/AuthService";
+import { user} from "@/Services/Auth/AuthService";
+import {toast} from "react-toastify";
 
 const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAddEventSidebarToggle) => {
     const dispatch = useDispatch();
@@ -67,14 +68,30 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         } else if (values.role === "13") {
             processedData.villages = data.villages;
         }
-        const response = axios.post(register(), processedData,
+        const response = axios.post(user(), processedData,
             {headers: {Authorization: `Bearer ${window.localStorage.getItem('token')}`}})
             .then((response) =>{
-                console.log(response)
-            }).catch((error)=>{
-                console.log(error)
-
-            })
+                toast.success("کاربر با موفقیت ایجاد شد",{
+                    position: "top-center"
+                });
+            }).catch((error) => {
+                if (error.response && error.response.data.errors) {
+                    const errors = error.response.data.errors;
+                    Object.keys(errors).forEach((key) => {
+                        errors[key].forEach((message) => {
+                            toast.error(message);
+                        });
+                    });
+                } else if (error.response && error.response.data.message) {
+                    toast.error(error.response.data.message,{
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error("خطای ناشناخته",{
+                        position: "top-center"
+                    });
+                }
+            });
 
         handleSidebarClose();
     };

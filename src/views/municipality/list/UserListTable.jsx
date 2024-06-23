@@ -18,11 +18,9 @@ const UserListTable = props => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }).then((response) => {
-            console.log(response.data.data)
             setUsers(response.data.data[0])
         })
     }, []);
-    console.log(users)
     const tableData = useMemo(() => users, [users]); // Memoize table data
     const {
         dispatch,
