@@ -8,5 +8,9 @@ const getVillageInformationList = () => {
     return `${BaseUrl}/village-information/detail/list`
 }
 
+const getRegion = () => {
+    return `${BaseUrl}/country-division/region`
+}
 
-export {getCity,getVillageInformationList}
+
+export {getCity,getVillageInformationList,getRegion}

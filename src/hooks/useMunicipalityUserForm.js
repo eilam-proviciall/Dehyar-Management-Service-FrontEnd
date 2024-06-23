@@ -8,11 +8,9 @@ import {toast} from "react-toastify";
 const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAddEventSidebarToggle) => {
     const dispatch = useDispatch();
     const [values, setValues] = useState({
-        title: '',
         nid: '',
         role: '',
         villages: [],
-        city: '',
     });
 
     const resetToStoredValues = useCallback(() => {
@@ -57,9 +55,10 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     };
 
     const onSubmit = data => {
+        console.log(data)
         let processedData = {
             nid: data.nid,
-            work_group: 12,
+            work_group: data.role,
             ...data // include other necessary data
         };
 
@@ -68,12 +67,14 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         } else if (values.role === "13") {
             processedData.villages = data.villages;
         }
+        console.log(processedData)
         const response = axios.post(user(), processedData,
             {headers: {Authorization: `Bearer ${window.localStorage.getItem('token')}`}})
             .then((response) =>{
                 toast.success("کاربر با موفقیت ایجاد شد",{
                     position: "top-center"
                 });
+                handleSidebarClose();
             }).catch((error) => {
                 if (error.response && error.response.data.errors) {
                     const errors = error.response.data.errors;
@@ -83,6 +84,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
                         });
                     });
                 } else if (error.response && error.response.data.message) {
+                    console.log(error.response)
                     toast.error(error.response.data.message,{
                         position: "top-center"
                     });
@@ -93,7 +95,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
                 }
             });
 
-        handleSidebarClose();
     };
 
     useEffect(() => {

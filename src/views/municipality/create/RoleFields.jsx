@@ -15,7 +15,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
             return (
                 <FormControl fullWidth className='mbe-5'>
                     <Controller
-                        name='city'
+                        name='geo_region'
                         control={control}
                         rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
@@ -24,7 +24,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                             ) : (
                                 <Autocomplete
                                     options={options}
-                                    getOptionLabel={(option) => `${option.state?.approved_name || ''} - ${option.approved_name}`}
+                                    getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
                                         onChange(newValue.hierarchy_code);
                                     }}
@@ -35,8 +35,8 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                             label='شهر'
                                             value={value}
                                             onChange={onChange}
-                                            error={!!errors.personalField1}
-                                            helperText={errors.personalField1 ? 'شهر الزامی است' : ''}
+                                            error={!!errors.geo_region}
+                                            helperText={errors.geo_region ? 'منطقه الزامی است' : ''}
                                         />
                                     )}
                                 />

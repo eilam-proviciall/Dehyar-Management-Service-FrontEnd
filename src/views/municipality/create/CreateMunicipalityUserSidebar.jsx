@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+// در ابتدای فایل CreateMunicipalityUserSidebar.js
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import useMunicipalityUserForm from '@hooks/useMunicipalityUserForm';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useFetchCities } from '@hooks/useFetchCities';
 import { useFetchVillageInformationList } from '@hooks/useFetchVillageInformationList';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -12,9 +12,10 @@ import {
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
 import roles from '@data/roles';
+import {useFetchRegions} from "@hooks/useFetchRegions";
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
-    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '' } });
+    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '', role: '' } });
     const {
         values, setValues, handleSidebarClose, handleDeleteButtonClick,
         onSubmit, resetToStoredValues
@@ -23,19 +24,17 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
     const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
     const [fetchState, setFetchState] = useState({
-        shouldFetchCities: false,
+        shouldFetchRegion: false,
         shouldFetchVillages: false
     });
 
-    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities);
+    const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion);
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages);
-
-    const { user } = useAuth();
 
     useEffect(() => {
         setFetchState(prevState => ({
             ...prevState,
-            shouldFetchCities: values.role === "14",
+            shouldFetchRegion: values.role === "14",
             shouldFetchVillages: values.role === "13"
         }));
     }, [values.role]);
@@ -82,35 +81,41 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             </Box>
             <Box className='sidebar-body p-5'>
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
-                    {renderTextField('title', 'نام و نام خانوادگی', 'نام و نام خانوادگی الزامی است')}
+                    {renderTextField('first_name', 'نام ', 'نام الزامی است')}
+                    {renderTextField('last_name', 'نام خانوادگی', 'نام خانوادگی الزامی است')}
                     {renderTextField('nid', 'کد ملی', 'کدملی الزامی است')}
                     <FormControl fullWidth className='mbe-5'>
                         <InputLabel id='event-role'>نقش</InputLabel>
-                        <Select
-                            label='نقش'
-                            value={values.role}
-                            labelId='event-role'
-                            onChange={e => {
-                                const newRole = e.target.value;
-                                setValues(prevValues => ({ ...prevValues, role: '' }));
-                                setTimeout(() => {
-                                    setValues(prevValues => ({ ...prevValues, role: newRole }));
-                                }, 0);
-                            }}
-                        >
-                            {Object.entries(roles).map(([value, label]) => (
-                                <MenuItem key={value} value={value}>{label}</MenuItem>
-                            ))}
-                        </Select>
+                        <Controller
+                            name="role"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label='نقش'
+                                    onChange={e => {
+                                        const newRole = e.target.value;
+                                        setValues(prevValues => ({ ...prevValues, role: '' }));
+                                        setTimeout(() => {
+                                            setValues(prevValues => ({ ...prevValues, role: newRole }));
+                                            field.onChange(e);
+                                        }, 0);
+                                    }}
+                                >
+                                    {Object.entries(roles).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>{label}</MenuItem>
+                                    ))}
+                                </Select>
+                            )}
+                        />
                     </FormControl>
-
 
                     <RoleFields
                         role={values.role}
                         control={control}
                         errors={errors}
-                        isLoading={values.role === "14" ? isCitiesLoading : isVillagesLoading}
-                        options={values.role === "14" ? cities : villages}
+                        isLoading={values.role === "14" ? isRegionsLoading : isVillagesLoading}
+                        options={values.role === "14" ? regions : villages}
                     />
                     <SidebarFooter
                         isUpdate={calendarStore.selectedEvent?.title?.length > 0}
