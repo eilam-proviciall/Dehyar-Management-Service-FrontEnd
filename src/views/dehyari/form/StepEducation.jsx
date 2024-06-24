@@ -86,7 +86,7 @@ const StepEducation = ({validation}) => {
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <DividerSimple title='اطلاعات تحصیلی'/>
+                <DividerSimple title='سوابق تحصیلی'/>
             </Grid>
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>

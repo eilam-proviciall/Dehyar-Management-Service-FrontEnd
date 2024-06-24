@@ -1,43 +1,73 @@
-import React, {useEffect, useState} from 'react'
-import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography, InputAdornment } from '@mui/material'
+import React from 'react'
+import {FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material'
 import jobTitles from '@data/jobTitles.json'
 import {Controller, useFormContext} from 'react-hook-form'
 import DividerSimple from "@components/common/Divider/DividerSimple";
+import Logo from "@core/svg/Logo";
 
-const StepJobDetails = ({ invoiceData, validation }) => {
-    const { register,control, watch, formState: { errors } } = useFormContext()
+const StepJobDetails = ({invoiceData, validation}) => {
+    const {register, control, watch, formState: {errors}} = useFormContext()
 
     return (
         <>
-            <Grid item xs={12}>
-                <div className='p-6 bg-actionHover rounded-xl'>
-                    <div className='flex justify-between gap-4 flex-col sm:flex-row'>
-                        <div className='flex flex-col gap-6'>
-                            <div className='flex items-center'>
-                                <Typography>شماره قرارداد:</Typography>
-                                <TextField
-                                    fullWidth
-                                    size='small'
-                                    value={invoiceData[0].id}
-                                    InputProps={{
-                                        disabled: true,
-                                        startAdornment: <InputAdornment position='start'>#</InputAdornment>
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div className='flex items-center gap-4'>
-                            <Typography className='min-is-[95px]' color='text.primary'>
-                                یه شماره دیگه:
-                            </Typography>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <div className='p-6 bg-actionHover rounded-xl'>
+                        <div className='flex justify-between items-center'>
+                            {/* لوگو در سمت راست */}
+                            <Grid item xs={4}>
+                                <div style={{width:200}} className='flex justify-start'>
+                                    <Logo />
+                                </div>
+                            </Grid>
+
+
+                            {/* متن در وسط */}
+                            <Grid item xs={4}>
+                                <div className='flex flex-col items-center'>
+                                    <Typography variant='h6'>قرارداد مدت معین و حکم حقوقی</Typography>
+                                    <Typography variant='h6'>دهیار تمام وقت</Typography>
+                                </div>
+                            </Grid>
+
+                            {/* فرم در سمت چپ */}
+                            <Grid item xs={4}>
+                                <div className='flex flex-col gap-2'>
+                                    <div className='flex items-center'>
+                                        <Typography>شماره قرارداد:</Typography>
+                                        <TextField
+                                            fullWidth
+                                            size='small'
+                                            value={invoiceData[0].id}
+                                            InputProps={{
+                                                disabled: true,
+                                                startAdornment: <InputAdornment position='start'>#</InputAdornment>
+                                            }}
+                                        />
+                                    </div>
+                                    <div className='flex items-center gap-4'>
+                                        <Typography  color='text.primary'>
+                                            تاریخ اجرا
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            size='small'
+                                            value={invoiceData[0].id}
+                                            InputProps={{
+                                                disabled: true,
+                                                startAdornment: <InputAdornment position='start'>1403/04/04</InputAdornment>
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </Grid>
                         </div>
                     </div>
-                </div>
+                </Grid>
             </Grid>
-
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات تکمیلی'/>
+                    <DividerSimple title='ساختار تشکیلات'/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small" error={!!errors.jobTitle}>
@@ -47,7 +77,7 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                             control={control}
                             defaultValue=""
                             rules={validation.jobTitle}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="پست سازمانی"
@@ -73,7 +103,7 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                             control={control}
                             defaultValue=""
                             rules={validation.coveredVillages}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="دهیاری های تحت پوشش"
@@ -90,7 +120,8 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                                 </Select>
                             )}
                         />
-                        {errors.coveredVillages && <Typography color="error">{errors.coveredVillages.message}</Typography>}
+                        {errors.coveredVillages &&
+                            <Typography color="error">{errors.coveredVillages.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -99,7 +130,7 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.nationalCode}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
                                 size="small"

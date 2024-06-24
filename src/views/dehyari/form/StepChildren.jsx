@@ -88,8 +88,8 @@ const StepChildren = ({ validation }) => {
                                                             onChange={(e) => field.onChange(e.target.value)}
                                                             value={field.value}
                                                         >
-                                                            <MenuItem value="1">مرد</MenuItem>
-                                                            <MenuItem value="0">زن</MenuItem>
+                                                            <MenuItem value="1">پسر</MenuItem>
+                                                            <MenuItem value="0">دختر</MenuItem>
                                                         </Select>
                                                     )}
                                                 />

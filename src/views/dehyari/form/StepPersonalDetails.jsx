@@ -13,7 +13,7 @@ const StepPersonalDetails = ({ validation }) => {
         <>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات تکمیلی' />
+                    <DividerSimple title='اطلاعات شخصی' />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
