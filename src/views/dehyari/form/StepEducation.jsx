@@ -100,10 +100,9 @@ const StepEducation = ({validation}) => {
                                     color: 'white',
                                     padding: '0 10px',
                                     borderRadius: '10px',
-                                    minWidth: '80px', // تنظیم عرض کمتر برای جلوگیری از شکستن متن
+                                    minWidth: '80px',
                                     textAlign: 'center',
-                                    whiteSpace: 'nowrap', // جلوگیری از شکستن متن به خطوط جدید
-                                    // overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis'
                                 }}
                             />

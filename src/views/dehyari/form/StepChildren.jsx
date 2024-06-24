@@ -60,6 +60,7 @@ const StepChildren = ({ validation }) => {
                                         backgroundColor: 'pink' ,
                                         minWidth: '80px',
                                         textAlign: 'center',
+                                        marginLeft :50,
                                         whiteSpace: 'nowrap',
                                         textOverflow: 'ellipsis'
                                     }}

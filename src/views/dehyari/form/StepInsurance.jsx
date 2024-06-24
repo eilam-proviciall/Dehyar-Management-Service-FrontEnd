@@ -7,6 +7,8 @@ import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
 
 const StepInsurance = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -15,6 +17,7 @@ const StepInsurance = ({ validation }) => {
         name: 'insurances'
     });
     const [expanded, setExpanded] = useState(false);
+    const totalInsuranceMonths = watch('insurances').reduce((acc, curr) => acc + (parseInt(curr.insurancePeriod) || 0), 0);
     useEffect(() => {
         if (Object.keys(errors.insurances || {}).length > 0) {
             setExpanded(true);
@@ -28,7 +31,21 @@ const StepInsurance = ({ validation }) => {
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>سوابق بیمه‌ای</Typography>
+                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                            <Typography>سوابق بیمه‌ای</Typography>
+                            <Badge
+                                badgeContent={`مجموع ماه‌ها: ${totalInsuranceMonths}`}
+                                color="primary"
+                                style={{color: 'white',
+                                    padding: '0 10px',
+                                    marginLeft :50,
+                                    borderRadius: '10px',
+                                    minWidth: '80px',
+                                    textAlign: 'center',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis' }}
+                            />
+                        </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         {fields.map((item, index) => (
