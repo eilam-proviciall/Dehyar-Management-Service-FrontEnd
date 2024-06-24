@@ -9,6 +9,8 @@ import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
 
 const StepChildren = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -22,6 +24,13 @@ const StepChildren = ({ validation }) => {
             setExpanded(true);
         }
     }, [errors.children]);
+    const children = watch('children') || [];
+    const countChildrenByGender = (gender) => {
+        return children.filter(child => child.gender === gender).length;
+    };
+
+    const girlsCount = countChildrenByGender('0');
+    const boysCount = countChildrenByGender('1');
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
@@ -30,7 +39,33 @@ const StepChildren = ({ validation }) => {
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>اطلاعات فرزندان</Typography>
+                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                            <Typography>اطلاعات فرزندان</Typography>
+                            <Box sty display="flex" alignItems="center" gap="20px">
+                                <Badge
+                                    badgeContent={`دختر: ${girlsCount}`}
+                                    color="primary"
+                                    style={{
+                                        backgroundColor: 'pink' ,
+                                        minWidth: '80px',
+                                        textAlign: 'center',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis'
+                                }}
+                                />
+                                <Badge
+                                    badgeContent={`پسر: ${boysCount}`}
+                                    color="primary"
+                                    style={{
+                                        backgroundColor: 'pink' ,
+                                        minWidth: '80px',
+                                        textAlign: 'center',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis'
+                                    }}
+                                />
+                            </Box>
+                        </Box>
                     </AccordionSummary>
                     <AccordionDetails>
                         {fields.map((item, index) => (

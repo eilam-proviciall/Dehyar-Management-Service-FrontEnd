@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import axios from "axios";
 import {user} from "@/Services/Auth/AuthService";
 import roles from "@data/roles.json"
+import {Cell} from "recharts";
 
 const UserListTable = props => {
     const [users, setUsers] = useState([]);
@@ -18,6 +19,7 @@ const UserListTable = props => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }).then((response) => {
+            console.log(response.data.data[0])
             setUsers(response.data.data[0])
         })
     }, []);
