@@ -91,7 +91,7 @@ const StepEducation = ({validation}) => {
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Box display="flex" alignItems="center">
+                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                             <Typography sx={{ fontWeight: 'bold', marginRight: '-10px' }}>اخرین مدرک تحصیلی:</Typography>
                             <Badge
                                 badgeContent={highestDegree.title}

@@ -43,7 +43,8 @@ const StepInsurance = ({ validation }) => {
                                     minWidth: '80px',
                                     textAlign: 'center',
                                     whiteSpace: 'nowrap',
-                                    textOverflow: 'ellipsis' }}
+                                    textOverflow: 'ellipsis'
+                            }}
                             />
                         </Box>
                     </AccordionSummary>
