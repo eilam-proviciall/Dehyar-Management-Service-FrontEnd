@@ -1,16 +1,19 @@
 import React from 'react';
-import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography, FormHelperText } from '@mui/material';
-import { useFormContext, Controller } from 'react-hook-form';
+import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
+import { useFetchCities } from "@hooks/useFetchCities";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const StepPersonalDetails = ({ validation }) => {
-    const { control, watch, formState: { errors } } = useFormContext();
+    const { control, formState: { errors } } = useFormContext();
+    const { cities, isLoading, error } = useFetchCities(true);
 
     return (
         <>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات تکمیلی'/>
+                    <DividerSimple title='اطلاعات تکمیلی' />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
@@ -79,14 +82,22 @@ const StepPersonalDetails = ({ validation }) => {
                         defaultValue=""
                         rules={validation.birthPlace}
                         render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="محل تولد"
-                                placeholder="محل تولد"
-                                {...field}
-                                error={!!errors.birthPlace}
-                                helperText={errors.birthPlace && errors.birthPlace.message}
+                            <Autocomplete
+                                options={cities}
+                                getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
+                                onChange={(event, newValue) => {
+                                    field.onChange(newValue ? newValue.hierarchy_code : '');
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        {...field}
+                                        size="small"
+                                        label='محل تولد'
+                                        error={!!errors.birthPlace}
+                                        helperText={errors.birthPlace && errors.birthPlace.message}
+                                    />
+                                )}
                             />
                         )}
                     />
@@ -98,14 +109,22 @@ const StepPersonalDetails = ({ validation }) => {
                         defaultValue=""
                         rules={validation.issuancePlace}
                         render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="محل صدور شناسنامه"
-                                placeholder="محل صدور"
-                                {...field}
-                                error={!!errors.issuancePlace}
-                                helperText={errors.issuancePlace && errors.issuancePlace.message}
+                            <Autocomplete
+                                options={cities}
+                                getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
+                                onChange={(event, newValue) => {
+                                    field.onChange(newValue ? newValue.hierarchy_code : '');
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        {...field}
+                                        size="small"
+                                        label='محل صدور شناسنامه'
+                                        error={!!errors.issuancePlace}
+                                        helperText={errors.issuancePlace && errors.issuancePlace.message}
+                                    />
+                                )}
                             />
                         )}
                     />

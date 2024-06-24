@@ -32,7 +32,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label='شهر'
+                                            label='منطقه'
                                             value={value}
                                             onChange={onChange}
                                             error={!!errors.geo_region}
