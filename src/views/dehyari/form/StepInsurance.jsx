@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Accordion, AccordionSummary, AccordionDetails, Button, FormHelperText } from '@mui/material';
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepInsurance = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -13,14 +14,19 @@ const StepInsurance = ({ validation }) => {
         control,
         name: 'insurances'
     });
-
+    const [expanded, setExpanded] = useState(false);
+    useEffect(() => {
+        if (Object.keys(errors.insurances || {}).length > 0) {
+            setExpanded(true);
+        }
+    }, [errors.insurances]);
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <Divider className='border-dashed' />
+                <DividerSimple title='سوابق بیمه‌ای'/>
             </Grid>
             <Grid item xs={12}>
-                <Accordion>
+                <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>سوابق بیمه‌ای</Typography>
                     </AccordionSummary>
@@ -38,6 +44,7 @@ const StepInsurance = ({ validation }) => {
                                                 render={({ field }) => (
                                                     <TextField
                                                         fullWidth
+                                                        size="small"
                                                         label="دهیاری محل خدمت"
                                                         {...field}
                                                         error={!!errors?.insurances?.[index]?.workplace}
@@ -54,6 +61,7 @@ const StepInsurance = ({ validation }) => {
                                                 rules={validation.insurancePeriod}
                                                 render={({ field }) => (
                                                     <TextField
+                                                        size="small"
                                                         fullWidth
                                                         label="سابقه بیمه (ماه)"
                                                         {...field}
@@ -80,7 +88,7 @@ const StepInsurance = ({ validation }) => {
                                                 )}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} sm={3}>
+                                        <Grid item xs={12} sm={2}>
                                             <Controller
                                                 name={`insurances.${index}.employmentEndDate`}
                                                 control={control}
@@ -97,7 +105,7 @@ const StepInsurance = ({ validation }) => {
                                                 )}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} sm={3}>
+                                        <Grid item xs={12} sm={1}>
                                             <IconButton
                                                 color="error"
                                                 aria-label="delete"

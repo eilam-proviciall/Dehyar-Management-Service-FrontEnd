@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Accordion, AccordionSummary, AccordionDetails, Button, FormHelperText
 } from '@mui/material';
@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepChildren = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -15,14 +16,19 @@ const StepChildren = ({ validation }) => {
         control,
         name: 'children'
     });
-
+    const [expanded, setExpanded] = useState(false);
+    useEffect(() => {
+        if (Object.keys(errors.children || {}).length > 0) {
+            setExpanded(true);
+        }
+    }, [errors.children]);
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <Divider className='border-dashed' />
+                <DividerSimple title='اطلاعات فرزندان' />
             </Grid>
             <Grid item xs={12}>
-                <Accordion>
+                <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>اطلاعات فرزندان</Typography>
                     </AccordionSummary>
@@ -40,6 +46,7 @@ const StepChildren = ({ validation }) => {
                                                 render={({ field }) => (
                                                     <TextField
                                                         fullWidth
+                                                        size="small"
                                                         label="کد ملی"
                                                         {...field}
                                                         error={!!errors?.children?.[index]?.nationalCode}
@@ -57,6 +64,7 @@ const StepChildren = ({ validation }) => {
                                                 render={({ field }) => (
                                                     <TextField
                                                         fullWidth
+                                                        size="small"
                                                         label="نام و نام خانوادگی"
                                                         {...field}
                                                         error={!!errors?.children?.[index]?.fullName}

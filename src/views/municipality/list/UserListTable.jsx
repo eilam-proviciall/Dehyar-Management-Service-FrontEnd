@@ -74,7 +74,7 @@ const UserListTable = props => {
             {
                 accessorKey: 'covered_village',
                 header: 'دهیاری‌ها',
-                size: 200,
+                size: 100,
                 Cell: ({cell, row}) => {
                     const dehyaries = cell.getValue();
                     const rowId = row.id;
@@ -82,10 +82,6 @@ const UserListTable = props => {
 
                     return (
                         <div style={{textAlign: 'right'}}>
-                            {/*{isExpanded ? dehyaries.join(', ') : `${dehyaries.slice(0, 2).join(', ')}...`}*/}
-                            {/*<Button onClick={() => handleExpandClick(rowId)} size="small">*/}
-                            {/*    {isExpanded ? 'کمتر' : 'بیشتر'}*/}
-                            {/*</Button>*/}
                             {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
                         </div>
                     );

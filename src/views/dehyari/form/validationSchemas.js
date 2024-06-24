@@ -85,15 +85,6 @@ const validationSchemas = {
         birthDate: {
             required: 'این فیلد الزامی است',
         },
-        marriageDate: {
-            required: 'این فیلد الزامی است',
-        },
-        endOfStudyExemption: {
-            required: 'این فیلد الزامی است',
-        },
-        deathDate: {
-            required: 'این فیلد الزامی است',
-        },
     },
     contract: {
         descriptionContract: {

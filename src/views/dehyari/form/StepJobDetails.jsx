@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography, InputAdornment } from '@mui/material'
 import jobTitles from '@data/jobTitles.json'
-import { useFormContext } from 'react-hook-form'
+import {Controller, useFormContext} from 'react-hook-form'
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepJobDetails = ({ invoiceData, validation }) => {
-    const { register, watch, formState: { errors } } = useFormContext()
+    const { register,control, watch, formState: { errors } } = useFormContext()
 
     return (
         <>
@@ -36,52 +37,83 @@ const StepJobDetails = ({ invoiceData, validation }) => {
 
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <Divider className='border-dashed' />
+                    <DividerSimple title='اطلاعات تکمیلی'/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
+                    <FormControl fullWidth size="small" error={!!errors.jobTitle}>
                         <InputLabel>پست سازمانی</InputLabel>
-                        <Select
-                            {...register('jobTitle', validation.jobTitle)}
-                            label="پست سازمانی"
-                            value={watch('jobTitle')}
-                            error={!!errors.jobTitle}
-                        >
-                            {Object.entries(jobTitles).map(([value, label]) => (
-                                <MenuItem key={value} value={value}>{label}</MenuItem>
-                            ))}
-                        </Select>
+                        <Controller
+                            name='jobTitle'
+                            control={control}
+                            defaultValue=""
+                            rules={validation.jobTitle}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label="پست سازمانی"
+                                    onChange={(e) => {
+                                        field.onChange(e.target.value);
+                                    }}
+                                    value={field.value || ''}
+                                >
+                                    {Object.entries(jobTitles).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>{label}</MenuItem>
+                                    ))}
+                                </Select>
+                            )}
+                        />
                         {errors.jobTitle && <Typography color="error">{errors.jobTitle.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
+                    <FormControl fullWidth size="small" error={!!errors.coveredVillages}>
                         <InputLabel>دهیاری های تحت پوشش</InputLabel>
-                        <Select
-                            {...register('coveredVillages', validation.coveredVillages)}
-                            label="دهیاری های تحت پوشش"
-                            value={watch('coveredVillages')}
-                            error={!!errors.coveredVillages}
-                        >
-                            <MenuItem value="1">چم جنگل</MenuItem>
-                            <MenuItem value="2">چم شیر</MenuItem>
-                            <MenuItem value="3">سرکان</MenuItem>
-                            <MenuItem value="4">سیاه سیاه</MenuItem>
-                            <MenuItem value="5">15 خرداد</MenuItem>
-                        </Select>
+                        <Controller
+                            name='coveredVillages'
+                            control={control}
+                            defaultValue=""
+                            rules={validation.coveredVillages}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label="دهیاری های تحت پوشش"
+                                    onChange={(e) => {
+                                        field.onChange(e.target.value);
+                                    }}
+                                    value={field.value || ''}
+                                >
+                                    <MenuItem value="1">چم جنگل</MenuItem>
+                                    <MenuItem value="2">چم شیر</MenuItem>
+                                    <MenuItem value="3">سرکان</MenuItem>
+                                    <MenuItem value="4">سیاه سیاه</MenuItem>
+                                    <MenuItem value="5">15 خرداد</MenuItem>
+                                </Select>
+                            )}
+                        />
                         {errors.coveredVillages && <Typography color="error">{errors.coveredVillages.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        label="کد ملی"
-                        placeholder="کد ملی"
-                        {...register('nationalCode', validation.nationalCode)}
-                        value={watch('nationalCode')}
-                        error={!!errors.nationalCode}
-                        helperText={errors.nationalCode && errors.nationalCode.message}
+                    <Controller
+                        name='nationalCode'
+                        control={control}
+                        defaultValue=""
+                        rules={validation.nationalCode}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="کد ملی"
+                                placeholder="کد ملی"
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value);
+                                }}
+                                value={field.value || ''}
+                                error={!!errors.nationalCode}
+                                helperText={errors.nationalCode && errors.nationalCode.message}
+                            />
+                        )}
                     />
                 </Grid>
             </Grid>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography, FormHelperText } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepPersonalDetails = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -9,7 +10,7 @@ const StepPersonalDetails = ({ validation }) => {
         <>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <Divider className='border-dashed' />
+                    <DividerSimple title='اطلاعات تکمیلی'/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
@@ -71,9 +72,6 @@ const StepPersonalDetails = ({ validation }) => {
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-                <Grid item xs={12}>
-                    <Divider className='border-dashed' />
-                </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name="birthPlace"
@@ -138,9 +136,6 @@ const StepPersonalDetails = ({ validation }) => {
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-                <Grid item xs={12}>
-                    <Divider className='border-dashed' />
-                </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small" error={!!errors.maritalStatus}>
                         <InputLabel>وضعیت تاهل</InputLabel>

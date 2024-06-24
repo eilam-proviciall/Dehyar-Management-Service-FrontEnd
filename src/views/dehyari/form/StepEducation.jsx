@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Accordion, AccordionSummary, AccordionDetails, Button, FormHelperText } from '@mui/material';
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepEducation = ({ validation }) => {
     const { control, watch, setValue, formState: { errors } } = useFormContext();
@@ -13,7 +14,12 @@ const StepEducation = ({ validation }) => {
         control,
         name: 'educations'
     });
-
+    const [expanded, setExpanded] = useState(false);
+    useEffect(() => {
+        if (Object.keys(errors.educations || {}).length > 0) {
+            setExpanded(true);
+        }
+    }, [errors.educations]);
     const educationDegrees = [
         { title: "بی سواد", value: 41 },
         { title: "سکل", value: 42 },
@@ -40,10 +46,10 @@ const StepEducation = ({ validation }) => {
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <Divider className='border-dashed' />
+                <DividerSimple title='اطلاعات تحصیلی'/>
             </Grid>
             <Grid item xs={12}>
-                <Accordion>
+                <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>تحصیلات</Typography>
                     </AccordionSummary>
