@@ -88,79 +88,86 @@ const Forms = ({ invoiceData }) => {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                 },
             }).then((res) => {
-                const { human_resource, children, educations, insurances } = res.data;
-
-                if (human_resource) {
-                    toast.success("Human resource با موفقیت ایجاد شد", {
-                        position: "top-center"
-                    });
-                    window.location.href = '/dehyari';
-                } else {
-                    toast.error("خطا در ایجاد Human resource", {
-                        position: "top-center"
-                    });
-                }
-
-                children.forEach((status, index) => {
-                    if (status) {
-                        toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
-                            position: "top-center"
-                        });
-                    } else {
-                        toast.error(`خطا در ایجاد Child ${index + 1}`, {
-                            position: "top-center"
-                        });
-                    }
-                });
-
-                educations.forEach((status, index) => {
-                    if (status) {
-                        toast.success(`Education ${index + 1} با موفقیت ایجاد شد`, {
-                            position: "top-center"
-                        });
-                    } else {
-                        toast.error(`خطا در ایجاد Education ${index + 1}`, {
-                            position: "top-center"
-                        });
-                    }
-                });
-
-                insurances.forEach((status, index) => {
-                    if (status) {
-                        toast.success(`Insurance ${index + 1} با موفقیت ایجاد شد`, {
-                            position: "top-center"
-                        });
-                    } else {
-                        toast.error(`خطا در ایجاد Insurance ${index + 1}`, {
-                            position: "top-center"
-                        });
-                    }
-                });
-            }).catch((error) => {
-                if (error.response && error.response.data.errors) {
-                    const errors = error.response.data.errors;
-                    Object.keys(errors).forEach((key) => {
-                        errors[key].forEach((message) => {
-                            toast.error(message);
-                        });
-                    });
-                } else if (error.response && error.response.data.message) {
-                    toast.error(error.response.data.message, {
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error("خطای ناشناخته", {
-                        position: "top-center"
-                    });
-                }
-            });
-        }
-        else {
-            axios.put(`/api/humanResources/${id}`, formattedData, {
+                handleResponse(res.data);
+            }).catch(handleError);
+        } else {
+            axios.put(`${humanResources()}/human-resources/${id}`, formattedData, {
                 headers: {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                 },
-            }).then((res) => console.log(res));
+            }).then((res) => {
+                handleResponse(res.data);
+            }).catch(handleError);
+        }
+    };
+
+    const handleResponse = (data) => {
+        const { human_resource, children, educations, insurances } = data;
+
+        if (human_resource) {
+            toast.success("Human resource با موفقیت به‌روزرسانی شد", {
+                position: "top-center"
+            });
+            window.location.href = '/dehyari';
+        } else {
+            toast.error("خطا در به‌روزرسانی Human resource", {
+                position: "top-center"
+            });
+        }
+
+        children.forEach((status, index) => {
+            if (status) {
+                toast.success(`Child ${index + 1} با موفقیت به‌روزرسانی شد`, {
+                    position: "top-center"
+                });
+            } else {
+                toast.error(`خطا در به‌روزرسانی Child ${index + 1}`, {
+                    position: "top-center"
+                });
+            }
+        });
+
+        educations.forEach((status, index) => {
+            if (status) {
+                toast.success(`Education ${index + 1} با موفقیت به‌روزرسانی شد`, {
+                    position: "top-center"
+                });
+            } else {
+                toast.error(`خطا در به‌روزرسانی Education ${index + 1}`, {
+                    position: "top-center"
+                });
+            }
+        });
+
+        insurances.forEach((status, index) => {
+            if (status) {
+                toast.success(`Insurance ${index + 1} با موفقیت به‌روزرسانی شد`, {
+                    position: "top-center"
+                });
+            } else {
+                toast.error(`خطا در به‌روزرسانی Insurance ${index + 1}`, {
+                    position: "top-center"
+                });
+            }
+        });
+    };
+
+    const handleError = (error) => {
+        if (error.response && error.response.data.errors) {
+            const errors = error.response.data.errors;
+            Object.keys(errors).forEach((key) => {
+                errors[key].forEach((message) => {
+                    toast.error(message);
+                });
+            });
+        } else if (error.response && error.response.data.message) {
+            toast.error(error.response.data.message, {
+                position: "top-center"
+            });
+        } else {
+            toast.error("خطای ناشناخته", {
+                position: "top-center"
+            });
         }
     };
 
