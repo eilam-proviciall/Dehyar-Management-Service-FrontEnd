@@ -9,6 +9,7 @@ import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
+import contractType from "@data/contractType.json";
 
 const StepInsurance = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();

@@ -49,16 +49,16 @@ const StepEducation = ({validation}) => {
     ];
 
     const fieldsOfStudy = [
-        {title: "مهندسی نرم‌افزار", value: 51},
-        {title: "مهندسی برق", value: 52},
-        {title: "مهندسی مکانیک", value: 53},
-        {title: "پزشکی", value: 54},
-        {title: "حقوق", value: 55},
-        {title: "مدیریت", value: 56},
-        {title: "اقتصاد", value: 57},
-        {title: "ریاضی", value: 58},
-        {title: "فیزیک", value: 59},
-        {title: "شیمی", value: 60}
+        {title: "مهندسی نرم‌افزار", value: 2001692},
+        {title: "مهندسی برق", value: 2651},
+        {title: "مهندسی مکانیک", value: 2667},
+        {title: "پزشکی", value: 16351},
+        {title: "حقوق", value: 2061},
+        {title: "مدیریت", value: 2510},
+        {title: "اقتصاد", value: 7317},
+        {title: "ریاضی", value: 2001339},
+        {title: "فیزیک", value: 6989},
+        {title: "شیمی", value: 6909}
     ];
     const getHighestDegree = (educations) => {
         if (!educations || educations.length === 0) {

@@ -15,6 +15,8 @@ import axios from "axios";
 import {humanResources} from "@/Services/humanResources";
 import MyDocument from "@components/MyDocument";
 import {pdf} from "@react-pdf/renderer";
+import {salaryToDTO} from "@/utils/SalaryDTO";
+import {toast} from "react-toastify";
 
 const Forms = ({invoiceData}) => {
     const methods = useForm({
@@ -34,6 +36,7 @@ const Forms = ({invoiceData}) => {
             educations: [{degree: '', fieldOfStudy: '', graduationDate: ''}],
             insurances: [{
                 workplace: '',
+                contract_type :"",
                 insurancePeriod: '',
                 insuranceType: '',
                 employmentStartDate: '',
@@ -52,64 +55,92 @@ const Forms = ({invoiceData}) => {
             employmentStatus: '',
             contractStart: '',
             contractEnd: '',
+            execute_start: '',
             descriptionContract: '',
             titleContract: ''
         }
     })
 
     const onSubmit = data => {
-        data = methods.getValues()
-        const formattedData = {
-            job_type_id: data.jobTitle,
-            nid: data.nationalCode,
-            covered_villages: 13141011117,
-            full_name: data.fullName,
-            father_name: data.fatherName,
-            personal_id: data.personalId,
-            gender: data.gender,
-            married_status: data.maritalStatus,
-            birth_place: 1311,
-            issue_place: 1311,
-            eisargari_status: data.veteranStatus,
-            nezam_vazife: data.militaryService,
-            contract_type: data.contractType,
-            employment_status: data.employmentStatus,
-            contract_start: 345345345,
-            contract_end: 345345,
-            execute_start: 345435, // Assuming execute_start is the same as contractStart
-            description_contract: data.descriptionContract,
-            title_contract: data.titleContract,
-            educations: data.educations.map(education => ({
-                education_degree: education.degree,
-                education_field: 2651,
-                education_date: education.graduationDate
-            })),
-            insurances: data.insurances.map(insurance => ({
-                city: 1311,
-                month: 23,
-                start_date: 345345345,
-                end_date: 345345345
-            })),
-            children: data.children.map(child => ({
-                nid: child.nationalCode,
-                full_name: child.fullName,
-                birth_date: 345345345,
-                death_date: 345345345,
-                gender: child.gender,
-                married_date: 345345345,
-                end_academic_deferment: 345345345
-            }))
-        };
-        axios.post(humanResources(),
-            formattedData
-            , {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                },
-            }).then((res) => console.log(res))
-    }
+        data = methods.getValues();
+        const formattedData = salaryToDTO(data);
+        console.log(formattedData);
+        axios.post(humanResources(), formattedData, {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+            },
+        }).then((res) => {
+            const { human_resource, children, educations, insurances } = res.data;
+
+            if (human_resource) {
+                toast.success("Human resource با موفقیت ایجاد شد", {
+                    position: "top-center"
+                });
+            } else {
+                toast.error("خطا در ایجاد Human resource", {
+                    position: "top-center"
+                });
+            }
+
+            children.forEach((status, index) => {
+                if (status) {
+                    toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error(`خطا در ایجاد Child ${index + 1}`, {
+                        position: "top-center"
+                    });
+                }
+            });
+
+            educations.forEach((status, index) => {
+                if (status) {
+                    toast.success(`Education ${index + 1} با موفقیت ایجاد شد`, {
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error(`خطا در ایجاد Education ${index + 1}`, {
+                        position: "top-center"
+                    });
+                }
+            });
+
+            insurances.forEach((status, index) => {
+                if (status) {
+                    toast.success(`Insurance ${index + 1} با موفقیت ایجاد شد`, {
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error(`خطا در ایجاد Insurance ${index + 1}`, {
+                        position: "top-center"
+                    });
+                }
+            });
+        }).catch((error) => {
+            if (error.response && error.response.data.errors) {
+                const errors = error.response.data.errors;
+                Object.keys(errors).forEach((key) => {
+                    errors[key].forEach((message) => {
+                        toast.error(message);
+                    });
+                });
+            } else if (error.response && error.response.data.message) {
+                console.log(error.response);
+                toast.error(error.response.data.message, {
+                    position: "top-center"
+                });
+            } else {
+                toast.error("خطای ناشناخته", {
+                    position: "top-center"
+                });
+            }
+        });
+    };
+
+
     const handleDownload = async () => {
-        const doc = <MyDocument />;
+        const doc = <MyDocument/>;
         const asPdf = pdf([]); // Creating an instance of pdf
         asPdf.updateContainer(doc);
         const blob = await asPdf.toBlob();

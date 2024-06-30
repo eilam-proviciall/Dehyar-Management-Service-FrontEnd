@@ -138,10 +138,14 @@ const StepChildren = ({ validation }) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.birthDate}
+                                                onChange={(date) => field.onChange(date.toUnix().toUnix())}
                                                 render={({ field }) => (
                                                     <DatePicker
                                                         {...field}
                                                         calendar={persian}
+                                                        onChange={(date) => {
+                                                            field.onChange(date ? date.toUnix() : '');
+                                                        }}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
                                                         render={<TextField size="small" fullWidth label="تاریخ تولد" error={!!errors?.children?.[index]?.birthDate} helperText={errors?.children?.[index]?.birthDate && errors.children[index].birthDate.message} />}
