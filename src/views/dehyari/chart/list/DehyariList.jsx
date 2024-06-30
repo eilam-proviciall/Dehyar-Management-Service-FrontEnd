@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import Button from "@mui/material/Button";
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import Box from "@mui/material/Box";
 import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
 import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
@@ -114,16 +114,17 @@ function DehyariList(props) {
                 header: 'عملیات',
                 size: 150,
                 Cell: ({ row }) => (
-                    <div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                         <IconButton
                             aria-label="more"
                             id="long-button"
                             aria-controls={open ? 'long-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
                             aria-haspopup="true"
-                            onClick={handleClick}
+                            onClick={(event) => handleClick(event)}
+                            style={{ paddingLeft: 0 }}
                         >
-                            <MoreVertIcon />
+                            <MoreVertIcon style={{textAlign:"center",justifyContent: 'center', alignItems: 'center'}}/>
                         </IconButton>
                         <Menu
                             id="long-menu"
