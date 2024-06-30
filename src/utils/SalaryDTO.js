@@ -64,19 +64,19 @@ export const dtoToEmployee = (data) => {
         contractEnd: data.contract_end,
         descriptionContract: data.description_contract,
         titleContract: data.title_contract,
-        educations: data.educations.map(education => ({
+        educations: data.education_histories.map(education => ({
             degree: education.education_degree,
             fieldOfStudy: education.education_field,
             graduationDate: education.education_date
         })),
-        insurances: data.insurances.map(insurance => ({
-            workplace: insurance.city,
-            insurancePeriod: insurance.insurance_period,
-            insuranceType: insurance.insurance_type,
-            employmentStartDate: insurance.employment_start_date,
-            employmentEndDate: insurance.employment_end_date
+        insurances: data.insurance_histories.map(insurance => ({
+            workplace: insurance.dehyari_title,
+            insurancePeriod: insurance.month,
+            insuranceType: insurance.contract_type,
+            employmentStartDate: insurance.start_date,
+            employmentEndDate: insurance.end_date
         })),
-        children: data.children.map(child => ({
+        children: data.childrens.map(child => ({
             nationalCode: child.nid,
             fullName: child.full_name,
             birthDate: child.birth_date,

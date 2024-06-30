@@ -1,53 +1,41 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from "@mui/material/Button";
 import { MaterialReactTable } from 'material-react-table';
 import Box from "@mui/material/Box";
-import OpenDialogOnElementClick from "@components/dialogs/OpenDialogOnElementClick";
-import DehyariDialog from "@views/dehyari/chart/list/DehyariDialog";
 import Chip from "@mui/material/Chip";
 import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import jobTitles from '@data/jobTitles.json';
-import contractType from "@data/contractType.json";
-import { Delete, Edit, MoreVert } from "@mui/icons-material";
+import contractType from "@data/jobTitles.json";
+import { Edit, MoreVert } from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Link from 'next/link';
 
 function DehyariList(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const router = useRouter();
+
+    const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
+        setSelectedRow(row);
     };
-    const options = [
-        'None',
-        'Atria',
-        'Callisto',
-        'Dione',
-        'Ganymede',
-        'Hangouts Call',
-        'Luna',
-        'Oberon',
-        'Phobos',
-        'Pyxis',
-        'Sedna',
-        'Titania',
-        'Triton',
-        'Umbriel',
-    ];
+
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     useEffect(() => {
         axios.get(humanResources(), {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             },
         }).then((response) => {
-            console.log(response.data);
             setData(response.data);
             setLoading(false);
         }).catch(() => {
@@ -56,25 +44,6 @@ function DehyariList(props) {
     }, []);
 
     const tableData = useMemo(() => data, [data]);
-    const {
-        dispatch,
-        handleAddEventSidebarToggle
-    } = props;
-    const buttonProps = {
-        variant: 'contained',
-        children: 'ثبت اطلاعات پرسنلی'
-    };
-
-    const getChipColor = (role) => {
-        switch (role) {
-            case 'ناقض':
-                return 'primary';
-            case 'پایان کار':
-                return 'warning';
-            default:
-                return 'default';
-        }
-    };
 
     const columns = useMemo(
         () => [
@@ -110,21 +79,20 @@ function DehyariList(props) {
                 },
             },
             {
-                accessorKey: '3453',
+                accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
                 Cell: ({ row }) => (
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                         <IconButton
                             aria-label="more"
-                            id="long-button"
                             aria-controls={open ? 'long-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
                             aria-haspopup="true"
-                            onClick={(event) => handleClick(event)}
+                            onClick={(event) => handleClick(event, row)}
                             style={{ paddingLeft: 0 }}
                         >
-                            <MoreVertIcon style={{textAlign:"center",justifyContent: 'center', alignItems: 'center'}}/>
+                            <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
                         </IconButton>
                         <Menu
                             id="long-menu"
@@ -135,11 +103,11 @@ function DehyariList(props) {
                             open={open}
                             onClose={handleClose}
                         >
-                            {options.map((option) => (
-                                <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                                    {option}
-                                </MenuItem>
-                            ))}
+                            <MenuItem onClick={handleClose}>
+                                <Link href={`/dehyari/form?mode=edit&id=${row.original.id}`}>
+                                    ویرایش
+                                </Link>
+                            </MenuItem>
                         </Menu>
                     </div>
                 ),
@@ -147,16 +115,6 @@ function DehyariList(props) {
         ],
         [anchorEl, selectedRow]
     );
-
-    const handleEdit = (row) => {
-        console.info('Edit', row);
-        setAnchorEl(null);
-    };
-
-    const handleDelete = (row) => {
-        console.info('Delete', row);
-        setAnchorEl(null);
-    };
 
     if (loading) {
         return <div>در حال بارگذاری...</div>;

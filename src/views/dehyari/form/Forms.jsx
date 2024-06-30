@@ -1,25 +1,26 @@
-'use client'
-
-import {FormProvider, useForm} from 'react-hook-form'
-import {Button, Card, CardContent, Grid} from '@mui/material'
-import StepJobDetails from './StepJobDetails'
-import StepPersonalDetails from './StepPersonalDetails'
-import StepEducation from './StepEducation'
-import StepInsurance from './StepInsurance'
-import StepChildren from './StepChildren'
-import StepContract from './StepContract'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
-import SaveIcon from '@mui/icons-material/Save'
-import validationSchemas from './validationSchemas'
+"use client"
+import { useRouter } from 'next/navigation';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Button, Card, CardContent, Grid, CircularProgress, Alert } from '@mui/material';
+import StepJobDetails from './StepJobDetails';
+import StepPersonalDetails from './StepPersonalDetails';
+import StepEducation from './StepEducation';
+import StepInsurance from './StepInsurance';
+import StepChildren from './StepChildren';
+import StepContract from './StepContract';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SaveIcon from '@mui/icons-material/Save';
+import validationSchemas from './validationSchemas';
 import axios from "axios";
-import {humanResources} from "@/Services/humanResources";
+import {GetHumanResource, humanResources} from "@/Services/humanResources";
 import MyDocument from "@components/MyDocument";
-import {pdf} from "@react-pdf/renderer";
-import {dtoToEmployee, salaryToDTO} from "@/utils/SalaryDTO";
-import {toast} from "react-toastify";
-import {useEffect, useState} from "react";
+import { pdf } from "@react-pdf/renderer";
+import { dtoToEmployee, salaryToDTO } from "@/utils/SalaryDTO";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
-const Forms = ({ invoiceData, mode = 'create', id }) => {
+const Forms = ({ invoiceData }) => {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const methods = useForm({
@@ -49,24 +50,38 @@ const Forms = ({ invoiceData, mode = 'create', id }) => {
     });
 
     useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const mode = queryParams.get('mode') || 'create';
+        const id = queryParams.get('id');
+
         if (mode === 'edit' && id) {
             setLoading(true);
-            axios.get(`/api/humanResources/${id}`)
+            axios.get(GetHumanResource(id),{
+                headers:{
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                }
+            })
                 .then(response => {
+                    console.log(response)
+                    console.log(dtoToEmployee(response.data));
                     methods.reset(dtoToEmployee(response.data));
                     setLoading(false);
                 })
                 .catch(error => {
+                    console.log(error)
                     setError(error);
                     setLoading(false);
                 });
         }
-    }, [mode, id, methods]);
+    }, [methods]);
 
     const onSubmit = data => {
         const formattedData = salaryToDTO(data);
+        const queryParams = new URLSearchParams(window.location.search);
+        const mode = queryParams.get('mode') || 'create';
+        const id = queryParams.get('id');
+
         if (mode === 'create') {
-            console.log(formattedData);
             axios.post(humanResources(), formattedData, {
                 headers: {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
@@ -78,11 +93,14 @@ const Forms = ({ invoiceData, mode = 'create', id }) => {
                     toast.success("Human resource با موفقیت ایجاد شد", {
                         position: "top-center"
                     });
+                    // Redirect to /dehyarti after successful creation
+                    window.location.href = '/dehyari';
                 } else {
                     toast.error("خطا در ایجاد Human resource", {
                         position: "top-center"
                     });
                 }
+
                 children.forEach((status, index) => {
                     if (status) {
                         toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
@@ -127,7 +145,6 @@ const Forms = ({ invoiceData, mode = 'create', id }) => {
                         });
                     });
                 } else if (error.response && error.response.data.message) {
-                    console.log(error.response);
                     toast.error(error.response.data.message, {
                         position: "top-center"
                     });
@@ -137,7 +154,8 @@ const Forms = ({ invoiceData, mode = 'create', id }) => {
                     });
                 }
             });
-        } else {
+        }
+        else {
             axios.put(`/api/humanResources/${id}`, formattedData, {
                 headers: {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
@@ -244,4 +262,4 @@ const Forms = ({ invoiceData, mode = 'create', id }) => {
     );
 }
 
-export default Forms
+export default Forms;
