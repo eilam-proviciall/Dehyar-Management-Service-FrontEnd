@@ -2,7 +2,7 @@ export const salaryToDTO = (data) => {
     return {
         job_type_id: data.jobTitle,
         nid: data.nationalCode,
-        covered_villages: 13141011116,
+        covered_villages: data.coveredVillages,
         full_name: data.fullName,
         father_name: data.fatherName,
         personal_id: data.personalId,

@@ -18,6 +18,7 @@ import { pdf } from "@react-pdf/renderer";
 import { dtoToEmployee, salaryToDTO } from "@/utils/SalaryDTO";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import {getSalary} from "@/Services/Salary";
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();
@@ -93,7 +94,6 @@ const Forms = ({ invoiceData }) => {
                     toast.success("Human resource با موفقیت ایجاد شد", {
                         position: "top-center"
                     });
-                    // Redirect to /dehyarti after successful creation
                     window.location.href = '/dehyari';
                 } else {
                     toast.error("خطا در ایجاد Human resource", {
@@ -165,24 +165,44 @@ const Forms = ({ invoiceData }) => {
     };
 
     const handleDownload = async () => {
-        const doc = <MyDocument />;
-        const asPdf = pdf([]);
-        asPdf.updateContainer(doc);
-        const blob = await asPdf.toBlob();
+        const queryParams = new URLSearchParams(window.location.search);
+        const id = queryParams.get('id');
 
-        const url = URL.createObjectURL(blob);
-        const iframe = document.createElement('iframe');
-        iframe.style.position = 'fixed';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
-        iframe.style.border = 'none';
-        iframe.src = url;
+        try {
+            // Fetch salary data
+            const response = await axios.get(getSalary(id), {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            });
+            const data = response.data;
+            console.log(data)
+            // Create PDF document
+            const doc = <MyDocument data={data} />;
+            const asPdf = pdf([]);
+            asPdf.updateContainer(doc);
+            const blob = await asPdf.toBlob();
 
-        document.body.appendChild(iframe);
+            // Create URL for the PDF
+            const url = URL.createObjectURL(blob);
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            iframe.src = url;
 
-        iframe.onload = () => {
-            iframe.contentWindow.print();
-        };
+            // Append iframe to the document body
+            document.body.appendChild(iframe);
+
+            // Print the PDF once it's loaded
+            iframe.onload = () => {
+                iframe.contentWindow.print();
+            };
+        } catch (err) {
+            console.error("Error fetching salary data:", err.message);
+            toast.error("Error fetching salary data");
+        }
     };
 
     if (loading) return <CircularProgress />;

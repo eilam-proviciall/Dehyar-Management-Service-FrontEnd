@@ -112,7 +112,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
                                     }}
                                     value={field.value || ''}
                                 >
-                                    <MenuItem value="1">چم جنگل</MenuItem>
+                                    <MenuItem value="30101111101">چم جنگل</MenuItem>
                                     <MenuItem value="2">چم شیر</MenuItem>
                                     <MenuItem value="3">سرکان</MenuItem>
                                     <MenuItem value="4">سیاه سیاه</MenuItem>
