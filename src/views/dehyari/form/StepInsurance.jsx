@@ -73,6 +73,33 @@ const StepInsurance = ({ validation }) => {
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
+                                            <FormControl fullWidth size="small">
+                                                <InputLabel>نوع قرارداد</InputLabel>
+                                                <Controller
+                                                    name={`insurances.${index}.insurancesContractType`}
+                                                    control={control}
+                                                    rules={"required"}
+                                                    defaultValue=""
+                                                    render={({ field }) => (
+                                                        <Select
+                                                            {...field}
+                                                            label="نوع قرارداد"
+                                                            error={!!errors?.insurances?.[index]?.insurancesContractType}
+                                                        >
+                                                            {Object.entries(contractType).map(([value, label]) => (
+                                                                <MenuItem key={value} value={value}>{label}</MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    )}
+                                                />
+                                                {errors?.insurances?.[index]?.insurancesContractType && (
+                                                    <Typography color="error">
+                                                        {errors.insurances[index].insurancesContractType.message}
+                                                    </Typography>
+                                                )}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={3}>
                                             <Controller
                                                 name={`insurances.${index}.insurancePeriod`}
                                                 control={control}

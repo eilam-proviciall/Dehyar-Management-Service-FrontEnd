@@ -58,7 +58,7 @@ const validationSchemas = {
         workplace: {
             required: 'این فیلد الزامی است',
         },
-        contract_type: {
+        insurancesContractType: {
             required: 'این فیلد الزامی است',
         },
         insurancePeriod: {

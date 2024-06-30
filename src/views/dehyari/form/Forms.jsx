@@ -36,7 +36,7 @@ const Forms = ({invoiceData}) => {
             educations: [{degree: '', fieldOfStudy: '', graduationDate: ''}],
             insurances: [{
                 workplace: '',
-                contract_type :"",
+                insurancesContractType :"",
                 insurancePeriod: '',
                 insuranceType: '',
                 employmentStartDate: '',

@@ -26,11 +26,11 @@ export const salaryToDTO = (data) => {
         })),
         insurances: data.insurances.map(insurance => ({
             dehyari_title: insurance.workplace,
-            contract_type: insurance.contract_type,
-            insurance_period: insurance.insurancePeriod,
+            contract_type: insurance.insurancesContractType,
+            month: insurance.insurancePeriod,
             insurance_type: insurance.insuranceType,
-            employment_start_date: insurance.employmentStartDate,
-            employment_end_date: insurance.employmentEndDate
+            start_date: insurance.employmentStartDate,
+            end_date: insurance.employmentEndDate
         })),
         children: data.children.map(child => ({
             nid: child.nationalCode,
