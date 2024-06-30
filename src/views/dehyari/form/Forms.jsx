@@ -81,7 +81,6 @@ const Forms = ({invoiceData}) => {
                     position: "top-center"
                 });
             }
-
             children.forEach((status, index) => {
                 if (status) {
                     toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
