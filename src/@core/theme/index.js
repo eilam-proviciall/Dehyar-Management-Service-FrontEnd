@@ -29,6 +29,7 @@ const theme = (settings, mode, direction) => {
     },
     shadows: shadows(mode),
     typography: typography(inter.style.fontFamily),
+
     customShadows: customShadows(mode),
     mainColorChannels: {
       light: '38 43 67',

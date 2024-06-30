@@ -61,7 +61,7 @@ const input = {
           opacity: 0.38
         },
         '&.MuiInputBase-multiline': {
-          paddingInline: theme.spacing(4)
+          paddingInline: theme.spacing(40)
         },
         '&:has(.MuiInputAdornment-positionStart)': {
           paddingInlineStart: theme.spacing(4)
