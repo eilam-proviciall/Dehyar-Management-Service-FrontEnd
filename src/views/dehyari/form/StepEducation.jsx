@@ -27,7 +27,7 @@ import DividerSimple from "@components/common/Divider/DividerSimple";
 import Badge from "@mui/material/Badge";
 
 const StepEducation = ({validation}) => {
-    const {control, watch, setValue, formState: {errors}} = useFormContext();
+    const {control, watch, getValues, formState: {errors}} = useFormContext();
     const {fields, append, remove} = useFieldArray({
         control,
         name: 'educations'
@@ -182,8 +182,10 @@ const StepEducation = ({validation}) => {
                                                         calendar={persian}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
-                                                        onChange={(date) => field.onChange(date.unix)}
-                                                        value={field.value}
+                                                        onChange={(date) => {
+                                                            field.onChange(date ? date.toUnix() : '');
+                                                        }}
+                                                        value={getValues("graduationDate")}
                                                         render={
                                                             <TextField
                                                                 fullWidth

@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 const RoleFields = ({ role, control, errors, isLoading, options }) => {
 
     if (role && (!options || options.length === 0)) {
-        return <Typography variant='body1'>داده‌ای یافت نشد</Typography>;
+        return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     }
 
     switch (role) {
@@ -24,6 +24,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                             ) : (
                                 <Autocomplete
                                     options={options}
+                                    disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
                                         onChange(newValue.hierarchy_code);
@@ -58,6 +59,7 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                             ) : (
                                 <Autocomplete
                                     multiple
+                                    disableCloseOnSelect
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
