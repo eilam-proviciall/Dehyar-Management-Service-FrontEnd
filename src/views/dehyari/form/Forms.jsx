@@ -15,10 +15,13 @@ import axios from "axios";
 import {humanResources} from "@/Services/humanResources";
 import MyDocument from "@components/MyDocument";
 import {pdf} from "@react-pdf/renderer";
-import {salaryToDTO} from "@/utils/SalaryDTO";
+import {dtoToEmployee, salaryToDTO} from "@/utils/SalaryDTO";
 import {toast} from "react-toastify";
+import {useEffect, useState} from "react";
 
-const Forms = ({invoiceData}) => {
+const Forms = ({ invoiceData, mode = 'create', id }) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const methods = useForm({
         defaultValues: {
             jobTitle: '',
@@ -33,114 +36,119 @@ const Forms = ({invoiceData}) => {
             issuancePlace: '',
             veteranStatus: '',
             militaryService: '',
-            educations: [{degree: '', fieldOfStudy: '', graduationDate: ''}],
-            insurances: [{
-                workplace: '',
-                insurancesContractType :"",
-                insurancePeriod: '',
-                insuranceType: '',
-                employmentStartDate: '',
-                employmentEndDate: ''
-            }],
-            children: [{
-                nationalCode: '',
-                fullName: '',
-                gender: '',
-                birthDate: '',
-                marriageDate: '',
-                endOfStudyExemption: '',
-                deathDate: ''
-            }],
+            educations: [{ degree: '', fieldOfStudy: '', graduationDate: '' }],
+            insurances: [{ workplace: '', insurancePeriod: '', insuranceType: '', employmentStartDate: '', employmentEndDate: '' }],
+            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', deathDate: '' }],
             contractType: '',
             employmentStatus: '',
             contractStart: '',
             contractEnd: '',
-            execute_start: '',
             descriptionContract: '',
             titleContract: ''
         }
-    })
+    });
+
+    useEffect(() => {
+        if (mode === 'edit' && id) {
+            setLoading(true);
+            axios.get(`/api/humanResources/${id}`)
+                .then(response => {
+                    methods.reset(dtoToEmployee(response.data));
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setError(error);
+                    setLoading(false);
+                });
+        }
+    }, [mode, id, methods]);
 
     const onSubmit = data => {
-        data = methods.getValues();
         const formattedData = salaryToDTO(data);
-        console.log(formattedData);
-        axios.post(humanResources(), formattedData, {
-            headers: {
-                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-            },
-        }).then((res) => {
-            const { human_resource, children, educations, insurances } = res.data;
+        if (mode === 'create') {
+            console.log(formattedData);
+            axios.post(humanResources(), formattedData, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            }).then((res) => {
+                const { human_resource, children, educations, insurances } = res.data;
 
-            if (human_resource) {
-                toast.success("Human resource با موفقیت ایجاد شد", {
-                    position: "top-center"
-                });
-            } else {
-                toast.error("خطا در ایجاد Human resource", {
-                    position: "top-center"
-                });
-            }
-            children.forEach((status, index) => {
-                if (status) {
-                    toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
+                if (human_resource) {
+                    toast.success("Human resource با موفقیت ایجاد شد", {
                         position: "top-center"
                     });
                 } else {
-                    toast.error(`خطا در ایجاد Child ${index + 1}`, {
+                    toast.error("خطا در ایجاد Human resource", {
+                        position: "top-center"
+                    });
+                }
+                children.forEach((status, index) => {
+                    if (status) {
+                        toast.success(`Child ${index + 1} با موفقیت ایجاد شد`, {
+                            position: "top-center"
+                        });
+                    } else {
+                        toast.error(`خطا در ایجاد Child ${index + 1}`, {
+                            position: "top-center"
+                        });
+                    }
+                });
+
+                educations.forEach((status, index) => {
+                    if (status) {
+                        toast.success(`Education ${index + 1} با موفقیت ایجاد شد`, {
+                            position: "top-center"
+                        });
+                    } else {
+                        toast.error(`خطا در ایجاد Education ${index + 1}`, {
+                            position: "top-center"
+                        });
+                    }
+                });
+
+                insurances.forEach((status, index) => {
+                    if (status) {
+                        toast.success(`Insurance ${index + 1} با موفقیت ایجاد شد`, {
+                            position: "top-center"
+                        });
+                    } else {
+                        toast.error(`خطا در ایجاد Insurance ${index + 1}`, {
+                            position: "top-center"
+                        });
+                    }
+                });
+            }).catch((error) => {
+                if (error.response && error.response.data.errors) {
+                    const errors = error.response.data.errors;
+                    Object.keys(errors).forEach((key) => {
+                        errors[key].forEach((message) => {
+                            toast.error(message);
+                        });
+                    });
+                } else if (error.response && error.response.data.message) {
+                    console.log(error.response);
+                    toast.error(error.response.data.message, {
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error("خطای ناشناخته", {
                         position: "top-center"
                     });
                 }
             });
-
-            educations.forEach((status, index) => {
-                if (status) {
-                    toast.success(`Education ${index + 1} با موفقیت ایجاد شد`, {
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error(`خطا در ایجاد Education ${index + 1}`, {
-                        position: "top-center"
-                    });
-                }
-            });
-
-            insurances.forEach((status, index) => {
-                if (status) {
-                    toast.success(`Insurance ${index + 1} با موفقیت ایجاد شد`, {
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error(`خطا در ایجاد Insurance ${index + 1}`, {
-                        position: "top-center"
-                    });
-                }
-            });
-        }).catch((error) => {
-            if (error.response && error.response.data.errors) {
-                const errors = error.response.data.errors;
-                Object.keys(errors).forEach((key) => {
-                    errors[key].forEach((message) => {
-                        toast.error(message);
-                    });
-                });
-            } else if (error.response && error.response.data.message) {
-                console.log(error.response);
-                toast.error(error.response.data.message, {
-                    position: "top-center"
-                });
-            } else {
-                toast.error("خطای ناشناخته", {
-                    position: "top-center"
-                });
-            }
-        });
+        } else {
+            axios.put(`/api/humanResources/${id}`, formattedData, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            }).then((res) => console.log(res));
+        }
     };
 
-
     const handleDownload = async () => {
-        const doc = <MyDocument/>;
-        const asPdf = pdf([]); // Creating an instance of pdf
+        const doc = <MyDocument />;
+        const asPdf = pdf([]);
         asPdf.updateContainer(doc);
         const blob = await asPdf.toBlob();
 
@@ -158,6 +166,10 @@ const Forms = ({invoiceData}) => {
             iframe.contentWindow.print();
         };
     };
+
+    if (loading) return <CircularProgress />;
+    if (error) return <Alert severity="error">{error.message}</Alert>;
+
     return (
         <>
             <Grid container spacing={6}>
@@ -166,13 +178,12 @@ const Forms = ({invoiceData}) => {
                         <Card>
                             <CardContent className='sm:!p-12'>
                                 <Grid container spacing={6}>
-                                    <StepJobDetails invoiceData={invoiceData}
-                                                    validation={validationSchemas.jobDetails}/>
-                                    <StepPersonalDetails validation={validationSchemas.personalDetails}/>
-                                    <StepEducation validation={validationSchemas.education}/>
-                                    <StepInsurance validation={validationSchemas.insurance}/>
-                                    <StepChildren validation={validationSchemas.children}/>
-                                    <StepContract validation={validationSchemas.contract}/>
+                                    <StepJobDetails invoiceData={invoiceData} validation={validationSchemas.jobDetails} />
+                                    <StepPersonalDetails validation={validationSchemas.personalDetails} />
+                                    <StepEducation validation={validationSchemas.education} />
+                                    <StepInsurance validation={validationSchemas.insurance} />
+                                    <StepChildren validation={validationSchemas.children} />
+                                    <StepContract validation={validationSchemas.contract} />
                                 </Grid>
                             </CardContent>
                         </Card>
@@ -187,10 +198,10 @@ const Forms = ({invoiceData}) => {
                                             fullWidth
                                             variant="contained"
                                             color="primary"
-                                            startIcon={<SaveIcon/>}
+                                            startIcon={<SaveIcon />}
                                             onClick={methods.handleSubmit(onSubmit)}
                                             style={{
-                                                backgroundColor: '#1976d2', // رنگ آبی جذاب
+                                                backgroundColor: '#1976d2',
                                                 color: 'white',
                                                 fontWeight: 'bold',
                                                 textTransform: 'none',
@@ -206,7 +217,7 @@ const Forms = ({invoiceData}) => {
                                             fullWidth
                                             variant="contained"
                                             color="error"
-                                            startIcon={<PictureAsPdfIcon/>}
+                                            startIcon={<PictureAsPdfIcon />}
                                             onClick={handleDownload}
                                         >
                                             حکم کارگزینی
@@ -230,7 +241,7 @@ const Forms = ({invoiceData}) => {
                 </FormProvider>
             </Grid>
         </>
-    )
+    );
 }
 
 export default Forms
