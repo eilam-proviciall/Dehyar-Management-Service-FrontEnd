@@ -74,7 +74,7 @@ const UserListTable = props => {
             },
 
             {
-                accessorKey: 'covered_village',
+                accessorKey: 'covered_villages',
                 header: 'دهیاری‌ها',
                 size: 100,
                 Cell: ({cell, row}) => {
