@@ -1,8 +1,11 @@
 import React from 'react';
+import CfoTable from "@views/dehyari/cfo/CfoTable";
 
 function Page(props) {
     return (
-        <div></div>
+        <div>
+            <CfoTable />
+        </div>
     );
 }
 

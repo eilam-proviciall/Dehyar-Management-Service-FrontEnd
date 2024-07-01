@@ -7,6 +7,11 @@ const humanResources = () => {
 const GetHumanResource = (id) => {
     return `${BaseUrl}/human-resources/human-resources/${id}`
 }
+const GetHumanResourcesForCfo = () => {
+    return `${BaseUrl}/cfo/covered-villages`
+}
 
 
-export {humanResources,GetHumanResource}
+
+
+export {humanResources,GetHumanResource,GetHumanResourcesForCfo}
