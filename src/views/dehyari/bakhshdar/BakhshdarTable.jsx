@@ -1,14 +1,15 @@
 "use client"
-import React, { useMemo, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { MaterialReactTable } from 'material-react-table';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {MaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
+import {IconButton, Menu, MenuItem} from '@mui/material';
 import axios from "axios";
-import { GetHumanResourcesForGovernor} from "@/Services/humanResources";
+import {GetHumanResourcesForGovernor} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
+import {toast} from "react-toastify";
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -35,12 +36,17 @@ function BakhshdarTable(props) {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
-                console.log(response.data);
-
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                if (error.response && error.response.status === 403) {
+                    toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!', {
+                        position: "top-center"
+                    });
+                } else {
+                    toast.error('خطا در دریافت اطلاعات');
+                }
+                setLoading(false);
             }
         };
 
@@ -55,29 +61,29 @@ function BakhshdarTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'full_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_type',
                 header: 'نوع قرار داد',
                 size: 150,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     const role = cell.getValue();
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={contractType[role]} color="primary" />
+                        <div style={{textAlign: 'right'}}>
+                            <Chip label={contractType[role]} color="primary"/>
                         </div>
                     );
                 },
@@ -86,17 +92,18 @@ function BakhshdarTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                Cell: ({row}) => (
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                         <IconButton
                             aria-label="more"
                             aria-controls={open ? 'long-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
                             aria-haspopup="true"
                             onClick={(event) => handleClick(event, row)}
-                            style={{ paddingLeft: 0 }}
+                            style={{paddingLeft: 0}}
                         >
-                            <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
+                            <MoreVertIcon
+                                style={{textAlign: "center", justifyContent: 'center', alignItems: 'center'}}/>
                         </IconButton>
                         <Menu
                             id="long-menu"
