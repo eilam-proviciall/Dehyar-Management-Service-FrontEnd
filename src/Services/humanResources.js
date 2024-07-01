@@ -10,8 +10,14 @@ const GetHumanResource = (id) => {
 const GetHumanResourcesForCfo = () => {
     return `${BaseUrl}/cfo/covered-villages`
 }
+const GetHumanResourcesForBakhshdar = () => {
+    return `${BaseUrl}/bakhshdar/villages-by-region`
+}
+const GetHumanResourcesForGovernor = () => {
+    return `${BaseUrl}/governor/villages-by-state`
+}
 
 
 
 
-export {humanResources,GetHumanResource,GetHumanResourcesForCfo}
+export {humanResources,GetHumanResource,GetHumanResourcesForCfo,GetHumanResourcesForBakhshdar,GetHumanResourcesForGovernor}

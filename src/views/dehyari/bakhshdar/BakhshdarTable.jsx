@@ -1,20 +1,16 @@
 "use client"
 import React, { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Button from "@mui/material/Button";
 import { MaterialReactTable } from 'material-react-table';
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
-import {GetHumanResourcesForCfo, humanResources} from "@/Services/humanResources";
-import jobTitles from '@data/jobTitles.json';
+import { GetHumanResourcesForGovernor} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
-import { Edit, MoreVert } from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 
-function CfoTable(props) {
+function BakhshdarTable(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -34,7 +30,7 @@ function CfoTable(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(GetHumanResourcesForCfo(), {
+                const response = await axios.get(GetHumanResourcesForGovernor(), {
                     headers: {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
@@ -136,4 +132,4 @@ function CfoTable(props) {
     );
 }
 
-export default CfoTable;
+export default BakhshdarTable;

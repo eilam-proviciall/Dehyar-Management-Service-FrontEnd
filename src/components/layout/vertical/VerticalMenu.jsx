@@ -69,6 +69,8 @@ const VerticalMenu = ({ scrollMenu }) => {
         <MenuItem href={`/dehyari`}>چارت سازمانی</MenuItem>
         <MenuItem href={`/dehyari/form`}>ایجاد فرد جدید</MenuItem>
         <MenuItem href={`/dehyari/cfo/table`}>جدول امور مالی</MenuItem>
+        <MenuItem href={`/dehyari/bakhshdar/table`}>جدول بخشدار</MenuItem>
+        <MenuItem href={`/dehyari/governor/table`}>جدول استاندار</MenuItem>
       </Menu>
 
     </ScrollWrapper>
