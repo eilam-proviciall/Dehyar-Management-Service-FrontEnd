@@ -8,6 +8,7 @@
             personal_id: data.personalId,
             gender: data.gender,
             married_status: data.maritalStatus,
+            village_employer: data.villageEmployer,
             birth_place: data.birthPlace,
             issue_place: data.issuancePlace,
             eisargari_status: data.veteranStatus,

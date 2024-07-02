@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { Autocomplete } from '@mui/material';
 import axios from 'axios';
 import jobTitles from '@data/jobTitles.json';
 import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Logo from "@core/svg/Logo";
 import {GetHumanCoverdVillageForCfo} from "@/Services/humanResources";
-
+import IconButton from "@mui/material/IconButton";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 const StepJobDetails = ({ invoiceData, validation }) => {
-    const { register, control, watch,getValues, formState: { errors } } = useFormContext();
+    const { register, control, setValue,getValues, formState: { errors } } = useFormContext();
     const [villages, setVillages] = useState([]);
-
+    const [employerVillage, setEmployerVillage] = useState('');
+    const handleEmployerVillageSelect = (villageCode) => {
+        setValue("villageEmployer",villageCode)
+        setEmployerVillage(villageCode);
+    };
     useEffect(() => {
         const fetchVillages = async () => {
             try {
@@ -126,6 +131,15 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                                         field.onChange(e.target.value);
                                     }}
                                     value={Array.isArray(field.value) ? field.value : []}
+                                    renderValue={(selected) => (
+                                        <div>
+                                            {selected.map(value => (
+                                                <span key={value}>
+                                                    {villages.find(village => village.hierarchy_code === value)?.village_name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                 >
                                     {villages.map((village) => (
                                         <MenuItem
@@ -134,6 +148,13 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                                             disabled={village.has_human_resource}
                                         >
                                             {village.village_name}
+                                            <IconButton
+                                                onClick={() => handleEmployerVillageSelect(village.hierarchy_code)}
+                                                edge="end"
+                                                disabled={false}
+                                            >
+                                                {employerVillage === village.hierarchy_code ? <StarIcon /> : <StarBorderIcon />}
+                                            </IconButton>
                                         </MenuItem>
                                     ))}
                                 </Select>

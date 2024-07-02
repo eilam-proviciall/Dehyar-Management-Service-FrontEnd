@@ -30,6 +30,7 @@ const Forms = ({ invoiceData }) => {
             nationalCode: '',
             coveredVillages: {},
             fullName: '',
+            villageEmployer : '',
             fatherName: '',
             personalId: '',
             gender: '',
