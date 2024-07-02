@@ -10,6 +10,9 @@ const GetHumanResource = (id) => {
 const GetHumanResourcesForCfo = () => {
     return `${BaseUrl}/cfo/covered-villages`
 }
+const GetHumanCoverdVillageForCfo = () => {
+    return `${BaseUrl}/cfo/village-statuses`
+}
 const GetHumanResourcesForBakhshdar = () => {
     return `${BaseUrl}/bakhshdar/villages-by-region`
 }
@@ -18,6 +21,11 @@ const GetHumanResourcesForGovernor = () => {
 }
 
 
-
-
-export {humanResources,GetHumanResource,GetHumanResourcesForCfo,GetHumanResourcesForBakhshdar,GetHumanResourcesForGovernor}
+export {
+    humanResources,
+    GetHumanResource,
+    GetHumanResourcesForCfo,
+    GetHumanResourcesForBakhshdar,
+    GetHumanResourcesForGovernor,
+    GetHumanCoverdVillageForCfo
+}

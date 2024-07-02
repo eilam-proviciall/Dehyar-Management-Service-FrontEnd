@@ -1,12 +1,34 @@
-import React from 'react'
-import {FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material'
-import jobTitles from '@data/jobTitles.json'
-import {Controller, useFormContext} from 'react-hook-form'
+import React, { useEffect, useState } from 'react';
+import { FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Autocomplete } from '@mui/material';
+import axios from 'axios';
+import jobTitles from '@data/jobTitles.json';
+import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Logo from "@core/svg/Logo";
+import {GetHumanCoverdVillageForCfo} from "@/Services/humanResources";
 
-const StepJobDetails = ({invoiceData, validation}) => {
-    const {register, control, watch, formState: {errors}} = useFormContext()
+const StepJobDetails = ({ invoiceData, validation }) => {
+    const { register, control, watch,getValues, formState: { errors } } = useFormContext();
+    const [villages, setVillages] = useState([]);
+
+    useEffect(() => {
+        const fetchVillages = async () => {
+            try {
+                const response = await axios.get(GetHumanCoverdVillageForCfo(), {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
+                });
+                console.log(response.data);
+                setVillages(response.data);
+            } catch (error) {
+                console.error('Error fetching villages:', error);
+            }
+        };
+
+        fetchVillages();
+    }, []);
 
     return (
         <>
@@ -14,23 +36,17 @@ const StepJobDetails = ({invoiceData, validation}) => {
                 <Grid item xs={12}>
                     <div className='p-6 bg-actionHover rounded-xl'>
                         <div className='flex justify-between items-center'>
-                            {/* لوگو در سمت راست */}
                             <Grid item xs={4}>
-                                <div style={{width:200}} className='flex justify-start'>
+                                <div style={{ width: 200 }} className='flex justify-start'>
                                     <Logo />
                                 </div>
                             </Grid>
-
-
-                            {/* متن در وسط */}
                             <Grid item xs={4}>
                                 <div className='flex flex-col items-center'>
                                     <Typography variant='h6'>قرارداد مدت معین و حکم حقوقی</Typography>
                                     <Typography variant='h6'>دهیار تمام وقت</Typography>
                                 </div>
                             </Grid>
-
-                            {/* فرم در سمت چپ */}
                             <Grid item xs={4}>
                                 <div className='flex flex-col gap-2'>
                                     <div className='flex items-center'>
@@ -46,9 +62,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
                                         />
                                     </div>
                                     <div className='flex items-center gap-4'>
-                                        <Typography  color='text.primary'>
-                                            تاریخ اجرا
-                                        </Typography>
+                                        <Typography color='text.primary'>تاریخ اجرا</Typography>
                                         <TextField
                                             fullWidth
                                             size='small'
@@ -67,7 +81,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
             </Grid>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='ساختار تشکیلات'/>
+                    <DividerSimple title='ساختار تشکیلات' />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small" error={!!errors.jobTitle}>
@@ -77,7 +91,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.jobTitle}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="پست سازمانی"
@@ -101,27 +115,31 @@ const StepJobDetails = ({invoiceData, validation}) => {
                         <Controller
                             name='coveredVillages'
                             control={control}
-                            defaultValue=""
+                            defaultValue={[]}
                             rules={validation.coveredVillages}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="دهیاری های تحت پوشش"
+                                    multiple
                                     onChange={(e) => {
                                         field.onChange(e.target.value);
                                     }}
-                                    value={field.value || ''}
+                                    value={Array.isArray(field.value) ? field.value : []}
                                 >
-                                    <MenuItem value="30101111101">چم جنگل</MenuItem>
-                                    <MenuItem value="2">چم شیر</MenuItem>
-                                    <MenuItem value="3">سرکان</MenuItem>
-                                    <MenuItem value="4">سیاه سیاه</MenuItem>
-                                    <MenuItem value="5">15 خرداد</MenuItem>
+                                    {villages.map((village) => (
+                                        <MenuItem
+                                            key={village.hierarchy_code}
+                                            value={village.hierarchy_code}
+                                            disabled={village.has_human_resource}
+                                        >
+                                            {village.village_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />
-                        {errors.coveredVillages &&
-                            <Typography color="error">{errors.coveredVillages.message}</Typography>}
+                        {errors.coveredVillages && <Typography color="error">{errors.coveredVillages.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -130,7 +148,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.nationalCode}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 size="small"
@@ -149,7 +167,7 @@ const StepJobDetails = ({invoiceData, validation}) => {
                 </Grid>
             </Grid>
         </>
-    )
-}
+    );
+};
 
-export default StepJobDetails
+export default StepJobDetails;

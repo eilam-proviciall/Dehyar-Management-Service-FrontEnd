@@ -28,7 +28,7 @@ const Forms = ({ invoiceData }) => {
         defaultValues: {
             jobTitle: '',
             nationalCode: '',
-            coveredVillages: '',
+            coveredVillages: {},
             fullName: '',
             fatherName: '',
             personalId: '',
@@ -83,6 +83,7 @@ const Forms = ({ invoiceData }) => {
         const id = queryParams.get('id');
 
         if (mode === 'create') {
+            console.log(formattedData)
             axios.post(humanResources(), formattedData, {
                 headers: {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
