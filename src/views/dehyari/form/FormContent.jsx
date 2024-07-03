@@ -1,12 +1,12 @@
 import { Card, CardContent, Grid } from '@mui/material';
 
 import validationSchemas from './validationSchemas';
-import StepJobDetails from "@views/dehyari/form/StepsForm/StepJobDetails";
 import StepPersonalDetails from "@views/dehyari/form/StepsForm/StepPersonalDetails";
 import StepEducation from "@views/dehyari/form/StepsForm/StepEducation";
 import StepInsurance from "@views/dehyari/form/StepsForm/StepInsurance";
 import StepChildren from "@views/dehyari/form/StepsForm/StepChildren";
 import StepContract from "@views/dehyari/form/StepsForm/StepContract";
+import StepJobDetails from "@views/dehyari/form/StepsForm/JobDetails/StepJobDetails";
 
 const FormContent = ({ invoiceData }) => (
     <Card>
