@@ -11,8 +11,8 @@ import '@assets/iconify-icons/generated-icons.css'
 import {Toaster} from "react-hot-toast";
 
 export const metadata = {
-    title: 'Materialize - Material Next.js Admin Template',
-    description: 'Materialize - Material Next.js Admin Template'
+    title: 'سازمان شهرداری ها و دهیاری',
+    description: 'سامانه خدمات الکترونیکی'
 }
 
 const RootLayout = ({children, params}) => {
