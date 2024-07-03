@@ -19,6 +19,9 @@ const GetHumanResourcesForBakhshdar = () => {
 const GetHumanResourcesForGovernor = () => {
     return `${BaseUrl}/governor/villages-by-state`
 }
+const GetFieldStudy = () => {
+    return `${BaseUrl}/education-fields`
+}
 const GetJobTitles = () => {
 
     return `${BaseUrl}/job-titles`
@@ -32,5 +35,6 @@ export {
     GetHumanResourcesForBakhshdar,
     GetHumanResourcesForGovernor,
     GetHumanCoverdVillageForCfo,
-    GetJobTitles
+    GetJobTitles,
+    GetFieldStudy
 }

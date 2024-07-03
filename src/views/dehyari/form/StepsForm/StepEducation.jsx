@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -17,7 +17,7 @@ import {
     Typography,
     Box
 } from '@mui/material';
-import {Controller, useFieldArray, useFormContext} from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DatePicker from 'react-multi-date-picker';
@@ -25,44 +25,38 @@ import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Badge from "@mui/material/Badge";
+import axios from 'axios';
+import { GetFieldStudy } from "@/Services/humanResources";
 
-const StepEducation = ({validation}) => {
-    const {control, watch, getValues, formState: {errors}} = useFormContext();
-    const {fields, append, remove} = useFieldArray({
+const StepEducation = ({ validation }) => {
+    const { control, watch, getValues, formState: { errors } } = useFormContext();
+    const { fields, append, remove } = useFieldArray({
         control,
         name: 'educations'
     });
+
     const [expanded, setExpanded] = useState(false);
+    const [fieldsOfStudy, setFieldsOfStudy] = useState({});
+
     useEffect(() => {
         if (Object.keys(errors.educations || {}).length > 0) {
             setExpanded(true);
         }
     }, [errors.educations]);
+
     const educationDegrees = [
-        {title: "بی سواد", value: 41},
-        {title: "سیکل", value: 42},
-        {title: "دیپلم", value: 43},
-        {title: "کاردانی", value: 44},
-        {title: "کارشناسی", value: 45},
-        {title: "کارشناسی ارشد", value: 46},
-        {title: "دکترا", value: 47}
+        { title: "بی سواد", value: 41 },
+        { title: "سیکل", value: 42 },
+        { title: "دیپلم", value: 43 },
+        { title: "کاردانی", value: 44 },
+        { title: "کارشناسی", value: 45 },
+        { title: "کارشناسی ارشد", value: 46 },
+        { title: "دکترا", value: 47 }
     ];
 
-    const fieldsOfStudy = [
-        {title: "مهندسی نرم‌افزار", value: 2001692},
-        {title: "مهندسی برق", value: 2651},
-        {title: "مهندسی مکانیک", value: 2667},
-        {title: "پزشکی", value: 16351},
-        {title: "حقوق", value: 2061},
-        {title: "مدیریت", value: 2510},
-        {title: "اقتصاد", value: 7317},
-        {title: "ریاضی", value: 2001339},
-        {title: "فیزیک", value: 6989},
-        {title: "شیمی", value: 6909}
-    ];
     const getHighestDegree = (educations) => {
         if (!educations || educations.length === 0) {
-            return {title: 'بدون مدرک', color: 'gray'};
+            return { title: 'بدون مدرک', color: 'gray' };
         }
 
         const highestDegree = educations.reduce((prev, current) => (prev.degree > current.degree ? prev : current));
@@ -70,23 +64,43 @@ const StepEducation = ({validation}) => {
 
         switch (highestDegree.degree) {
             case 47:
-                return {...degree, color: 'red'};
+                return { ...degree, color: 'red' };
             case 46:
-                return {...degree, color: 'orange'};
+                return { ...degree, color: 'orange' };
             case 45:
-                return {...degree, color: 'green'};
+                return { ...degree, color: 'green' };
             case 44:
-                return {...degree, color: 'blue'};
+                return { ...degree, color: 'blue' };
             default:
-                return {...degree, color: 'gray'};
+                return { ...degree, color: 'gray' };
         }
     };
 
     const highestDegree = getHighestDegree(watch('educations'));
+
+    const fetchFieldsOfStudy = async (grade) => {
+        grade = grade[0];
+        try {
+            const response = await axios.get(GetFieldStudy(), {
+                params: { grade }
+            });
+            setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));
+        } catch (error) {
+            console.error('Error fetching fields of study:', error);
+        }
+    };
+
+    const handleDegreeChange = (e, field, index) => {
+        field.onChange(e.target.value);
+        if (e.target.value >= 44) {
+            fetchFieldsOfStudy([e.target.value]);
+        }
+    };
+
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <DividerSimple title='سوابق تحصیلی'/>
+                <DividerSimple title='سوابق تحصیلی' />
             </Grid>
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
@@ -110,7 +124,7 @@ const StepEducation = ({validation}) => {
                     </AccordionSummary>
                     <AccordionDetails>
                         {fields.map((item, index) => (
-                            <Card key={item.id} sx={{mb: 2}}>
+                            <Card key={item.id} sx={{ mb: 2 }}>
                                 <CardContent>
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} sm={3}>
@@ -122,11 +136,11 @@ const StepEducation = ({validation}) => {
                                                     control={control}
                                                     defaultValue=""
                                                     rules={validation.degree}
-                                                    render={({field}) => (
+                                                    render={({ field }) => (
                                                         <Select
                                                             {...field}
                                                             label="مدرک تحصیلی"
-                                                            onChange={(e) => field.onChange(e.target.value)}
+                                                            onChange={(e) => handleDegreeChange(e, field, index)}
                                                             value={field.value}
                                                         >
                                                             {educationDegrees.map(degree => (
@@ -150,17 +164,15 @@ const StepEducation = ({validation}) => {
                                                     control={control}
                                                     defaultValue=""
                                                     rules={validation.fieldOfStudy}
-                                                    render={({field}) => (
+                                                    render={({ field }) => (
                                                         <Select
                                                             {...field}
                                                             label="رشته تحصیلی"
-                                                            onChange={(e) => field.onChange(e.target.value)}
-                                                            value={field.value}
+                                                            disabled={!watch(`educations.${index}.degree`) || watch(`educations.${index}.degree`) < 44}
                                                         >
-                                                            {fieldsOfStudy.map(fieldOfStudy => (
-                                                                <MenuItem key={fieldOfStudy.value}
-                                                                          value={fieldOfStudy.value}>
-                                                                    {fieldOfStudy.title}
+                                                            {(fieldsOfStudy[watch(`educations.${index}.degree`)] || []).map(field => (
+                                                                <MenuItem key={field.code} value={field.code}>
+                                                                    {field.name}
                                                                 </MenuItem>
                                                             ))}
                                                         </Select>
@@ -176,7 +188,7 @@ const StepEducation = ({validation}) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.graduationDate}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <DatePicker
                                                         scrollSensitive={true}
                                                         calendar={persian}
@@ -202,18 +214,18 @@ const StepEducation = ({validation}) => {
                                         <Grid item xs={12} sm={3}>
                                             <IconButton color="error" aria-label="delete" size="large"
                                                         onClick={() => remove(index)}>
-                                                <DeleteIcon fontSize="inherit"/>
+                                                <DeleteIcon fontSize="inherit" />
                                             </IconButton>
                                         </Grid>
                                     </Grid>
                                 </CardContent>
                             </Card>
                         ))}
-                        <Grid item xs={12} sx={{px: 0}} pt={5}>
+                        <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button
                                 size="small"
                                 variant="contained"
-                                onClick={() => append({degree: '', fieldOfStudy: '', graduationDate: ''})}
+                                onClick={() => append({ degree: '', fieldOfStudy: '', graduationDate: '' })}
                             >
                                 افزودن
                             </Button>
