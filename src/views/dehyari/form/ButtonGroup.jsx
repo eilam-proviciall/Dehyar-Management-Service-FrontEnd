@@ -9,14 +9,14 @@ import {toast} from "react-toastify";
 
 const ButtonGroup = ({ onSubmit }) =>{
     const handleDownload = async () => {
-        const queryParams = new URLSearchParams(window.location.search);
-        const id = queryParams.get('id');
+        // const queryParams = new URLSearchParams(window.location.search);
+        // const id = queryParams.get('id');
 
-        try {
-            const response = await axios.get(getSalary(id), {
-                headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` },
-            });
-            const data = response.data;
+        // try {
+            // const response = await axios.get(getSalary(id), {
+            //     headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` },
+            // });
+            // const data = response.data;
             const doc = <MyDocument  />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
@@ -32,9 +32,9 @@ const ButtonGroup = ({ onSubmit }) =>{
             iframe.onload = () => {
                 iframe.contentWindow.print();
             };
-        } catch (err) {
-            toast.error("Error fetching salary data");
-        }
+        // } catch (err) {
+            // toast.error("Error fetching salary data");
+        // }
     };
     return(
         <Card>

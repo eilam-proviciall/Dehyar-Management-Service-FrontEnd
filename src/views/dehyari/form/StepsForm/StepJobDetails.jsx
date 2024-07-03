@@ -25,7 +25,6 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
-                console.log(response.data);
                 setVillages(response.data);
             } catch (error) {
                 console.error('Error fetching villages:', error);
