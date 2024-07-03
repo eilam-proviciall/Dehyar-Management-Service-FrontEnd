@@ -85,7 +85,7 @@ const Forms = ({ invoiceData }) => {
         const { human_resource, children, educations, insurances } = data;
         if (human_resource) {
             toast.success("Human resource با موفقیت به‌روزرسانی شد", { position: "top-center" });
-            // window.location.href = '/dehyari';
+            window.location.href = '/dehyari';
         } else {
             toast.error("خطا در به‌روزرسانی Human resource", { position: "top-center" });
         }
