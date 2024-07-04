@@ -6,13 +6,7 @@ import JobTitleSelect from './JobTitleSelect';
 import CoveredVillagesSelect from './CoveredVillagesSelect';
 import InvoiceDetails from './InvoiceDetails';
 import validationSchemas from "@views/dehyari/form/validationSchemas";
-
-const contractType = {
-    fullTime: 'تمام وقت',
-    partTime: 'پاره وقت',
-    freelance: 'آزاد',
-};
-
+import contractType from "@data/contractType.json";
 const StepJobDetails = ({ invoiceData, validation }) => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
     const selectedJobTitle = watch('jobTitle');
