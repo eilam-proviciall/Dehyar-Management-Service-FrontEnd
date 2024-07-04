@@ -1,14 +1,17 @@
 import React from 'react';
-import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import { useFetchCities } from "@hooks/useFetchCities";
 import Autocomplete from "@mui/material/Autocomplete";
 import PersonalOptions from "@data/PersonalOption.json";
 import validationSchemas from "@views/dehyari/form/validationSchemas";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 const StepPersonalDetails = ({ validation }) => {
-    const { control, formState: { errors } } = useFormContext();
+    const { control,register,getValues,setValue, formState: { errors } } = useFormContext();
     const { cities, isLoading, error } = useFetchCities(true);
 
     return (
@@ -77,6 +80,33 @@ const StepPersonalDetails = ({ validation }) => {
                             />
                         )}
                     />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small">
+                        <DatePicker
+                            scrollSensitive={true}
+                            calendar={persian}
+                            locale={persian_fa}
+                            calendarPosition="bottom-right"
+                            {...register('contractEnd', validation.birthDate)}
+                            onChange={(date) => setValue('birthDate', date.toUnix())}
+                            value={getValues('birthDate')}
+                            render={
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    label="تاریخ تولد"
+                                    name="contractStart"
+                                    error={!!errors.contractEnd}
+                                    placeholder="تاریخ تولد"
+                                    inputProps={{
+                                        style: { textAlign: 'end' }
+                                    }}
+                                />
+                            }
+                        />
+                        {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
+                    </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller

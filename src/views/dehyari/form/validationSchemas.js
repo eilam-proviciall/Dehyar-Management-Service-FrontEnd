@@ -42,6 +42,9 @@ const validationSchemas = {
         militaryService: {
             required: 'این فیلد الزامی است',
         },
+        birthDate: {
+            required: 'این فیلد الزامی است',
+        },
     },
     education: {
         degree: {

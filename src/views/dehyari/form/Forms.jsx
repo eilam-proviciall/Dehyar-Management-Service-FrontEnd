@@ -21,11 +21,12 @@ const Forms = ({ invoiceData }) => {
     const methods = useForm({
         defaultValues: {
             jobTitle: '',
-            nationalCode: '',
             coveredVillages: {},
             fullName: '',
             villageEmployer: '',
             fatherName: '',
+            nationalCode: '',
+            birthDate : '',
             personalId: '',
             gender: '',
             maritalStatus: '',
