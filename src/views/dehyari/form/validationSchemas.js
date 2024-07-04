@@ -21,6 +21,9 @@ const validationSchemas = {
         fatherName: {
             required: 'این فیلد الزامی است',
         },
+        phoneNumber: {
+            required: 'این فیلد الزامی است',
+        },
         personalId: {
             required: 'این فیلد الزامی است',
         },

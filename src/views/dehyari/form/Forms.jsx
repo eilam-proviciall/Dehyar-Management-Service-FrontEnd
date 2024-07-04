@@ -27,6 +27,7 @@ const Forms = ({ invoiceData }) => {
             fatherName: '',
             nationalCode: '',
             birthDate : '',
+            phoneNumbers : {},
             personalId: '',
             gender: '',
             maritalStatus: '',

@@ -9,6 +9,7 @@ import validationSchemas from "@views/dehyari/form/validationSchemas";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import Chip from "@mui/material/Chip";
 
 const StepPersonalDetails = ({ validation }) => {
     const { control,register,getValues,setValue, formState: { errors } } = useFormContext();
@@ -107,6 +108,58 @@ const StepPersonalDetails = ({ validation }) => {
                         />
                         {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
                     </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="phoneNumbers"
+                        control={control}
+                        defaultValue={[]}
+                        rules={validation.phoneNumber}
+                        render={({ field }) => (
+                            <Autocomplete
+                                multiple
+                                size="small"
+                                freeSolo
+                                options={[]}
+                                value={getValues("phoneNumbers")}
+                                onChange={(event, newValue) => setValue("phoneNumbers", newValue)}
+                                renderTags={(value, getTagProps) =>
+                                    value.map((option, index) => (
+                                        <Chip
+                                            variant="outlined"
+                                            label={option}
+                                            {...getTagProps({ index })}
+                                            onDelete={() => {
+                                                const newValues = [...field.value];
+                                                newValues.splice(index, 1);
+                                                field.onChange(newValues);
+                                                setValue("phoneNumbers", newValues);
+                                            }}
+                                        />
+                                    ))
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="شماره تلفن"
+                                        placeholder="شماره تلفن را وارد کنید"
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Enter' && params.inputProps.value) {
+                                                event.preventDefault();
+                                                const newValue = [getValues("phoneNumbers"), params.inputProps.value];
+                                                setValue('phoneNumbers', newValue);
+                                                field.onChange(newValue);
+                                                params.inputProps.onChange({ target: { value: '' } });
+                                            }
+                                        }}
+                                        error={!!errors.phoneNumbers}
+                                        helperText={errors.phoneNumbers && errors.phoneNumbers.message}
+                                    />
+                                )}
+                            />
+                        )}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
