@@ -95,6 +95,9 @@ const StepContract = ({ validation }) => {
                                     name="contractStart"
                                     error={!!errors.contractStart}
                                     placeholder="شروع قرارداد"
+                                    inputProps={{
+                                        style: { textAlign: 'end' }
+                                    }}
                                 />
                             }
                         />
@@ -119,6 +122,9 @@ const StepContract = ({ validation }) => {
                                     name="contractStart"
                                     error={!!errors.contractEnd}
                                     placeholder="پایان قرارداد"
+                                    inputProps={{
+                                        style: { textAlign: 'end' }
+                                    }}
                                 />
                             }
                         />
@@ -143,6 +149,9 @@ const StepContract = ({ validation }) => {
                                     name="contractStart"
                                     error={!!errors.execute_start}
                                     placeholder="اجرای قرارداد"
+                                    inputProps={{
+                                        style: { textAlign: 'end' }
+                                    }}
                                 />
                             }
                         />

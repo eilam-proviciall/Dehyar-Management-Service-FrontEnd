@@ -27,6 +27,7 @@ import DividerSimple from "@components/common/Divider/DividerSimple";
 import Badge from "@mui/material/Badge";
 import axios from 'axios';
 import { GetFieldStudy } from "@/Services/humanResources";
+import AddIcon from "@mui/icons-material/Add";
 
 const StepEducation = ({ validation }) => {
     const { control, watch, getValues, formState: { errors } } = useFormContext();
@@ -106,7 +107,7 @@ const StepEducation = ({ validation }) => {
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                            <Typography sx={{ fontWeight: 'bold', marginRight: '-10px' }}>اخرین مدرک تحصیلی:</Typography>
+                            <Typography sx={{ fontWeight: 'bold', marginRight: '-10px' }}>آخرین مدرک تحصیلی:</Typography>
                             <Badge
                                 badgeContent={highestDegree.title}
                                 color="primary"
@@ -114,14 +115,16 @@ const StepEducation = ({ validation }) => {
                                     color: 'white',
                                     padding: '0 10px',
                                     borderRadius: '10px',
-                                    minWidth: '80px',
-                                    textAlign: 'center',
+                                    // minWidth: '80px',
+                                    // textAlign: 'center',
                                     whiteSpace: 'nowrap',
-                                    textOverflow: 'ellipsis'
+                                    textOverflow: 'ellipsis',
+                                    marginRight: 10 // اضافه کردن فاصله از سمت چپ
                                 }}
                             />
                         </Box>
                     </AccordionSummary>
+
                     <AccordionDetails>
                         {fields.map((item, index) => (
                             <Card key={item.id} sx={{ mb: 2 }}>
@@ -200,11 +203,15 @@ const StepEducation = ({ validation }) => {
                                                         value={getValues("graduationDate")}
                                                         render={
                                                             <TextField
+                                                                sx={{textAlign :"center"}}
                                                                 fullWidth
                                                                 size="small"
                                                                 label="تاریخ اخذ مدرک تحصیلی"
                                                                 error={!!errors?.educations?.[index]?.graduationDate}
                                                                 helperText={errors?.educations?.[index]?.graduationDate && errors.educations[index].graduationDate.message}
+                                                                inputProps={{
+                                                                    style: { textAlign: 'end' }
+                                                                }}
                                                             />
                                                         }
                                                     />
@@ -225,7 +232,23 @@ const StepEducation = ({ validation }) => {
                             <Button
                                 size="small"
                                 variant="contained"
-                                onClick={() => append({ degree: '', fieldOfStudy: '', graduationDate: '' })}
+                                sx={{
+                                    margin: 1,
+                                    backgroundColor: '#3f51b5',
+                                    color: 'white',
+                                    '&:hover': {
+                                        backgroundColor: '#303f9f',
+                                    },
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                                startIcon={<AddIcon sx={{ marginRight: 1 }} />}
+                                onClick={() => append({
+                                    workplace: '',
+                                    insurancePeriod: '',
+                                    employmentStartDate: '',
+                                    employmentEndDate: ''
+                                })}
                             >
                                 افزودن
                             </Button>

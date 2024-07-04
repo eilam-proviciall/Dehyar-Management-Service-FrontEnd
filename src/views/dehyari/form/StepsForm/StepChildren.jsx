@@ -11,6 +11,9 @@ import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
+import Chip from "@mui/material/Chip";
+import Avatar from "@mui/material/Avatar";
+import AddIcon from "@mui/icons-material/Add";
 
 const StepChildren = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -42,25 +45,22 @@ const StepChildren = ({ validation }) => {
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                             <Typography>اطلاعات فرزندان</Typography>
                             <Box sty display="flex" alignItems="center" gap="20px">
-                                <Badge
-                                    badgeContent={`دختر: ${girlsCount}`}
-                                    color="primary"
+                                <Chip
+                                    avatar={<Avatar>  {girlsCount}</Avatar>}
+                                    label="دختر"
+                                    variant="outlined"
                                     style={{
-                                        backgroundColor: 'pink' ,
-                                        minWidth: '80px',
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
                                         textOverflow: 'ellipsis'
-                                }}
+                                    }}
                                 />
-                                <Badge
-                                    badgeContent={`پسر: ${boysCount}`}
-                                    color="primary"
+                                <Chip
+                                    avatar={<Avatar>  {boysCount}</Avatar>}
+                                    label="پسر"
+                                    variant="outlined"
                                     style={{
-                                        backgroundColor: 'pink' ,
-                                        minWidth: '80px',
                                         textAlign: 'center',
-                                        marginLeft :50,
                                         whiteSpace: 'nowrap',
                                         textOverflow: 'ellipsis'
                                     }}
@@ -221,10 +221,25 @@ const StepChildren = ({ validation }) => {
                         <Grid container sx={{ mt: 4.75 }}>
                             <Grid item xs={12} sx={{ px: 0 }}>
                                 <Button
-                                    size='small'
-                                    variant='contained'
-                                    startIcon={<ExpandMoreIcon />}
-                                    onClick={() => append({ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', deathDate: '' })}
+                                    size="small"
+                                    variant="contained"
+                                    sx={{
+                                        margin: 1,
+                                        backgroundColor: '#3f51b5',
+                                        color: 'white',
+                                        '&:hover': {
+                                            backgroundColor: '#303f9f',
+                                        },
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                    startIcon={<AddIcon sx={{ marginRight: 1 }} />}
+                                    onClick={() => append({
+                                        workplace: '',
+                                        insurancePeriod: '',
+                                        employmentStartDate: '',
+                                        employmentEndDate: ''
+                                    })}
                                 >
                                     افزودن
                                 </Button>
