@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import { useFetchCities } from "@hooks/useFetchCities";
 import Autocomplete from "@mui/material/Autocomplete";
+import PersonalOptions from "@data/PersonalOption.json";
 
 const StepPersonalDetails = ({ validation }) => {
     const { control, formState: { errors } } = useFormContext();
@@ -144,8 +145,11 @@ const StepPersonalDetails = ({ validation }) => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     value={field.value}
                                 >
-                                    <MenuItem value="1">مرد</MenuItem>
-                                    <MenuItem value="0">زن</MenuItem>
+                                    {PersonalOptions.genderOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />
@@ -170,8 +174,11 @@ const StepPersonalDetails = ({ validation }) => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     value={field.value}
                                 >
-                                    <MenuItem value="0">مجرد</MenuItem>
-                                    <MenuItem value="1">متاهل</MenuItem>
+                                    {PersonalOptions.maritalStatusOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />
@@ -193,10 +200,11 @@ const StepPersonalDetails = ({ validation }) => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     value={field.value}
                                 >
-                                    <MenuItem value="1">شهید</MenuItem>
-                                    <MenuItem value="2">جانباز</MenuItem>
-                                    <MenuItem value="3">رزمنده</MenuItem>
-                                    <MenuItem value="4">آزاده</MenuItem>
+                                    {PersonalOptions.veteranStatusOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />
@@ -218,9 +226,11 @@ const StepPersonalDetails = ({ validation }) => {
                                     onChange={(e) => field.onChange(e.target.value)}
                                     value={field.value}
                                 >
-                                    <MenuItem value="0">معاف</MenuItem>
-                                    <MenuItem value="1">انجام شده</MenuItem>
-                                    <MenuItem value="2">در حال انجام</MenuItem>
+                                    {PersonalOptions.militaryServiceOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />

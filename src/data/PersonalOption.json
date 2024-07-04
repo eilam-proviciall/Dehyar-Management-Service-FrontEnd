@@ -1,0 +1,25 @@
+{
+  "genderOptions": [
+    { "value": "1", "label": "مرد" },
+    { "value": "0", "label": "زن" }
+  ],
+  "maritalStatusOptions": [
+    { "value": "0", "label": "مجرد" },
+    { "value": "1", "label": "متاهل" }
+  ],
+  "veteranStatusOptions": [
+    { "value": "1", "label": "جانباز کمتر از ۵ درصد" },
+    { "value": "2", "label": "جانباز کمتر از 25 درصد" },
+    { "value": "3", "label": "جانباز بالای 25 درصد" },
+    { "value": "4", "label": "جانباز بالای 45 درصد" },
+    { "value": "5", "label": "آزاده" },
+    { "value": "6", "label": "رزمنده" },
+    { "value": "7", "label": "فرزند شهید" },
+    { "value": "8", "label": "همسر شهید" }
+  ],
+  "militaryServiceOptions": [
+    { "value": "0", "label": "معافیت پزشکی" },
+    { "value": "1", "label": "دارای کارت پایان خدمت" },
+    { "value": "2", "label": "معافیت خاص" }
+  ]
+}
