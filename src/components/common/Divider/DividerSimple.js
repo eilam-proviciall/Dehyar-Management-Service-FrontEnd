@@ -4,7 +4,7 @@ import Chip from "@mui/material/Chip";
 
 function DividerSimple({title}) {
     return (
-        <Divider>
+        <Divider sx={{marginBottom : "10px"}}>
             <Chip label={title} size="small"/>
         </Divider>
     );

@@ -5,6 +5,7 @@ import contractType from "@data/contractType.json";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const StepContract = ({ validation }) => {
     const { register, watch,getValues,setValue, formState: { errors } } = useFormContext()
@@ -13,7 +14,7 @@ const StepContract = ({ validation }) => {
         <>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <Divider className='border-dashed' />
+                    <DividerSimple title='اطلاعات قرار داد' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -47,12 +48,10 @@ const StepContract = ({ validation }) => {
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-                <Grid item xs={12}>
-                    <Divider className='border-dashed' />
-                </Grid>
                 <Grid item xs={12} sm={12}>
                     <TextField
                         fullWidth
+                        multiline
                         size="small"
                         label="شرح قرارداد"
                         placeholder="شرح قرارداد"
