@@ -5,6 +5,7 @@ import DividerSimple from "@components/common/Divider/DividerSimple";
 import { useFetchCities } from "@hooks/useFetchCities";
 import Autocomplete from "@mui/material/Autocomplete";
 import PersonalOptions from "@data/PersonalOption.json";
+import validationSchemas from "@views/dehyari/form/validationSchemas";
 
 const StepPersonalDetails = ({ validation }) => {
     const { control, formState: { errors } } = useFormContext();
@@ -50,6 +51,29 @@ const StepPersonalDetails = ({ validation }) => {
                                 {...field}
                                 error={!!errors.fatherName}
                                 helperText={errors.fatherName && errors.fatherName.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name='nationalCode'
+                        control={control}
+                        defaultValue=""
+                        rules={validationSchemas.jobDetails.nationalCode}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="کد ملی"
+                                placeholder="کد ملی"
+                                {...field}
+                                onChange={(e) => {
+                                    field.onChange(e.target.value);
+                                }}
+                                value={field.value || ''}
+                                error={!!errors.nationalCode}
+                                helperText={errors.nationalCode && errors.nationalCode.message}
                             />
                         )}
                     />
