@@ -1,10 +1,17 @@
 import React from 'react';
-import { Grid, Typography, TextField } from '@mui/material';
+import { Grid, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import JobTitleSelect from './JobTitleSelect';
 import CoveredVillagesSelect from './CoveredVillagesSelect';
 import InvoiceDetails from './InvoiceDetails';
+import validationSchemas from "@views/dehyari/form/validationSchemas";
+
+const contractType = {
+    fullTime: 'تمام وقت',
+    partTime: 'پاره وقت',
+    freelance: 'آزاد',
+};
 
 const StepJobDetails = ({ invoiceData, validation }) => {
     const { control, setValue, watch, formState: { errors } } = useFormContext();
@@ -30,27 +37,27 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <Controller
-                        name='nationalCode'
-                        control={control}
-                        defaultValue=""
-                        rules={validation.nationalCode}
-                        render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="کد ملی"
-                                placeholder="کد ملی"
-                                {...field}
-                                onChange={(e) => {
-                                    field.onChange(e.target.value);
-                                }}
-                                value={field.value || ''}
-                                error={!!errors.nationalCode}
-                                helperText={errors.nationalCode && errors.nationalCode.message}
-                            />
-                        )}
-                    />
+                    <FormControl fullWidth size="small">
+                        <InputLabel>نوع قرارداد</InputLabel>
+                        <Controller
+                            name="contractType"
+                            control={control}
+                            defaultValue=""
+                            rules={validationSchemas.contract.contractType}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label="نوع قرارداد"
+                                    error={!!errors.contractType}
+                                >
+                                    {Object.entries(contractType).map(([value, label]) => (
+                                        <MenuItem key={value} value={value}>{label}</MenuItem>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+                        {errors.contractType && <Typography color="error">{errors.contractType.message}</Typography>}
+                    </FormControl>
                 </Grid>
             </Grid>
         </>
