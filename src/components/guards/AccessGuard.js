@@ -11,7 +11,14 @@ const AccessGuard = ({ children }) => {
 
     useEffect(() => {
         if (!loading) {
-            const currentPath = window.location.pathname; // گرفتن مسیر فعلی
+            const currentPath = window.location.pathname;
+
+            if (user && user.status === 81) {
+                router.replace('/profile/complete');
+                setIsAuthorized(false);
+                return;
+            }
+
             let allowedGroups = [];
 
             for (const [group, pages] of Object.entries(accessControl)) {
@@ -30,7 +37,7 @@ const AccessGuard = ({ children }) => {
     }, [user, loading, router]);
 
     if (loading || isAuthorized === null) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>; // یا هر اسپینر لودینگ دیگر
     }
 
     if (!isAuthorized) {

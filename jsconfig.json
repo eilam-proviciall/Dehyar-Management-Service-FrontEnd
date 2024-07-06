@@ -50,6 +50,9 @@
         "./src/data/*"
       ],"@hooks/*": [
         "./src/hooks/*"
+      ],
+      "@contexts/*": [
+        "./src/contexts/*"
       ]
     }
   },

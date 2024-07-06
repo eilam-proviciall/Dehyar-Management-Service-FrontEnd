@@ -73,14 +73,18 @@ const AuthProvider = ({ children }) => {
             const userData = userResponse.data.data.user.original;
             setUser(userData);
 
-            // پیدا کردن اولین صفحه‌ای که کاربر به آن دسترسی دارد
+            if (userData.status === 81) {
+                router.push('/profile/complete');
+                return;
+            }
+
             const workGroup = userData.work_group;
             const allowedPages = accessControl[workGroup];
             if (allowedPages && allowedPages.length > 0) {
                 const firstPage = allowedPages[0].href;
                 router.push(firstPage);
             } else {
-                router.push('/403'); // در صورت عدم وجود صفحه مجاز
+                router.push('/403');
             }
         } catch (error) {
             console.log(error);
