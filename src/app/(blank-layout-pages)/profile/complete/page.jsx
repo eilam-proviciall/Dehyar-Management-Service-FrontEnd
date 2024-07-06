@@ -13,7 +13,6 @@ function Page(props) {
                 alignItems: 'center',
                 height: '100vh',
                 padding: '20px',
-                backgroundColor: '#1e1e2d'
             }}
         >
             <Typography variant="h4" sx={{ marginBottom: '20px', color: '#fff' }}>

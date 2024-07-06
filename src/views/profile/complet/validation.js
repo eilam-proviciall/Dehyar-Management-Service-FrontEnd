@@ -24,6 +24,7 @@ export const personalSchema = object({
 export const passwordSchema = object({
     password: string([
         minLength(1, 'این فیلد الزامی است'),
+        minLength(8, 'رمز عبور باید حداقل ۸ کاراکتر باشد'),
         regex(passwordRegex, 'رمز عبور باید شامل حداقل یک حرف کوچک، یک حرف بزرگ و یک عدد باشد'),
     ]),
     confirmPassword: string([

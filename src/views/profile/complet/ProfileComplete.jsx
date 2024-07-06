@@ -23,8 +23,11 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
         '&:first-of-type': { paddingInlineStart: 0 },
         '&:last-of-type': { paddingInlineEnd: 0 },
         [theme.breakpoints.down('md')]: { paddingInline: 0 }
-    }
+    },
+    maxWidth: "600px",
+    margin: '0 auto'
 }));
+
 
 const ProfileComplete = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -65,7 +68,6 @@ const ProfileComplete = () => {
                                             <Typography className='step-number'>{`0${index + 1}`}</Typography>
                                             <div>
                                                 <Typography className='step-title'>{label.title}</Typography>
-                                                {/*<Typography className='step-subtitle'>{label.subtitle}</Typography>*/}
                                             </div>
                                         </div>
                                     </StepLabel>
@@ -79,7 +81,7 @@ const ProfileComplete = () => {
                     {activeStep === steps.length ? (
                         <>
                             <Typography className='mlb-2 mli-1' color='text.primary'>
-                                All steps are completed!
+                                {/*All steps are completed!*/}
                             </Typography>
                             <div className='flex justify-end mt-4'>
                                 <Button variant='contained' onClick={handleReset}>

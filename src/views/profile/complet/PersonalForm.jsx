@@ -221,10 +221,10 @@ const PersonalForm = ({ onNext }) => {
                 </Grid>
                 <Grid item xs={12} className='flex justify-between'>
                     <Button variant='outlined' disabled>
-                        Back
+                        بازگشت
                     </Button>
                     <Button variant='contained' type='submit'>
-                        Next
+                        مرحله بعد
                     </Button>
                 </Grid>
             </Grid>

@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { passwordSchema } from './validation';
-import { TextField, Grid, Button, Typography, InputAdornment, IconButton } from '@mui/material';
+import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const PasswordForm = ({ onBack, onNext }) => {
     const { formData, updateFormData } = useFormContext();
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false);
+    const [passwordCriteria, setPasswordCriteria] = useState({
+        hasUpperLowerCase: false,
+        hasNumber: false,
+        passwordsMatch: false,
+        hasMinLength: false
+    });
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: valibotResolver(passwordSchema),
         defaultValues: formData.password
     });
+
+    const password = watch('password');
+    const confirmPassword = watch('confirmPassword');
+
+    useEffect(() => {
+        const hasUpperLowerCase = /(?=.*[a-z])(?=.*[A-Z])/.test(password);
+        const hasNumber = /(?=.*\d)/.test(password);
+        const passwordsMatch = password === confirmPassword && password.length > 0;
+        const hasMinLength = password.length >= 8;
+
+        setPasswordCriteria({ hasUpperLowerCase, hasNumber, passwordsMatch, hasMinLength });
+    }, [password, confirmPassword]);
 
     const handleClickShowPassword = () => setIsPasswordShown(show => !show);
     const handleClickShowConfirmPassword = () => setIsConfirmPasswordShown(show => !show);
@@ -30,7 +50,6 @@ const PasswordForm = ({ onBack, onNext }) => {
                     <Typography className='font-medium' color='text.primary'>
                         تغییر رمز عبور
                     </Typography>
-                    <Typography variant='body2'>رمز عبور جدید خود را تنظیم کنید</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <Controller
@@ -93,6 +112,62 @@ const PasswordForm = ({ onBack, onNext }) => {
                             />
                         )}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <List>
+                        <ListItem>
+                            <ListItemIcon>
+                                {passwordCriteria.hasUpperLowerCase ? (
+                                    <CheckCircleIcon style={{ color: 'green' }} />
+                                ) : (
+                                    <CancelIcon style={{ color: 'red' }} />
+                                )}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="رمز عبور باید حداقل شامل یک حرف بزرگ و یک حرف کوچک باشد"
+                                primaryTypographyProps={{ style: { color: passwordCriteria.hasUpperLowerCase ? 'green' : 'red' } }}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon>
+                                {passwordCriteria.hasNumber ? (
+                                    <CheckCircleIcon style={{ color: 'green' }} />
+                                ) : (
+                                    <CancelIcon style={{ color: 'red' }} />
+                                )}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="رمز عبور باید حداقل شامل یک عدد باشد"
+                                primaryTypographyProps={{ style: { color: passwordCriteria.hasNumber ? 'green' : 'red' } }}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon>
+                                {passwordCriteria.hasMinLength ? (
+                                    <CheckCircleIcon style={{ color: 'green' }} />
+                                ) : (
+                                    <CancelIcon style={{ color: 'red' }} />
+                                )}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="رمز عبور باید حداقل ۸ کاراکتر باشد"
+                                primaryTypographyProps={{ style: { color: passwordCriteria.hasMinLength ? 'green' : 'red' } }}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon>
+                                {passwordCriteria.passwordsMatch ? (
+                                    <CheckCircleIcon style={{ color: 'green' }} />
+                                ) : (
+                                    <CancelIcon style={{ color: 'red' }} />
+                                )}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="رمز عبور و تکرار آن باید یکسان باشند"
+                                primaryTypographyProps={{ style: { color: passwordCriteria.passwordsMatch ? 'green' : 'red' } }}
+                            />
+                        </ListItem>
+                    </List>
                 </Grid>
                 <Grid item xs={12} className='flex justify-between'>
                     <Button variant='outlined' onClick={onBack}>
