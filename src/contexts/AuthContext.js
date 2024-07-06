@@ -1,18 +1,17 @@
 "use client";
-import {createContext, useContext, useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import {login, me} from "@/Services/Auth/AuthService";
-import {toast} from "react-toastify";
+import { login, me } from "@/Services/Auth/AuthService";
+import { toast } from "react-toastify";
+import accessControl from "@components/layout/vertical/accessControl";
 
 // Auth Context
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-const HOME_PAGE_URL = '/municipality/list';
-
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -31,7 +30,7 @@ const AuthProvider = ({children}) => {
                         setUser(response.data.data.user.original);
                     } catch (error) {
                         toast.error('اطلاعات نادرست است');
-                         setUser(null);
+                        setUser(null);
                         if (router.pathname !== '/login') {
                             router.push('/login');
                         }
@@ -56,20 +55,37 @@ const AuthProvider = ({children}) => {
                 nid: params.email,
                 password: params.password,
             });
-            const {access_token} = res.data.data;
+            const { access_token } = res.data.data;
             if (typeof window !== 'undefined') {
                 window.localStorage.setItem('token', access_token);
-
             }
             toast.success('ورود با موفقیت انجام شد', {
                 position: "top-center",
                 duration: 3000
             });
-            router.push(HOME_PAGE_URL);
+
+            // گرفتن اطلاعات کاربر
+            const userResponse = await axios.get(me(), {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
+            const userData = userResponse.data.data.user.original;
+            setUser(userData);
+
+            // پیدا کردن اولین صفحه‌ای که کاربر به آن دسترسی دارد
+            const workGroup = userData.work_group;
+            const allowedPages = accessControl[workGroup];
+            if (allowedPages && allowedPages.length > 0) {
+                const firstPage = allowedPages[0].href;
+                router.push(firstPage);
+            } else {
+                router.push('/403'); // در صورت عدم وجود صفحه مجاز
+            }
         } catch (error) {
             console.log(error);
-            toast.error('اطلاعات وارد شده صحیح نمیباشد',{
-                position:"top-center",
+            toast.error('اطلاعات وارد شده صحیح نمیباشد', {
+                position: "top-center",
                 duration: 3000
             });
         } finally {
@@ -86,10 +102,10 @@ const AuthProvider = ({children}) => {
     };
 
     return (
-        <AuthContext.Provider value={{user, loading, login: handleLogin, logout: handleLogout}}>
+        <AuthContext.Provider value={{ user, loading, login: handleLogin, logout: handleLogout }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export {AuthContext, AuthProvider};
+export { AuthContext, AuthProvider };

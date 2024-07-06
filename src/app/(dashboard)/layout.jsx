@@ -19,6 +19,7 @@ import ScrollToTop from '@core/components/scroll-to-top'
 // Util Imports
 import {getMode, getSystemMode} from '@core/utils/serverHelpers'
 import {AuthProvider} from "@/contexts/AuthContext";
+import AccessGuard from "@components/guards/AccessGuard";
 
 const Layout = async ({children, params}) => {
     // Vars
@@ -29,6 +30,7 @@ const Layout = async ({children, params}) => {
     return (
         <Providers direction={direction}>
             <AuthProvider>
+                <AccessGuard>
                     <LayoutWrapper
                         systemMode={systemMode}
                         verticalLayout={
@@ -46,13 +48,14 @@ const Layout = async ({children, params}) => {
                             </HorizontalLayout>
                         }
                     />
-                <ScrollToTop className='mui-fixed'>
-                    <Button variant='contained'
-                            className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'>
-                        <i className='ri-arrow-up-line'/>
-                    </Button>
-                </ScrollToTop>
-                <Customizer dir={direction} disableDirection/>
+                    <ScrollToTop className='mui-fixed'>
+                        <Button variant='contained'
+                                className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'>
+                            <i className='ri-arrow-up-line'/>
+                        </Button>
+                    </ScrollToTop>
+                    {/*<Customizer dir={direction} disableDirection/>*/}
+                </AccessGuard>
             </AuthProvider>
         </Providers>
     )
