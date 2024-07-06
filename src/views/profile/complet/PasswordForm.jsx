@@ -3,9 +3,16 @@ import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { passwordSchema } from './validation';
-import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { styled } from '@mui/material/styles';
+
+const CustomGrid = styled(Grid)(({ theme }) => ({
+    maxWidth: '1300px',
+    maxHeight: '500px',
+    margin: '0 auto',
+}));
 
 const PasswordForm = ({ onBack, onNext }) => {
     const { formData, updateFormData } = useFormContext();
@@ -15,7 +22,8 @@ const PasswordForm = ({ onBack, onNext }) => {
         hasUpperLowerCase: false,
         hasNumber: false,
         passwordsMatch: false,
-        hasMinLength: false
+        hasMinLength: false,
+        hasSpecialChar: false
     });
 
     const { control, handleSubmit, watch, formState: { errors } } = useForm({
@@ -31,8 +39,9 @@ const PasswordForm = ({ onBack, onNext }) => {
         const hasNumber = /(?=.*\d)/.test(password);
         const passwordsMatch = password === confirmPassword && password.length > 0;
         const hasMinLength = password.length >= 8;
+        const hasSpecialChar = /(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?])/.test(password);
 
-        setPasswordCriteria({ hasUpperLowerCase, hasNumber, passwordsMatch, hasMinLength });
+        setPasswordCriteria({ hasUpperLowerCase, hasNumber, passwordsMatch, hasMinLength, hasSpecialChar });
     }, [password, confirmPassword]);
 
     const handleClickShowPassword = () => setIsPasswordShown(show => !show);
@@ -40,16 +49,18 @@ const PasswordForm = ({ onBack, onNext }) => {
 
     const onSubmit = data => {
         updateFormData('password', data);
-        onNext();
+        console.log(formData)
+        // onNext();
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={5}>
+            <CustomGrid container spacing={5}>
                 <Grid item xs={12}>
                     <Typography className='font-medium' color='text.primary'>
                         تغییر رمز عبور
                     </Typography>
+                    <Typography variant='body2'>رمز عبور جدید خود را تنظیم کنید</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <Controller
@@ -115,58 +126,79 @@ const PasswordForm = ({ onBack, onNext }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List>
-                        <ListItem>
-                            <ListItemIcon>
-                                {passwordCriteria.hasUpperLowerCase ? (
-                                    <CheckCircleIcon style={{ color: 'green' }} />
-                                ) : (
-                                    <CancelIcon style={{ color: 'red' }} />
-                                )}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="رمز عبور باید حداقل شامل یک حرف بزرگ و یک حرف کوچک باشد"
-                                primaryTypographyProps={{ style: { color: passwordCriteria.hasUpperLowerCase ? 'green' : 'red' } }}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                {passwordCriteria.hasNumber ? (
-                                    <CheckCircleIcon style={{ color: 'green' }} />
-                                ) : (
-                                    <CancelIcon style={{ color: 'red' }} />
-                                )}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="رمز عبور باید حداقل شامل یک عدد باشد"
-                                primaryTypographyProps={{ style: { color: passwordCriteria.hasNumber ? 'green' : 'red' } }}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                {passwordCriteria.hasMinLength ? (
-                                    <CheckCircleIcon style={{ color: 'green' }} />
-                                ) : (
-                                    <CancelIcon style={{ color: 'red' }} />
-                                )}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="رمز عبور باید حداقل ۸ کاراکتر باشد"
-                                primaryTypographyProps={{ style: { color: passwordCriteria.hasMinLength ? 'green' : 'red' } }}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                {passwordCriteria.passwordsMatch ? (
-                                    <CheckCircleIcon style={{ color: 'green' }} />
-                                ) : (
-                                    <CancelIcon style={{ color: 'red' }} />
-                                )}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="رمز عبور و تکرار آن باید یکسان باشند"
-                                primaryTypographyProps={{ style: { color: passwordCriteria.passwordsMatch ? 'green' : 'red' } }}
-                            />
-                        </ListItem>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        {passwordCriteria.hasUpperLowerCase ? (
+                                            <CheckCircleIcon style={{ color: 'green' }} />
+                                        ) : (
+                                            <CancelIcon style={{ color: 'red' }} />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary="رمز عبور باید حداقل شامل یک حرف بزرگ و یک حرف کوچک باشد"
+                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasUpperLowerCase ? 'green' : 'red' } }}
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        {passwordCriteria.hasNumber ? (
+                                            <CheckCircleIcon style={{ color: 'green' }} />
+                                        ) : (
+                                            <CancelIcon style={{ color: 'red' }} />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary="رمز عبور باید حداقل شامل یک عدد باشد"
+                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasNumber ? 'green' : 'red' } }}
+                                    />
+                                </ListItem>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        {passwordCriteria.hasMinLength ? (
+                                            <CheckCircleIcon style={{ color: 'green' }} />
+                                        ) : (
+                                            <CancelIcon style={{ color: 'red' }} />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary="رمز عبور باید حداقل ۸ کاراکتر باشد"
+                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasMinLength ? 'green' : 'red' } }}
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        {passwordCriteria.hasSpecialChar ? (
+                                            <CheckCircleIcon style={{ color: 'green' }} />
+                                        ) : (
+                                            <CancelIcon style={{ color: 'red' }} />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary="رمز عبور باید حداقل شامل یک علامت نگارشی باشد"
+                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasSpecialChar ? 'green' : 'red' } }}
+                                    />
+                                </ListItem>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <ListItem>
+                                    <ListItemIcon>
+                                        {passwordCriteria.passwordsMatch ? (
+                                            <CheckCircleIcon style={{ color: 'green' }} />
+                                        ) : (
+                                            <CancelIcon style={{ color: 'red' }} />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary="رمز عبور و تکرار آن باید یکسان باشند"
+                                        primaryTypographyProps={{ style: { color: passwordCriteria.passwordsMatch ? 'green' : 'red' } }}
+                                    />
+                                </ListItem>
+                            </Grid>
+                        </Grid>
                     </List>
                 </Grid>
                 <Grid item xs={12} className='flex justify-between'>
@@ -177,7 +209,7 @@ const PasswordForm = ({ onBack, onNext }) => {
                         ثبت
                     </Button>
                 </Grid>
-            </Grid>
+            </CustomGrid>
         </form>
     );
 };

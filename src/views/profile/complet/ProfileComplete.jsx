@@ -10,11 +10,11 @@ import StepperCustomDot from '@components/stepper-dot';
 import MuiStepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import styled from '@mui/material/styles/styled';
+import { styled } from '@mui/material/styles';
 
 const steps = [
     { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
-    { title: 'تعغیر رمز عبور', subtitle: 'Setup your new password' }
+    { title: 'تغییر رمز عبور', subtitle: 'Setup your new password' }
 ];
 
 const Stepper = styled(MuiStepper)(({ theme }) => ({
@@ -23,11 +23,8 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
         '&:first-of-type': { paddingInlineStart: 0 },
         '&:last-of-type': { paddingInlineEnd: 0 },
         [theme.breakpoints.down('md')]: { paddingInline: 0 }
-    },
-    maxWidth: "600px",
-    margin: '0 auto'
+    }
 }));
-
 
 const ProfileComplete = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -81,11 +78,11 @@ const ProfileComplete = () => {
                     {activeStep === steps.length ? (
                         <>
                             <Typography className='mlb-2 mli-1' color='text.primary'>
-                                {/*All steps are completed!*/}
+                                همه مراحل تکمیل شده‌اند!
                             </Typography>
                             <div className='flex justify-end mt-4'>
                                 <Button variant='contained' onClick={handleReset}>
-                                    Reset
+                                    بازنشانی
                                 </Button>
                             </div>
                         </>

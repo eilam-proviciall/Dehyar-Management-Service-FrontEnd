@@ -1,6 +1,6 @@
 import { object, string, custom, forward, minLength, regex } from 'valibot';
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/;
 
 export const personalSchema = object({
     fullName: string([minLength(1, 'این فیلد الزامی است')]),
@@ -25,7 +25,7 @@ export const passwordSchema = object({
     password: string([
         minLength(1, 'این فیلد الزامی است'),
         minLength(8, 'رمز عبور باید حداقل ۸ کاراکتر باشد'),
-        regex(passwordRegex, 'رمز عبور باید شامل حداقل یک حرف کوچک، یک حرف بزرگ و یک عدد باشد'),
+        regex(passwordRegex, 'رمز عبور باید شامل حداقل یک حرف کوچک، یک حرف بزرگ، یک عدد و یک علامت نگارشی باشد'),
     ]),
     confirmPassword: string([
         minLength(1, 'این فیلد الزامی است')
