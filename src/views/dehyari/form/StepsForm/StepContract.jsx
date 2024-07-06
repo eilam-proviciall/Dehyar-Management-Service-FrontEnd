@@ -28,22 +28,7 @@ const StepContract = ({ validation }) => {
                         helperText={errors.titleContract && errors.titleContract.message}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel>وضعیت استخدام</InputLabel>
-                        <Select
-                            {...register('employmentStatus', validation.employmentStatus)}
-                            label="وضعیت استخدام"
-                            value={watch('employmentStatus')}
-                            error={!!errors.employmentStatus}
-                        >
-                            <MenuItem value="1">آزمون</MenuItem>
-                            <MenuItem value="2">بدون آزمون</MenuItem>
-                            <MenuItem value="3">دهیاری</MenuItem>
-                        </Select>
-                        {errors.employmentStatus && <Typography color="error">{errors.employmentStatus.message}</Typography>}
-                    </FormControl>
-                </Grid>
+
 
             </Grid>
 

@@ -74,7 +74,6 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                                 value={village.hierarchy_code}
                                 disabled={village.has_human_resource}
                             >
-                                {village.village_name}
                                 <IconButton
                                     onClick={() => handleEmployerVillageSelect(village.hierarchy_code)}
                                     edge="end"
@@ -82,6 +81,8 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                                 >
                                     {employerVillage === village.hierarchy_code ? <StarIcon /> : <StarBorderIcon />}
                                 </IconButton>
+                                {village.village_name}
+
                             </MenuItem>
                         ))}
                     </Select>

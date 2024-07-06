@@ -95,7 +95,7 @@ const menuItemStyles = (verticalNavOptions, theme, settings) => {
       }
     }),
     prefix: {
-      marginInlineEnd: theme.spacing(2)
+      // marginInlineEnd: theme.spacing(2)
     },
     label: ({ level }) => ({
       ...((!isPopoutWhenCollapsed || popoutExpanded || (popoutCollapsed && level === 0)) && {

@@ -8,33 +8,17 @@ const InvoiceDetails = ({ invoiceData }) => {
             <Grid item xs={12}>
                 <div className='p-6 bg-actionHover rounded-xl'>
                     <div className='flex justify-between items-center'>
-                        <Grid item xs={4}>
-                            <div style={{ width: 200 }} className='flex justify-start'>
+                        <Grid item xs={6}>
+                            <div  className='flex justify-start items-center'>
                                 <Logo />
+                                <Typography sx={{marginLeft : "20px",justifyContent:"center",textAlign:"center"}} variant='h6'>قرارداد مدت معین و حکم حقوقی</Typography>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
-                            <div className='flex flex-col items-center'>
-                                <Typography variant='h6'>قرارداد مدت معین و حکم حقوقی</Typography>
-                                <Typography variant='h6'>دهیار تمام وقت</Typography>
-                            </div>
-                        </Grid>
+
                         <Grid item xs={4}>
                             <div className='flex flex-col gap-2'>
-                                <div className='flex items-center'>
-                                    <Typography>شماره قرارداد:</Typography>
-                                    <TextField
-                                        fullWidth
-                                        size='small'
-                                        value={invoiceData[0].id}
-                                        InputProps={{
-                                            disabled: true,
-                                            startAdornment: <InputAdornment position='start'>#</InputAdornment>
-                                        }}
-                                    />
-                                </div>
                                 <div className='flex items-center gap-4'>
-                                    <Typography color='text.primary'>تاریخ اجرا</Typography>
+                                    <Typography color='text.primary' sx={{whiteSpace: 'nowrap'}}>تاریخ اجرا</Typography>
                                     <TextField
                                         fullWidth
                                         size='small'
