@@ -12,26 +12,27 @@ const AccessGuard = ({ children }) => {
     useEffect(() => {
         if (!loading) {
             const currentPath = window.location.pathname; // گرفتن مسیر فعلی
-            let allowedPaths = [];
+            let allowedGroups = [];
 
-            if (user && accessControl[user.work_group]) {
-                allowedPaths = accessControl[user.work_group].map(page => page.href);
+            for (const [group, pages] of Object.entries(accessControl)) {
+                if (pages.some(page => page.href === currentPath)) {
+                    allowedGroups.push(parseInt(group));
+                }
             }
-            console.log(allowedPaths    )
-            if (allowedPaths.includes(currentPath)) {
+
+            if (allowedGroups.includes(99) || (user && allowedGroups.includes(user.work_group))) {
                 setIsAuthorized(true);
             } else {
                 setIsAuthorized(false);
-                router.replace('/403'); // هدایت به صفحه 403
+                router.replace('/403');
             }
         }
     }, [user, loading, router]);
 
     if (loading || isAuthorized === null) {
-        return <div>Loading...</div>; // یا هر اسپینر لودینگ دیگر
+        return <div>Loading...</div>;
     }
 
-    // اگر کاربر مجاز نیست، جلوگیری از رندر بیشتر
     if (!isAuthorized) {
         return null;
     }
