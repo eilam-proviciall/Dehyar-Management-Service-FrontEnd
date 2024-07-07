@@ -14,7 +14,9 @@ export const FormProvider = ({ children }) => {
         birthDate: '',
         gender: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        degree: '',
+        fieldOfStudy: '',
     };
 
     const [formData, setFormData] = useState(defaultValues);

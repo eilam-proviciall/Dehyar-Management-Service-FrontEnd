@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
@@ -9,6 +9,14 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import PersonalOptions from "@data/PersonalOption.json";
 import Button from "@mui/material/Button";
+import axios from 'axios';
+import { GetFieldStudy } from "@/Services/humanResources";
+import { styled } from '@mui/material/styles';
+
+const CustomGrid = styled(Grid)(({ theme }) => ({
+    maxWidth: '1300px',
+    margin: '0 auto',
+}));
 
 const PersonalForm = ({ onNext }) => {
     const { formData, updateFormData } = useFormContext();
@@ -16,6 +24,28 @@ const PersonalForm = ({ onNext }) => {
         resolver: valibotResolver(personalSchema),
         defaultValues: formData
     });
+
+    const [fieldsOfStudy, setFieldsOfStudy] = useState({});
+
+    const fetchFieldsOfStudy = async (grade) => {
+        grade = grade[0];
+        try {
+            const response = await axios.get(GetFieldStudy(), {
+                params: { grade }
+            });
+            setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));
+        } catch (error) {
+            console.error('Error fetching fields of study:', error);
+        }
+    };
+
+    const handleDegreeChange = (e, field) => {
+        onChangeHandler('degree', e.target.value);
+        field.onChange(e);
+        if (e.target.value >= 44) {
+            fetchFieldsOfStudy([e.target.value]);
+        }
+    };
 
     const onChangeHandler = (field, value) => {
         setValue(field, value);
@@ -27,8 +57,10 @@ const PersonalForm = ({ onNext }) => {
         onNext();
     };
 
+    const selectedDegree = watch('degree');
+
     return (
-        <Grid container spacing={5}>
+        <CustomGrid container spacing={5}>
             <Grid item xs={12}>
                 <Typography className='font-medium' color='text.primary'>
                     اطلاعات شخصی
@@ -96,6 +128,7 @@ const PersonalForm = ({ onNext }) => {
                                 calendar={persian}
                                 locale={persian_fa}
                                 calendarPosition="bottom-right"
+                                onChange={date => onChangeHandler('birthDate', date.toUnix())}
                                 render={
                                     <TextField
                                         fullWidth
@@ -106,7 +139,6 @@ const PersonalForm = ({ onNext }) => {
                                         inputProps={{
                                             style: { textAlign: 'end' }
                                         }}
-                                        onChange={e => onChangeHandler('birthDate', e.target.value)}
                                     />
                                 }
                             />
@@ -150,10 +182,7 @@ const PersonalForm = ({ onNext }) => {
                             <Select
                                 {...field}
                                 label="مدرک تحصیلی"
-                                onChange={e => {
-                                    onChangeHandler('degree', e.target.value);
-                                    field.onChange(e);
-                                }}
+                                onChange={e => handleDegreeChange(e, field)}
                             >
                                 {PersonalOptions.degreeOptions.map(degree => (
                                     <MenuItem key={degree.value} value={degree.value}>
@@ -167,6 +196,41 @@ const PersonalForm = ({ onNext }) => {
                         <FormHelperText>{errors.degree.message}</FormHelperText>}
                 </FormControl>
             </Grid>
+            {selectedDegree >= 44 && (
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name='fieldOfStudy'
+                        control={control}
+                        render={({ field }) => (
+                            <Autocomplete
+                                {...field}
+                                options={fieldsOfStudy[selectedDegree] || []}
+                                getOptionLabel={(option) => option.name || ''}
+                                isOptionEqualToValue={(option, value) => option.code === value.code}
+                                onChange={(_, value) => onChangeHandler('fieldOfStudy', value.code)}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="رشته تحصیلی"
+                                        size="small"
+                                        error={!!errors.fieldOfStudy}
+                                        helperText={errors.fieldOfStudy ? errors.fieldOfStudy.message : ''}
+                                        inputProps={{
+                                            ...params.inputProps,
+                                            style: { maxWidth: '300px' }
+                                        }}
+                                    />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.code}>
+                                        {option.name}
+                                    </li>
+                                )}
+                            />
+                        )}
+                    />
+                </Grid>
+            )}
             <Grid item xs={12} className='flex justify-between'>
                 <Button variant='outlined' disabled>
                     بازگشت
@@ -175,7 +239,7 @@ const PersonalForm = ({ onNext }) => {
                     مرحله بعد
                 </Button>
             </Grid>
-        </Grid>
+        </CustomGrid>
     );
 };
 
