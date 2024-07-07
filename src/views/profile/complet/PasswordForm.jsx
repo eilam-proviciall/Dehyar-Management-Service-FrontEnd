@@ -3,16 +3,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { passwordSchema } from './validation';
-import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon, Box } from '@mui/material';
+import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { styled } from '@mui/material/styles';
-
-const CustomGrid = styled(Grid)(({ theme }) => ({
-    maxWidth: '1300px',
-    maxHeight: '500px',
-    margin: '0 auto',
-}));
 
 const PasswordForm = ({ onBack, onNext }) => {
     const { formData, updateFormData } = useFormContext();
@@ -26,13 +19,13 @@ const PasswordForm = ({ onBack, onNext }) => {
         hasSpecialChar: false
     });
 
-    const { control, handleSubmit, watch, formState: { errors } } = useForm({
+    const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
         resolver: valibotResolver(passwordSchema),
-        defaultValues: formData.password
+        defaultValues: formData
     });
 
-    const password = watch('password');
-    const confirmPassword = watch('confirmPassword');
+    const password = watch('password', formData.password);
+    const confirmPassword = watch('confirmPassword', formData.confirmPassword);
 
     useEffect(() => {
         const hasUpperLowerCase = /(?=.*[a-z])(?=.*[A-Z])/.test(password);
@@ -47,170 +40,180 @@ const PasswordForm = ({ onBack, onNext }) => {
     const handleClickShowPassword = () => setIsPasswordShown(show => !show);
     const handleClickShowConfirmPassword = () => setIsConfirmPasswordShown(show => !show);
 
+    const onChangeHandler = (field, value) => {
+        setValue(field, value);
+        updateFormData({ [field]: value });
+    };
+
     const onSubmit = data => {
-        updateFormData('password', data);
-        console.log(formData)
-        // onNext();
+        updateFormData(data);
+        onNext();
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <CustomGrid container spacing={5}>
-                <Grid item xs={12}>
-                    <Typography className='font-medium' color='text.primary'>
-                        تغییر رمز عبور
-                    </Typography>
-                    <Typography variant='body2'>رمز عبور جدید خود را تنظیم کنید</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Controller
-                        name='password'
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                fullWidth
-                                label='رمز عبور'
-                                type={isPasswordShown ? 'text' : 'password'}
-                                error={!!errors.password}
-                                helperText={errors.password ? errors.password.message : ''}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                                size='small'
-                                                edge='end'
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={e => e.preventDefault()}
-                                                aria-label='toggle password visibility'
-                                            >
-                                                <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Controller
-                        name='confirmPassword'
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                fullWidth
-                                label='تکرار رمز عبور'
-                                type={isConfirmPasswordShown ? 'text' : 'password'}
-                                error={!!errors.confirmPassword}
-                                helperText={errors.confirmPassword ? errors.confirmPassword.message : ''}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                                size='small'
-                                                edge='end'
-                                                onClick={handleClickShowConfirmPassword}
-                                                onMouseDown={e => e.preventDefault()}
-                                                aria-label='toggle password visibility'
-                                            >
-                                                <i className={isConfirmPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <List>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        {passwordCriteria.hasUpperLowerCase ? (
-                                            <CheckCircleIcon style={{ color: 'green' }} />
-                                        ) : (
-                                            <CancelIcon style={{ color: 'red' }} />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="رمز عبور باید حداقل شامل یک حرف بزرگ و یک حرف کوچک باشد"
-                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasUpperLowerCase ? 'green' : 'red' } }}
-                                    />
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        {passwordCriteria.hasNumber ? (
-                                            <CheckCircleIcon style={{ color: 'green' }} />
-                                        ) : (
-                                            <CancelIcon style={{ color: 'red' }} />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="رمز عبور باید حداقل شامل یک عدد باشد"
-                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasNumber ? 'green' : 'red' } }}
-                                    />
-                                </ListItem>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        {passwordCriteria.hasMinLength ? (
-                                            <CheckCircleIcon style={{ color: 'green' }} />
-                                        ) : (
-                                            <CancelIcon style={{ color: 'red' }} />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="رمز عبور باید حداقل ۸ کاراکتر باشد"
-                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasMinLength ? 'green' : 'red' } }}
-                                    />
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        {passwordCriteria.hasSpecialChar ? (
-                                            <CheckCircleIcon style={{ color: 'green' }} />
-                                        ) : (
-                                            <CancelIcon style={{ color: 'red' }} />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="رمز عبور باید حداقل شامل یک علامت نگارشی باشد"
-                                        primaryTypographyProps={{ style: { color: passwordCriteria.hasSpecialChar ? 'green' : 'red' } }}
-                                    />
-                                </ListItem>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        {passwordCriteria.passwordsMatch ? (
-                                            <CheckCircleIcon style={{ color: 'green' }} />
-                                        ) : (
-                                            <CancelIcon style={{ color: 'red' }} />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary="رمز عبور و تکرار آن باید یکسان باشند"
-                                        primaryTypographyProps={{ style: { color: passwordCriteria.passwordsMatch ? 'green' : 'red' } }}
-                                    />
-                                </ListItem>
-                            </Grid>
+        <Grid container spacing={5}>
+            <Grid item xs={12}>
+                <Typography className='font-medium' color='text.primary'>
+                    تغییر رمز عبور
+                </Typography>
+                <Typography variant='body2'>رمز عبور جدید خود را تنظیم کنید</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Controller
+                    name='password'
+                    control={control}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            fullWidth
+                            label='رمز عبور'
+                            type={isPasswordShown ? 'text' : password}
+                            error={!!errors.password}
+                            helperText={errors.password ? errors.password.message : ''}
+                            onChange={e => {
+                                onChangeHandler('password', e.target.value);
+                                field.onChange(e);
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={e => e.preventDefault()}
+                                            aria-label='toggle password visibility'
+                                        >
+                                            <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    )}
+                />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Controller
+                    name='confirmPassword'
+                    control={control}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            fullWidth
+                            label='تکرار رمز عبور'
+                            type={isConfirmPasswordShown ? 'text' : 'password'}
+                            error={!!errors.confirmPassword}
+                            helperText={errors.confirmPassword ? errors.confirmPassword.message : ''}
+                            onChange={e => {
+                                onChangeHandler('confirmPassword', e.target.value);
+                                field.onChange(e);
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            size='small'
+                                            edge='end'
+                                            onClick={handleClickShowConfirmPassword}
+                                            onMouseDown={e => e.preventDefault()}
+                                            aria-label='toggle password visibility'
+                                        >
+                                            <i className={isConfirmPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    )}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <List>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <ListItem>
+                                <ListItemIcon>
+                                    {passwordCriteria.hasUpperLowerCase ? (
+                                        <CheckCircleIcon style={{ color: 'green' }} />
+                                    ) : (
+                                        <CancelIcon style={{ color: 'red' }} />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="رمز عبور باید حداقل شامل یک حرف بزرگ و یک حرف کوچک باشد"
+                                    primaryTypographyProps={{ style: { color: passwordCriteria.hasUpperLowerCase ? 'green' : 'red' } }}
+                                />
+                            </ListItem>
+                            <ListItem>
+                                <ListItemIcon>
+                                    {passwordCriteria.hasNumber ? (
+                                        <CheckCircleIcon style={{ color: 'green' }} />
+                                    ) : (
+                                        <CancelIcon style={{ color: 'red' }} />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="رمز عبور باید حداقل شامل یک عدد باشد"
+                                    primaryTypographyProps={{ style: { color: passwordCriteria.hasNumber ? 'green' : 'red' } }}
+                                />
+                            </ListItem>
                         </Grid>
-                    </List>
-                </Grid>
-                <Grid item xs={12} className='flex justify-between'>
-                    <Button variant='outlined' onClick={onBack}>
-                        بازگشت
-                    </Button>
-                    <Button variant='contained' type='submit'>
-                        ثبت
-                    </Button>
-                </Grid>
-            </CustomGrid>
-        </form>
+                        <Grid item xs={12} sm={6}>
+                            <ListItem>
+                                <ListItemIcon>
+                                    {passwordCriteria.hasMinLength ? (
+                                        <CheckCircleIcon style={{ color: 'green' }} />
+                                    ) : (
+                                        <CancelIcon style={{ color: 'red' }} />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="رمز عبور باید حداقل ۸ کاراکتر باشد"
+                                    primaryTypographyProps={{ style: { color: passwordCriteria.hasMinLength ? 'green' : 'red' } }}
+                                />
+                            </ListItem>
+                            <ListItem>
+                                <ListItemIcon>
+                                    {passwordCriteria.hasSpecialChar ? (
+                                        <CheckCircleIcon style={{ color: 'green' }} />
+                                    ) : (
+                                        <CancelIcon style={{ color: 'red' }} />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="رمز عبور باید حداقل شامل یک علامت نگارشی باشد"
+                                    primaryTypographyProps={{ style: { color: passwordCriteria.hasSpecialChar ? 'green' : 'red' } }}
+                                />
+                            </ListItem>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <ListItem>
+                                <ListItemIcon>
+                                    {passwordCriteria.passwordsMatch ? (
+                                        <CheckCircleIcon style={{ color: 'green' }} />
+                                    ) : (
+                                        <CancelIcon style={{ color: 'red' }} />
+                                    )}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="رمز عبور و تکرار آن باید یکسان باشند"
+                                    primaryTypographyProps={{ style: { color: passwordCriteria.passwordsMatch ? 'green' : 'red' } }}
+                                />
+                            </ListItem>
+                        </Grid>
+                    </Grid>
+                </List>
+            </Grid>
+            <Grid item xs={12} className='flex justify-between'>
+                <Button variant='outlined' onClick={onBack}>
+                    بازگشت
+                </Button>
+                <Button variant='contained' onClick={handleSubmit(onSubmit)}>
+                    ثبت
+                </Button>
+            </Grid>
+        </Grid>
     );
 };
 

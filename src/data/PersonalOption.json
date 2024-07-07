@@ -21,5 +21,14 @@
     { "value": "0", "label": "معافیت پزشکی" },
     { "value": "1", "label": "دارای کارت پایان خدمت" },
     { "value": "2", "label": "معافیت خاص" }
+  ],
+  "degreeOptions": [
+    { "title": "بی سواد", "value": 41 },
+    { "title": "سیکل", "value": 42 },
+    { "title": "دیپلم", "value": 43 },
+    { "title": "کاردانی", "value": 44 },
+    { "title": "کارشناسی", "value": 45 },
+    { "title": "کارشناسی ارشد", "value": 46 },
+    { "title": "دکترا", "value": 47 }
   ]
 }

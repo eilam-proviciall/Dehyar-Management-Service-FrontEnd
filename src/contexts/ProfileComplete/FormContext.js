@@ -1,5 +1,4 @@
-// src/contexts/FormContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const FormContext = createContext();
 
@@ -9,18 +8,29 @@ export const useFormContext = () => {
 
 export const FormProvider = ({ children }) => {
     const defaultValues = {
-        personal: { fullName: '', fatherName: '', nationalId: '', birthDate: '', gender: '' },
-        password: { password: '', confirmPassword: '' }
+        fullName: '',
+        fatherName: '',
+        nationalId: '',
+        birthDate: '',
+        gender: '',
+        password: '',
+        confirmPassword: ''
     };
 
     const [formData, setFormData] = useState(defaultValues);
 
-    const updateFormData = (section, data) => {
+
+    const updateFormData = (data) => {
         setFormData(prev => ({
             ...prev,
-            [section]: { ...prev[section], ...data }
+            ...data
         }));
     };
+
+    // Watch formData changes
+    useEffect(() => {
+        console.log("formData changed:", formData);
+    }, [formData]);
 
     return (
         <FormContext.Provider value={{ formData, updateFormData, defaultValues }}>

@@ -1,7 +1,7 @@
 "use client"
 // src/pages/ProfileComplete.js
 import React, { useState } from 'react';
-import { FormProvider } from '@contexts/ProfileComplete/FormContext';
+import { FormProvider, useFormContext } from '@contexts/ProfileComplete/FormContext';
 import PersonalForm from './PersonalForm';
 import PasswordForm from './PasswordForm';
 import { Card, CardContent, Divider, Typography, Button } from '@mui/material';
@@ -26,8 +26,15 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
     }
 }));
 
+const ContentWrapper = styled('div')(({ theme }) => ({
+    // maxWidth: '600px',
+    // margin: '0 auto',
+    position:"relative",
+}));
+
 const ProfileComplete = () => {
     const [activeStep, setActiveStep] = useState(0);
+    const { formData } = useFormContext();
 
     const handleNext = () => {
         setActiveStep(prev => prev + 1);
@@ -41,19 +48,23 @@ const ProfileComplete = () => {
         setActiveStep(0);
     };
 
+    const handleSubmit = () => {
+        // Here you can send formData to the API
+        console.log('Form2 Data:', formData);
+    };
+
     const renderStepContent = step => {
         switch (step) {
             case 0:
                 return <PersonalForm onNext={handleNext} />;
             case 1:
-                return <PasswordForm onBack={handleBack} onNext={handleReset} />;
+                return <PasswordForm onBack={handleBack} onNext={handleSubmit} />;
             default:
                 return <Typography color='text.primary'>Unknown stepIndex</Typography>;
         }
     };
 
     return (
-        <FormProvider>
             <Card>
                 <CardContent>
                     <StepperWrapper>
@@ -75,23 +86,24 @@ const ProfileComplete = () => {
                 </CardContent>
                 <Divider />
                 <CardContent>
-                    {activeStep === steps.length ? (
-                        <>
-                            <Typography className='mlb-2 mli-1' color='text.primary'>
-                                همه مراحل تکمیل شده‌اند!
-                            </Typography>
-                            <div className='flex justify-end mt-4'>
-                                <Button variant='contained' onClick={handleReset}>
-                                    بازنشانی
-                                </Button>
-                            </div>
-                        </>
-                    ) : (
-                        renderStepContent(activeStep)
-                    )}
+                    <ContentWrapper>
+                        {activeStep === steps.length ? (
+                            <>
+                                <Typography className='mlb-2 mli-1' color='text.primary'>
+                                    همه مراحل تکمیل شده‌اند!
+                                </Typography>
+                                <div className='flex justify-end mt-4'>
+                                    <Button variant='contained' onClick={handleReset}>
+                                        بازنشانی
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            renderStepContent(activeStep)
+                        )}
+                    </ContentWrapper>
                 </CardContent>
             </Card>
-        </FormProvider>
     );
 };
 
