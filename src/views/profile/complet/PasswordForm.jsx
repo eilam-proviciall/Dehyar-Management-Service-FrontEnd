@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
-import { passwordSchema } from './validation';
+import validationSchemas, { passwordSchema } from './validation';
 import { TextField, Grid, Button, Typography, InputAdornment, IconButton, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -20,7 +20,6 @@ const PasswordForm = ({ onBack, onNext }) => {
     });
 
     const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
-        resolver: valibotResolver(passwordSchema),
         defaultValues: formData
     });
 
@@ -49,6 +48,10 @@ const PasswordForm = ({ onBack, onNext }) => {
         updateFormData(data);
         onNext();
     };
+    const renderError = (name) => {
+        const field = name.split('.').reduce((o, i) => o[i], validationSchemas);
+        return errors[name] ? field.required : '';
+    };
 
     return (
         <Grid container spacing={5}>
@@ -62,6 +65,11 @@ const PasswordForm = ({ onBack, onNext }) => {
                 <Controller
                     name='password'
                     control={control}
+                    rules={{
+                        required: validationSchemas.passwordDetails.password.required,
+                        minLength: validationSchemas.passwordDetails.password.minLength,
+                        pattern: validationSchemas.passwordDetails.password.pattern
+                    }}
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -97,6 +105,10 @@ const PasswordForm = ({ onBack, onNext }) => {
                 <Controller
                     name='confirmPassword'
                     control={control}
+                    rules={{
+                        required: validationSchemas.passwordDetails.confirmPassword.required,
+                        validate: (value) => value === password || 'رمز عبور و تکرار آن باید یکسان باشند'
+                    }}
                     render={({ field }) => (
                         <TextField
                             {...field}

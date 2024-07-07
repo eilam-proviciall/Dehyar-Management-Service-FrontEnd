@@ -1,38 +1,44 @@
-import { object, string, custom, forward, minLength, regex } from 'valibot';
+const validationSchemas = {
+    personalDetails: {
+        fullName: {
+            required: 'این فیلد الزامی است',
+        },
+        fatherName: {
+            required: 'این فیلد الزامی است',
+        },
+        personalId: {
+            required: 'این فیلد الزامی است',
+        },
+        birthDate: {
+            required: 'این فیلد الزامی است',
+        },
+        gender: {
+            required: 'این فیلد الزامی است',
+        },
+        degree: {
+            required: 'این فیلد الزامی است',
+        },
+        fieldOfStudy: {
+            required: 'این فیلد الزامی است',
+        },
+    },
+    passwordDetails: {
+        password: {
+            required: 'این فیلد الزامی است',
+            minLength: {
+                value: 8,
+                message: 'رمز عبور باید حداقل ۸ کاراکتر باشد'
+            },
+            pattern: {
+                value: /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?])/,
+                message: 'رمز عبور باید شامل حرف بزرگ، حرف کوچک، عدد و علامت نگارشی باشد'
+            }
+        },
+        confirmPassword: {
+            required: 'این فیلد الزامی است',
+            validate: (value, context) => value === context.password || 'رمز عبور و تکرار آن باید یکسان باشند'
+        }
+    }
+};
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/;
-
-export const personalSchema = object({
-    fullName: string([minLength(1, 'این فیلد الزامی است')]),
-    fatherName: string([minLength(1, 'این فیلد الزامی است')]),
-    nationalId: string([minLength(1, 'این فیلد الزامی است')]),
-    // birthDate: string([minLength(1, 'این فیلد الزامی است')]),
-    gender: string([minLength(1, 'این فیلد الزامی است')]),
-    // degree: string([minLength(1, 'این فیلد الزامی است')]),
-    // fieldOfStudy: custom(
-    //     (value, ctx) => {
-    //         const degree = ctx.parent?.degree;
-    //         if (degree && degree >= 44 && !value) {
-    //             return 'رشته تحصیلی الزامی است';
-    //         }
-    //         return true;
-    //     },
-    //     'این فیلد الزامی است'
-    // ),
-});
-
-export const passwordSchema = object({
-    password: string([
-        minLength(1, 'این فیلد الزامی است'),
-        minLength(8, 'رمز عبور باید حداقل ۸ کاراکتر باشد'),
-        regex(passwordRegex, 'رمز عبور باید شامل حداقل یک حرف کوچک، یک حرف بزرگ، یک عدد و یک علامت نگارشی باشد'),
-    ]),
-    confirmPassword: string([
-        minLength(1, 'این فیلد الزامی است')
-    ])
-}, [
-    forward(
-        custom(input => input.password === input.confirmPassword, 'رمزهای عبور مطابقت ندارند'),
-        ['confirmPassword']
-    )
-]);
+export default validationSchemas;

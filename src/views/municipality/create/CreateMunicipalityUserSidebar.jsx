@@ -13,6 +13,7 @@ import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
 import roles from '@data/roles';
 import {useFetchRegions} from "@hooks/useFetchRegions";
+import { user} from "@/Services/Auth/AuthService";
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '', role: '' } });

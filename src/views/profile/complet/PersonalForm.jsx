@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import { valibotResolver } from '@hookform/resolvers/valibot';
-import { personalSchema } from './validation';
+import validationSchemas from './validation';
 import { TextField, Grid, Typography, FormControl, InputLabel, Select, MenuItem, FormHelperText, Autocomplete } from '@mui/material';
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
@@ -20,12 +20,15 @@ const CustomGrid = styled(Grid)(({ theme }) => ({
 
 const PersonalForm = ({ onNext }) => {
     const { formData, updateFormData } = useFormContext();
-    const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
-        resolver: valibotResolver(personalSchema),
+    const { control, handleSubmit, setValue,getValues, watch, formState: { errors } } = useForm({
         defaultValues: formData
     });
 
     const [fieldsOfStudy, setFieldsOfStudy] = useState({});
+    const renderError = (name) => {
+        const field = name.split('.').reduce((o, i) => o[i], validationSchemas);
+        return errors[name] ? field.required : '';
+    };
 
     const fetchFieldsOfStudy = async (grade) => {
         grade = grade[0];
@@ -70,6 +73,7 @@ const PersonalForm = ({ onNext }) => {
                 <Controller
                     name='fullName'
                     control={control}
+                    rules={{ required: validationSchemas.personalDetails.fullName.required }}
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -77,7 +81,7 @@ const PersonalForm = ({ onNext }) => {
                             fullWidth
                             label='نام و نام خانوادگی'
                             error={!!errors.fullName}
-                            helperText={errors.fullName ? errors.fullName.message : ''}
+                            helperText={renderError('personalDetails.fullName')}
                             onChange={e => onChangeHandler('fullName', e.target.value)}
                         />
                     )}
@@ -87,6 +91,7 @@ const PersonalForm = ({ onNext }) => {
                 <Controller
                     name='fatherName'
                     control={control}
+                    rules={{ required: validationSchemas.personalDetails.fatherName.required }}
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -94,7 +99,7 @@ const PersonalForm = ({ onNext }) => {
                             fullWidth
                             label='نام پدر'
                             error={!!errors.fatherName}
-                            helperText={errors.fatherName ? errors.fatherName.message : ''}
+                            helperText={renderError('personalDetails.fatherName')}
                             onChange={e => onChangeHandler('fatherName', e.target.value)}
                         />
                     )}
@@ -102,17 +107,18 @@ const PersonalForm = ({ onNext }) => {
             </Grid>
             <Grid item xs={12} sm={4}>
                 <Controller
-                    name='nationalId'
+                    name='personalId'
                     control={control}
+                    rules={{ required: validationSchemas.personalDetails.personalId.required }}
                     render={({ field }) => (
                         <TextField
                             {...field}
                             fullWidth
                             size="small"
                             label='شماره شناسنامه'
-                            error={!!errors.nationalId}
-                            helperText={errors.nationalId ? errors.nationalId.message : ''}
-                            onChange={e => onChangeHandler('nationalId', e.target.value)}
+                            error={!!errors.personalId}
+                            helperText={renderError('personalDetails.personalId')}
+                            onChange={e => onChangeHandler('personalId', e.target.value)}
                         />
                     )}
                 />
@@ -122,12 +128,15 @@ const PersonalForm = ({ onNext }) => {
                     <Controller
                         name='birthDate'
                         control={control}
+                        defaultValue=""
+                        rules={{ required: validationSchemas.personalDetails.birthDate.required }}
                         render={({ field }) => (
                             <DatePicker
                                 {...field}
                                 calendar={persian}
                                 locale={persian_fa}
                                 calendarPosition="bottom-right"
+
                                 onChange={date => onChangeHandler('birthDate', date.toUnix())}
                                 render={
                                     <TextField
@@ -135,7 +144,7 @@ const PersonalForm = ({ onNext }) => {
                                         size="small"
                                         label="تاریخ تولد"
                                         error={!!errors.birthDate}
-                                        helperText={errors.birthDate ? errors.birthDate.message : ''}
+                                        helperText={renderError('personalDetails.birthDate')}
                                         inputProps={{
                                             style: { textAlign: 'end' }
                                         }}
@@ -152,6 +161,7 @@ const PersonalForm = ({ onNext }) => {
                     <Controller
                         name="gender"
                         control={control}
+                        rules={{ required: validationSchemas.personalDetails.gender.required }}
                         render={({ field }) => (
                             <Select
                                 {...field}
@@ -178,6 +188,7 @@ const PersonalForm = ({ onNext }) => {
                     <Controller
                         name='degree'
                         control={control}
+                        rules={{ required: validationSchemas.personalDetails.degree.required }}
                         render={({ field }) => (
                             <Select
                                 {...field}
@@ -201,6 +212,7 @@ const PersonalForm = ({ onNext }) => {
                     <Controller
                         name='fieldOfStudy'
                         control={control}
+                        rules={{ required: validationSchemas.personalDetails.fieldOfStudy.required }}
                         render={({ field }) => (
                             <Autocomplete
                                 {...field}

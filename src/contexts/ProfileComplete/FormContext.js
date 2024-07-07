@@ -10,7 +10,7 @@ export const FormProvider = ({ children }) => {
     const defaultValues = {
         fullName: '',
         fatherName: '',
-        nationalId: '',
+        personalId: '',
         birthDate: '',
         gender: '',
         password: '',
@@ -29,10 +29,6 @@ export const FormProvider = ({ children }) => {
         }));
     };
 
-    // Watch formData changes
-    useEffect(() => {
-        console.log("formData changed:", formData);
-    }, [formData]);
 
     return (
         <FormContext.Provider value={{ formData, updateFormData, defaultValues }}>
