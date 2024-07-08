@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
-import { valibotResolver } from '@hookform/resolvers/valibot';
 import validationSchemas from './validation';
 import { TextField, Grid, Typography, FormControl, InputLabel, Select, MenuItem, FormHelperText, Autocomplete } from '@mui/material';
 import DatePicker from "react-multi-date-picker";
@@ -20,8 +19,9 @@ const CustomGrid = styled(Grid)(({ theme }) => ({
 
 const PersonalForm = ({ onNext }) => {
     const { formData, updateFormData } = useFormContext();
-    const { control, handleSubmit, setValue,getValues, watch, formState: { errors } } = useForm({
-        defaultValues: formData
+    const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+        defaultValues: formData,
+        mode: 'onChange', // Enable live validation
     });
 
     const [fieldsOfStudy, setFieldsOfStudy] = useState({});
@@ -71,18 +71,42 @@ const PersonalForm = ({ onNext }) => {
             </Grid>
             <Grid item xs={12} sm={4}>
                 <Controller
-                    name='fullName'
+                    name='firstName'
                     control={control}
-                    rules={{ required: validationSchemas.personalDetails.fullName.required }}
+                    rules={{ required: validationSchemas.personalDetails.firstName.required }}
                     render={({ field }) => (
                         <TextField
                             {...field}
                             size="small"
                             fullWidth
-                            label='نام و نام خانوادگی'
-                            error={!!errors.fullName}
-                            helperText={renderError('personalDetails.fullName')}
-                            onChange={e => onChangeHandler('fullName', e.target.value)}
+                            label='نام'
+                            error={!!errors.firstName}
+                            helperText={errors.firstName ? errors.firstName.message : ''}
+                            onChange={e => {
+                                onChangeHandler('firstName', e.target.value);
+                                field.onChange(e);
+                            }}
+                        />
+                    )}
+                />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+                <Controller
+                    name='lastName'
+                    control={control}
+                    rules={{ required: validationSchemas.personalDetails.lastName.required }}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            size="small"
+                            fullWidth
+                            label='نام خانوادگی'
+                            error={!!errors.lastName}
+                            helperText={errors.lastName ? errors.lastName.message : ''}
+                            onChange={e => {
+                                onChangeHandler('lastName', e.target.value);
+                                field.onChange(e);
+                            }}
                         />
                     )}
                 />
@@ -99,8 +123,11 @@ const PersonalForm = ({ onNext }) => {
                             fullWidth
                             label='نام پدر'
                             error={!!errors.fatherName}
-                            helperText={renderError('personalDetails.fatherName')}
-                            onChange={e => onChangeHandler('fatherName', e.target.value)}
+                            helperText={errors.fatherName ? errors.fatherName.message : ''}
+                            onChange={e => {
+                                onChangeHandler('fatherName', e.target.value);
+                                field.onChange(e);
+                            }}
                         />
                     )}
                 />
@@ -117,8 +144,11 @@ const PersonalForm = ({ onNext }) => {
                             size="small"
                             label='شماره شناسنامه'
                             error={!!errors.personalId}
-                            helperText={renderError('personalDetails.personalId')}
-                            onChange={e => onChangeHandler('personalId', e.target.value)}
+                            helperText={errors.personalId ? errors.personalId.message : ''}
+                            onChange={e => {
+                                onChangeHandler('personalId', e.target.value);
+                                field.onChange(e);
+                            }}
                         />
                     )}
                 />
@@ -136,7 +166,6 @@ const PersonalForm = ({ onNext }) => {
                                 calendar={persian}
                                 locale={persian_fa}
                                 calendarPosition="bottom-right"
-
                                 onChange={date => onChangeHandler('birthDate', date.toUnix())}
                                 render={
                                     <TextField
@@ -144,7 +173,7 @@ const PersonalForm = ({ onNext }) => {
                                         size="small"
                                         label="تاریخ تولد"
                                         error={!!errors.birthDate}
-                                        helperText={renderError('personalDetails.birthDate')}
+                                        helperText={errors.birthDate ? errors.birthDate.message : ''}
                                         inputProps={{
                                             style: { textAlign: 'end' }
                                         }}

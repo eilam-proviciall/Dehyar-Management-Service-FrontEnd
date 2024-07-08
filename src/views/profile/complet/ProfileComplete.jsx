@@ -1,42 +1,43 @@
-"use client"
-// src/pages/ProfileComplete.js
-import React, {useState} from 'react';
-import {useFormContext} from '@contexts/ProfileComplete/FormContext';
+import React, { useState } from 'react';
+import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import PersonalForm from './PersonalForm';
 import PasswordForm from './PasswordForm';
-import {Button, Card, CardContent, Divider, Typography} from '@mui/material';
 import StepperWrapper from '@core/styles/stepper';
 import StepperCustomDot from '@components/stepper-dot';
 import MuiStepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import {styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import axios from "axios";
-import {toast} from "react-toastify";
-import {useAuth} from '@/contexts/AuthContext';
-import {user} from "@/Services/Auth/AuthService";
+import { toast } from "react-toastify";
+import { useAuth } from '@/contexts/AuthContext';
+import { user } from "@/Services/Auth/AuthService";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import { Step, StepLabel } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 
 const steps = [
-    {title: 'اطلاعات شخصی', subtitle: 'Enter your personal details'},
-    {title: 'تغییر رمز عبور', subtitle: 'Setup your new password'}
+    { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
+    { title: 'تغییر رمز عبور', subtitle: 'Setup your new password' }
 ];
 
-const Stepper = styled(MuiStepper)(({theme}) => ({
+const Stepper = styled(MuiStepper)(({ theme }) => ({
     justifyContent: 'center',
     '& .MuiStep-root': {
-        '&:first-of-type': {paddingInlineStart: 0},
-        '&:last-of-type': {paddingInlineEnd: 0},
-        [theme.breakpoints.down('md')]: {paddingInline: 0}
+        '&:first-of-type': { paddingInlineStart: 0 },
+        '&:last-of-type': { paddingInlineEnd: 0 },
+        [theme.breakpoints.down('md')]: { paddingInline: 0 }
     }
 }));
-const ContentWrapper = styled('div')(({theme}) => ({
+const ContentWrapper = styled('div')(({ theme }) => ({
     position: "relative",
 }));
 
 const ProfileComplete = () => {
     const [activeStep, setActiveStep] = useState(0);
-    const {formData} = useFormContext();
-    const {user: authUser, loading} = useAuth();
+    const { formData } = useFormContext();
+    const { user: authUser, loading } = useAuth();
 
     const handleNext = () => {
         setActiveStep(prev => prev + 1);
@@ -51,13 +52,14 @@ const ProfileComplete = () => {
     };
 
     const handleSubmit = async () => {
+        console.log(formData)
         try {
             const token = window.localStorage.getItem('token');
             if (!token) {
                 toast.error('No token found');
-
+                return;
             }
-           console.log(formData)
+            console.log(formData);
             const response = await axios.put(`${user()}/${authUser.id}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -88,9 +90,9 @@ const ProfileComplete = () => {
     const renderStepContent = step => {
         switch (step) {
             case 0:
-                return <PersonalForm onNext={handleNext}/>;
+                return <PersonalForm onNext={handleNext} />;
             case 1:
-                return <PasswordForm onBack={handleBack} onNext={handleSubmit}/>;
+                return <PasswordForm onBack={handleBack} onNext={handleSubmit} />;
             default:
                 return <Typography color='text.primary'>Unknown stepIndex</Typography>;
         }
@@ -116,7 +118,7 @@ const ProfileComplete = () => {
                     </Stepper>
                 </StepperWrapper>
             </CardContent>
-            <Divider/>
+            <Divider />
             <CardContent>
                 <ContentWrapper>
                     {activeStep === steps.length ? (

@@ -1,6 +1,9 @@
 const validationSchemas = {
     personalDetails: {
-        fullName: {
+        firstName: {
+            required: 'این فیلد الزامی است',
+        },
+        lastName: {
             required: 'این فیلد الزامی است',
         },
         fatherName: {

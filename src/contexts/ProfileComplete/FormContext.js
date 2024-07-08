@@ -8,7 +8,8 @@ export const useFormContext = () => {
 
 export const FormProvider = ({ children }) => {
     const defaultValues = {
-        fullName: '',
+        firstName: '',
+        lastName: '',
         fatherName: '',
         personalId: '',
         birthDate: '',
