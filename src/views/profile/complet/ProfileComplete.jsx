@@ -39,7 +39,7 @@ const ContentWrapper = styled('div')(({ theme }) => ({
 const ProfileComplete = () => {
     const [activeStep, setActiveStep] = useState(0);
     const { formData } = useFormContext();
-    const { user: authUser, loading } = useAuth();
+    const { user: authUser, logout } = useAuth();
 
     const handleNext = () => {
         setActiveStep(prev => prev + 1);
@@ -60,14 +60,14 @@ const ProfileComplete = () => {
                 toast.error('No token found');
                 return;
             }
-            console.log(formData);
             const response = await axios.put(`${user()}/${authUser.id}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            toast.success("کاربر با موفقیت ایجاد شد", {
+            toast.success("بروزرسانی اطلاعات با موفقیت انجام شد", {
                 position: "top-center"
             });
+             logout();
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 const errors = error.response.data.errors;
