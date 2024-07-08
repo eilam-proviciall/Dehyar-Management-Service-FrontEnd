@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormContext } from '@contexts/ProfileComplete/FormContext';
 import PersonalForm from './PersonalForm';
 import PasswordForm from './PasswordForm';
+import ProfilePictureForm from './ProfilePictureForm';
 import StepperWrapper from '@core/styles/stepper';
 import StepperCustomDot from '@components/stepper-dot';
 import MuiStepper from '@mui/material/Stepper';
@@ -19,6 +20,7 @@ import Button from "@mui/material/Button";
 
 const steps = [
     { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
+    { title: 'عکس پروفایل', subtitle: 'Upload your profile picture' },
     { title: 'تغییر رمز عبور', subtitle: 'Setup your new password' }
 ];
 
@@ -52,7 +54,6 @@ const ProfileComplete = () => {
     };
 
     const handleSubmit = async () => {
-        console.log(formData)
         try {
             const token = window.localStorage.getItem('token');
             if (!token) {
@@ -92,6 +93,8 @@ const ProfileComplete = () => {
             case 0:
                 return <PersonalForm onNext={handleNext} />;
             case 1:
+                return <ProfilePictureForm onNext={handleNext} onBack={handleBack} />;
+            case 2:
                 return <PasswordForm onBack={handleBack} onNext={handleSubmit} />;
             default:
                 return <Typography color='text.primary'>Unknown stepIndex</Typography>;

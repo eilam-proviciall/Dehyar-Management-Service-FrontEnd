@@ -18,6 +18,7 @@ export const FormProvider = ({ children }) => {
         confirmPassword: '',
         degree: '',
         fieldOfStudy: '',
+        profilePicture:''
     };
 
     const [formData, setFormData] = useState(defaultValues);
@@ -32,7 +33,7 @@ export const FormProvider = ({ children }) => {
 
 
     return (
-        <FormContext.Provider value={{ formData, updateFormData, defaultValues }}>
+        <FormContext.Provider value={{ formData, updateFormData, defaultValues,setFormData }}>
             {children}
         </FormContext.Provider>
     );
