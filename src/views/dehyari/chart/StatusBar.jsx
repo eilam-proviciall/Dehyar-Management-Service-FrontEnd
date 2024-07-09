@@ -26,6 +26,7 @@ function StatusBar({ onVillageSelect }) {
                 setVillages(villageData);
                 if (villageData.length > 0) {
                     const defaultVillage = villageData[0].village.hierarchy_code;
+                    console.log(defaultVillage)
                     setSelectedVillage(defaultVillage);
                     onVillageSelect(defaultVillage);
                 }

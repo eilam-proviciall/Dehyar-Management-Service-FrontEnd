@@ -28,4 +28,13 @@ const jobTitleOptions = [
   }
 ];
 
+export const getJobTitleLabel = (value) => {
+  for (const group of jobTitleOptions) {
+    const title = group.titles.find(title => title.value === value);
+    if (title) {
+      return title.label;
+    }
+  }
+  return "عنوان نامشخص"; // در صورتی که عنوان پیدا نشود
+};
 export default jobTitleOptions;

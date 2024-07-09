@@ -15,9 +15,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
 
 function Chart(props) {
-    const [data, setData] = useState([
-        // ... (داده‌های نمودار سازمانی)
-    ]);
+    const [data, setData] = useState([]);
     const [selectedVillage, setSelectedVillage] = useState('');
     let addNodeChildFunc = null;
     const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
@@ -32,7 +30,7 @@ function Chart(props) {
     }
 
     const handleVillageSelect = (villageId) => {
-        setSelectedVillage(villageId);
+        setSelectedVillage(villageId.toString());
     };
 
     const actions = [
@@ -61,28 +59,8 @@ function Chart(props) {
                         }} >
                             <CardContent>
                                 <div>
-                                    <Box sx={{ height: 50, transform: 'translateZ(0px)', flexGrow: 1 }}>
-                                        <SpeedDial
-                                            ariaLabel="SpeedDial openIcon example"
-                                            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                                            icon={<SpeedDialIcon openIcon={<EditIcon />} />}
-                                            direction="left"
-                                        >
-                                            {actions.map((action) => (
-                                                <SpeedDialAction
-                                                    key={action.name}
-                                                    icon={action.icon}
-                                                    tooltipTitle={action.name}
-                                                    onClick={() => changeLayout(action.position)}
-                                                />
-                                            ))}
-                                        </SpeedDial>
-                                    </Box>
-                                </div>
-                                <div>
                                     <OrgChartComponent
                                         setClick={(click) => (addNodeChildFunc = click)}
-                                        data={data}
                                     />
                                 </div>
                             </CardContent>

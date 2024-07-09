@@ -26,11 +26,12 @@ const Page = ({ mode }) => {
                         403
                     </Typography>
                     <Typography variant='h4'>شما  به این صفحه دسترسی ندارید⚠️</Typography>
-                    <Typography></Typography>
+                    <Typography variant='h4'>سوابق دسترسی های غیر مجاز در سامانه ثبت میگردد⚠️</Typography>
+                    <Typography variant='h4'>همچنین تکرار برای اقدام به صفحات غیر مجاز موجب مسدودی حساب کاربری میگردد⚠️</Typography>
                 </div>
-                {/*<Button href='/municipality/list' component={Link} variant='contained'>*/}
-                {/*    Back to Home*/}
-                {/*</Button>*/}
+                <Button href='/login'  variant='contained'>
+                   بازگشت به صفحه ورود
+                </Button>
             </div>
             <img src={miscBackground} className='absolute bottom-0 z-[-1] is-full max-md:hidden' />
         </div>
