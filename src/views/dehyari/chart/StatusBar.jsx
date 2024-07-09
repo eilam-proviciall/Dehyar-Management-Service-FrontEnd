@@ -22,9 +22,10 @@ function StatusBar({ onVillageSelect }) {
             },
         })
             .then(response => {
-                setVillages(response.data);
-                if (response.data.length > 0) {
-                    const defaultVillage = response.data[0].id;
+                const villageData = response.data;
+                setVillages(villageData);
+                if (villageData.length > 0) {
+                    const defaultVillage = villageData[0].village.hierarchy_code;
                     setSelectedVillage(defaultVillage);
                     onVillageSelect(defaultVillage);
                 }
