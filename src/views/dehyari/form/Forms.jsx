@@ -1,4 +1,5 @@
 "use client"
+// Forms.js
 import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Grid, CircularProgress, Alert } from '@mui/material';
@@ -12,6 +13,7 @@ import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
 import MyDocument from '@components/MyDocument';
 import { pdf } from '@react-pdf/renderer';
 import { getSalary } from '@/Services/Salary';
+import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();
@@ -26,8 +28,8 @@ const Forms = ({ invoiceData }) => {
             villageEmployer: '',
             fatherName: '',
             nationalCode: '',
-            birthDate : '',
-            phoneNumbers : {},
+            birthDate: '',
+            phoneNumbers: {},
             personalId: '',
             gender: '',
             maritalStatus: '',
@@ -43,7 +45,8 @@ const Forms = ({ invoiceData }) => {
             contractStart: '',
             contractEnd: '',
             descriptionContract: '',
-            titleContract: ''
+            titleContract: '',
+            profilePicture: '' // افزودن این خط
         }
     });
 
@@ -131,8 +134,6 @@ const Forms = ({ invoiceData }) => {
         }
     };
 
-
-
     if (loading) return <CircularProgress />;
     if (error) return <Alert severity="error">{error.message}</Alert>;
 
@@ -144,6 +145,9 @@ const Forms = ({ invoiceData }) => {
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={6}>
+                        <Grid item xs={12}>
+                            <ProfilePictureUpload />
+                        </Grid>
                         <Grid item xs={12}>
                             <ButtonGroup onSubmit={methods.handleSubmit(onSubmit)} />
                         </Grid>

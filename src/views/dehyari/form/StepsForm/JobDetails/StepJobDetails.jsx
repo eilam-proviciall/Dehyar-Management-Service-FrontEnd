@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Grid, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import JobTitleSelect from './JobTitleSelect';
@@ -7,13 +7,19 @@ import CoveredVillagesSelect from './CoveredVillagesSelect';
 import InvoiceDetails from './InvoiceDetails';
 import validationSchemas from "@views/dehyari/form/validationSchemas";
 import contractType from "@data/contractType.json";
+
 const StepJobDetails = ({ invoiceData, validation }) => {
-    const { control, setValue,register, watch, formState: { errors } } = useFormContext();
-    const selectedJobTitle = watch('jobTitle');
+    const { control, setValue, register, watch, formState: { errors } } = useFormContext();
+    const selectedJobTitleLabel = watch('jobTitleLabel');
+    const selectedContractTypeLabel = watch('contractTypeLabel');
 
     return (
         <>
-            <InvoiceDetails invoiceData={invoiceData} />
+            <InvoiceDetails
+                invoiceData={invoiceData}
+                jobTitleLabel={selectedJobTitleLabel}
+                contractTypeLabel={selectedContractTypeLabel}
+            />
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
                     <DividerSimple title='ساختار تشکیلات' />
@@ -55,17 +61,16 @@ const StepJobDetails = ({ invoiceData, validation }) => {
                         >
                             <MenuItem value="1">آزمون</MenuItem>
                             <MenuItem value="2">بدون آزمون</MenuItem>
-                            <MenuItem value="3">دهیاری</MenuItem>
                         </Select>
                         {errors.employmentStatus && <Typography color="error">{errors.employmentStatus.message}</Typography>}
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={12   }>
+                <Grid item xs={12} sm={12}>
                     <CoveredVillagesSelect
                         control={control}
                         validation={validation}
                         errors={errors}
-                        selectedJobTitle={selectedJobTitle}
+                        selectedJobTitle={watch('jobTitle')}
                         setValue={setValue}
                     />
                 </Grid>

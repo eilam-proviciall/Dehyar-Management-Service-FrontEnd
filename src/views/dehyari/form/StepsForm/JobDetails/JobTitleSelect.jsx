@@ -1,52 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-import axios from 'axios';
-import { Controller } from 'react-hook-form';
-import { GetJobTitles } from "@/Services/humanResources";
+import React from 'react';
+import { FormControl, InputLabel, Autocomplete, TextField, Typography } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
+import jobTitleOptions from "@data/jobTitles";
 
 const JobTitleSelect = ({ control, validation, errors }) => {
-    const [jobTitles, setJobTitles] = useState([]);
+    const { setValue, getValues } = useFormContext();
 
-    useEffect(() => {
-        const fetchJobTitles = async () => {
-            try {
-                const response = await axios.get(GetJobTitles(), {
-                    headers: {
-                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                    },
-                });
-                setJobTitles(response.data);
-            } catch (error) {
-                console.error('Error fetching job titles:', error);
-            }
-        };
+    const options = jobTitleOptions.flatMap(group =>
+        group.titles.map(title => ({
+            group: group.group,
+            value: title.value,
+            label: title.label
+        }))
+    );
 
-        fetchJobTitles();
-    }, []);
+    const findOption = (value) => options.find(option => option.value === value) || null;
 
     return (
-        <FormControl fullWidth size="small" error={!!errors.jobTitle}>
-            <InputLabel>پست سازمانی</InputLabel>
+        <FormControl fullWidth size="small">
             <Controller
-                name='jobTitle'
+                name="jobTitle"
                 control={control}
                 defaultValue=""
                 rules={validation.jobTitle}
                 render={({ field }) => (
-                    <Select
+                    <Autocomplete
                         {...field}
-                        label="پست سازمانی"
-                        onChange={(e) => {
-                            field.onChange(e.target.value);
+                        size="small"
+                        options={options}
+                        groupBy={(option) => option.group}
+                        getOptionLabel={(option) => option.label}
+                        value={findOption(field.value)}
+                        onChange={(e, value) => {
+                            field.onChange(value?.value || '');
+                            setValue('jobTitleLabel', value?.label || '');
                         }}
-                        value={field.value || ''}
-                    >
-                        {jobTitles.map((jobTitle) => (
-                            <MenuItem key={jobTitle.id} value={jobTitle.id}>
-                                {`${jobTitle.title} (درجه ${jobTitle.grade})`}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                        renderInput={(params) => <TextField {...params} label="پست سازمانی" />}
+                    />
                 )}
             />
             {errors.jobTitle && <Typography color="error">{errors.jobTitle.message}</Typography>}

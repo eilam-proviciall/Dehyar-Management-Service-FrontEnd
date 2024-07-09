@@ -4,8 +4,8 @@ import { MaterialReactTable } from 'material-react-table';
 import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
-import jobTitles from '@data/jobTitles.json';
-import contractType from "@data/jobTitles.json";
+import jobTitles from '@data/jobTitles.js';
+import contractType from "@data/jobTitles.js";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 

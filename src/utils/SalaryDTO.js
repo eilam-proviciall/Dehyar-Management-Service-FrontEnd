@@ -20,6 +20,7 @@
             execute_start: data.contractStart, // Assuming execute_start is the same as contractStart
             description_contract: data.descriptionContract,
             title_contract: data.titleContract,
+            profile_picture : data.profilePicture,
             educations: data.educations.map(education => ({
                 education_degree: education.degree,
                 education_field: education.fieldOfStudy,

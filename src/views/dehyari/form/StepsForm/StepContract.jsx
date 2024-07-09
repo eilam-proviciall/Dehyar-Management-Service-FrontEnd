@@ -29,7 +29,33 @@ const StepContract = ({ validation }) => {
                     />
                 </Grid>
 
-
+                <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth size="small">
+                        <DatePicker
+                            scrollSensitive={true}
+                            calendar={persian}
+                            locale={persian_fa}
+                            calendarPosition="bottom-right"
+                            {...register('execute_start', validation.contractStart)}
+                            onChange={(date) => setValue('execute_start', date.toUnix())}
+                            value={getValues('execute_start')}
+                            render={
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    label="تاریخ اجرای قرارداد"
+                                    name="contractStart"
+                                    error={!!errors.execute_start}
+                                    placeholder="تاریخ اجرای قرارداد"
+                                    inputProps={{
+                                        style: { textAlign: 'end' }
+                                    }}
+                                />
+                            }
+                        />
+                        {errors.execute_start && <Typography color="error">{errors.execute_start.message}</Typography>}
+                    </FormControl>
+                </Grid>
             </Grid>
 
             <Grid container spacing={2} mt={1}>
@@ -62,10 +88,10 @@ const StepContract = ({ validation }) => {
                                 <TextField
                                     fullWidth
                                     size="small"
-                                    label="شروع قرارداد"
+                                    label="تاریخ شروع قرارداد"
                                     name="contractStart"
                                     error={!!errors.contractStart}
-                                    placeholder="شروع قرارداد"
+                                    placeholder="تاریخ شروع قرارداد"
                                     inputProps={{
                                         style: { textAlign: 'end' }
                                     }}
@@ -89,10 +115,10 @@ const StepContract = ({ validation }) => {
                                 <TextField
                                     fullWidth
                                     size="small"
-                                    label="پایان قرارداد"
+                                    label="تاریخ پایان قرارداد"
                                     name="contractStart"
                                     error={!!errors.contractEnd}
-                                    placeholder="پایان قرارداد"
+                                    placeholder="تاریخ پایان قرارداد"
                                     inputProps={{
                                         style: { textAlign: 'end' }
                                     }}
@@ -100,33 +126,6 @@ const StepContract = ({ validation }) => {
                             }
                         />
                         {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth size="small">
-                        <DatePicker
-                            scrollSensitive={true}
-                            calendar={persian}
-                            locale={persian_fa}
-                            calendarPosition="bottom-right"
-                            {...register('execute_start', validation.contractStart)}
-                            onChange={(date) => setValue('execute_start', date.toUnix())}
-                            value={getValues('execute_start')}
-                            render={
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="اجرای قرارداد"
-                                    name="contractStart"
-                                    error={!!errors.execute_start}
-                                    placeholder="اجرای قرارداد"
-                                    inputProps={{
-                                        style: { textAlign: 'end' }
-                                    }}
-                                />
-                            }
-                        />
-                        {errors.execute_start && <Typography color="error">{errors.execute_start.message}</Typography>}
                     </FormControl>
                 </Grid>
             </Grid>
