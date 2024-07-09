@@ -1,19 +1,15 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Button from "@mui/material/Button";
 import { MaterialReactTable } from 'material-react-table';
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import jobTitles from '@data/jobTitles.json';
 import contractType from "@data/jobTitles.json";
-import { Edit, MoreVert } from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 
-function DehyariList(props) {
+function DehyariList({ selectedVillage }) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -31,17 +27,23 @@ function DehyariList(props) {
     };
 
     useEffect(() => {
-        axios.get(humanResources(), {
-            headers: {
-                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-            },
-        }).then((response) => {
-            setData(response.data);
-            setLoading(false);
-        }).catch(() => {
-            setLoading(false);
-        });
-    }, []);
+        if (selectedVillage) {
+            setLoading(true);
+            axios.get(humanResources(), {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+                params: {
+                    village_code: selectedVillage
+                }
+            }).then((response) => {
+                setData(response.data);
+                setLoading(false);
+            }).catch(() => {
+                setLoading(false);
+            });
+        }
+    }, [selectedVillage]);
 
     const tableData = useMemo(() => data, [data]);
 

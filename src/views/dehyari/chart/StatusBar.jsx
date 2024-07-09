@@ -4,25 +4,30 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
 import FamillyStatus from "@views/dehyari/chart/FamillyStatus";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import {getCfoCoveredVillage} from "@/Services/DataService";
+import { getCfoCoveredVillage } from "@/Services/DataService";
 
-function StatusBar(props) {
+function StatusBar({ onVillageSelect }) {
     const [villages, setVillages] = useState([]);
     const [selectedVillage, setSelectedVillage] = useState('');
 
     useEffect(() => {
-        axios.get(getCfoCoveredVillage(),{
+        axios.get(getCfoCoveredVillage(), {
             headers: {
                 'Authorization': `Bearer ${window.localStorage.getItem('token')}`,
             },
         })
             .then(response => {
                 setVillages(response.data);
+                if (response.data.length > 0) {
+                    const defaultVillage = response.data[0].id;
+                    setSelectedVillage(defaultVillage);
+                    onVillageSelect(defaultVillage);
+                }
             })
             .catch(error => {
                 console.error('Error fetching villages:', error);
@@ -30,11 +35,40 @@ function StatusBar(props) {
     }, []);
 
     const handleVillageChange = (event) => {
-        setSelectedVillage(event.target.value);
+        const villageId = event.target.value;
+        setSelectedVillage(villageId);
+        onVillageSelect(villageId);
     };
 
     return (
         <div>
+            <Box item xs={12} sm={6} mb={4} lg={3}>
+                <Card>
+                    <CardContent>
+                        <div className='flex items-center justify-between gap-3'>
+                            <Typography className='font-medium' color='text.primary'>
+                                انتخاب روستا:
+                            </Typography>
+                            <Select
+                                value={selectedVillage}
+                                onChange={handleVillageChange}
+                                displayEmpty
+                                inputProps={{ 'aria-label': 'Select Village' }}
+                                sx={{ width: '150px' }}
+                            >
+                                <MenuItem value="" disabled>
+                                    انتخاب کنید
+                                </MenuItem>
+                                {villages.map(village => (
+                                    <MenuItem key={village.id} value={village.village.hierarchy_code}>
+                                        {village.village.approved_name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </div>
+                    </CardContent>
+                </Card>
+            </Box>
             <Box item xs={12} sm={6} mb={4} lg={3}>
                 <Card >
                     <CardContent>
@@ -56,33 +90,6 @@ function StatusBar(props) {
                                 value={Math.round(80)}
                                 className='bs-2'
                             />
-                        </div>
-                    </CardContent>
-                </Card>
-            </Box>
-            <Box item xs={12} sm={6} mb={4} lg={3}>
-                <Card>
-                    <CardContent>
-                        <div className='flex items-center justify-between gap-3'>
-                            <Typography className='font-medium' color='text.primary'>
-                                انتخاب روستا:
-                            </Typography>
-                            <Select
-                                value={selectedVillage}
-                                onChange={handleVillageChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Select Village' }}
-                                sx={{ width: '250px' }}
-                            >
-                                <MenuItem value="" disabled>
-                                    انتخاب کنید
-                                </MenuItem>
-                                {villages.map(village => (
-                                    <MenuItem key={village.id} value={village.id}>
-                                        {village.village.approved_name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
                         </div>
                     </CardContent>
                 </Card>
