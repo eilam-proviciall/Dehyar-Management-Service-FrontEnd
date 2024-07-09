@@ -10,7 +10,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.GOVERNOR]: [
         {label: 'جدول استاندار', href: '/dehyari/governor/table'},
-
+        {label: 'ایجاد کاربر', href: '/municipality/list'},
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         {label: 'جدول بخشدار', href: '/dehyari/bakhshdar/table'},
