@@ -98,6 +98,10 @@ const StepEducation = ({ validation }) => {
         }
     };
 
+    const isFieldOfStudyRequired = (index) => {
+        return watch(`educations.${index}.degree`) >= 45;
+    };
+
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
@@ -166,7 +170,12 @@ const StepEducation = ({ validation }) => {
                                                     name={`educations.${index}.fieldOfStudy`}
                                                     control={control}
                                                     defaultValue=""
-                                                    rules={validation.fieldOfStudy}
+                                                    rules={{
+                                                        validate: value =>
+                                                            !isFieldOfStudyRequired(index) || value
+                                                                ? true
+                                                                : 'این فیلد الزامی است'
+                                                    }}
                                                     render={({ field }) => (
                                                         <Select
                                                             {...field}

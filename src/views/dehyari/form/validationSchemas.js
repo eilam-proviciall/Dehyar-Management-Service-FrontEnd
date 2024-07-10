@@ -54,7 +54,8 @@ const validationSchemas = {
             required: 'این فیلد الزامی است',
         },
         fieldOfStudy: {
-            required: 'این فیلد الزامی است',
+            validate: (value, { degree }) =>
+                degree >= 45 ? value !== undefined && value !== '' : true || 'این فیلد الزامی است'
         },
         graduationDate: {
             required: 'این فیلد الزامی است',
