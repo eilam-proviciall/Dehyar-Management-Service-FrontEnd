@@ -38,7 +38,7 @@ const StepContract = ({ validation }) => {
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth size="small">
                         <Controller
-                            name="execute_start"
+                            name="executeStart"
                             control={control}
                             defaultValue={null}
                             rules={validation.contractStart}

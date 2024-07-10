@@ -19,7 +19,7 @@
             employment_status: data.employmentStatus,
             contract_start: data.contractStart,
             contract_end: data.contractEnd,
-            execute_start: data.contractStart, // Assuming execute_start is the same as contractStart
+            execute_start: data.executeStart,
             description_contract: data.descriptionContract,
             title_contract: data.titleContract,
             profile_picture : data.profilePicture,
