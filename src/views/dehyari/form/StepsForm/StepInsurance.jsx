@@ -140,23 +140,23 @@ const StepInsurance = ({ validation }) => {
                                                     control={control}
                                                     defaultValue=""
                                                     rules={validation.employmentStartDate}
-                                                    render={({ field }) => (
+                                                    render={({ field: { onChange, value } }) => (
                                                         <DatePicker
-                                                            {...field}
+                                                            value={value ? new Date(value * 1000) : ""}
+                                                            onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                             calendar={persian}
                                                             locale={persian_fa}
                                                             calendarPosition="bottom-right"
-                                                            render={
-                                                                <TextField
-                                                                    size="small"
-                                                                    fullWidth
-                                                                    label="تاریخ شروع"
-                                                                    error={!!errors?.insurances?.[index]?.employmentStartDate}
-                                                                    helperText={errors?.insurances?.[index]?.employmentStartDate && errors.insurances[index].employmentStartDate.message}
-                                                                    inputProps={{
-                                                                        style: { textAlign: 'end' }
-                                                                    }}
-                                                                />}
+                                                            render={<TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="تاریخ شروع"
+                                                                error={!!errors?.insurances?.[index]?.employmentStartDate}
+                                                                helperText={errors?.insurances?.[index]?.employmentStartDate && errors.insurances[index].employmentStartDate.message}
+                                                                inputProps={{
+                                                                    style: { textAlign: 'end' }
+                                                                }}
+                                                            />}
                                                         />
                                                     )}
                                                 />
@@ -169,23 +169,23 @@ const StepInsurance = ({ validation }) => {
                                                     control={control}
                                                     defaultValue=""
                                                     rules={validation.employmentEndDate}
-                                                    render={({ field }) => (
+                                                    render={({ field: { onChange, value } }) => (
                                                         <DatePicker
-                                                            {...field}
+                                                            value={value ? new Date(value * 1000) : ""}
+                                                            onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                             calendar={persian}
                                                             locale={persian_fa}
                                                             calendarPosition="bottom-right"
-                                                            render={
-                                                                <TextField
-                                                                    size="small"
-                                                                    fullWidth
-                                                                    label="تاریخ پایان"
-                                                                    error={!!errors?.insurances?.[index]?.employmentEndDate}
-                                                                    helperText={errors?.insurances?.[index]?.employmentEndDate && errors.insurances[index].employmentEndDate.message}
-                                                                    inputProps={{
-                                                                        style: { textAlign: 'end' }
-                                                                    }}
-                                                                />}
+                                                            render={<TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="تاریخ پایان"
+                                                                error={!!errors?.insurances?.[index]?.employmentEndDate}
+                                                                helperText={errors?.insurances?.[index]?.employmentEndDate && errors.insurances[index].employmentEndDate.message}
+                                                                inputProps={{
+                                                                    style: { textAlign: 'end' }
+                                                                }}
+                                                            />}
                                                         />
                                                     )}
                                                 />

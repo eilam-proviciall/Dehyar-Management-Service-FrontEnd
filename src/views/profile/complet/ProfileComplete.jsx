@@ -19,8 +19,8 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 
 const steps = [
-    { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
-    { title: 'عکس پروفایل', subtitle: 'Upload your profile picture' },
+    // { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
+    // { title: 'عکس پروفایل', subtitle: 'Upload your profile picture' },
     { title: 'تغییر رمز عبور', subtitle: 'Setup your new password' }
 ];
 

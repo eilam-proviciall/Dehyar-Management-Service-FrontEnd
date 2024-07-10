@@ -1,30 +1,30 @@
 const validationSchemas = {
-    personalDetails: {
-        firstName: {
-            required: 'این فیلد الزامی است',
-        },
-        lastName: {
-            required: 'این فیلد الزامی است',
-        },
-        fatherName: {
-            required: 'این فیلد الزامی است',
-        },
-        personalId: {
-            required: 'این فیلد الزامی است',
-        },
-        birthDate: {
-            required: 'این فیلد الزامی است',
-        },
-        gender: {
-            required: 'این فیلد الزامی است',
-        },
-        degree: {
-            required: 'این فیلد الزامی است',
-        },
-        fieldOfStudy: {
-            required: 'این فیلد الزامی است',
-        },
-    },
+    // personalDetails: {
+    //     firstName: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     lastName: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     fatherName: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     personalId: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     birthDate: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     gender: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     degree: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    //     fieldOfStudy: {
+    //         required: 'این فیلد الزامی است',
+    //     },
+    // },
     passwordDetails: {
         password: {
             required: 'این فیلد الزامی است',
