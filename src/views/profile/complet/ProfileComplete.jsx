@@ -90,11 +90,11 @@ const ProfileComplete = () => {
 
     const renderStepContent = step => {
         switch (step) {
+            // case 0:
+            //     return <PersonalForm onNext={handleNext} />;
+            // case 1:
+            //     return <ProfilePictureForm onNext={handleNext} onBack={handleBack} />;
             case 0:
-                return <PersonalForm onNext={handleNext} />;
-            case 1:
-                return <ProfilePictureForm onNext={handleNext} onBack={handleBack} />;
-            case 2:
                 return <PasswordForm onBack={handleBack} onNext={handleSubmit} />;
             default:
                 return <Typography color='text.primary'>Unknown stepIndex</Typography>;

@@ -15,12 +15,14 @@
     { "value": "5", "label": "آزاده" },
     { "value": "6", "label": "رزمنده" },
     { "value": "7", "label": "فرزند شهید" },
-    { "value": "8", "label": "همسر شهید" }
+    { "value": "8", "label": "همسر شهید" },
+    { "value": "9", "label": "ندارد" }
   ],
   "militaryServiceOptions": [
     { "value": "0", "label": "معافیت پزشکی" },
     { "value": "1", "label": "دارای کارت پایان خدمت" },
-    { "value": "2", "label": "معافیت خاص" }
+    { "value": "2", "label": "معافیت خاص" },
+    { "value": "4", "label": "ندارد" }
   ],
   "degreeOptions": [
     { "title": "بی سواد", "value": 41 },
