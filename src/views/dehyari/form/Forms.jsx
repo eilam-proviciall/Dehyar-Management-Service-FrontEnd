@@ -79,12 +79,11 @@ const Forms = ({ invoiceData }) => {
         const queryParams = new URLSearchParams(window.location.search);
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
-        console.log(formattedData)
-        //     const request = mode === 'create'
-        //     ? axios.post(humanResources(), formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
-        //     : axios.put(`${humanResources()}/human-resources/${id}`, formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } });
-        //
-        // request.then((res) => handleResponse(res.data)).catch(handleError);
+            const request = mode === 'create'
+            ? axios.post(humanResources(), formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
+            : axios.put(`${humanResources()}/human-resources/${id}`, formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } });
+
+        request.then((res) => handleResponse(res.data)).catch(handleError);
     };
 
     const handleResponse = (data) => {
