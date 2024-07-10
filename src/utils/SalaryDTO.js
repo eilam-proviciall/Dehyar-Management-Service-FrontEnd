@@ -13,6 +13,8 @@
             issue_place: data.issuancePlace,
             eisargari_status: data.veteranStatus,
             nezam_vazife: data.militaryService,
+            birth_date: data.birthDate,
+            phone_numbers: data.phoneNumbers,
             contract_type: data.contractType,
             employment_status: data.employmentStatus,
             contract_start: data.contractStart,

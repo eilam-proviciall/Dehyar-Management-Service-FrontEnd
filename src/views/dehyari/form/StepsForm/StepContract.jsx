@@ -1,13 +1,13 @@
-import React from 'react'
-import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
-import { useFormContext, Controller } from 'react-hook-form'
-import DatePicker from 'react-multi-date-picker'
-import persian from 'react-date-object/calendars/persian'
-import persian_fa from 'react-date-object/locales/persian_fa'
-import DividerSimple from '@components/common/Divider/DividerSimple'
+import React from 'react';
+import { Grid, TextField, FormControl, Typography } from '@mui/material';
+import { useFormContext, Controller } from 'react-hook-form';
+import DatePicker from 'react-multi-date-picker';
+import persian from 'react-date-object/calendars/persian';
+import persian_fa from 'react-date-object/locales/persian_fa';
+import DividerSimple from '@components/common/Divider/DividerSimple';
 
 const StepContract = ({ validation }) => {
-    const { control, register,getValues, formState: { errors }, setValue } = useFormContext()
+    const { control, formState: { errors } } = useFormContext();
 
     return (
         <>
@@ -42,26 +42,27 @@ const StepContract = ({ validation }) => {
                             control={control}
                             defaultValue={null}
                             rules={validation.contractStart}
-                            render={({ field }) => (
-                                <DatePicker
-                                    scrollSensitive={true}
-                                    calendar={persian}
-                                    locale={persian_fa}
-                                    calendarPosition="bottom-right"
-                                    value={getValues('execute_start')}
-                                    onChange={(date) =>field.onChange(date.toUnix())}
-                                    render={<TextField
-                                        fullWidth
-                                        size="small"
-                                        label="تاریخ اجرای قرارداد"
-                                        error={!!errors.execute_start}
-                                        placeholder="تاریخ اجرای قرارداد"
-                                        inputProps={{ style: { textAlign: 'end' } }}
-                                    />}
-                                />
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <DatePicker
+                                        value={value ? new Date(value * 1000) : ""}
+                                        onChange={(date) => onChange(date ? date.toUnix() : null)}
+                                        calendar={persian}
+                                        locale={persian_fa}
+                                        calendarPosition="bottom-right"
+                                        render={<TextField
+                                            fullWidth
+                                            size="small"
+                                            label="تاریخ اجرای قرارداد"
+                                            error={!!errors.execute_start}
+                                            placeholder="تاریخ اجرای قرارداد"
+                                            inputProps={{ style: { textAlign: 'end' } }}
+                                        />}
+                                    />
+                                    {errors.execute_start && <Typography color="error">{errors.execute_start.message}</Typography>}
+                                </>
                             )}
                         />
-                        {errors.execute_start && <Typography color="error">{errors.execute_start.message}</Typography>}
                     </FormControl>
                 </Grid>
             </Grid>
@@ -95,26 +96,27 @@ const StepContract = ({ validation }) => {
                             control={control}
                             defaultValue={null}
                             rules={validation.contractStart}
-                            render={({ field }) => (
-                                <DatePicker
-                                    scrollSensitive={true}
-                                    calendar={persian}
-                                    locale={persian_fa}
-                                    calendarPosition="bottom-right"
-                                    value={field.value}
-                                    onChange={(date) => setValue('contractStart', date ? date.toUnix() : null)}
-                                    render={<TextField
-                                        fullWidth
-                                        size="small"
-                                        label="تاریخ شروع قرارداد"
-                                        error={!!errors.contractStart}
-                                        placeholder="تاریخ شروع قرارداد"
-                                        inputProps={{ style: { textAlign: 'end' } }}
-                                    />}
-                                />
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <DatePicker
+                                        value={value ? new Date(value * 1000) : ""}
+                                        onChange={(date) => onChange(date ? date.toUnix() : null)}
+                                        calendar={persian}
+                                        locale={persian_fa}
+                                        calendarPosition="bottom-right"
+                                        render={<TextField
+                                            fullWidth
+                                            size="small"
+                                            label="تاریخ شروع قرارداد"
+                                            error={!!errors.contractStart}
+                                            placeholder="تاریخ شروع قرارداد"
+                                            inputProps={{ style: { textAlign: 'end' } }}
+                                        />}
+                                    />
+                                    {errors.contractStart && <Typography color="error">{errors.contractStart.message}</Typography>}
+                                </>
                             )}
                         />
-                        {errors.contractStart && <Typography color="error">{errors.contractStart.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -124,31 +126,32 @@ const StepContract = ({ validation }) => {
                             control={control}
                             defaultValue={null}
                             rules={validation.contractStart}
-                            render={({ field }) => (
-                                <DatePicker
-                                    scrollSensitive={true}
-                                    calendar={persian}
-                                    locale={persian_fa}
-                                    calendarPosition="bottom-right"
-                                    value={field.value}
-                                    onChange={(date) => setValue('contractEnd', date ? date.toUnix() : null)}
-                                    render={<TextField
-                                        fullWidth
-                                        size="small"
-                                        label="تاریخ پایان قرارداد"
-                                        error={!!errors.contractEnd}
-                                        placeholder="تاریخ پایان قرارداد"
-                                        inputProps={{ style: { textAlign: 'end' } }}
-                                    />}
-                                />
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <DatePicker
+                                        value={value ? new Date(value * 1000) : ""}
+                                        onChange={(date) => onChange(date ? date.toUnix() : null)}
+                                        calendar={persian}
+                                        locale={persian_fa}
+                                        calendarPosition="bottom-right"
+                                        render={<TextField
+                                            fullWidth
+                                            size="small"
+                                            label="تاریخ پایان قرارداد"
+                                            error={!!errors.contractEnd}
+                                            placeholder="تاریخ پایان قرارداد"
+                                            inputProps={{ style: { textAlign: 'end' } }}
+                                        />}
+                                    />
+                                    {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
+                                </>
                             )}
                         />
-                        {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
                     </FormControl>
                 </Grid>
             </Grid>
         </>
-    )
+    );
 }
 
-export default StepContract
+export default StepContract;

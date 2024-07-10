@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Grid, Divider, Card, CardContent, IconButton, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Accordion, AccordionSummary, AccordionDetails, Button, FormHelperText
 } from '@mui/material';
@@ -13,7 +13,7 @@ import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
 import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 
 const StepChildren = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -44,7 +44,7 @@ const StepChildren = ({ validation }) => {
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                             <Typography>اطلاعات فرزندان</Typography>
-                            <Box sty display="flex" alignItems="center" gap="20px">
+                            <Box display="flex" alignItems="center" gap="20px">
                                 <Chip
                                     avatar={<Avatar>  {girlsCount}</Avatar>}
                                     label="دختر"
@@ -138,13 +138,20 @@ const StepChildren = ({ validation }) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.birthDate}
-                                                render={({ field }) => (
+                                                render={({ field: { onChange, value } }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        value={value ? new Date(value * 1000) : ""}
+                                                        onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                         calendar={persian}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
-                                                        render={<TextField size="small" fullWidth label="تاریخ تولد" error={!!errors?.children?.[index]?.birthDate} helperText={errors?.children?.[index]?.birthDate && errors.children[index].birthDate.message} />}
+                                                        render={<TextField
+                                                            size="small"
+                                                            fullWidth
+                                                            label="تاریخ تولد"
+                                                            error={!!errors?.children?.[index]?.birthDate}
+                                                            helperText={errors?.children?.[index]?.birthDate && errors.children[index].birthDate.message}
+                                                        />}
                                                     />
                                                 )}
                                             />
@@ -155,13 +162,20 @@ const StepChildren = ({ validation }) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.marriageDate}
-                                                render={({ field }) => (
+                                                render={({ field: { onChange, value } }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        value={value ? new Date(value * 1000) : ""}
+                                                        onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                         calendar={persian}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
-                                                        render={<TextField size="small" fullWidth label="تاریخ ازدواج" error={!!errors?.children?.[index]?.marriageDate} helperText={errors?.children?.[index]?.marriageDate && errors.children[index].marriageDate.message} />}
+                                                        render={<TextField
+                                                            size="small"
+                                                            fullWidth
+                                                            label="تاریخ ازدواج"
+                                                            error={!!errors?.children?.[index]?.marriageDate}
+                                                            helperText={errors?.children?.[index]?.marriageDate && errors.children[index].marriageDate.message}
+                                                        />}
                                                     />
                                                 )}
                                             />
@@ -172,13 +186,20 @@ const StepChildren = ({ validation }) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.endOfStudyExemption}
-                                                render={({ field }) => (
+                                                render={({ field: { onChange, value } }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        value={value ? new Date(value * 1000) : ""}
+                                                        onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                         calendar={persian}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
-                                                        render={<TextField size="small" fullWidth label="پایان معافیت تحصیلی" error={!!errors?.children?.[index]?.endOfStudyExemption} helperText={errors?.children?.[index]?.endOfStudyExemption && errors.children[index].endOfStudyExemption.message} />}
+                                                        render={<TextField
+                                                            size="small"
+                                                            fullWidth
+                                                            label="پایان معافیت تحصیلی"
+                                                            error={!!errors?.children?.[index]?.endOfStudyExemption}
+                                                            helperText={errors?.children?.[index]?.endOfStudyExemption && errors.children[index].endOfStudyExemption.message}
+                                                        />}
                                                     />
                                                 )}
                                             />
@@ -189,13 +210,20 @@ const StepChildren = ({ validation }) => {
                                                 control={control}
                                                 defaultValue=""
                                                 rules={validation.deathDate}
-                                                render={({ field }) => (
+                                                render={({ field: { onChange, value } }) => (
                                                     <DatePicker
-                                                        {...field}
+                                                        value={value ? new Date(value * 1000) : ""}
+                                                        onChange={(date) => onChange(date ? date.toUnix() : "")}
                                                         calendar={persian}
                                                         locale={persian_fa}
                                                         calendarPosition="bottom-right"
-                                                        render={<TextField size="small" fullWidth label="تاریخ وفات" error={!!errors?.children?.[index]?.deathDate} helperText={errors?.children?.[index]?.deathDate && errors.children[index].deathDate.message} />}
+                                                        render={<TextField
+                                                            size="small"
+                                                            fullWidth
+                                                            label="تاریخ وفات"
+                                                            error={!!errors?.children?.[index]?.deathDate}
+                                                            helperText={errors?.children?.[index]?.deathDate && errors.children[index].deathDate.message}
+                                                        />}
                                                     />
                                                 )}
                                             />
