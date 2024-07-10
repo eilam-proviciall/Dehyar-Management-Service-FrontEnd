@@ -75,8 +75,8 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: '0200883442',
-      password: '12435324'
+      email: '',
+      password: ''
     }
   })
 

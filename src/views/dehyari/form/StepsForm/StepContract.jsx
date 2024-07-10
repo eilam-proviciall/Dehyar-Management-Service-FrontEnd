@@ -1,57 +1,65 @@
 import React from 'react'
 import { Grid, Divider, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material'
-import { useFormContext } from 'react-hook-form'
-import contractType from "@data/contractType.json";
-import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import DividerSimple from "@components/common/Divider/DividerSimple";
+import { useFormContext, Controller } from 'react-hook-form'
+import DatePicker from 'react-multi-date-picker'
+import persian from 'react-date-object/calendars/persian'
+import persian_fa from 'react-date-object/locales/persian_fa'
+import DividerSimple from '@components/common/Divider/DividerSimple'
 
 const StepContract = ({ validation }) => {
-    const { register, watch,getValues,setValue, formState: { errors } } = useFormContext()
+    const { control, register,getValues, formState: { errors }, setValue } = useFormContext()
 
     return (
         <>
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات قرار داد' />
+                    <DividerSimple title='اطلاعات قرارداد' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        label="عنوان قرارداد"
-                        placeholder="عنوان قرارداد"
-                        {...register('titleContract', validation.titleContract)}
-                        value={watch('titleContract')}
-                        error={!!errors.titleContract}
-                        helperText={errors.titleContract && errors.titleContract.message}
+                    <Controller
+                        name="titleContract"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.titleContract}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="عنوان قرارداد"
+                                placeholder="عنوان قرارداد"
+                                {...field}
+                                error={!!errors.titleContract}
+                                helperText={errors.titleContract && errors.titleContract.message}
+                            />
+                        )}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth size="small">
-                        <DatePicker
-                            scrollSensitive={true}
-                            calendar={persian}
-                            locale={persian_fa}
-                            calendarPosition="bottom-right"
-                            {...register('execute_start', validation.contractStart)}
-                            onChange={(date) => setValue('execute_start', date.toUnix())}
-                            value={getValues('execute_start')}
-                            render={
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="تاریخ اجرای قرارداد"
-                                    name="contractStart"
-                                    error={!!errors.execute_start}
-                                    placeholder="تاریخ اجرای قرارداد"
-                                    inputProps={{
-                                        style: { textAlign: 'end' }
-                                    }}
+                        <Controller
+                            name="execute_start"
+                            control={control}
+                            defaultValue={null}
+                            rules={validation.contractStart}
+                            render={({ field }) => (
+                                <DatePicker
+                                    scrollSensitive={true}
+                                    calendar={persian}
+                                    locale={persian_fa}
+                                    calendarPosition="bottom-right"
+                                    value={getValues('execute_start')}
+                                    onChange={(date) =>field.onChange(date.toUnix())}
+                                    render={<TextField
+                                        fullWidth
+                                        size="small"
+                                        label="تاریخ اجرای قرارداد"
+                                        error={!!errors.execute_start}
+                                        placeholder="تاریخ اجرای قرارداد"
+                                        inputProps={{ style: { textAlign: 'end' } }}
+                                    />}
                                 />
-                            }
+                            )}
                         />
                         {errors.execute_start && <Typography color="error">{errors.execute_start.message}</Typography>}
                     </FormControl>
@@ -60,70 +68,80 @@ const StepContract = ({ validation }) => {
 
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12} sm={12}>
-                    <TextField
-                        fullWidth
-                        multiline
-                        size="small"
-                        label="شرح قرارداد"
-                        placeholder="شرح قرارداد"
-                        {...register('descriptionContract', validation.descriptionContract)}
-                        value={watch('descriptionContract')}
-                        error={!!errors.descriptionContract}
-                        helperText={errors.descriptionContract && errors.descriptionContract.message}
+                    <Controller
+                        name="descriptionContract"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.descriptionContract}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                multiline
+                                size="small"
+                                label="شرح قرارداد"
+                                placeholder="شرح قرارداد"
+                                {...field}
+                                error={!!errors.descriptionContract}
+                                helperText={errors.descriptionContract && errors.descriptionContract.message}
+                            />
+                        )}
                     />
                 </Grid>
 
-
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth size="small">
-                        <DatePicker
-                            scrollSensitive={true}
-                            calendar={persian}
-                            locale={persian_fa}
-                            calendarPosition="bottom-right"
-                            {...register('contractStart', validation.contractStart)}
-                            onChange={(date) => setValue('contractStart', date.toUnix())}
-                            value={getValues('contractStart')}
-                            render={
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="تاریخ شروع قرارداد"
-                                    name="contractStart"
-                                    error={!!errors.contractStart}
-                                    placeholder="تاریخ شروع قرارداد"
-                                    inputProps={{
-                                        style: { textAlign: 'end' }
-                                    }}
+                        <Controller
+                            name="contractStart"
+                            control={control}
+                            defaultValue={null}
+                            rules={validation.contractStart}
+                            render={({ field }) => (
+                                <DatePicker
+                                    scrollSensitive={true}
+                                    calendar={persian}
+                                    locale={persian_fa}
+                                    calendarPosition="bottom-right"
+                                    value={field.value}
+                                    onChange={(date) => setValue('contractStart', date ? date.toUnix() : null)}
+                                    render={<TextField
+                                        fullWidth
+                                        size="small"
+                                        label="تاریخ شروع قرارداد"
+                                        error={!!errors.contractStart}
+                                        placeholder="تاریخ شروع قرارداد"
+                                        inputProps={{ style: { textAlign: 'end' } }}
+                                    />}
                                 />
-                            }
+                            )}
                         />
                         {errors.contractStart && <Typography color="error">{errors.contractStart.message}</Typography>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth size="small">
-                        <DatePicker
-                            scrollSensitive={true}
-                            calendar={persian}
-                            locale={persian_fa}
-                            calendarPosition="bottom-right"
-                            {...register('contractEnd', validation.contractStart)}
-                            onChange={(date) => setValue('contractEnd', date.toUnix())}
-                            value={getValues('contractEnd')}
-                            render={
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="تاریخ پایان قرارداد"
-                                    name="contractStart"
-                                    error={!!errors.contractEnd}
-                                    placeholder="تاریخ پایان قرارداد"
-                                    inputProps={{
-                                        style: { textAlign: 'end' }
-                                    }}
+                        <Controller
+                            name="contractEnd"
+                            control={control}
+                            defaultValue={null}
+                            rules={validation.contractStart}
+                            render={({ field }) => (
+                                <DatePicker
+                                    scrollSensitive={true}
+                                    calendar={persian}
+                                    locale={persian_fa}
+                                    calendarPosition="bottom-right"
+                                    value={field.value}
+                                    onChange={(date) => setValue('contractEnd', date ? date.toUnix() : null)}
+                                    render={<TextField
+                                        fullWidth
+                                        size="small"
+                                        label="تاریخ پایان قرارداد"
+                                        error={!!errors.contractEnd}
+                                        placeholder="تاریخ پایان قرارداد"
+                                        inputProps={{ style: { textAlign: 'end' } }}
+                                    />}
                                 />
-                            }
+                            )}
                         />
                         {errors.contractEnd && <Typography color="error">{errors.contractEnd.message}</Typography>}
                     </FormControl>

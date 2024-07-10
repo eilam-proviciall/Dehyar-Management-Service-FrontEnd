@@ -44,6 +44,7 @@ const Forms = ({ invoiceData }) => {
             employmentStatus: '',
             contractStart: '',
             contractEnd: '',
+            execute_start: '',
             descriptionContract: '',
             titleContract: '',
             profilePicture: '' // افزودن این خط
