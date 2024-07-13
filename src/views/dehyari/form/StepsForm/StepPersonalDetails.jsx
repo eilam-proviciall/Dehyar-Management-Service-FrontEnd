@@ -150,12 +150,20 @@ const StepPersonalDetails = ({ validation }) => {
                                         label="شماره تلفن"
                                         placeholder="شماره تلفن را وارد کنید"
                                         onKeyDown={(event) => {
-                                            if (event.key === 'Enter' && params.inputProps.value) {
+                                            if (event.key === 'Tab' || event.key === 'Enter' && params.inputProps.value) {
                                                 event.preventDefault();
-                                                const newValue = [getValues("phoneNumbers"), params.inputProps.value];
+                                                const newValue = [getValues("phoneNumbers") , params.inputProps.value];
                                                 setValue('phoneNumbers', newValue);
                                                 field.onChange(newValue);
                                                 params.inputProps.onChange({ target: { value: '' } });
+                                            }
+                                            if (event.key === 'Tab') {
+                                                setTimeout(() => {
+                                                    const nextElement = event.target.nextElementSibling;
+                                                    if (nextElement) {
+                                                        nextElement.focus();
+                                                    }
+                                                }, 0);
                                             }
                                         }}
                                         error={!!errors.phoneNumbers}
