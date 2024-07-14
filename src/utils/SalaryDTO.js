@@ -17,7 +17,7 @@
             phone_numbers: data.phoneNumbers,
             contract_type: data.contractType,
             employment_status: data.employmentStatus,
-            contract_start: data.execute_start,
+            contract_start: data.contractStart,
             contract_end: data.contractEnd,
             execute_start: data.execute_start,
             description_contract: data.descriptionContract,
