@@ -19,7 +19,6 @@ const UserListTable = props => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }).then((response) => {
-            console.log(response.data.data[0])
             setUsers(response.data.data[0])
         })
     }, []);
