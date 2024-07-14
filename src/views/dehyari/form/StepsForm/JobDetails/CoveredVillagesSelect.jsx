@@ -10,7 +10,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
     const { getValues } = useFormContext();
     const [villages, setVillages] = useState([]);
     const [employerVillage, setEmployerVillage] = useState('');
-    const [key, setKey] = useState(0);
+    const [chipsKey, setChipsKey] = useState(0);
 
     const handleEmployerVillageSelect = useCallback((villageCode) => {
         let currentSelection = getValues('coveredVillages');
@@ -33,7 +33,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
         }
 
         setValue('coveredVillages', currentSelection);
-        setKey(prevKey => prevKey + 1); // Trigger re-render
+        setChipsKey(prevKey => prevKey + 1); // Trigger re-render of chips
     }, [employerVillage, getValues, setValue]);
 
     const handleChange = (selectedVillages) => {
@@ -45,6 +45,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
         }
 
         setValue('coveredVillages', selectedVillages);
+        setChipsKey(prevKey => prevKey + 1); // Trigger re-render of chips
     };
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
     }, [selectedJobTitle]);
 
     return (
-        <FormControl fullWidth size="small" error={!!errors.coveredVillages} key={key}>
+        <FormControl fullWidth size="small" error={!!errors.coveredVillages}>
             <InputLabel>دهیاری های تحت پوشش</InputLabel>
             <Controller
                 name='coveredVillages'
@@ -86,7 +87,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                         }}
                         value={Array.isArray(field.value) ? field.value : []}
                         renderValue={(selected) => (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            <div key={chipsKey} style={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map(value => (
                                     <Chip
                                         key={value}
@@ -100,6 +101,10 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                             </div>
                         )}
                         disabled={!selectedJobTitle}
+                        MenuProps={{
+                            PaperProps: { style: { maxHeight: 224 } },
+                            onClose: (e) => e.stopPropagation()
+                        }}
                     >
                         {villages.map((village) => (
                             <MenuItem
