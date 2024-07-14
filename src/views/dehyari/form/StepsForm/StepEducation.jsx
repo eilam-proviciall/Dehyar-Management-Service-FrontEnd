@@ -16,7 +16,7 @@ import {
     TextField,
     Typography,
     Box
-// } from '@mui/material';
+} from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -239,7 +239,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                     </Grid>
                                 </CardContent>
-                            {/*</Card>*/}
+                            </Card>
                         ))}
                         <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button

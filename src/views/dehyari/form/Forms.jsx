@@ -65,6 +65,7 @@ const Forms = ({ invoiceData }) => {
             })
                 .then(response => {
                     methods.reset(dtoToEmployee(response.data));
+                    console.log(dtoToEmployee(response.data))
                     setLoading(false);
                 })
                 .catch(error => {

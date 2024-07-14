@@ -52,7 +52,7 @@
         return {
             jobTitle: data.job_type_id,
             nationalCode: data.nid,
-            coveredVillages: data.covered_villages,
+            coveredVillages: data.covered_villages.village_code, // تبدیل به آرایه
             fullName: data.full_name,
             fatherName: data.father_name,
             personalId: data.personal_id,
