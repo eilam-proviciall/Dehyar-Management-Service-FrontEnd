@@ -12,7 +12,8 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
     const [employerVillage, setEmployerVillage] = useState('');
     const [chipsKey, setChipsKey] = useState(0);
 
-    const handleEmployerVillageSelect = useCallback((villageCode) => {
+    const handleEmployerVillageSelect = useCallback((villageCode, event) => {
+        event.stopPropagation();
         let currentSelection = getValues('coveredVillages');
         if (!Array.isArray(currentSelection)) {
             currentSelection = [];
@@ -102,8 +103,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                         )}
                         disabled={!selectedJobTitle}
                         MenuProps={{
-                            PaperProps: { style: { maxHeight: 224 } },
-                            onClose: (e) => e.stopPropagation()
+                            PaperProps: { style: { maxHeight: 224 } }
                         }}
                     >
                         {villages.map((village) => (
@@ -113,10 +113,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
                                 disabled={village.has_human_resource}
                             >
                                 <IconButton
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleEmployerVillageSelect(village.hierarchy_code);
-                                    }}
+                                    onClick={(e) => handleEmployerVillageSelect(village.hierarchy_code, e)}
                                     edge="end"
                                 >
                                     {employerVillage === village.hierarchy_code ? <StarIcon /> : <StarBorderIcon />}

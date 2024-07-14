@@ -94,34 +94,38 @@ const validationSchemas = {
     },
     children: {
         nationalCode: {
-            validate: (value, allValues) => {
-                const { fullName, gender, birthDate } = allValues;
-                const anyFieldFilled = value || fullName || gender || birthDate;
-                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+            validate: (value, { fullName, gender, birthDate, maritalStatus }) => {
+                if (maritalStatus === 'متاهل') {
+                    const anyFieldFilled = value || fullName || gender || birthDate;
+                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                }
                 return true;
             }
         },
         fullName: {
-            validate: (value, allValues) => {
-                const { nationalCode, gender, birthDate } = allValues;
-                const anyFieldFilled = value || nationalCode || gender || birthDate;
-                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+            validate: (value, { nationalCode, gender, birthDate, maritalStatus }) => {
+                if (maritalStatus === 'متاهل') {
+                    const anyFieldFilled = value || nationalCode || gender || birthDate;
+                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                }
                 return true;
             }
         },
         gender: {
-            validate: (value, allValues) => {
-                const { nationalCode, fullName, birthDate } = allValues;
-                const anyFieldFilled = value || nationalCode || fullName || birthDate;
-                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+            validate: (value, { nationalCode, fullName, birthDate, maritalStatus }) => {
+                if (maritalStatus === 'متاهل') {
+                    const anyFieldFilled = value || nationalCode || fullName || birthDate;
+                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                }
                 return true;
             }
         },
         birthDate: {
-            validate: (value, allValues) => {
-                const { nationalCode, fullName, gender } = allValues;
-                const anyFieldFilled = value || nationalCode || fullName || gender;
-                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+            validate: (value, { nationalCode, fullName, gender, maritalStatus }) => {
+                if (maritalStatus === 'متاهل') {
+                    const anyFieldFilled = value || nationalCode || fullName || gender;
+                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                }
                 return true;
             }
         },
