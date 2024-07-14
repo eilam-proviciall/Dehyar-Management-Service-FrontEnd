@@ -10,6 +10,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
     const { getValues } = useFormContext();
     const [villages, setVillages] = useState([]);
     const [employerVillage, setEmployerVillage] = useState('');
+    const [key, setKey] = useState(0);
 
     const handleEmployerVillageSelect = useCallback((villageCode) => {
         let currentSelection = getValues('coveredVillages');
@@ -32,6 +33,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
         }
 
         setValue('coveredVillages', currentSelection);
+        setKey(prevKey => prevKey + 1); // Trigger re-render
     }, [employerVillage, getValues, setValue]);
 
     const handleChange = (selectedVillages) => {
@@ -66,7 +68,7 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
     }, [selectedJobTitle]);
 
     return (
-        <FormControl fullWidth size="small" error={!!errors.coveredVillages}>
+        <FormControl fullWidth size="small" error={!!errors.coveredVillages} key={key}>
             <InputLabel>دهیاری های تحت پوشش</InputLabel>
             <Controller
                 name='coveredVillages'
