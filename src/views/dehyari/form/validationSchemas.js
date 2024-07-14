@@ -51,14 +51,28 @@ const validationSchemas = {
     },
     education: {
         degree: {
-            required: 'این فیلد الزامی است',
+            validate: (value, allValues) => {
+                const { fieldOfStudy, graduationDate } = allValues;
+                const anyFieldFilled = value || fieldOfStudy || graduationDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
         fieldOfStudy: {
-            validate: (value, { degree }) =>
-                degree >= 45 ? value !== undefined && value !== '' : true || 'این فیلد الزامی است'
+            validate: (value, allValues) => {
+                const { degree, graduationDate } = allValues;
+                const anyFieldFilled = value || degree || graduationDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
         graduationDate: {
-            required: 'این فیلد الزامی است',
+            validate: (value, allValues) => {
+                const { degree, fieldOfStudy } = allValues;
+                const anyFieldFilled = value || degree || fieldOfStudy;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
     },
     insurance: {
@@ -80,20 +94,36 @@ const validationSchemas = {
     },
     children: {
         nationalCode: {
-            required: 'این فیلد الزامی است',
-            pattern: {
-                value: /^[0-9]+$/,
-                message: 'کد ملی باید فقط شامل اعداد باشد'
+            validate: (value, allValues) => {
+                const { fullName, gender, birthDate } = allValues;
+                const anyFieldFilled = value || fullName || gender || birthDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
             }
         },
         fullName: {
-            required: 'این فیلد الزامی است',
+            validate: (value, allValues) => {
+                const { nationalCode, gender, birthDate } = allValues;
+                const anyFieldFilled = value || nationalCode || gender || birthDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
         gender: {
-            required: 'این فیلد الزامی است',
+            validate: (value, allValues) => {
+                const { nationalCode, fullName, birthDate } = allValues;
+                const anyFieldFilled = value || nationalCode || fullName || birthDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
         birthDate: {
-            required: 'این فیلد الزامی است',
+            validate: (value, allValues) => {
+                const { nationalCode, fullName, gender } = allValues;
+                const anyFieldFilled = value || nationalCode || fullName || gender;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
+                return true;
+            }
         },
     },
     contract: {

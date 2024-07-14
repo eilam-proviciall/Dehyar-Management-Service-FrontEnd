@@ -38,10 +38,10 @@ const StepContract = ({ validation }) => {
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth size="small">
                         <Controller
-                            name="executeStart"
+                            name="execute_start"
                             control={control}
                             defaultValue={null}
-                            rules={validation.contractStart}
+                            rules={validation.execute_start}
                             render={({ field: { onChange, value } }) => (
                                 <>
                                     <DatePicker

@@ -16,7 +16,7 @@ import {
     TextField,
     Typography,
     Box
-} from '@mui/material';
+// } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -30,7 +30,7 @@ import { GetFieldStudy } from "@/Services/humanResources";
 import AddIcon from "@mui/icons-material/Add";
 
 const StepEducation = ({ validation }) => {
-    const { control, watch, getValues, formState: { errors } } = useFormContext();
+    const { control, watch, getValues, formState: { errors }, trigger } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'educations'
@@ -98,9 +98,20 @@ const StepEducation = ({ validation }) => {
         }
     };
 
-    const isFieldOfStudyRequired = (index) => {
-        return watch(`educations.${index}.degree`) >= 45;
-    };
+    const educations = watch('educations') || [];
+
+    useEffect(() => {
+        educations.forEach((education, index) => {
+            const { degree, fieldOfStudy, graduationDate } = education;
+            const anyFieldFilled = degree || fieldOfStudy || graduationDate;
+
+            if (anyFieldFilled) {
+                Object.keys(education).forEach(field => {
+                    trigger(`educations.${index}.${field}`);
+                });
+            }
+        });
+    }, [educations, trigger]);
 
     return (
         <Grid container spacing={2} mt={1}>
@@ -119,11 +130,9 @@ const StepEducation = ({ validation }) => {
                                     color: 'white',
                                     padding: '0 10px',
                                     borderRadius: '10px',
-                                    // minWidth: '80px',
-                                    // textAlign: 'center',
                                     whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis',
-                                    marginRight: 10 // اضافه کردن فاصله از سمت چپ
+                                    marginRight: 10
                                 }}
                             />
                         </Box>
@@ -170,12 +179,7 @@ const StepEducation = ({ validation }) => {
                                                     name={`educations.${index}.fieldOfStudy`}
                                                     control={control}
                                                     defaultValue=""
-                                                    rules={{
-                                                        validate: value =>
-                                                            !isFieldOfStudyRequired(index) || value
-                                                                ? true
-                                                                : 'این فیلد الزامی است'
-                                                    }}
+                                                    rules={validation.fieldOfStudy}
                                                     render={({ field }) => (
                                                         <Select
                                                             {...field}
@@ -235,7 +239,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                     </Grid>
                                 </CardContent>
-                            </Card>
+                            {/*</Card>*/}
                         ))}
                         <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button
@@ -253,10 +257,9 @@ const StepEducation = ({ validation }) => {
                                 }}
                                 startIcon={<AddIcon sx={{ marginRight: 1 }} />}
                                 onClick={() => append({
-                                    workplace: '',
-                                    insurancePeriod: '',
-                                    employmentStartDate: '',
-                                    employmentEndDate: ''
+                                    degree: '',
+                                    fieldOfStudy: '',
+                                    graduationDate: ''
                                 })}
                             >
                                 افزودن

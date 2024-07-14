@@ -16,24 +16,41 @@ import Avatar from "@mui/material/Avatar";
 import AddIcon from '@mui/icons-material/Add';
 
 const StepChildren = ({ validation }) => {
-    const { control, watch, formState: { errors } } = useFormContext();
+    const { control, watch, formState: { errors }, trigger } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'children'
     });
     const [expanded, setExpanded] = useState(false);
+
     useEffect(() => {
         if (Object.keys(errors.children || {}).length > 0) {
             setExpanded(true);
         }
     }, [errors.children]);
+
     const children = watch('children') || [];
+
+    useEffect(() => {
+        children.forEach((child, index) => {
+            const { nationalCode, fullName, gender, birthDate } = child;
+            const anyFieldFilled = nationalCode || fullName || gender || birthDate;
+
+            if (anyFieldFilled) {
+                Object.keys(child).forEach(field => {
+                    trigger(`children.${index}.${field}`);
+                });
+            }
+        });
+    }, [children, trigger]);
+
     const countChildrenByGender = (gender) => {
         return children.filter(child => child.gender === gender).length;
     };
 
     const girlsCount = countChildrenByGender('0');
     const boysCount = countChildrenByGender('1');
+
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
@@ -46,7 +63,7 @@ const StepChildren = ({ validation }) => {
                             <Typography>اطلاعات فرزندان</Typography>
                             <Box display="flex" alignItems="center" gap="20px">
                                 <Chip
-                                    avatar={<Avatar>  {girlsCount}</Avatar>}
+                                    avatar={<Avatar>{girlsCount}</Avatar>}
                                     label="دختر"
                                     variant="outlined"
                                     style={{
@@ -56,7 +73,7 @@ const StepChildren = ({ validation }) => {
                                     }}
                                 />
                                 <Chip
-                                    avatar={<Avatar>  {boysCount}</Avatar>}
+                                    avatar={<Avatar>{boysCount}</Avatar>}
                                     label="پسر"
                                     variant="outlined"
                                     style={{
@@ -93,18 +110,18 @@ const StepChildren = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
                                             <Controller
-                                                name={`children.${index}.fullName`}
+                                                name={`children.${index}.ChildrenFullName`}
                                                 control={control}
                                                 defaultValue=""
-                                                rules={validation.fullName}
+                                                rules={validation.ChildrenFullName}
                                                 render={({ field }) => (
                                                     <TextField
                                                         fullWidth
                                                         size="small"
                                                         label="نام و نام خانوادگی"
                                                         {...field}
-                                                        error={!!errors?.children?.[index]?.fullName}
-                                                        helperText={errors?.children?.[index]?.fullName && errors.children[index].fullName.message}
+                                                        error={!!errors?.children?.[index]?.ChildrenFullName}
+                                                        helperText={errors?.children?.[index]?.ChildrenFullName && errors.children[index].ChildrenFullName.message}
                                                     />
                                                 )}
                                             />
@@ -161,7 +178,6 @@ const StepChildren = ({ validation }) => {
                                                 name={`children.${index}.marriageDate`}
                                                 control={control}
                                                 defaultValue=""
-                                                rules={validation.marriageDate}
                                                 render={({ field: { onChange, value } }) => (
                                                     <DatePicker
                                                         value={value ? new Date(value * 1000) : ""}
@@ -185,7 +201,6 @@ const StepChildren = ({ validation }) => {
                                                 name={`children.${index}.endOfStudyExemption`}
                                                 control={control}
                                                 defaultValue=""
-                                                rules={validation.endOfStudyExemption}
                                                 render={({ field: { onChange, value } }) => (
                                                     <DatePicker
                                                         value={value ? new Date(value * 1000) : ""}
@@ -209,7 +224,6 @@ const StepChildren = ({ validation }) => {
                                                 name={`children.${index}.deathDate`}
                                                 control={control}
                                                 defaultValue=""
-                                                rules={validation.deathDate}
                                                 render={({ field: { onChange, value } }) => (
                                                     <DatePicker
                                                         value={value ? new Date(value * 1000) : ""}
@@ -259,10 +273,13 @@ const StepChildren = ({ validation }) => {
                                     }}
                                     startIcon={<AddIcon sx={{ marginRight: 1 }} />}
                                     onClick={() => append({
-                                        workplace: '',
-                                        insurancePeriod: '',
-                                        employmentStartDate: '',
-                                        employmentEndDate: ''
+                                        nationalCode: '',
+                                        fullName: '',
+                                        gender: '',
+                                        birthDate: '',
+                                        marriageDate: '',
+                                        endOfStudyExemption: '',
+                                        deathDate: ''
                                     })}
                                 >
                                     افزودن
