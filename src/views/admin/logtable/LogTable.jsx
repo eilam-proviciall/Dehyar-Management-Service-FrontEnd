@@ -71,9 +71,9 @@ function LogTable() {
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{toPersianDate(cell.getValue())}</div>,
             },
             {
-                accessorKey: 'description',
-                header: 'توضیحات',
-                size: 300,
+                accessorKey: 'properties.tracking_code',
+                header: 'کد پیگیری',
+                size: 150,
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
@@ -136,7 +136,7 @@ function LogTable() {
             columns={columns}
             data={data}
             options={{
-                columnOrder: ['created_at', 'description', 'properties.user_id', 'properties.exception_message', 'properties.request_url', 'actions'],
+                columnOrder: ['created_at', 'properties.tracking_code', 'properties.user_id', 'properties.exception_message', 'properties.request_url', 'actions'],
             }}
         />
     );
