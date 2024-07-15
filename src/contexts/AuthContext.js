@@ -64,7 +64,6 @@ const AuthProvider = ({ children }) => {
                 duration: 3000
             });
 
-            // گرفتن اطلاعات کاربر
             const userResponse = await axios.get(me(), {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
@@ -87,7 +86,6 @@ const AuthProvider = ({ children }) => {
                 router.push('/403');
             }
         } catch (error) {
-            console.log(error);
             toast.error('اطلاعات وارد شده صحیح نمیباشد', {
                 position: "top-center",
                 duration: 3000
