@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
         padding: 5,
         border: '1px solid #dfdfdf',
         textAlign: 'right',
+        flexWrap: 'nowrap',
     },
     highlightedText: {
         color: 'red',
@@ -99,8 +100,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         marginTop: 5,
         flexDirection: 'row-reverse',
-        padding: 0,  // حذف padding
-        margin: 0,  // حذف margin
+        padding: 0,
+        margin: 0,
+        flexWrap: 'nowrap',
+
+    },
+    whiteRow: {
+        backgroundColor: '#ffffff',
+        flexDirection: 'row-reverse',
+        flexWrap: 'nowrap',
+        fontSize :"10.5px"
+    },
+    noWrapText: {
+        whiteSpace: 'nowrap',
+        flexShrink: 1,
     },
 });
 
@@ -138,25 +151,26 @@ const MyDocument = () => {
                                 <Text>۲ -دهیاری های تحت پوشش: زیفل / <Text style={styles.highlightedText}>پاکل گراب</Text> / کله کبود /</Text>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={{ flex: 3, ...styles.tableCol }}>
-                                <Text>3- نام و نام خانوادگی طرف قرارداد : کبری جوانمردی</Text>
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 2, ...styles.tableCol, ...styles.noWrapText }}>
+                                <Text>نام و نام خانوادگی طرف قرارداد : کبری جوانمردی</Text>
                             </View>
                             <View style={{ flex: 1, ...styles.tableCol }}>
                                 <Text>4- نام پدر : کرمرضا</Text>
                             </View>
-                            <View style={{ flex: 1, ...styles.tableCol }}>
-                                <Text>کد ملی : 6340081738</Text>
+                            <View style={{ flex: 1, ...styles.tableCol, ...styles.noWrapText }}>
+                                <Text>5- کد ملی : 6340081738</Text>
                             </View>
                             <View style={{ flex: 1, ...styles.tableCol }}>
-                                <Text>۶- وﺿﻌﯿﺖ ﺗﺎﻫﻞ: ﻣﺠﺮد</Text>
+                                <Text>6- وضعیت تاهل: مجرد</Text>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={{ flex: 1, ...styles.tableCol }}>
+
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 2, ...styles.tableCol, ...styles.noWrapText }}>
                                 <Text>۷- ﺷﻤﺎره ﺷﻨﺎﺳﻨﺎﻣﻪ: ۶۳۴۰۰۸۱۷۳۸</Text>
                             </View>
-                            <View style={{ flex: 1, ...styles.tableCol }}>
+                            <View style={{ flex: 2, ...styles.tableCol, ...styles.noWrapText }}>
                                 <Text>۸- ﺗﺎرﯾﺦ ﺗﻮﻟﺪ: ۱۳۶۵/۰۴/۱۶</Text>
                             </View>
                             <View style={{ flex: 1, ...styles.tableCol }}>
@@ -166,6 +180,8 @@ const MyDocument = () => {
                                 <Text>۱۰- ﺗﻌﺪاد ﻓﺮزﻧﺪان:</Text>
                             </View>
                         </View>
+
+
                         <View style={styles.tableRow}>
                             <View style={{ flex: 1, ...styles.tableCol }}>
                                 <Text>۱۱- وﺿﻌﯿﺖ ﻧﻈﺎم وﻇﯿﻔﻪ: ﻧﺪارد</Text>
