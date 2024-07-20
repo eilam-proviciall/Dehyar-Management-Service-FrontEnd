@@ -116,6 +116,13 @@ const styles = StyleSheet.create({
         whiteSpace: 'nowrap',
         flexShrink: 1,
     },
+    numberText: {
+        marginLeft: 2,
+        textAlign: 'right',
+    },
+    textContainer: {
+        flex: 1,
+    },
 });
 
 const MyDocument = () => {
@@ -190,28 +197,40 @@ const MyDocument = () => {
                             </View>
                         </View>
 
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۱- وﺿﻌﯿﺖ ﻧﻈﺎم وﻇﯿﻔﻪ: ﻧﺪارد</Text>
+
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> وضعیت نظام وظیفه: ندارد</Text>
+                                <Text style={{ marginLeft: 2 }}>-11</Text>
                             </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۲- وﺿﻌﯿﺖ ایثارگری : ﻧﺪارد</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۳- ﻣﺤﻞ ﺗﻮﻟﺪ: اﯾﻼم -ﺳﯿﺮوان</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۴- ﻣﺤﻞ ﺻﺪور ﺷﻨﺎﺳﻨﺎﻣﻪ: اﯾﻼم - اﯾﻼم</Text>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text style={{ marginLeft: 2 }}>-12</Text>
+                                <Text> وضعیت ایثارگری: ندارد</Text>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۵- ﻣﺪرک تحصیلی: کارشناسی ناپیوسته</Text>
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> محل تولد: ایلام - سیروان</Text>
+                                <Text style={{ marginLeft: 2 }}>-13</Text>
                             </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۶- رﺷﺘﻪ تحصیلی: ﻣﺪﯾﺮﯾﺖ بازرگانی</Text>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> محل صدور شناسنامه: ایلام - ایلام</Text>
+                                <Text style={{ marginLeft: 2 }}>-14</Text>
                             </View>
                         </View>
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> مدرک تحصیلی: کارشناسی ناپیوسته</Text>
+                                <Text style={{ marginLeft: 2 }}>-15</Text>
+                            </View>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> رشته تحصیلی: مدیریت بازرگانی</Text>
+                                <Text style={{ marginLeft: 2 }}>-16</Text>
+                            </View>
+                        </View>
+
+
+
                         <View style={styles.tableRow}>
                             <View style={{flex: 1, ...styles.tableCol}}>
                                 <Text>۱۷-ﺗﺎرﯾﺦ اﻧﺘﺼﺎب: ۱۳۹۹/۱۰/۰۱</Text>
@@ -233,6 +252,8 @@ const MyDocument = () => {
                                 </Text>
                             </View>
                         </View>
+
+
                         <View style={styles.tableRow}>
                             <View style={{flex: 1, ...styles.tableCol}}>
                                 <Text>۲۲- ﻣﻮﺿﻮع ﻗﺮارداد: اﻧﺠﺎم وﻇﺎﯾﻒ تعیین ﺷﺪه ﺑﺮای اﻣﻮر مالی در چهار ﻗﻮاﻧﯿﻦ و
