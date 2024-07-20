@@ -152,16 +152,16 @@ const MyDocument = () => {
                             </View>
                         </View>
                         <View style={[styles.tableRow, styles.whiteRow]}>
-                            <View style={{ flex: 2, ...styles.tableCol, ...styles.noWrapText }}>
+                            <View style={{ flex: 3.8, ...styles.tableCol, ...styles.noWrapText }}>
                                 <Text>نام و نام خانوادگی طرف قرارداد : کبری جوانمردی</Text>
                             </View>
-                            <View style={{ flex: 1, ...styles.tableCol }}>
+                            <View style={{ flex: 1.5, ...styles.tableCol }}>
                                 <Text>4- نام پدر : کرمرضا</Text>
                             </View>
-                            <View style={{ flex: 1, ...styles.tableCol, ...styles.noWrapText }}>
+                            <View style={{ flex: 2, ...styles.tableCol, ...styles.noWrapText }}>
                                 <Text>5- کد ملی : 6340081738</Text>
                             </View>
-                            <View style={{ flex: 1, ...styles.tableCol }}>
+                            <View style={{ flex: 1.8, ...styles.tableCol }}>
                                 <Text>6- وضعیت تاهل: مجرد</Text>
                             </View>
                         </View>
@@ -180,8 +180,6 @@ const MyDocument = () => {
                                 <Text>۱۰- ﺗﻌﺪاد ﻓﺮزﻧﺪان:</Text>
                             </View>
                         </View>
-
-
                         <View style={styles.tableRow}>
                             <View style={{ flex: 1, ...styles.tableCol }}>
                                 <Text>۱۱- وﺿﻌﯿﺖ ﻧﻈﺎم وﻇﯿﻔﻪ: ﻧﺪارد</Text>
