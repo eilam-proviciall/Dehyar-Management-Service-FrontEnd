@@ -43,23 +43,6 @@ const styles = StyleSheet.create({
         border: '1px solid #dfdfdf',
         padding: 5,
     },
-    table: {
-        display: 'table',
-        width: 'auto',
-        borderCollapse: 'collapse',
-        marginBottom: 10,
-    },
-    tableRow: {
-        flexDirection: 'row',
-    },
-    tableColHeader: {
-        backgroundColor: '#ededed',
-        padding: 5,
-        fontWeight: 'bold',
-    },
-    tableCol: {
-        padding: 5,
-    },
     tableCell: {
         padding: 5,
         fontSize: 11,
@@ -87,6 +70,38 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: 10,
     },
+    table: {
+        display: 'table',
+        width: 'auto',
+        borderCollapse: 'collapse',
+        marginBottom: 10,
+    },
+    tableRow: {
+        flexDirection: 'row',
+    },
+    tableColHeader: {
+        backgroundColor: '#EDEDED',
+        padding: 5,
+        fontWeight: 'bold',
+        border: '1px solid #dfdfdf',
+        textAlign: 'right',
+    },
+    tableCol: {
+        marginTop:0,
+        padding: 5,
+        border: '1px solid #dfdfdf',
+        textAlign: 'right',
+    },
+    highlightedText: {
+        color: 'red',
+    },
+    highlightedRow: {
+        backgroundColor: '#f0f0f0',
+        marginTop: 5,
+        flexDirection: 'row-reverse',
+        padding: 0,  // حذف padding
+        margin: 0,  // حذف margin
+    },
 });
 
 const MyDocument = () => {
@@ -104,23 +119,23 @@ const MyDocument = () => {
                     </View>
 
                     <View style={styles.table}>
-                        <View style={styles.tableRow}>
+                        <View style={[styles.tableRow, styles.highlightedRow]}>
                             <View style={{ flex: 1, ...styles.tableColHeader }}>
-                                <Text>۱ -استان: اﯾﻼم</Text>
+                                <Text>۱ -استان: ایلام</Text>
+                            </View>
+                            <View style={{ flex: 1, ...styles.tableColHeader }}>
+                                <Text>شهرستان: ایلام</Text>
                             </View>
                             <View style={{ flex: 2, ...styles.tableColHeader }}>
-                                <Text>ﺷﻬﺮﺳﺘﺎن: اﯾﻼم</Text>
+                                <Text>بخش: مرکزی / سیوان</Text>
                             </View>
                             <View style={{ flex: 1, ...styles.tableColHeader }}>
-                                <Text>ﺑﺨﺶ: ﻣﺮکﺰی / ﺳﯿﻮان</Text>
-                            </View>
-                            <View style={{ flex: 1, ...styles.tableColHeader }}>
-                                <Text>ﺗﻌﺪاد دﻫﯿﺎری: ۳</Text>
+                                <Text>تعداد دهیاری: ۳</Text>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={{ flex: 1, ...styles.tableColHeader }}>
-                                <Text>۲ -دﻫﯿﺎری ﻫﺎی ﺗﺤﺖ پوشش: زﯾﻔﻞ / پاکل گراب / کله کبود /</Text>
+                        <View style={[styles.tableRow, styles.highlightedRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol }}>
+                                <Text>۲ -دهیاری های تحت پوشش: زیفل / <Text style={styles.highlightedText}>پاکل گراب</Text> / کله کبود /</Text>
                             </View>
                         </View>
                         <View style={styles.tableRow}>
