@@ -231,38 +231,43 @@ const MyDocument = () => {
 
 
 
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۷-ﺗﺎرﯾﺦ اﻧﺘﺼﺎب: ۱۳۹۹/۱۰/۰۱</Text>
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> تاریخ انتصاب: ۱۳۹۹/۱۰/۰۱</Text>
+                                <Text style={{ marginLeft: 2 }}>-17</Text>
                             </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۸- ﺳﺎﺑﻘﻪ کار (ﻣﺎه) : ۱۴</Text>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> سابقه کار(ماه) : ۱۴</Text>
+                                <Text style={{ marginLeft: 2 }}>-18</Text>
                             </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۱۹ -ﺷﻤﺎره حکیم : ۹۷۸/۱۳/ه/گ/م</Text>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> شماره حکم : ۹۷۸/۱۳/ه/گ/م</Text>
+                                <Text style={{ marginLeft: 2 }}>-19</Text>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۲۰- ﻋﻨﻮان ﺳﻤﺖ: ﻣﺴﺌﻮل مالی دﻫﯿﺎری</Text>
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> عنوان سمت: مسئول مالی دهیاری</Text>
+                                <Text style={{ marginLeft: 2 }}>-20</Text>
                             </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>
-                                    ۲۱ - ﻣﺪت اﯾﻦ ﻗﺮارداد: از ﺗﺎرﯾﺦ : ۱۴۰۲/۰۱/۰۱ ﺗﺎ ﺗﺎرﯾﺦ : ۱۴۰۲/۱۲/۲۹
-                                </Text>
+                            <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> مدت این قرارداد: از تاریخ : ۱۴۰۲/۰۱/۰۱ تا تاریخ : ۱۴۰۲/۱۲/۲۹</Text>
+                                <Text style={{ marginLeft: 2 }}>-21</Text>
+                            </View>
+                        </View>
+
+                        <View style={[styles.tableRow, styles.whiteRow]}>
+                            <View style={{ flex: 6, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> موضوع قرارداد: انجام وظایف تعیین شده برای امور مالی در چهار قوانین و مقررات</Text>
+                                <Text style={{ marginLeft: 2 }}>-22</Text>
+                            </View>
+                            <View style={{ flex: 2, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                                <Text> محل اجرا : دهیاری های بند 2 قرارداد</Text>
+                                {/*<Text style={{ marginLeft: 2 }}>-23</Text>*/}
                             </View>
                         </View>
 
 
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>۲۲- ﻣﻮﺿﻮع ﻗﺮارداد: اﻧﺠﺎم وﻇﺎﯾﻒ تعیین ﺷﺪه ﺑﺮای اﻣﻮر مالی در چهار ﻗﻮاﻧﯿﻦ و
-                                    ﻣﻘﺮرات</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>23- محل اجرا : دهیاری های بند 2 قرارداد</Text>
-                            </View>
-                        </View>
                         <View style={styles.tableRow}>
                             <View style={{flex: 1, ...styles.tableCol}}>
                                 <Text>
