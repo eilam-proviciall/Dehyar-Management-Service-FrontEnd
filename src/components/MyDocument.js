@@ -123,6 +123,16 @@ const styles = StyleSheet.create({
     textContainer: {
         flex: 1,
     },
+    greyBackground: {
+        backgroundColor: '#EDEDED',
+        flexDirection: 'row-reverse'
+    },
+    centerAlign: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
 });
 
 const MyDocument = () => {
@@ -268,106 +278,104 @@ const MyDocument = () => {
                         </View>
 
 
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>
-                                    ۲۴- دﺳﺘﻤﺰد ﻣﺎﻫﯿﺎﻧﻪ ﺑﻪ ﺷﺮح زﯾﺮ تعیین ﻣﯿﺸﻮد: دﺳﺘﻤﺰد ﻣﺎﻫﯿﺎﻧﻪ ﺑﻪ ﺷﺮح زﯾﺮ تعیین ﻣﯿﺸﻮد :
-                                    ﺑﺮﺳﺎس دﺳﺘﻮراﻟﻌﻤﻞ ﻧﺤﻮه
-                                    تعیین ﺣﻘﻮق و ﻣﺰاﯾﺎی اﻣﻮر ﻣﺎﻟی ﻣﻮﺿﻮع ﺑﺨﺸﻨﺎﻣﻪ ﺷﻤﺎره ۱۶۱۹۸ و کﺸﻮر دﻫﯿﺎرﯾﻬﺎی و ﻫﺎ
-                                    ﺷﻬﺮداری ﺳﺎزﻣﺎن ۱۴۰۲/۰۴/۰۳
-                                    ﻣﻮرخ ﺑﺨﺸﻨﺎﻣﻪ ﺷﻤﺎره ۱۳۴۵۹۹/ت۵۸۷۵۶ ﺷﻮرا ﻋﺎﻟی کﺎر ﺣﻘﻮق و ﻣﺰاﯾﺎی ﺷﻤﺎ ﻃﺒﻖ ارﻗﺎم ﻣﻨﺪرج در
-                                    ردﯾﻒ ۲۳ اﯾﻦ ﺣکﻢ تعیین
-                                    ﻣی گﺮدد کﻪ ﺑﺎ رﻋﺎﯾﺖ ﻗﺎﻧﻮن و ﻣﻘﺮرات و پﺲ از کﺴﻮرات ﻗﺎﻧﻮﻧی ﻗﺎﺑﻞ پﺮداﺧﺖ ﻣی ﺑﺎﺷﺪ
-                                </Text>
+                        <View style={[styles.tableRow, { flexDirection: 'row-reverse' }]}>
+                            <View style={{ flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5 }}>
+                                <Text>۲۴- دستمزد ماهیانه به شرح زیر تعیین می‌شود: </Text>
+                                <Text>دستمزد ماهیانه به شرح زیر تعیین می‌شود :</Text>
+                                <Text>براساس دستورالعمل نحوه تعیین حقوق و مزایای امور مالی موضوع بخشنامه شماره ۱۶۱۹۸</Text>
+                                <Text>مورخ ۱۴۰۲/۰۴/۰۳ سازمان شهرداری ها و دهیاریهای کشور و</Text>
+                                <Text>بخشنامه شماره ۱۳۴۵۹۹/ت۵۸۷۵۶ شورا عالی کار حقوق و مزایای</Text>
+                                <Text>شما طبق ارقام مندرج در ردیف ۲۳ این حکم تعیین می‌گردد که با</Text>
+                                <Text>رعایت قانون و مقررات و پس از کسورات قانونی قابل پرداخت می‌باشد.</Text>
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <View style={[styles.tableRow, styles.greyBackground]}>
+                                    <View style={{ flex: 1, ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign }}>
+                                        <Text>الف- مزد ثابت</Text>
+                                    </View>
+                                    <View style={{ flex: 2 }}>
+                                        <View style={[styles.tableRow, styles.greyBackground]}>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>حقوق مبنا:</Text>
+                                            </View>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>۲۶,۹۸۳,۷۷۷ ریال</Text>
+                                            </View>
+                                        </View>
+                                        <View style={[styles.tableRow, styles.greyBackground]}>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>پایه سنواتی:</Text>
+                                            </View>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>۲,۵۶۵,۵۶۸ ریال</Text>
+                                            </View>
+                                        </View>
+                                        <View style={[styles.tableRow, styles.greyBackground]}>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>ﻓﻮق اﻟﻌﺎده ﺷﻐﻞ:</Text>
+                                            </View>
+                                            <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                                <Text>۲,۴۲۸,۵۳۹ ریال</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+
+
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>ب- کمک ﻫﺰﯾﻨﻪ ﻋﺎﺋﻠﻪ ﻣﻨﺪی(ﺣﻖ اوﻻد):</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۰ رﯾﺎل</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>ج- کمک ﻫﺰﯾﻨﻪ مسکن:</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۴,۵۰۰,۰۰۰ رﯾﺎل</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>د- کمک ﻫﺰﯾﻨﻪ اﻗﻼم مصرفی ﺧﺎﻧﻮار:</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۵,۵۰۰,۰۰۰ رﯾﺎل</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>ذ- ﻓﻮق اﻟﻌﺎده ﻣﺤﺮوﻣﯿﺖ از ﺗﺴﻬﯿﻼت زﻧﺪگی:</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۵,۳۹۶,۷۵۵ رﯾﺎل</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>ر- ﻓﻮق اﻟﻌﺎده ایثارگری:</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۰ رﯾﺎل</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', borderBottom: '1px solid #dfdfdf', paddingBottom: 5 }}>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>جمع حقوق مزایا:</Text>
+                                    </View>
+                                    <View style={{ flex: 1, ...styles.tableCol, textAlign: 'center' }}>
+                                        <Text>۴۷,۳۷۴,۶۳۹ رﯾﺎل</Text>
+                                    </View>
+                                </View>
                             </View>
                         </View>
-                        <View style={styles.tableRow}>
-                            <View style={[styles.tableColHeader, {
-                                flex: 1,
-                                textAlign: 'center',
-                                verticalAlign: 'middle'
-                            }]}>
-                                <Text>الف- مزد ثابت</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>حقوق مبنا:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۲۶,۹۸۳,۷۷۷ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>پایه سنواتی:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۲,۵۶۵,۵۶۸ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>ﻓﻮق اﻟﻌﺎده ﺷﻐﻞ:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۲,۴۲۸,۵۳۹ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>جمع مزد ثابت :</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۳۱,۹۷۷,۸۸۴ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>ب- کمک ﻫﺰﯾﻨﻪ ﻋﺎﺋﻠﻪ ﻣﻨﺪی(ﺣﻖ اوﻻد):</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۰ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>ج- کمک ﻫﺰﯾﻨﻪ مسکن:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۴,۵۰۰,۰۰۰ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>د- کمک ﻫﺰﯾﻨﻪ اﻗﻼم مصرفی ﺧﺎﻧﻮار:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۵,۵۰۰,۰۰۰ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>ذ- ﻓﻮق اﻟﻌﺎده ﻣﺤﺮوﻣﯿﺖ از ﺗﺴﻬﯿﻼت زﻧﺪگی:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۵,۳۹۶,۷۵۵ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>ر- ﻓﻮق اﻟﻌﺎده ایثارگری:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۰ رﯾﺎل</Text>
-                            </View>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <View style={{flex: 1, ...styles.tableCol}}>
-                                <Text>جمع حقوق مزایا:</Text>
-                            </View>
-                            <View style={{flex: 1, ...styles.tableCol, textAlign: 'end'}}>
-                                <Text>۴۷,۳۷۴,۶۳۹ رﯾﺎل</Text>
-                            </View>
-                        </View>
+
+
+
+
                         <View style={styles.tableRow}>
                             <View style={{flex: 1, ...styles.tableCol}}>
                                 <Text>
