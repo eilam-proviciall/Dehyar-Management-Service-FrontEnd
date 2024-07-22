@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     tableCol: {
-        padding: 2,
+        padding: 1.5,
         border: '1px solid #dfdfdf',
         textAlign: 'right',
         flexWrap: 'nowrap',
@@ -98,10 +98,9 @@ const styles = StyleSheet.create({
 });
 
 // کامپوننت‌های کمکی
-const Header = ({title, date}) => (
+const Header = ({title}) => (
     <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>{title}</Text>
-        <Text style={styles.headerDate}>{date}</Text>
     </View>
 );
 
@@ -124,7 +123,7 @@ const TableRow = ({rowStyle, data}) => (
 
 const Footer = () => (
     <View style={styles.footer}>
-        <Text>صفحه ١</Text>
+        <Text>۱۱:۲۴:۴۱ ۱۴۰۳/۰۳/۱۶ چهارشنبه</Text>
         <Text>سامانه عملکرد دهیاری ها - dehyar.net</Text>
     </View>
 );
@@ -133,8 +132,7 @@ const MyDocument = () => (
     <Document>
         <Page style={styles.page}>
             <View style={styles.container}>
-                <Header title="قرارداد مدت معین و حکم حقوقی مسئول امور مالی پاره وقت - چهار ساعته"
-                        date="۱۱:۲۴:۴۱ ۱۴۰۳/۰۳/۱۶ چهارشنبه"/>
+                <Header title="قرارداد مدت معین و حکم حقوقی مسئول امور مالی پاره وقت - چهار ساعته"/>
 
                 <View style={styles.table}>
                     <TableRow
@@ -170,22 +168,17 @@ const MyDocument = () => (
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            {flex: 2, text: 'شماره شناسنامه: ۶۳۴۰۰۸۱۷۳۸', number: '۷'},
-                            {flex: 1.8, text: 'تاریخ تولد: ۱۳۶۵/۰۴/۱۶', number: '۸'},
+                            {flex: 1.8, text: 'شماره شناسنامه: ۶۳۴۰۰۸۱۷۳۸', number: '۷'},
+                            {flex: 1.5, text: 'تاریخ تولد: ۱۳۶۵/۰۴/۱۶', number: '۸'},
                             {flex: 1, text: 'جنسیت: زن', number: '۹'},
                             {flex: 1, text: 'تعداد فرزندان:', number: '۱۰'},
-                        ]}
-                    />
-                    <TableRow
-                        rowStyle={styles.whiteRow}
-                        data={[
                             {flex: 2, text: 'وضعیت نظام وظیفه: ندارد', number: '۱۱'},
-                            {flex: 2, text: 'وضعیت ایثارگری: ندارد', number: '۱۲'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
+                            {flex: 1, text: 'وضعیت ایثارگری: ندارد', number: '۱۲'},
                             {flex: 1, text: 'محل تولد: ایلام - سیروان', number: '۱۳'},
                             {flex: 1, text: 'محل صدور شناسنامه: ایلام - ایلام', number: '۱۴'},
                         ]}
@@ -194,7 +187,7 @@ const MyDocument = () => (
                         rowStyle={styles.whiteRow}
                         data={[
                             {flex: 1, text: 'مدرک تحصیلی: کارشناسی ناپیوسته', number: '۱۵'},
-                            {flex: 1, text: 'رشته تحصیلی: مدیریت بازرگانی', number: '۱۶'},
+                            {flex: 1.5, text: 'رشته تحصیلی: مدیریت بازرگانی', number: '۱۶'},
                         ]}
                     />
                     <TableRow
@@ -202,13 +195,11 @@ const MyDocument = () => (
                         data={[
                             {flex: 1, text: 'تاریخ انتصاب: ۱۳۹۹/۱۰/۰۱', number: '۱۷'},
                             {flex: 1, text: 'سابقه کار(ماه) : ۱۴', number: '۱۸'},
-                            {flex: 1, text: 'شماره حکم : ۹۷۸/۱۳/ه/گ/م', number: '۱۹'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            {flex: 1, text: 'عنوان سمت: مسئول مالی دهیاری', number: '۲۰'},
                             {
                                 flex: 1,
                                 text: 'مدت این قرارداد: از تاریخ : ۱۴۰۲/۰۱/۰۱ تا تاریخ : ۱۴۰۲/۱۲/۲۹',
@@ -224,7 +215,6 @@ const MyDocument = () => (
                                 text: 'موضوع قرارداد: انجام وظایف تعیین شده برای امور مالی در چهار قوانین و مقررات',
                                 number: '۲۲'
                             },
-                            {flex: 2, text: 'محل اجرا : دهیاری های بند 2 قرارداد'},
                         ]}
                     />
 
@@ -410,15 +400,15 @@ const MyDocument = () => (
                         ]}
                     />
                     <TableRow
-                        rowStyle={styles.whiteRow}
+                        rowStyle={[styles.whiteRow]}
                         data={[
-                            {flex: 1, text: '۳۲- تاریخ اجرای قرارداد: ۱۴۰۲/۰۱/۰۱'},
-                            {flex: 1, text: '۳۳- شناسه یکتا : ۱۴۰۰۸۸۱۲۹۳۴'},
-                            {flex: 1, text: '۳۴- شماره و تاریخ صدور قرارداد: ۴۰۷ - ۱۴۰۲/۰۴/۲۶'},
+                            {flex: 1, text: 'تاریخ اجرای قرارداد: ۱۴۰۲/۰۱/۰۱',number: "۳۲"},
+                            {flex: 1, text: 'شناسه یکتا : پیش فرض',number: "۳۳"},
+                            {flex: 1, text: 'شماره و تاریخ قرارداد: ۴۰۷ - ۱۴۰۲/۰۴/۲۶',number: "۳۴"},
                         ]}
                     />
                     <TableRow
-                        rowStyle={styles.whiteRow}
+                        rowStyle={[styles.whiteRow, { height: 50 }]} // تنظیم ارتفاع مورد نظر به صورت inline
                         data={[
                             {
                                 flex: 1,
@@ -432,7 +422,7 @@ const MyDocument = () => (
                                 subText: 'نعمت االله نوری',
                                 subTextStyle: styles.textCenter
                             },
-                            {flex: 1, text: 'بخشدار مرکزی', subText: 'صفیه علی اولاد', subTextStyle: styles.textCenter},
+                            { flex: 1, text: 'بخشدار مرکزی', subText: 'صفیه علی اولاد', subTextStyle: styles.textCenter },
                             {
                                 flex: 1,
                                 text: 'بخشدار سیوان',
@@ -441,6 +431,7 @@ const MyDocument = () => (
                             },
                         ]}
                     />
+
                 </View>
 
                 <Footer/>
