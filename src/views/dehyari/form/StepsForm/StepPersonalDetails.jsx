@@ -28,22 +28,25 @@ const StepPersonalDetails = ({ validation }) => {
 
 
     const handlePhoneKeyDown = (event, field, params) => {
-        if ((event.key === 'Tab' || event.key === 'Enter') && params.inputProps.value) {
+        const phoneValue = params.inputProps.value;
+
+        if ((event.key === 'Tab' || event.key === 'Enter') || phoneValue.length === 10) {
             event.preventDefault();
-            if (validatePhoneNumber(params.inputProps.value)) {
+            if (validatePhoneNumber(phoneValue)) {
                 const currentValues = Array.isArray(field.value) ? field.value : [];
-                const newValue = [...currentValues, params.inputProps.value];
+                const newValue = [...currentValues, phoneValue];
                 setValue('phoneNumbers', newValue);
                 field.onChange(newValue);
                 params.inputProps.onChange({ target: { value: '' } });
             } else {
                 // اگر شماره تلفن معتبر نیست، آن را از state حذف کنید
-                const newValue = Array.isArray(field.value) ? field.value.filter(phone => phone !== params.inputProps.value) : [];
+                const newValue = Array.isArray(field.value) ? field.value.filter(phone => phone !== phoneValue) : [];
                 setValue('phoneNumbers', newValue);
                 field.onChange(newValue);
             }
         }
     };
+
 
 
 
