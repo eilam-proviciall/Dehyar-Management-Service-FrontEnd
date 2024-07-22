@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -10,6 +10,8 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 registerPlugin(FilePondPluginImagePreview, FilePondPluginFileEncode);
 
@@ -30,13 +32,32 @@ const CenteredGrid = styled(Grid)(({ theme }) => ({
 const ProfilePictureUpload = ({ onNext, onBack }) => {
     const { getValues, setValue } = useFormContext();
     const [files, setFiles] = useState([]);
+    const pondRef = useRef(null);
 
     const handleFileChange = (fileItems) => {
-        setFiles(fileItems);
         if (fileItems.length > 0) {
+            const file = fileItems[0].file;
+            const maxSizeInBytes = 200 * 1024; // 200KB
+            const validTypes = ['image/png', 'image/jpeg'];
+
+            if (file.size > maxSizeInBytes) {
+                toast.error('حجم فایل نباید بیشتر از 200KB باشد');
+                pondRef.current.removeFile(fileItems[0].id);
+                return;
+            }
+
+            if (!validTypes.includes(file.type)) {
+                toast.error('فقط فایل‌های PNG و JPG مجاز هستند');
+                pondRef.current.removeFile(fileItems[0].id);
+                return;
+            }
+
             const base64 = fileItems[0].getFileEncodeBase64String();
             setValue('profilePicture', base64);
+        } else {
+            setValue('profilePicture', '');
         }
+        setFiles(fileItems);
     };
 
     const handleSubmit = () => {
@@ -45,28 +66,32 @@ const ProfilePictureUpload = ({ onNext, onBack }) => {
     };
 
     return (
-        <Card>
-            <CardContent className="flex flex-col gap-4">
-                <CenteredGrid item xs={12}>
-                    <Typography className='font-medium' color='text.primary'>
-                        عکس پروفایل
-                    </Typography>
-                    <Typography variant='body2'>لطفا عکس پروفایل  را آپلود کنید</Typography>
-                </CenteredGrid>
-                <FilePond
-                    files={files}
-                    onupdatefiles={handleFileChange}
-                    allowMultiple={false}
-                    name="file"
-                    labelIdle='عکس خود را اینجا بکشید یا <span class="filepond--label-action">انتخاب کنید</span>'
-                    acceptedFileTypes={['image/png', 'image/jpeg']}
-                    maxFileSize='200KB'
-                    fileValidateTypeLabelExpectedTypes='فقط فایل‌های PNG و JPG مجاز هستند'
-                    fileValidateSizeLabelMaxFileSizeExceeded='حجم فایل نباید بیشتر از 200KB باشد'
-                    fileValidateSizeLabelMaxFileSize='حجم فایل مجاز: {filesize}'
-                />
-            </CardContent>
-        </Card>
+        <>
+            <Card>
+                <CardContent className="flex flex-col gap-4">
+                    <CenteredGrid item xs={12}>
+                        <Typography className='font-medium' color='text.primary'>
+                            عکس پروفایل
+                        </Typography>
+                        <Typography variant='body2'>لطفا عکس پروفایل را آپلود کنید</Typography>
+                    </CenteredGrid>
+                    <FilePond
+                        ref={pondRef}
+                        files={files}
+                        onupdatefiles={handleFileChange}
+                        allowMultiple={false}
+                        name="file"
+                        labelIdle='عکس خود را اینجا بکشید یا <span class="filepond--label-action">انتخاب کنید</span>'
+                        acceptedFileTypes={['image/png', 'image/jpeg']}
+                        maxFileSize='200KB'
+                        fileValidateTypeLabelExpectedTypes='فقط فایل‌های PNG و JPG مجاز هستند'
+                        fileValidateSizeLabelMaxFileSizeExceeded='حجم فایل نباید بیشتر از 200KB باشد'
+                        fileValidateSizeLabelMaxFileSize='حجم فایل مجاز: {filesize}'
+                    />
+                </CardContent>
+            </Card>
+            <ToastContainer />
+        </>
     );
 };
 
