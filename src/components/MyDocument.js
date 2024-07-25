@@ -150,7 +150,7 @@ const MyDocument = ({ data }) => (
                         data={[
                             {
                                 flex: 1,
-                                text: `دهیاری های تحت پوشش: ${data.villages}`,
+                                text: `دهیاری های طرف قرارداد: ${data.villages}`,
                                 number: '۲'
                             }
                         ]}
@@ -415,7 +415,7 @@ const MyDocument = ({ data }) => (
                             },
                             {
                                 flex: 1,
-                                text: 'دهیاری کارفرما ( پاکل گراب )',
+                                text: 'دهیاری منتخب ( پاکل گراب )',
                                 subText: `${data.employerName}`,
                                 subTextStyle: styles.textCenter
                             },
