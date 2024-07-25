@@ -218,12 +218,8 @@ const MyDocument = ({ data }) => (
                     />
                     <View style={[styles.tableRow, { flexDirection: 'row-reverse' }]}>
                         <View style={{ flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5 }}>
-                            <Text>:دستمزد ماهیانه به شرح زیر تعیین می‌شود</Text>
-                            <Text>براساس دستورالعمل نحوه تعیین حقوق و مزایای امور مالی موضوع بخشنامه شماره ۱۶۱۹۸</Text>
-                            <Text>مورخ ۱۴۰۲/۰۴/۰۳ سازمان شهرداری ها و دهیاریهای کشور و</Text>
-                            <Text>بخشنامه شماره ۱۳۴۵۹۹/ت۵۸۷۵۶ شورا عالی کار حقوق و مزایای</Text>
-                            <Text>شما طبق ارقام مندرج در ردیف ۲۳ این حکم تعیین می‌گردد که با</Text>
-                            <Text>رعایت قانون و مقررات و پس از کسورات قانونی قابل پرداخت می‌باشد.</Text>
+                            <Text>{data.contractDescription}</Text>
+
                         </View>
                         <View style={{ flex: 1 }}>
                             <View style={[styles.tableRow, styles.greyBackground]}>

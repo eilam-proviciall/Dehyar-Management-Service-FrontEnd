@@ -22,7 +22,7 @@ function CfoTable(props) {
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const {militaryServiceOptions} = PersonalOption
+    const {militaryServiceOptions,veteranStatusOptions,degreeOptions} = PersonalOption
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
@@ -37,7 +37,7 @@ function CfoTable(props) {
 
             const humanResourceData = response.data;
             const villages = humanResourceData.covered_villages.map(village => village.village.approved_name).join(' / ');
-            console.log(militaryServiceOptions.find(option => option.value == humanResourceData.nezam_vazife).label)
+            console.log(degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree))
             console.log("Human Resource Data:", humanResourceData);
 
             const data = {
@@ -55,16 +55,17 @@ function CfoTable(props) {
                 "gender":humanResourceData.gender === 0 ? "زن" : "مرد",
                 "childrenCount": humanResourceData.childrens.length,
                 "militaryStatus": militaryServiceOptions.find(option => option.value == humanResourceData.nezam_vazife).label,
-                "isaarStatus": "ندارد",
+                "isaarStatus": veteranStatusOptions.find(option => option.value == humanResourceData.eisargari_status).label,
                 "birthPlace": humanResourceData.birth_place,
-                "issuePlace": "ایلام - ایلام",
-                "education": "کارشناسی ناپیوسته",
-                "major": "مدیریت بازرگانی",
+                "issuePlace": humanResourceData.issue_place,
+                "education": degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree).title,
+                "major": humanResourceData.last_degree.education_field,
                 "appointmentDate": "۱۳۹۹/۱۰/۰۱",
-                "experience": 14,
-                "contractStartDate": "۱۴۰۲/۰۱/۰۱",
-                "contractEndDate": "۱۴۰۲/۱۲/۲۹",
-                "contractSubject": "انجام وظایف تعیین شده برای امور مالی در چهار قوانین و مقررات",
+                "experience": humanResourceData.some_month_history,
+                "contractStartDate": humanResourceData.contract_start,
+                "contractEndDate": humanResourceData.contract_end,
+                "contractSubject": humanResourceData.title_contract,
+                "contractDescription" : humanResourceData.description_contract,
                 "baseSalary": "۲۶,۹۸۳,۷۷۷ ریال",
                 "yearlyBase": "۲,۵۶۵,۵۶۸ ریال",
                 "jobBonus": "۲,۴۲۸,۵۳۹ ریال",
