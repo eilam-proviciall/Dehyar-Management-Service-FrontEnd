@@ -123,7 +123,7 @@ const TableRow = ({ rowStyle, data }) => (
 const Footer = () => (
     <View style={styles.footer}>
         <Text>۱۱:۲۴:۴۱ ۱۴۰۳/۰۳/۱۶ چهارشنبه</Text>
-        <Text>سامانه عملکرد دهیاری ها - dehyar.net</Text>
+        <Text>پنجره واحد سازمان شهرداری ها و دهیاری ها</Text>
     </View>
 );
 
