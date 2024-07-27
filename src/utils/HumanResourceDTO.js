@@ -72,6 +72,7 @@ class HumanResourceDTO {
             (salary?.home_benefits || 0) +
             (salary?.food_benefits || 0) +
             (salary?.warzone_benefits || 0) +
+            (salary?.supervisor_benefits || 0) +
             (salary?.married_benifits || 0);
     }
 }
