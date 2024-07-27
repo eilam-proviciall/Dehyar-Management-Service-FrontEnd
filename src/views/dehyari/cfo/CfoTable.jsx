@@ -54,14 +54,27 @@ function CfoTable(props) {
             document.body.appendChild(iframe);
             iframe.onload = () => {
                 iframe.contentWindow.print();
-                toast.success('محاسبه موفق بود');
+                toast.success('محاسبه موفق بود', { position: "top-center" });
             };
         } catch (error) {
-            toast.error('محاسبه ناموفق بود');
-            console.error("Error fetching human resource data:", error);
+            handleError(error);
         }
     };
 
+    const handleError = (error) => {
+        if (error.response && error.response.data && error.response.data.message) {
+            toast.error(`محاسبه ناموفق بود: ${error.response.data.message}`, { position: "top-center" });
+        } else if (error.response && error.response.data.errors) {
+            Object.keys(error.response.data.errors).forEach((key) => {
+                error.response.data.errors[key].forEach((message) => {
+                    toast.error(message, { position: "top-center" });
+                });
+            });
+        } else {
+            toast.error("محاسبه ناموفق بود", { position: "top-center" });
+        }
+        console.error("Error fetching human resource data:", error);
+    };
     const handleClose = () => {
         setAnchorEl(null);
     };
