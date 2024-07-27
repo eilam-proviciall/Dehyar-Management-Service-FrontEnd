@@ -97,6 +97,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+// تابع کمکی برای تبدیل اعداد انگلیسی به فارسی
+const convertToPersianNumbers = (number) => {
+    const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return number.toString().replace(/[0-9]/g, (w) => persianNumbers[+w]);
+};
 
 // کامپوننت‌های کمکی
 const Header = ({ title }) => (
@@ -104,11 +109,10 @@ const Header = ({ title }) => (
         <Text style={styles.headerTitle}>{title}</Text>
     </View>
 );
-
 const NumberedText = ({ number, text }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-        <Text>{text} - </Text>
-        <Text style={styles.number}>{number}</Text>
+        <Text>{convertToPersianNumbers(text)} - </Text>
+        <Text style={styles.number}>{convertToPersianNumbers(number)}</Text>
     </View>
 );
 
@@ -116,7 +120,7 @@ const TableRow = ({ rowStyle, data }) => (
     <View style={[styles.tableRow, rowStyle]}>
         {data.map((col, index) => (
             <View key={index} style={{ flex: col.flex, ...styles.tableCol }}>
-                <NumberedText number={col.number} text={col.text} />
+                <NumberedText number={convertToPersianNumbers(col.number)} text={convertToPersianNumbers(col.text)} />
             </View>
         ))}
     </View>
@@ -261,6 +265,14 @@ const MyDocument = ({ data }) => (
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
                                     <Text>جمع مزد ثابت:</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.tableRow]}>
+                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                    <Text>{data.supervisor_benefits}</Text>
+                                </View>
+                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                    <Text>حق مسئولیت:</Text>
                                 </View>
                             </View>
                             <View style={[styles.tableRow]}>
