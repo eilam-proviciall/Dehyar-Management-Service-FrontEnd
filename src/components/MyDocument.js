@@ -263,7 +263,14 @@ const MyDocument = ({ data }) => (
                                     <Text>جمع مزد ثابت:</Text>
                                 </View>
                             </View>
-
+                            <View style={[styles.tableRow]}>
+                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                    <Text>{data.married_benifits}</Text>
+                                </View>
+                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                                    <Text>حق تاهل:</Text>
+                                </View>
+                            </View>
                             <View style={[styles.tableRow]}>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
                                     <Text>{data.familyAllowance}</Text>

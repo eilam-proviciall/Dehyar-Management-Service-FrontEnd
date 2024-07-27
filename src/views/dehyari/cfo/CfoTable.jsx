@@ -22,7 +22,7 @@ function CfoTable(props) {
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const {militaryServiceOptions,veteranStatusOptions,degreeOptions} = PersonalOption
+    const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
@@ -37,22 +37,24 @@ function CfoTable(props) {
 
             const humanResourceData = response.data;
             const villages = humanResourceData.covered_villages.map(village => village.village.approved_name).join(' / ');
-            console.log(degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree))
-            console.log("Human Resource Data:", humanResourceData);
-
+            const section = humanResourceData.locationData.regions.join(' / ');
+            const cities = humanResourceData.locationData.cities.join(' / ');
+            const state = humanResourceData.locationData.states.join(' / ');
+            const total_salary = humanResourceData.salary.base_salary + humanResourceData.salary.history_benefits + humanResourceData.salary.job_benefits + humanResourceData.salary.child_benefits + humanResourceData.salary.home_benefits + humanResourceData.salary.food_benefits +humanResourceData.salary.warzone_benefits ?? 0+humanResourceData.salary.married_benefits ?? 0
+            console.log(humanResourceData)
             const data = {
-                "province": "ایلام",
-                "county": "ایلام",
-                "section": "مرکزی / سیوان",
+                "province": state,
+                "county": cities,
+                "section": section,
                 "villageCount": humanResourceData.covered_villages.length,
                 "villages": villages,
                 "name": `${humanResourceData.full_name}`,
                 "fatherName": `${humanResourceData.father_name}`,
                 "nationalId": `${humanResourceData.nid}`,
                 "maritalStatus": humanResourceData.married_status === 0 ? "مجرد" : "متاهل",
-                "idNumber": "6340081738",
-                "birthDate":humanResourceData.birth_date ,
-                "gender":humanResourceData.gender === 0 ? "زن" : "مرد",
+                "idNumber": humanResourceData.personal_id,
+                "birthDate": humanResourceData.birth_date,
+                "gender": humanResourceData.gender === 0 ? "زن" : "مرد",
                 "childrenCount": humanResourceData.childrens.length,
                 "militaryStatus": militaryServiceOptions.find(option => option.value == humanResourceData.nezam_vazife).label,
                 "isaarStatus": veteranStatusOptions.find(option => option.value == humanResourceData.eisargari_status).label,
@@ -60,22 +62,23 @@ function CfoTable(props) {
                 "issuePlace": humanResourceData.issue_place,
                 "education": degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree).title,
                 "major": humanResourceData.last_degree.education_field,
-                "appointmentDate": "۱۳۹۹/۱۰/۰۱",
+                "appointmentDate": " ",
                 "experience": humanResourceData.some_month_history,
                 "contractStartDate": humanResourceData.contract_start,
                 "contractEndDate": humanResourceData.contract_end,
                 "contractSubject": humanResourceData.title_contract,
-                "contractDescription" : humanResourceData.description_contract,
-                "baseSalary": "۲۶,۹۸۳,۷۷۷ ریال",
-                "yearlyBase": "۲,۵۶۵,۵۶۸ ریال",
-                "jobBonus": "۲,۴۲۸,۵۳۹ ریال",
-                "totalFixedWage": "۳۱,۹۷۷,۸۸۴ ریال",
-                "familyAllowance": "۰ ریال",
-                "housingAllowance": "۴,۵۰۰,۰۰۰ ریال",
-                "householdAllowance": "۵,۵۰۰,۰۰۰ ریال",
-                "deprivationBonus": "۵,۳۹۶,۷۵۵ ریال",
+                "contractDescription": humanResourceData.description_contract,
+                "baseSalary": `${humanResourceData.salary.base_salary} ریال`,
+                "yearlyBase": `${humanResourceData.salary.history_benefits} ریال`,
+                "jobBonus": `${humanResourceData.salary.job_benefits} ریال`,
+                "totalFixedWage": `${humanResourceData.salary.job_benefits + humanResourceData.salary.history_benefits + humanResourceData.salary.base_salary} ریال`,
+                "familyAllowance": `${humanResourceData.salary.child_benefits} ریال`,
+                "housingAllowance": `${humanResourceData.salary.home_benefits} ریال`,
+                "householdAllowance": `${humanResourceData.salary.food_benefits} ریال`,
+                "deprivationBonus": `${humanResourceData.salary.warzone_benefits ?? 0} ریال`,
+                "married_benifits": `${humanResourceData.salary.married_benifits ?? 0} ریال`,
                 "veteransBonus": "۰ ریال",
-                "totalSalary": "۴۷,۳۷۴,۶۳۹ ریال",
+                "totalSalary": `${total_salary ?? 0} ریال`,
                 "contractClause1": "طرف قرارداد تابع مقررات،ضوابط و آئین نامه های مربوط به دهیاری ، قانون کار و قانون تامین اجتماعی بوده و از مزایای قوانین مذکور بهره مند می شود",
                 "contractClause2": "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد",
                 "contractClause3": "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد",
