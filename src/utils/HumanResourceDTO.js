@@ -1,41 +1,44 @@
-// utils/HumanResourceDTO.js
+import PersonalOption from "@data/PersonalOption.json";
+
+const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption
 
 class HumanResourceDTO {
+
     constructor(humanResourceData) {
-        this.province = humanResourceData.states.join(' / ');
-        this.county = humanResourceData.cities.join(' / ');
-        this.section = humanResourceData.regions.join(' / ');
-        this.villageCount = humanResourceData.covered_villages.length;
-        this.villages = humanResourceData.covered_villages.map(village => village.village.approved_name).join(' / ');
-        this.name = humanResourceData.full_name;
-        this.fatherName = humanResourceData.father_name;
-        this.nationalId = humanResourceData.nid;
+        this.province = this.joinArray(humanResourceData.states);
+        this.county = this.joinArray(humanResourceData.cities);
+        this.section = this.joinArray(humanResourceData.regions);
+        this.villageCount = humanResourceData.covered_villages?.length || 0;
+        this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
+        this.name = humanResourceData.full_name || '';
+        this.fatherName = humanResourceData.father_name || '';
+        this.nationalId = humanResourceData.nid || '';
         this.maritalStatus = humanResourceData.married_status === 0 ? "مجرد" : "متاهل";
-        this.idNumber = humanResourceData.personal_id;
-        this.birthDate = humanResourceData.birth_date;
+        this.idNumber = humanResourceData.personal_id || '';
+        this.birthDate = humanResourceData.birth_date || '';
         this.gender = humanResourceData.gender === 0 ? "زن" : "مرد";
-        this.childrenCount = humanResourceData.childrens.length;
-        this.militaryStatus = militaryServiceOptions.find(option => option.value == humanResourceData.nezam_vazife).label;
-        this.isaarStatus = veteranStatusOptions.find(option => option.value == humanResourceData.eisargari_status).label;
-        this.birthPlace = humanResourceData.birth_place;
-        this.issuePlace = humanResourceData.issue_place;
-        this.education = degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree).title;
-        this.major = humanResourceData.last_degree.education_field;
+        this.childrenCount = humanResourceData.childrens?.length || 0;
+        this.militaryStatus = militaryServiceOptions.find(option => option.value == humanResourceData.nezam_vazife)?.label || '';
+        this.isaarStatus = veteranStatusOptions.find(option => option.value == humanResourceData.eisargari_status)?.label || '';
+        this.birthPlace = humanResourceData.birth_place || '';
+        this.issuePlace = humanResourceData.issue_place || '';
+        this.education = degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree)?.title || '';
+        this.major = humanResourceData.last_degree.education_field || '';
         this.appointmentDate = " ";
-        this.experience = humanResourceData.some_month_history;
-        this.contractStartDate = humanResourceData.contract_start;
-        this.contractEndDate = humanResourceData.contract_end;
-        this.contractSubject = humanResourceData.title_contract;
-        this.contractDescription = humanResourceData.description_contract;
-        this.baseSalary = `${humanResourceData.salary.base_salary} ریال`;
-        this.yearlyBase = `${humanResourceData.salary.history_benefits} ریال`;
-        this.jobBonus = `${humanResourceData.salary.job_benefits} ریال`;
-        this.totalFixedWage = `${humanResourceData.salary.job_benefits + humanResourceData.salary.history_benefits + humanResourceData.salary.base_salary} ریال`;
-        this.familyAllowance = `${humanResourceData.salary.child_benefits} ریال`;
-        this.housingAllowance = `${humanResourceData.salary.home_benefits} ریال`;
-        this.householdAllowance = `${humanResourceData.salary.food_benefits} ریال`;
-        this.deprivationBonus = `${humanResourceData.salary.warzone_benefits ?? 0} ریال`;
-        this.married_benifits = `${humanResourceData.salary.married_benifits ?? 0} ریال`;
+        this.experience = humanResourceData.some_month_history || '';
+        this.contractStartDate = humanResourceData.contract_start || '';
+        this.contractEndDate = humanResourceData.contract_end || '';
+        this.contractSubject = humanResourceData.title_contract || '';
+        this.contractDescription = humanResourceData.description_contract || '';
+        this.baseSalary = `${humanResourceData.salary.base_salary || 0} ریال`;
+        this.yearlyBase = `${humanResourceData.salary.history_benefits || 0} ریال`;
+        this.jobBonus = `${humanResourceData.salary.job_benefits || 0} ریال`;
+        this.totalFixedWage = `${(humanResourceData.salary.job_benefits || 0) + (humanResourceData.salary.history_benefits || 0) + (humanResourceData.salary.base_salary || 0)} ریال`;
+        this.familyAllowance = `${humanResourceData.salary.child_benefits || 0} ریال`;
+        this.housingAllowance = `${humanResourceData.salary.home_benefits || 0} ریال`;
+        this.householdAllowance = `${humanResourceData.salary.food_benefits || 0} ریال`;
+        this.deprivationBonus = `${humanResourceData.salary.warzone_benefits || 0} ریال`;
+        this.married_benifits = `${humanResourceData.salary.married_benifits || 0} ریال`;
         this.veteransBonus = "۰ ریال";
         this.totalSalary = `${this.calculateTotalSalary(humanResourceData.salary)} ریال`;
         this.contractClause1 = "طرف قرارداد تابع مقررات،ضوابط و آئین نامه های مربوط به دهیاری ، قانون کار و قانون تامین اجتماعی بوده و از مزایای قوانین مذکور بهره مند می شود";
@@ -57,15 +60,19 @@ class HumanResourceDTO {
         this.sivanGovernor = "آزاد شریفی نژاد";
     }
 
+    joinArray(arr) {
+        return (arr && arr.length > 0) ? arr.join(' / ') : '';
+    }
+
     calculateTotalSalary(salary) {
-        return salary.base_salary +
-            salary.history_benefits +
-            salary.job_benefits +
-            salary.child_benefits +
-            salary.home_benefits +
-            salary.food_benefits +
-            (salary.warzone_benefits ?? 0) +
-            (salary.married_benifits ?? 0);
+        return (salary.base_salary || 0) +
+            (salary.history_benefits || 0) +
+            (salary.job_benefits || 0) +
+            (salary.child_benefits || 0) +
+            (salary.home_benefits || 0) +
+            (salary.food_benefits || 0) +
+            (salary.warzone_benefits || 0) +
+            (salary.married_benifits || 0);
     }
 }
 
