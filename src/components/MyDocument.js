@@ -97,12 +97,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
-// تابع کمکی برای تبدیل اعداد انگلیسی به فارسی
-const convertToPersianNumbers = (number) => {
-    const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    return number.toString().replace(/[0-9]/g, (w) => persianNumbers[+w]);
-};
-
 // کامپوننت‌های کمکی
 const Header = ({ title }) => (
     <View style={styles.headerContainer}>
@@ -111,8 +105,8 @@ const Header = ({ title }) => (
 );
 const NumberedText = ({ number, text }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-        <Text>{convertToPersianNumbers(text)} - </Text>
-        <Text style={styles.number}>{convertToPersianNumbers(number)}</Text>
+        <Text>{text} - </Text>
+        <Text style={styles.number}>{number}</Text>
     </View>
 );
 
@@ -120,7 +114,7 @@ const TableRow = ({ rowStyle, data }) => (
     <View style={[styles.tableRow, rowStyle]}>
         {data.map((col, index) => (
             <View key={index} style={{ flex: col.flex, ...styles.tableCol }}>
-                <NumberedText number={convertToPersianNumbers(col.number)} text={convertToPersianNumbers(col.text)} />
+                <NumberedText number={col.number} text={col.text} />
             </View>
         ))}
     </View>
