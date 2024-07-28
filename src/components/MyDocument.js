@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Document, Font, Page, StyleSheet, Text, View, PDFViewer } from '@react-pdf/renderer';
+import React from 'react';
+import {Document, Font, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
 import moment from "moment-jalaali";
 
 // ثبت فونت
@@ -8,7 +7,7 @@ Font.register({
     family: 'iranSans',
     src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`,
 });
-moment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
+moment.loadPersian({dialect: 'persian-modern', usePersianDigits: true});
 // تعریف استایل‌ها
 const styles = StyleSheet.create({
     page: {
@@ -99,23 +98,23 @@ const styles = StyleSheet.create({
     },
 });
 // کامپوننت‌های کمکی
-const Header = ({ title }) => (
+const Header = ({title}) => (
     <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>{title}</Text>
     </View>
 );
-const NumberedText = ({ number, text }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+const NumberedText = ({number, text}) => (
+    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
         <Text>{text} - </Text>
         <Text style={styles.number}>{number}</Text>
     </View>
 );
 
-const TableRow = ({ rowStyle, data }) => (
+const TableRow = ({rowStyle, data}) => (
     <View style={[styles.tableRow, rowStyle]}>
         {data.map((col, index) => (
-            <View key={index} style={{ flex: col.flex, ...styles.tableCol }}>
-                <NumberedText number={col.number} text={col.text} />
+            <View key={index} style={{flex: col.flex, ...styles.tableCol}}>
+                <NumberedText number={col.number} text={col.text}/>
             </View>
         ))}
     </View>
@@ -132,20 +131,20 @@ const Footer = () => (
 );
 
 
-const MyDocument = ({ data }) => (
+const MyDocument = ({data}) => (
     <Document>
         <Page style={styles.page}>
             <View style={styles.container}>
-                <Header title={`قرارداد مدت معین و حکم حقوقی ${data.job_name} ${data.contract_type}`} />
+                <Header title={`قرارداد مدت معین و حکم حقوقی ${data.job_name} ${data.contract_type}`}/>
 
                 <View style={styles.table}>
                     <TableRow
                         rowStyle={styles.highlightedRow}
                         data={[
-                            { flex: 1, text: `استان: ${data.province}`, number: '۱' },
-                            { flex: 1, text: `شهرستان: ${data.county}` },
-                            { flex: 2, text: `بخش: ${data.section}` },
-                            { flex: 1, text: `تعداد دهیاری: ${data.villageCount}` },
+                            {flex: 1, text: `استان: ${data.province}`, number: '۱'},
+                            {flex: 1, text: `شهرستان: ${data.county}`},
+                            {flex: 2, text: `بخش: ${data.section}`},
+                            {flex: 1, text: `تعداد دهیاری: ${data.villageCount}`},
                         ]}
                     />
                     <TableRow
@@ -161,42 +160,42 @@ const MyDocument = ({ data }) => (
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            { flex: 3.9, text: `نام و نام خانوادگی : ${data.name}`, number: '۳' },
-                            { flex: 1.5, text: `نام پدر : ${data.fatherName}`, number: '۴' },
-                            { flex: 2, text: `کد ملی : ${data.nationalId}`, number: '۵' },
-                            { flex: 1.8, text: `وضعیت تاهل: ${data.maritalStatus}`, number: '۶' },
+                            {flex: 3.9, text: `نام و نام خانوادگی : ${data.name}`, number: '۳'},
+                            {flex: 1.5, text: `نام پدر : ${data.fatherName}`, number: '۴'},
+                            {flex: 2, text: `کد ملی : ${data.nationalId}`, number: '۵'},
+                            {flex: 1.8, text: `وضعیت تاهل: ${data.maritalStatus}`, number: '۶'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            { flex: 1.8, text: `شماره شناسنامه: ${data.idNumber}`, number: '۷' },
-                            { flex: 1.5, text: `تاریخ تولد: ${data.birthDate}`, number: '۸' },
-                            { flex: 1, text: `جنسیت: ${data.gender}`, number: '۹' },
-                            { flex: 1, text: `تعداد فرزندان: ${data.childrenCount}`, number: '۱۰' },
-                            { flex: 2, text: `نظام وظیفه: ${data.militaryStatus}`, number: '۱۱' },
+                            {flex: 1.8, text: `شماره شناسنامه: ${data.idNumber}`, number: '۷'},
+                            {flex: 1.5, text: `تاریخ تولد: ${data.birthDate}`, number: '۸'},
+                            {flex: 1, text: `جنسیت: ${data.gender}`, number: '۹'},
+                            {flex: 1, text: `تعداد فرزندان: ${data.childrenCount}`, number: '۱۰'},
+                            {flex: 2, text: `نظام وظیفه: ${data.militaryStatus}`, number: '۱۱'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            { flex: 1, text: `وضعیت ایثارگری: ${data.isaarStatus}`, number: '۱۲' },
-                            { flex: 1, text: `محل تولد: ${data.birthPlace}`, number: '۱۳' },
-                            { flex: 1, text: `محل صدور شناسنامه: ${data.issuePlace}`, number: '۱۴' },
+                            {flex: 1, text: `وضعیت ایثارگری: ${data.isaarStatus}`, number: '۱۲'},
+                            {flex: 1, text: `محل تولد: ${data.birthPlace}`, number: '۱۳'},
+                            {flex: 1, text: `محل صدور شناسنامه: ${data.issuePlace}`, number: '۱۴'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            { flex: 1, text: `مدرک تحصیلی: ${data.education}`, number: '۱۵' },
-                            { flex: 1.5, text: `رشته تحصیلی: ${data.major}`, number: '۱۶' },
+                            {flex: 1, text: `مدرک تحصیلی: ${data.education}`, number: '۱۵'},
+                            {flex: 1.5, text: `رشته تحصیلی: ${data.major}`, number: '۱۶'},
                         ]}
                     />
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            { flex: 1, text: `تاریخ انتصاب: ${data.appointmentDate}`, number: '۱۷' },
-                            { flex: 1, text: `سابقه کار(ماه) : ${data.experience}`, number: '۱۸' },
+                            {flex: 1, text: `تاریخ انتصاب: ${data.appointmentDate}`, number: '۱۷'},
+                            {flex: 1, text: `سابقه کار(ماه) : ${data.experience}`, number: '۱۸'},
                         ]}
                     />
                     <TableRow
@@ -219,120 +218,216 @@ const MyDocument = ({ data }) => (
                             },
                         ]}
                     />
-                    <View style={[styles.tableRow, { flexDirection: 'row-reverse' }]}>
-                        <View style={{ flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5 }}>
+                    <View style={[styles.tableRow, {flexDirection: 'row-reverse'}]}>
+                        <View style={{flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5}}>
                             <Text>{data.contractDescription}</Text>
 
                         </View>
-                        <View style={{ flex: 1 }}>
+                        <View style={{flex: 1}}>
                             <View style={[styles.tableRow, styles.greyBackground]}>
                                 <View
-                                    style={{ flex: 1, ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign }}>
+                                    style={{flex: 1, ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign}}>
                                     <Text>الف- مزد ثابت</Text>
                                 </View>
-                                <View style={{ flex: 2 }}>
+                                <View style={{flex: 2}}>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>حقوق مبنا:</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:حقوق مبنا</Text>
                                         </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>{data.baseSalary}</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <View style={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <Text style={{marginLeft: 4}}>ریال </Text>
+                                                <Text>{data.baseSalary}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>پایه سنواتی:</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:پایه سنواتی</Text>
                                         </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>{data.yearlyBase}</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <View style={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <Text style={{marginLeft: 4}}>ریال </Text>
+                                                <Text>{data.yearlyBase}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>فوق‌العاده شغل:</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:فوق‌العاده شغل</Text>
                                         </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>{data.jobBonus}</Text>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <View style={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <Text style={{marginLeft: 4}}>ریال </Text>
+                                                <Text>{data.jobBonus}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
                             </View>
 
                             <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.totalFixedWage}</Text>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.totalFixedWage}</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>جمع مزد ثابت:</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.supervisor_benefits}</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>حق مسئولیت:</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.married_benifits}</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>حق تاهل:</Text>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:جمع مزد ثابت</Text>
                                 </View>
                             </View>
                             <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.familyAllowance}</Text>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.supervisor_benefits}</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>کمک هزینه عائله‌مندی(حق اولاد):</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.housingAllowance}</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>کمک هزینه مسکن:</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.householdAllowance}</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>کمک هزینه اقلام مصرفی خانوار:</Text>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:حق مسئولیت</Text>
                                 </View>
                             </View>
-
                             <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.deprivationBonus}</Text>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.married_benifits}</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>فوق العاده محرومیت از تسهیلات زندگی:</Text>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:حق تاهل</Text>
                                 </View>
                             </View>
-
                             <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.veteransBonus}</Text>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.familyAllowance}</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>فوق العاده ایثارگری:</Text>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه عائله‌مندی(حق اولاد)</Text>
                                 </View>
                             </View>
 
                             <View style={[styles.tableRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.totalSalary}</Text>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.housingAllowance}</Text>
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>جمع حقوق مزایا:</Text>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه مسکن</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.householdAllowance}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه اقلام مصرفی خانوار</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.deprivationBonus}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:فوق العاده محرومیت از تسهیلات زندگی</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.veteransBonus}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:فوق العاده ایثارگری</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                        <Text>{data.totalSalary}</Text>
+                                    </View>
+                                </View>
+                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:جمع حقوق مزایا</Text>
                                 </View>
                             </View>
                         </View>
@@ -406,20 +501,20 @@ const MyDocument = ({ data }) => (
                             {
                                 flex: 1,
                                 text: `${data.finalNote}`,
-                                number:"۳۱"
+                                number: "۳۱"
                             },
                         ]}
                     />
                     <TableRow
                         rowStyle={[styles.whiteRow]}
                         data={[
-                            { flex: 1, text: `تاریخ اجرای قرارداد: ${data.executionDate}`, number: "۳۲" },
-                            { flex: 1, text: `شناسه یکتا : ${data.uniqueId}`, number: "۳۳" },
-                            { flex: 1, text: `شماره و تاریخ قرارداد: ${data.contractNumber}`, number: "۳۴" },
+                            {flex: 1, text: `تاریخ اجرای قرارداد: ${data.executionDate}`, number: "۳۲"},
+                            {flex: 1, text: `شناسه یکتا : ${data.uniqueId}`, number: "۳۳"},
+                            {flex: 1, text: `شماره و تاریخ قرارداد: ${data.contractNumber}`, number: "۳۴"},
                         ]}
                     />
                     <TableRow
-                        rowStyle={[styles.whiteRow, { height: 50 }]} // تنظیم ارتفاع مورد نظر به صورت inline
+                        rowStyle={[styles.whiteRow, {height: 50}]} // تنظیم ارتفاع مورد نظر به صورت inline
                         data={[
                             {
                                 flex: 1,
@@ -433,7 +528,12 @@ const MyDocument = ({ data }) => (
                                 subText: `${data.employerName}`,
                                 subTextStyle: styles.textCenter
                             },
-                            { flex: 1, text: 'بخشدار مرکزی', subText: `${data.centralGovernor}`, subTextStyle: styles.textCenter },
+                            {
+                                flex: 1,
+                                text: 'بخشدار مرکزی',
+                                subText: `${data.centralGovernor}`,
+                                subTextStyle: styles.textCenter
+                            },
                             {
                                 flex: 1,
                                 text: 'بخشدار سیوان',
@@ -445,7 +545,7 @@ const MyDocument = ({ data }) => (
 
                 </View>
 
-                <Footer />
+                <Footer/>
             </View>
         </Page>
     </Document>

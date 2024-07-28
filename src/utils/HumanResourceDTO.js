@@ -7,6 +7,10 @@ function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function formatCurrency(num) {
+    return`${formatNumber(num)}` ;
+}
+
 class HumanResourceDTO {
     constructor(humanResourceData) {
         this.province = this.joinArray(humanResourceData.locationData.states);
@@ -34,18 +38,18 @@ class HumanResourceDTO {
         this.contractEndDate = humanResourceData.contract_end || '';
         this.contractSubject = humanResourceData.title_contract || '';
         this.contractDescription = humanResourceData.description_contract || '';
-        this.baseSalary = `${formatNumber(humanResourceData.salary?.base_salary || 0)} ریال`;
-        this.yearlyBase = `${formatNumber(humanResourceData.salary?.history_benefits || 0)} ریال`;
-        this.jobBonus = `${formatNumber(humanResourceData.salary?.job_benefits || 0)} ریال`;
-        this.totalFixedWage = `${formatNumber((humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0))} ریال`;
-        this.familyAllowance = `${formatNumber(humanResourceData.salary?.child_benefits || 0)} ریال`;
-        this.housingAllowance = `${formatNumber(humanResourceData.salary?.home_benefits || 0)} ریال`;
-        this.householdAllowance = `${formatNumber(humanResourceData.salary?.food_benefits || 0)} ریال`;
-        this.deprivationBonus = `${formatNumber(humanResourceData.salary?.warzone_benefits || 0)} ریال`;
-        this.married_benifits = `${formatNumber(humanResourceData.salary?.married_benefits || 0)} ریال`;
-        this.supervisor_benefits = `${formatNumber(humanResourceData.salary?.supervisor_benefits || 0)} ریال`;
+        this.baseSalary = formatCurrency(humanResourceData.salary?.base_salary || 0);
+        this.yearlyBase = formatCurrency(humanResourceData.salary?.history_benefits || 0);
+        this.jobBonus = formatCurrency(humanResourceData.salary?.job_benefits || 0);
+        this.totalFixedWage = formatCurrency((humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0));
+        this.familyAllowance = formatCurrency(humanResourceData.salary?.child_benefits || 0);
+        this.housingAllowance = formatCurrency(humanResourceData.salary?.home_benefits || 0);
+        this.householdAllowance = formatCurrency(humanResourceData.salary?.food_benefits || 0);
+        this.deprivationBonus = formatCurrency(humanResourceData.salary?.warzone_benefits || 0);
+        this.married_benifits = formatCurrency(humanResourceData.salary?.married_benefits || 0);
+        this.supervisor_benefits = formatCurrency(humanResourceData.salary?.supervisor_benefits || 0);
         this.veteransBonus = "۰ ریال";
-        this.totalSalary = `${formatNumber(this.calculateTotalSalary(humanResourceData.salary))} ریال`;
+        this.totalSalary = formatCurrency(this.calculateTotalSalary(humanResourceData.salary));
         this.contractClause1 = "طرف قرارداد تابع مقررات،ضوابط و آئین نامه های مربوط به دهیاری ، قانون کار و قانون تامین اجتماعی بوده و از مزایای قوانین مذکور بهره مند می شود";
         this.contractClause2 = "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد";
         this.contractClause3 = "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد";
