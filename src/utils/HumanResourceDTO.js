@@ -1,6 +1,11 @@
 import PersonalOption from "@data/PersonalOption.json";
+import {getJobTitleLabel} from "@data/jobTitles";
+import contractType from "@data/contractType.json";
+const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption;
 
-const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 class HumanResourceDTO {
     constructor(humanResourceData) {
@@ -25,22 +30,22 @@ class HumanResourceDTO {
         this.major = humanResourceData.last_degree.education_field || '';
         this.appointmentDate = " ";
         this.experience = humanResourceData.some_month_history || '';
-        this.contractStartDate =humanResourceData.contract_start || '';
+        this.contractStartDate = humanResourceData.contract_start || '';
         this.contractEndDate = humanResourceData.contract_end || '';
         this.contractSubject = humanResourceData.title_contract || '';
         this.contractDescription = humanResourceData.description_contract || '';
-        this.baseSalary = `${humanResourceData.salary?.base_salary || 0} ریال`;
-        this.yearlyBase = `${humanResourceData.salary?.history_benefits || 0} ریال`;
-        this.jobBonus = `${humanResourceData.salary?.job_benefits || 0} ریال`;
-        this.totalFixedWage = `${(humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0)} ریال`;
-        this.familyAllowance = `${humanResourceData.salary?.child_benefits || 0} ریال`;
-        this.housingAllowance = `${humanResourceData.salary?.home_benefits || 0} ریال`;
-        this.householdAllowance = `${humanResourceData.salary?.food_benefits || 0} ریال`;
-        this.deprivationBonus = `${humanResourceData.salary?.warzone_benefits || 0} ریال`;
-        this.married_benifits = `${humanResourceData.salary?.married_benefits || 0} ریال`;
-        this.supervisor_benefits = `${humanResourceData.salary?.supervisor_benefits || 0} ریال`;
+        this.baseSalary = `${formatNumber(humanResourceData.salary?.base_salary || 0)} ریال`;
+        this.yearlyBase = `${formatNumber(humanResourceData.salary?.history_benefits || 0)} ریال`;
+        this.jobBonus = `${formatNumber(humanResourceData.salary?.job_benefits || 0)} ریال`;
+        this.totalFixedWage = `${formatNumber((humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0))} ریال`;
+        this.familyAllowance = `${formatNumber(humanResourceData.salary?.child_benefits || 0)} ریال`;
+        this.housingAllowance = `${formatNumber(humanResourceData.salary?.home_benefits || 0)} ریال`;
+        this.householdAllowance = `${formatNumber(humanResourceData.salary?.food_benefits || 0)} ریال`;
+        this.deprivationBonus = `${formatNumber(humanResourceData.salary?.warzone_benefits || 0)} ریال`;
+        this.married_benifits = `${formatNumber(humanResourceData.salary?.married_benefits || 0)} ریال`;
+        this.supervisor_benefits = `${formatNumber(humanResourceData.salary?.supervisor_benefits || 0)} ریال`;
         this.veteransBonus = "۰ ریال";
-        this.totalSalary = `${this.calculateTotalSalary(humanResourceData.salary)} ریال`;
+        this.totalSalary = `${formatNumber(this.calculateTotalSalary(humanResourceData.salary))} ریال`;
         this.contractClause1 = "طرف قرارداد تابع مقررات،ضوابط و آئین نامه های مربوط به دهیاری ، قانون کار و قانون تامین اجتماعی بوده و از مزایای قوانین مذکور بهره مند می شود";
         this.contractClause2 = "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد";
         this.contractClause3 = "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد";
@@ -58,6 +63,8 @@ class HumanResourceDTO {
         this.employerName = "نعمت االله نوری";
         this.centralGovernor = "صفیه علی اولاد";
         this.sivanGovernor = "آزاد شریفی نژاد";
+        this.job_name = getJobTitleLabel(humanResourceData.job_type_id)
+        this.contract_type = contractType[humanResourceData.contract_type]
     }
 
     joinArray(arr) {

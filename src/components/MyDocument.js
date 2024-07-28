@@ -136,7 +136,7 @@ const MyDocument = ({ data }) => (
     <Document>
         <Page style={styles.page}>
             <View style={styles.container}>
-                <Header title="قرارداد مدت معین و حکم حقوقی مسئول امور مالی پاره وقت - چهار ساعته" />
+                <Header title={`قرارداد مدت معین و حکم حقوقی ${data.job_name} ${data.contract_type}`} />
 
                 <View style={styles.table}>
                     <TableRow
@@ -287,7 +287,7 @@ const MyDocument = ({ data }) => (
                                     <Text>{data.familyAllowance}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>ب- کمک هزینه عائله‌مندی(حق اولاد):</Text>
+                                    <Text>کمک هزینه عائله‌مندی(حق اولاد):</Text>
                                 </View>
                             </View>
 
@@ -296,7 +296,7 @@ const MyDocument = ({ data }) => (
                                     <Text>{data.housingAllowance}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>ج- کمک هزینه مسکن:</Text>
+                                    <Text>کمک هزینه مسکن:</Text>
                                 </View>
                             </View>
 
@@ -305,7 +305,7 @@ const MyDocument = ({ data }) => (
                                     <Text>{data.householdAllowance}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>د- کمک هزینه اقلام مصرفی خانوار:</Text>
+                                    <Text>کمک هزینه اقلام مصرفی خانوار:</Text>
                                 </View>
                             </View>
 
@@ -314,7 +314,7 @@ const MyDocument = ({ data }) => (
                                     <Text>{data.deprivationBonus}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>ذ- فوق العاده محرومیت از تسهیلات زندگی:</Text>
+                                    <Text>فوق العاده محرومیت از تسهیلات زندگی:</Text>
                                 </View>
                             </View>
 
@@ -323,16 +323,16 @@ const MyDocument = ({ data }) => (
                                     <Text>{data.veteransBonus}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>ر- فوق العاده ایثارگری:</Text>
+                                    <Text>فوق العاده ایثارگری:</Text>
                                 </View>
                             </View>
 
                             <View style={[styles.tableRow]}>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>جمع حقوق مزایا:</Text>
+                                    <Text>{data.totalSalary}</Text>
                                 </View>
                                 <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                    <Text>{data.totalSalary}</Text>
+                                    <Text>جمع حقوق مزایا:</Text>
                                 </View>
                             </View>
                         </View>
