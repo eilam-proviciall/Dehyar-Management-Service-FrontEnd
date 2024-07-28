@@ -5,7 +5,7 @@ import { Document, Font, Page, StyleSheet, Text, View, PDFViewer } from '@react-
 // ثبت فونت
 Font.register({
     family: 'iranSans',
-    src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansWeb_UltraLight.ttf`,
+    src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`,
 });
 
 // تعریف استایل‌ها

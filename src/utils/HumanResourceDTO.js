@@ -4,9 +4,9 @@ const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOp
 
 class HumanResourceDTO {
     constructor(humanResourceData) {
-        this.province = this.joinArray(humanResourceData.states);
-        this.county = this.joinArray(humanResourceData.cities);
-        this.section = this.joinArray(humanResourceData.regions);
+        this.province = this.joinArray(humanResourceData.locationData.states);
+        this.county = this.joinArray(humanResourceData.locationData.cities);
+        this.section = this.joinArray(humanResourceData.locationData.regions);
         this.villageCount = humanResourceData.covered_villages?.length || 0;
         this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
         this.name = humanResourceData.full_name || '';
