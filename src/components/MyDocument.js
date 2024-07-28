@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Document, Font, Page, StyleSheet, Text, View, PDFViewer } from '@react-pdf/renderer';
+import moment from "moment-jalaali";
 
 // ثبت فونت
 Font.register({
     family: 'iranSans',
     src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`,
 });
-
+moment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
 // تعریف استایل‌ها
 const styles = StyleSheet.create({
     page: {
@@ -119,13 +120,17 @@ const TableRow = ({ rowStyle, data }) => (
         ))}
     </View>
 );
+// دریافت تاریخ و زمان فعلی به صورت شمسی و فارسی
+const now = moment();
+const formattedDate = now.format('HH:mm:ss jYYYY/jMM/jDD dddd');
 
 const Footer = () => (
     <View style={styles.footer}>
-        <Text>۱۱:۲۴:۴۱ ۱۴۰۳/۰۳/۱۶ چهارشنبه</Text>
+        <Text>{formattedDate}</Text>
         <Text>پنجره واحد سازمان شهرداری ها و دهیاری ها</Text>
     </View>
 );
+
 
 const MyDocument = ({ data }) => (
     <Document>

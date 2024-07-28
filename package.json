@@ -55,6 +55,7 @@
     "kbar": "0.1.0-beta.45",
     "keen-slider": "6.8.6",
     "material-react-table": "^2.13.0",
+    "moment-jalaali": "^0.10.1",
     "next": "14.2.3",
     "ngrok": "^5.0.0-beta.2",
     "react": "18.3.1",
