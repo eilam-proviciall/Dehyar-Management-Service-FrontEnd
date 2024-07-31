@@ -45,9 +45,6 @@ const styles = StyleSheet.create({
         borderCollapse: 'collapse',
         marginBottom: 5,
     },
-    tableRow: {
-        flexDirection: 'row',
-    },
     tableColHeader: {
         backgroundColor: '#EDEDED',
         padding: 2,
@@ -55,27 +52,8 @@ const styles = StyleSheet.create({
         border: '1px solid #dfdfdf',
         textAlign: 'right',
     },
-    tableCol: {
-        padding: 1.5,
-        border: '1px solid #dfdfdf',
-        textAlign: 'right',
-        flexWrap: 'nowrap',
-    },
     highlightedText: {
         color: 'red',
-    },
-    highlightedRow: {
-        backgroundColor: '#f0f0f0',
-        flexDirection: 'row-reverse',
-    },
-    whiteRow: {
-        backgroundColor: '#ffffff',
-        flexDirection: 'row-reverse',
-        flexWrap: 'nowrap',
-        fontSize: '9px',
-    },
-    textCenter: {
-        textAlign: 'center',
     },
     number: {
         marginRight: 2,
@@ -96,6 +74,34 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    tableRow: {
+        flexDirection: 'row',
+    },
+    tableCol: {
+        padding: 1.5,
+        border: '1px solid #dfdfdf',
+        textAlign: 'right',
+        flexWrap: 'nowrap',
+    },
+    textCenter: {
+        textAlign: 'center',
+    },
+    justifiedText: {
+        textAlign: 'justify',
+        padding: 5,
+        margin: 5,
+        lineHeight: 1.5,
+        fontSize: 10,
+    },
+    highlightedRow: {
+        backgroundColor: '#f0f0f0',
+        flexDirection: 'row-reverse',
+    },
+    whiteRow: {
+        backgroundColor: '#ffffff',
+        flexDirection: 'row-reverse',
+        flexWrap: 'nowrap',
+    },
 });
 // کامپوننت‌های کمکی
 const Header = ({title}) => (
@@ -105,7 +111,7 @@ const Header = ({title}) => (
 );
 const NumberedText = ({number, text}) => (
     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-        <Text>{text} - </Text>
+        <Text>{text} -</Text>
         <Text style={styles.number}>{number}</Text>
     </View>
 );
@@ -189,13 +195,9 @@ const MyDocument = ({data}) => (
                         data={[
                             {flex: 1, text: `مدرک تحصیلی: ${data.education}`, number: '۱۵'},
                             {flex: 1.5, text: `رشته تحصیلی: ${data.major}`, number: '۱۶'},
-                        ]}
-                    />
-                    <TableRow
-                        rowStyle={styles.whiteRow}
-                        data={[
                             {flex: 1, text: `تاریخ انتصاب: ${data.appointmentDate}`, number: '۱۷'},
                             {flex: 1, text: `سابقه کار(ماه) : ${data.experience}`, number: '۱۸'},
+
                         ]}
                     />
                     <TableRow
@@ -219,9 +221,19 @@ const MyDocument = ({data}) => (
                         ]}
                     />
                     <View style={[styles.tableRow, {flexDirection: 'row-reverse'}]}>
-                        <View style={{flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5}}>
-                            <Text>{data.contractDescription}</Text>
-
+                        <View style={{
+                            flex: 1,
+                            padding: 10,
+                            margin: 10,
+                            lineHeight: 2,
+                            direction: 'rtl',
+                            textAlign: 'justify'
+                        }}>
+                            <Text style={{
+                                textAlign: 'justify',
+                                direction: 'rtl',
+                                writingDirection: 'rtl'
+                            }}>{data.contractDescription}</Text>
                         </View>
                         <View style={{flex: 1}}>
                             <View style={[styles.tableRow, styles.greyBackground]}>
@@ -234,48 +246,39 @@ const MyDocument = ({data}) => (
                                         <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
                                             <Text>:حقوق مبنا</Text>
                                         </View>
-                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                            <View style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}>
-                                                <Text style={{marginLeft: 4}}>ریال </Text>
-                                                <Text>{data.baseSalary}</Text>
-                                            </View>
+                                        <View style={{
+                                            flex: 1, ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.baseSalary}</Text>
                                         </View>
                                     </View>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
                                         <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
                                             <Text>:پایه سنواتی</Text>
                                         </View>
-                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                            <View style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}>
-                                                <Text style={{marginLeft: 4}}>ریال </Text>
-                                                <Text>{data.yearlyBase}</Text>
-                                            </View>
+                                        <View style={{
+                                            flex: 1, ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.yearlyBase}</Text>
                                         </View>
                                     </View>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
                                         <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
                                             <Text>:فوق‌العاده شغل</Text>
                                         </View>
-                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                            <View style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'center'
-                                            }}>
-                                                <Text style={{marginLeft: 4}}>ریال </Text>
-                                                <Text>{data.jobBonus}</Text>
-                                            </View>
+                                        <View style={{
+                                            flex: 1, ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.jobBonus}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -283,13 +286,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.totalFixedWage}</Text>
                                     </View>
                                 </View>
@@ -299,13 +297,8 @@ const MyDocument = ({data}) => (
                             </View>
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.supervisor_benefits}</Text>
                                     </View>
                                 </View>
@@ -315,13 +308,8 @@ const MyDocument = ({data}) => (
                             </View>
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.married_benifits}</Text>
                                     </View>
                                 </View>
@@ -331,13 +319,8 @@ const MyDocument = ({data}) => (
                             </View>
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.familyAllowance}</Text>
                                     </View>
                                 </View>
@@ -348,13 +331,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.housingAllowance}</Text>
                                     </View>
                                 </View>
@@ -365,13 +343,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.householdAllowance}</Text>
                                     </View>
                                 </View>
@@ -382,13 +355,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.deprivationBonus}</Text>
                                     </View>
                                 </View>
@@ -399,13 +367,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.veteransBonus}</Text>
                                     </View>
                                 </View>
@@ -416,13 +379,8 @@ const MyDocument = ({data}) => (
 
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text style={{marginLeft: 4}}>ریال </Text>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
                                         <Text>{data.totalSalary}</Text>
                                     </View>
                                 </View>
@@ -437,12 +395,18 @@ const MyDocument = ({data}) => (
                         rowStyle={styles.whiteRow}
                         data={[
                             {
-                                flex: 1,
-                                text: ` .${data.contractClause1}`,
-                                number: "۲۵"
+                                flex: 2,
+                                text: `${data.contractClause1}`,
+                                number: "۲۵",
+                                style: {
+                                    flexDirection: 'row',
+                                    padding: '5px',
+                                    marginLeft: '20px' // اضافه کردن فاصله برای جلوگیری از رفتن متن داخل عدد
+                                }
                             },
                         ]}
                     />
+
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
@@ -478,14 +442,18 @@ const MyDocument = ({data}) => (
                         data={[
                             {
                                 flex: 1,
-                                text: `: تعهدات قرارداد
-                                - ${data.commitment1}
-                                - ${data.commitment2}
-                                - ${data.commitment3}
-                                - ${data.commitment4}`,
+                                text: `: تعهدات قرارداد \n${data.commitment1}\n ${data.commitment2}\n ${data.commitment3}\n ${data.commitment4}`,
+                                style: {
+                                    flexDirection: 'row',
+                                    alignItems: 'flex-start',
+                                    padding: '5px',
+                                    width: '100%',
+                                    whiteSpace: 'pre-wrap',
+                                }
                             },
                         ]}
                     />
+
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
