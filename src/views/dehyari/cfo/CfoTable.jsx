@@ -37,7 +37,9 @@ function CfoTable(props) {
             });
 
             const humanResourceData = response.data;
+            console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
+            console.log(data)
 
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);

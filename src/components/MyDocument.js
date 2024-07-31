@@ -1,6 +1,8 @@
 import React from 'react';
 import {Document, Font, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
 import moment from "moment-jalaali";
+import axios from "axios";
+import {getVillageEmployerDetail} from "@/Services/DataService";
 
 // ثبت فونت
 Font.register({
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
         flexWrap: 'nowrap',
     },
 });
-// کامپوننت‌های کمکی
 const Header = ({title}) => (
     <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>{title}</Text>
@@ -125,7 +126,6 @@ const TableRow = ({rowStyle, data}) => (
         ))}
     </View>
 );
-// دریافت تاریخ و زمان فعلی به صورت شمسی و فارسی
 const now = moment();
 const formattedDate = now.format('HH:mm:ss jYYYY/jMM/jDD dddd');
 
@@ -135,8 +135,146 @@ const Footer = () => (
         <Text>پنجره واحد سازمان شهرداری ها و دهیاری ها</Text>
     </View>
 );
-
-
+const renderTableRowsByJobTitle = (data, jobTitleId) => {
+    if (jobTitleId === 3) {
+        return (
+            <>
+                <TableRow
+                    rowStyle={styles.highlightedRow}
+                    data={[
+                        {flex: 1, text: `استان: ${data.province}`, number: '۱'},
+                        {flex: 1, text: `شهرستان: ${data.county}`},
+                        {flex: 2, text: `بخش: ${data.section}`},
+                        {flex: 1, text: `تعداد دهیاری: ${data.villageCount}`},
+                    ]}
+                />
+                <TableRow
+                    rowStyle={styles.highlightedRow}
+                    data={[
+                        {
+                            flex: 1,
+                            text: `دهیاری های طرف قرارداد: ${data.villages}`,
+                            number: '۲'
+                        }
+                    ]}
+                />
+            </>
+        );
+    } else if (jobTitleId === 1) {
+        if (data.covered_villages.length === 1) {
+            return (
+                <>
+                    <TableRow
+                        rowStyle={styles.highlightedRow}
+                        data={[
+                            {flex: 1, text: `استان: ${data.province}`, number: '۱'},
+                            {flex: 1.5, text: `شهرستان: ${data.county}`, number: '۲'},
+                            {flex: 1, text: `بخش: ${data.section}`, number: '۳'},
+                            {
+                                flex: 1.5,
+                                text: `دهیاری: ${data.covered_villages[0].village.approved_name}`,
+                                number: '۵'
+                            },
+                            {flex: 1, text: `درجه دهیاری ${data.villageCount}`, number: '۴'},
+                        ]}
+                    />
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <>
+                        <TableRow
+                            rowStyle={styles.highlightedRow}
+                            data={[
+                                {flex: 1, text: `استان: ${data.province}`, number: '۱'},
+                                {flex: 1, text: `شهرستان: ${data.county}`},
+                                {flex: 2, text: `بخش: ${data.section}`},
+                                {flex: 1, text: `تعداد دهیاری: ${data.villageCount}`},
+                            ]}
+                        />
+                        <TableRow
+                            rowStyle={styles.highlightedRow}
+                            data={[
+                                {
+                                    flex: 1,
+                                    text: `دهیاری های طرف قرارداد: ${data.villages}`,
+                                    number: '۲'
+                                }
+                            ]}
+                        />
+                    </>
+                </>
+            )
+        }
+    } else {
+        return (
+            <>
+                <Text>نا مشخص</Text>
+            </>
+        );
+    }
+};
+const renderSignatoriesByJobTitle = (data) => {
+    console.log(data.signatureData)
+    if (data.job_type_id === 1) {
+        return (
+            <>
+                <View style={{ flexDirection: 'row', marginVertical: 5, backgroundColor: '#ffffff', flexWrap: 'nowrap' }}>
+                    <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>{`طرف قرارداد`}</Text>
+                        <Text style={{ fontSize: 8 }}>{data.name}</Text>
+                    </View>
+                    <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>{`مسئول امور مالی`}</Text>
+                        <Text style={{ fontSize: 8 }}>{data.signatureData.financial_responsible.full_name}</Text>
+                    </View>
+                    <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>{`بخشدار مرکزی`}</Text>
+                        <Text style={{ fontSize: 8 }}>{data.signatureData.goverment.full_name}</Text>
+                    </View>
+                </View>
+            </>
+        );
+    } else if (data.job_type_id === 2) {
+        return (
+            <>
+                {/*<View style={[styles.tableRow, styles.whiteRow]}>*/}
+                {/*    <View style={{ flex: 1, ...styles.tableCol }}>*/}
+                {/*        <Text>{`طرف قرارداد ( ${data.name} )`}</Text>*/}
+                {/*    </View>*/}
+                {/*    <View style={{ flex: 1, ...styles.tableCol }}>*/}
+                {/*        <Text>{`دهیاری کارفرما ( ${data.employer.full_name} )`}</Text>*/}
+                {/*    </View>*/}
+                {/*    {data.covered_villages.map((village, index) => (*/}
+                {/*        <View key={index} style={{ flex: 1, ...styles.tableCol }}>*/}
+                {/*            <Text>{`${village.region_name} ( ${village.employer.full_name} )`}</Text>*/}
+                {/*        </View>*/}
+                {/*    ))}*/}
+                {/*</View>*/}
+            </>
+        );
+    }
+};
+const renderRemainDay = (contract_type,data) => {
+     if (contract_type == 1){
+         return (
+             <>
+                 <View style={[styles.tableRow]}>
+                     <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                         <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                             <Text style={{marginRight: 4}}>ریال</Text>
+                             <Text>{data.remainDay}</Text>
+                         </View>
+                     </View>
+                     <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                         <Text>:مابه التفاوت روز های کارکرد</Text>
+                     </View>
+                 </View>
+             </>
+         )
+     }
+}
 const MyDocument = ({data}) => (
     <Document>
         <Page style={styles.page}>
@@ -144,25 +282,7 @@ const MyDocument = ({data}) => (
                 <Header title={`قرارداد مدت معین و حکم حقوقی ${data.job_name} ${data.contract_type}`}/>
 
                 <View style={styles.table}>
-                    <TableRow
-                        rowStyle={styles.highlightedRow}
-                        data={[
-                            {flex: 1, text: `استان: ${data.province}`, number: '۱'},
-                            {flex: 1, text: `شهرستان: ${data.county}`},
-                            {flex: 2, text: `بخش: ${data.section}`},
-                            {flex: 1, text: `تعداد دهیاری: ${data.villageCount}`},
-                        ]}
-                    />
-                    <TableRow
-                        rowStyle={styles.highlightedRow}
-                        data={[
-                            {
-                                flex: 1,
-                                text: `دهیاری های طرف قرارداد: ${data.villages}`,
-                                number: '۲'
-                            }
-                        ]}
-                    />
+                    {renderTableRowsByJobTitle(data, data.job_type_id)}
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
@@ -281,6 +401,19 @@ const MyDocument = ({data}) => (
                                             <Text>{data.jobBonus}</Text>
                                         </View>
                                     </View>
+                                    <View style={[styles.tableRow, styles.greyBackground]}>
+                                        <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:مزایای سرپرستی</Text>
+                                        </View>
+                                        <View style={{
+                                            flex: 1, ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.supervisor_benefits}</Text>
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
 
@@ -293,17 +426,6 @@ const MyDocument = ({data}) => (
                                 </View>
                                 <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
                                     <Text>:جمع مزد ثابت</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow]}>
-                                <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
-                                        <Text style={{marginRight: 4}}>ریال</Text>
-                                        <Text>{data.supervisor_benefits}</Text>
-                                    </View>
-                                </View>
-                                <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
-                                    <Text>:حق مسئولیت</Text>
                                 </View>
                             </View>
                             <View style={[styles.tableRow]}>
@@ -328,7 +450,7 @@ const MyDocument = ({data}) => (
                                     <Text>:کمک هزینه عائله‌مندی(حق اولاد)</Text>
                                 </View>
                             </View>
-
+                            {renderRemainDay(data.contract_type,data)}
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
                                     <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
@@ -481,35 +603,7 @@ const MyDocument = ({data}) => (
                             {flex: 1, text: `شماره و تاریخ قرارداد: ${data.contractNumber}`, number: "۳۴"},
                         ]}
                     />
-                    <TableRow
-                        rowStyle={[styles.whiteRow, {height: 50}]} // تنظیم ارتفاع مورد نظر به صورت inline
-                        data={[
-                            {
-                                flex: 1,
-                                text: 'طرف قرارداد ( امورمالی دهیاری )',
-                                subText: `${data.contractorName}`,
-                                subTextStyle: styles.textCenter
-                            },
-                            {
-                                flex: 1,
-                                text: 'دهیاری منتخب ( پاکل گراب )',
-                                subText: `${data.employerName}`,
-                                subTextStyle: styles.textCenter
-                            },
-                            {
-                                flex: 1,
-                                text: 'بخشدار مرکزی',
-                                subText: `${data.centralGovernor}`,
-                                subTextStyle: styles.textCenter
-                            },
-                            {
-                                flex: 1,
-                                text: 'بخشدار سیوان',
-                                subText: `${data.sivanGovernor}`,
-                                subTextStyle: styles.textCenter
-                            },
-                        ]}
-                    />
+                    {renderSignatoriesByJobTitle(data)}
 
                 </View>
 

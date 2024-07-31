@@ -38,10 +38,12 @@ class HumanResourceDTO {
         this.contractEndDate = humanResourceData.contract_end || '';
         this.contractSubject = humanResourceData.title_contract || '';
         this.contractDescription = humanResourceData.description_contract || '';
+        this.job_type_id = humanResourceData.job_type_id;
+        this.covered_villages = humanResourceData.covered_villages;
         this.baseSalary = formatCurrency(humanResourceData.salary?.base_salary || 0);
         this.yearlyBase = formatCurrency(humanResourceData.salary?.history_benefits || 0);
         this.jobBonus = formatCurrency(humanResourceData.salary?.job_benefits || 0);
-        this.totalFixedWage = formatCurrency((humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0));
+        this.totalFixedWage = formatCurrency((humanResourceData.salary?.job_benefits || 0) + (humanResourceData.salary?.history_benefits || 0) + (humanResourceData.salary?.base_salary || 0)+ (humanResourceData.salary?.supervisor_benefits || 0));
         this.familyAllowance = formatCurrency(humanResourceData.salary?.child_benefits || 0);
         this.housingAllowance = formatCurrency(humanResourceData.salary?.home_benefits || 0);
         this.householdAllowance = formatCurrency(humanResourceData.salary?.food_benefits || 0);
@@ -69,6 +71,9 @@ class HumanResourceDTO {
         this.sivanGovernor = "آزاد شریفی نژاد";
         this.job_name = getJobTitleLabel(humanResourceData.job_type_id)
         this.contract_type = contractType[humanResourceData.contract_type]
+        this.villageEmployer = humanResourceData.village_employer
+        this.remainDay = humanResourceData.salary?.remain_day
+        this.signatureData = humanResourceData.signature_data
     }
 
     joinArray(arr) {
@@ -84,7 +89,7 @@ class HumanResourceDTO {
             (salary?.food_benefits || 0) +
             (salary?.warzone_benefits || 0) +
             (salary?.supervisor_benefits || 0) +
-            (salary?.married_benifits || 0);
+            (salary?.married_benefits || 0);
     }
 }
 
