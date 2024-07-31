@@ -236,22 +236,26 @@ const renderSignatoriesByJobTitle = (data) => {
                 </View>
             </>
         );
-    } else if (data.job_type_id === 2) {
+    } else if (data.job_type_id === 2 || data.job_type_id === 3) {
         return (
             <>
-                {/*<View style={[styles.tableRow, styles.whiteRow]}>*/}
-                {/*    <View style={{ flex: 1, ...styles.tableCol }}>*/}
-                {/*        <Text>{`طرف قرارداد ( ${data.name} )`}</Text>*/}
-                {/*    </View>*/}
-                {/*    <View style={{ flex: 1, ...styles.tableCol }}>*/}
-                {/*        <Text>{`دهیاری کارفرما ( ${data.employer.full_name} )`}</Text>*/}
-                {/*    </View>*/}
-                {/*    {data.covered_villages.map((village, index) => (*/}
-                {/*        <View key={index} style={{ flex: 1, ...styles.tableCol }}>*/}
-                {/*            <Text>{`${village.region_name} ( ${village.employer.full_name} )`}</Text>*/}
-                {/*        </View>*/}
-                {/*    ))}*/}
-                {/*</View>*/}
+                <View style={{ flexDirection: 'row', marginVertical: 5, backgroundColor: '#ffffff', flexWrap: 'nowrap' }}>
+                    {data.signatureData.covered_villages.map((region, index) => (
+                        <View key={index} style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                            <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}> {` بخشدار ${region.region_name}`}</Text>
+                            <Text style={{ fontSize: 8 }}>{region.bakhshdar.full_name}</Text>
+                        </View>
+                    ))}
+                    <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>{`طرف قرارداد`}</Text>
+                        <Text style={{ fontSize: 8 }}>{data.name}</Text>
+                    </View>
+                    <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>{`دهیاری کارفرما`}</Text>
+                        <Text style={{ fontSize: 8 }}>{data.signatureData.village_employer.full_name}</Text>
+                    </View>
+
+                </View>
             </>
         );
     }
