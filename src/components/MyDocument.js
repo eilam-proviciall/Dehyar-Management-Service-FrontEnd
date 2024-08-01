@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
         borderTop: '1px solid black',
         paddingTop: 5,
         marginTop: 10,
+        fontSize:8,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -132,7 +133,7 @@ const formattedDate = now.format('HH:mm:ss jYYYY/jMM/jDD dddd');
 const Footer = () => (
     <View style={styles.footer}>
         <Text>{formattedDate}</Text>
-        <Text>پنجره واحد سازمان شهرداری ها و دهیاری ها</Text>
+        <Text>پنجره واحد سازمان خدمات شهرداری ها و دهیاری ها</Text>
     </View>
 );
 const renderTableRowsByJobTitle = (data, jobTitleId) => {
@@ -175,7 +176,7 @@ const renderTableRowsByJobTitle = (data, jobTitleId) => {
                                 text: `دهیاری: ${data.covered_villages[0].village.approved_name}`,
                                 number: '۵'
                             },
-                            {flex: 1, text: `درجه دهیاری ${data.villageCount}`, number: '۴'},
+                            {flex: 1, text: `درجه دهیاری ${data?.lastGrade}`, number: '۴'},
                         ]}
                     />
                 </>
@@ -183,27 +184,6 @@ const renderTableRowsByJobTitle = (data, jobTitleId) => {
         } else {
             return (
                 <>
-                    <>
-                        <TableRow
-                            rowStyle={styles.highlightedRow}
-                            data={[
-                                {flex: 1, text: `استان: ${data.province}`, number: '۱'},
-                                {flex: 1, text: `شهرستان: ${data.county}`},
-                                {flex: 2, text: `بخش: ${data.section}`},
-                                {flex: 1, text: `تعداد دهیاری: ${data.villageCount}`},
-                            ]}
-                        />
-                        <TableRow
-                            rowStyle={styles.highlightedRow}
-                            data={[
-                                {
-                                    flex: 1,
-                                    text: `دهیاری های طرف قرارداد: ${data.villages}`,
-                                    number: '۲'
-                                }
-                            ]}
-                        />
-                    </>
                 </>
             )
         }
