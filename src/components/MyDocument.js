@@ -136,7 +136,7 @@ const Footer = () => (
     </View>
 );
 const renderTableRowsByJobTitle = (data, jobTitleId) => {
-    if (jobTitleId === 3) {
+    if (jobTitleId === 3 || jobTitleId ===4) {
         return (
             <>
                 <TableRow
@@ -216,7 +216,6 @@ const renderTableRowsByJobTitle = (data, jobTitleId) => {
     }
 };
 const renderSignatoriesByJobTitle = (data) => {
-    console.log(data.signatureData)
     if (data.job_type_id === 1) {
         return (
             <>
@@ -279,6 +278,16 @@ const renderRemainDay = (contract_type,data) => {
          )
      }
 }
+const renderJobType = (data) => {
+    const jobTypeId = data.job_type_id;
+    if (jobTypeId === 1) {
+        return ':مزایای سرپرستی';
+    } else if (jobTypeId === 3 || jobTypeId === 4) {
+        return ':حق مسئولیت ';
+    } else {
+        return '';
+    }
+};
 const MyDocument = ({data}) => (
     <Document>
         <Page style={styles.page}>
@@ -319,8 +328,6 @@ const MyDocument = ({data}) => (
                         data={[
                             {flex: 1, text: `مدرک تحصیلی: ${data.education}`, number: '۱۵'},
                             {flex: 1.5, text: `رشته تحصیلی: ${data.major}`, number: '۱۶'},
-                            {flex: 1, text: `تاریخ انتصاب: ${data.appointmentDate}`, number: '۱۷'},
-                            {flex: 1, text: `سابقه کار(ماه) : ${data.experience}`, number: '۱۸'},
 
                         ]}
                     />
@@ -328,10 +335,12 @@ const MyDocument = ({data}) => (
                         rowStyle={styles.whiteRow}
                         data={[
                             {
-                                flex: 1,
+                                flex: 2,
                                 text: `مدت این قرارداد: از تاریخ : ${data.contractStartDate} تا تاریخ : ${data.contractEndDate}`,
                                 number: '۲۱'
                             },
+                            {flex: 1, text: `تاریخ انتصاب: ${data.appointmentDate}`, number: '۱۷'},
+                            {flex: 1, text: `سابقه کار(ماه) : ${data.experience}`, number: '۱۸'},
                         ]}
                     />
                     <TableRow
@@ -407,7 +416,7 @@ const MyDocument = ({data}) => (
                                     </View>
                                     <View style={[styles.tableRow, styles.greyBackground]}>
                                         <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
-                                            <Text>:مزایای سرپرستی</Text>
+                                            <Text>{renderJobType(data)}</Text>
                                         </View>
                                         <View style={{
                                             flex: 1, ...styles.tableCol, ...styles.textCenter,
@@ -454,7 +463,7 @@ const MyDocument = ({data}) => (
                                     <Text>:کمک هزینه عائله‌مندی(حق اولاد)</Text>
                                 </View>
                             </View>
-                            {renderRemainDay(data.contract_type,data)}
+                            {renderRemainDay(data.contract_type_id,data)}
                             <View style={[styles.tableRow]}>
                                 <View style={{flex: 1, ...styles.tableCol, ...styles.textCenter}}>
                                     <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>

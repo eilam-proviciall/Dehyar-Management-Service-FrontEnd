@@ -50,7 +50,7 @@ class HumanResourceDTO {
         this.deprivationBonus = formatCurrency(humanResourceData.salary?.warzone_benefits || 0);
         this.married_benifits = formatCurrency(humanResourceData.salary?.married_benefits || 0);
         this.supervisor_benefits = formatCurrency(humanResourceData.salary?.supervisor_benefits || 0);
-        this.veteransBonus = "۰ ریال";
+        this.veteransBonus = "۰";
         this.totalSalary = formatCurrency(this.calculateTotalSalary(humanResourceData.salary));
         this.contractClause1 = "طرف قرارداد تابع مقررات،ضوابط و آئین نامه های مربوط به دهیاری،قانون کار و قانون تامین اجتماعی بوده و از مزایای قوانین مذکور بهره مند می شود";
         this.contractClause2 = "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد";
@@ -71,6 +71,7 @@ class HumanResourceDTO {
         this.sivanGovernor = "آزاد شریفی نژاد";
         this.job_name = getJobTitleLabel(humanResourceData.job_type_id)
         this.contract_type = contractType[humanResourceData.contract_type]
+        this.contract_type_id =humanResourceData.contract_type
         this.villageEmployer = humanResourceData.village_employer
         this.remainDay = humanResourceData.salary?.remain_day
         this.signatureData = humanResourceData.signature_data
@@ -89,6 +90,7 @@ class HumanResourceDTO {
             (salary?.food_benefits || 0) +
             (salary?.warzone_benefits || 0) +
             (salary?.supervisor_benefits || 0) +
+            (salary?.remainDay || 0) +
             (salary?.married_benefits || 0);
     }
 }
