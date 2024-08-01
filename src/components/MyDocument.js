@@ -235,7 +235,7 @@ const renderSignatoriesByJobTitle = (data) => {
                 </View>
             </>
         );
-    } else if (data.job_type_id === 2 || data.job_type_id === 3) {
+    } else if (data.job_type_id === 3 || data.job_type_id === 4) {
         return (
             <>
                 <View style={{ flexDirection: 'row', marginVertical: 5, backgroundColor: '#ffffff', flexWrap: 'nowrap' }}>
