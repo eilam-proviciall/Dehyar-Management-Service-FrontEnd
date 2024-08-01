@@ -90,7 +90,7 @@ class HumanResourceDTO {
             (salary?.food_benefits || 0) +
             (salary?.warzone_benefits || 0) +
             (salary?.supervisor_benefits || 0) +
-            (salary?.remainDay || 0) +
+            (salary?.remain_day || 0) +
             (salary?.married_benefits || 0);
     }
 }
