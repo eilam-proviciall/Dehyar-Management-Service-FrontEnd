@@ -180,10 +180,10 @@ const renderTableRowsByJobTitle = (data, jobTitleId) => {
                         rowStyle={styles.highlightedRow}
                         data={[
                             getRowData(`استان: ${data.province}`, true, '20%'),
-                            getRowData(`شهرستان: ${data.county}`, true, '20%'),
-                            getRowData(`بخش: ${data.section}`, true, '20%'),
-                            getRowData(`دهیاری: ${data.covered_villages[0].village.approved_name}`, true, '20%'),
-                            getRowData(`درجه دهیاری ${data?.lastGrade}`, true, '20%')
+                            getRowData(`شهرستان: ${data.county}`, false, '20%'),
+                            getRowData(`بخش: ${data.section}`, false, '20%'),
+                            getRowData(`دهیاری: ${data.covered_villages[0].village.approved_name}`, false, '20%'),
+                            getRowData(`درجه دهیاری ${data?.lastGrade}`, false, '20%')
                         ]}
                     />
                 </>
@@ -256,7 +256,7 @@ const renderRemainDay = (contract_type, data) => {
         return (
             <>
                 <View style={[styles.tableRow]}>
-                    <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
+                    <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Text style={{ marginRight: 4 }}>ریال</Text>
                             <Text>{data.remainDay}</Text>
@@ -339,7 +339,7 @@ const MyDocument = ({ data }) => (
                     />
                     <View style={[styles.tableRow, { flexDirection: 'row-reverse' }]}>
                         <View style={{
-                            width: '50%',
+                            width: '40%',
                             ...styles.tableCol,
                             padding: 10,
                             margin: 10,
@@ -356,7 +356,7 @@ const MyDocument = ({ data }) => (
                                 {data.contractDescription.split('\n').slice(-1)}
                             </Text>
                         </View>
-                        <View style={{ width: '50%' }}>
+                        <View style={{ width: '60%' }}>
                             <View style={[styles.tableRow, styles.greyBackground]}>
                                 <View
                                     style={{ width: '100%', ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign }}>
@@ -475,19 +475,17 @@ const MyDocument = ({ data }) => (
                                     <Text>:کمک هزینه اقلام مصرفی خانوار</Text>
                                 </View>
                             </View>
-
                             <View style={[styles.tableRow]}>
                                 <View style={{ width: '50%', ...styles.tableCol, ...styles.textCenter }}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', whiteSpace: 'nowrap', flexShrink: 0 }}>
                                         <Text style={{ marginRight: 4 }}>ریال</Text>
                                         <Text>{data.deprivationBonus}</Text>
                                     </View>
                                 </View>
-                                <View style={{ width: '50%', ...styles.tableCol, ...styles.textCenter }}>
+                                <View style={{ width: '50%', ...styles.tableCol, ...styles.textCenter, whiteSpace: 'nowrap', flexShrink: 0 }}>
                                     <Text>:فوق العاده محرومیت از تسهیلات زندگی</Text>
                                 </View>
                             </View>
-
                             <View style={[styles.tableRow]}>
                                 <View style={{ width: '50%', ...styles.tableCol, ...styles.textCenter }}>
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>

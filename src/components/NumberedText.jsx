@@ -24,7 +24,7 @@ const styles = {
 
 const NumberedText = ({ text, showNumber = true }) => {
     useEffect(() => {
-        resetCounter(); // Reset counter when component is first rendered
+        resetCounter();
     }, []);
 
     const persianNumber = (num) => {
