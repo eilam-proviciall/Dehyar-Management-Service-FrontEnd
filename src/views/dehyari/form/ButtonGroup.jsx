@@ -112,15 +112,15 @@ const ButtonGroup = ({ onSubmit }) =>{
                 >
                     ذخیره
                 </Button>
-                {/*<Button*/}
-                {/*    fullWidth*/}
-                {/*    variant="contained"*/}
-                {/*    color="error"*/}
-                {/*    startIcon={<PictureAsPdfIcon />}*/}
-                {/*    onClick={handleDownload}*/}
-                {/*>*/}
-                {/*    حکم کارگزینی*/}
-                {/*</Button>*/}
+                <Button
+                    fullWidth
+                    variant="contained"
+                    color="error"
+                    startIcon={<PictureAsPdfIcon />}
+                    // onClick={handleDownload}
+                >
+                    حکم کارگزینی
+                </Button>
                 <Button fullWidth color='secondary' variant='outlined' className='capitalize'>
                     اطلاعات پرسنلی
                 </Button>
