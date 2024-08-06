@@ -29,7 +29,7 @@ function getContractRole(humanResourceData) {
     } else if (humanResourceData.job_type_id === 3 || humanResourceData.job_type_id === 4) {
         return {
             "contractClause2": "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد.",
-            "contractClause3" : "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد"
+            "contractClause3" : "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد."
         }
     }
 }
@@ -85,7 +85,7 @@ class HumanResourceDTO {
         this.commitment2 = "طرف قرارداد اقرار می کند مشمول قانون منع مداخله کارکنان دولت در معالمات دولتی مصوب ۱۳۷۷ نیست";
         this.commitment3 = "عقد قرارداد هیچ گونه تعهدی مبنی بر استخدام اعم از رسمی یا پیمانی اعم از سوی دهیاری برای طرف قرارداد ایجاد نمی کند";
         this.commitment4 = "طرف قرارداد مسئول حفظ و نگهداری وسایل و اموال در اختیار است و در صورت ایجاد خسارت ،دهیاری می تواند از محل قرارداد خسارت را جبران کند";
-        this.signingNote = `امضای ذیل این قرارداد از سوی بخشدار صرفا جهت اجرای ماده ۱۶ اساسنامه ، تسهیلات و سازمان دهیاری ها مصوب ۱۳۸۰ و امضای مسئول امورمالی دهیاری دهیاری به استناد ماده ۱۱ آﺋین نامه استخدامی دهیاری های کشور می باشد دهیاری ${getVillageName(humanResourceData)} به نمایندگی از دهیاری های بند ۲ این قرارداد به عنوان دهیاری کارفرما تعیین می گردد`;
+        // this.signingNote = `امضای ذیل این قرارداد از سوی بخشدار صرفا جهت اجرای ماده ۱۶ اساسنامه ، تسهیلات و سازمان دهیاری ها مصوب ۱۳۸۰ و امضای مسئول امورمالی دهیاری دهیاری به استناد ماده ۱۱ آﺋین نامه استخدامی دهیاری های کشور می باشد دهیاری ${getVillageName(humanResourceData)} به نمایندگی از دهیاری های بند ۲ این قرارداد به عنوان دهیاری کارفرما تعیین می گردد`;
         this.finalNote = "این قرارداد در ۵ نسخه تنظیم و هر نسخه حکم واحد را دارد و پس از امضا و مهر و ثبت معتبر خواهد بود";
         this.executionDate = "۱۴۰۲/۰۱/۰۱";
         this.uniqueId = "پیش نویس";
@@ -94,11 +94,13 @@ class HumanResourceDTO {
         this.contract_type = contractType[humanResourceData.contract_type]
         this.contract_type_id = humanResourceData.contract_type
         this.villageEmployer = humanResourceData.village_employer
-        this.remainDay = humanResourceData.salary?.remain_day
+        this.remainDay = formatCurrency(humanResourceData.salary?.remain_day)
         this.signatureData = humanResourceData.signature_data
         this.lastGrade = humanResourceData?.last_grade ?? null
         this.convertStatus = humanResourceData.convert_status
-
+        this.villageName = getVillageName(humanResourceData)
+        this.signingNotePart1 = `امضای ذیل این قرارداد از سوی بخشدار صرفا جهت اجرای ماده ۱۶ اساسنامه ، تسهیلات و سازمان دهیاری ها مصوب ۱۳۸۰ و امضای مسئول امورمالی دهیاری دهیاری به استناد ماده ۱۱ آﺋین نامه استخدامی دهیاری های کشور می باشد دهیاری `;
+        this.signingNotePart2 = ` به نمایندگی از دهیاری های بند ۲ این قرارداد به عنوان دهیاری کارفرما تعیین می گردد`;
     }
 
     joinArray(arr) {

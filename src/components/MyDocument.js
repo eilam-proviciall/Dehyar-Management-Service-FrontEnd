@@ -6,8 +6,10 @@ import NumberedText from './NumberedText'; // فرض کنیم این فایل ر
 // ثبت فونت
 Font.register({
     family: 'iranSans',
-    src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`,
-});
+    fonts: [
+        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`, fontWeight: 'normal' },
+        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSans-Bold.ttf`, fontWeight: '500' },
+    ]});
 moment.loadPersian({dialect: 'persian-modern', usePersianDigits: true});
 
 const styles = StyleSheet.create({
@@ -34,7 +36,6 @@ const styles = StyleSheet.create({
     headerTitle: {
         textAlign: 'center',
         fontSize: 10,
-        fontWeight: 'bold',
     },
     headerDate: {
         textAlign: 'left',
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
     tableColHeader: {
         backgroundColor: '#EDEDED',
         padding: 2,
-        fontWeight: 'bold',
         border: '1px solid #dfdfdf',
         textAlign: 'right',
     },
@@ -158,10 +158,10 @@ const renderTableRowsByJobTitle = (data, jobTitleId) => {
                 <TableRow
                     rowStyle={styles.highlightedRow}
                     data={[
-                        getRowData(`استان: ${data.province}`, true, '20%'),
-                        getRowData(`شهرستان: ${data.county}`, false, '20%'),
-                        getRowData(`بخش: ${data.section}`, false, '20%'),
-                        getRowData(`تعداد دهیاری: ${data.villageCount}`, false, '40%')
+                        getRowData(`استان: ${data.province}`, true, '25%'),
+                        getRowData(`شهرستان: ${data.county}`, false, '25%'),
+                        getRowData(`بخش: ${data.section}`, false, '30%'),
+                        getRowData(`تعداد دهیاری: ${data.villageCount}`, false, '20%')
                     ]}
                 />
                 <TableRow
@@ -208,13 +208,12 @@ const renderSignatoriesByJobTitle = (data) => {
             <>
                 <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
-                        <Text style={{fontSize: 10, fontWeight: 'bold', marginBottom: 5}}>{`بخشدار مرکزی`}</Text>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`بخشدار مرکزی`}</Text>
                         <Text style={{fontSize: 8}}>{data.signatureData.goverment.full_name}</Text>
                     </View>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                         <Text style={{
                             fontSize: 10,
-                            fontWeight: 'bold',
                             marginBottom: 5
                         }}>{`مسئول امور مالی دهیاری`}</Text>
                         <Text style={{fontSize: 8}}>{data.signatureData.financial_responsible.full_name}</Text>
@@ -222,7 +221,6 @@ const renderSignatoriesByJobTitle = (data) => {
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                         <Text style={{
                             fontSize: 10,
-                            fontWeight: 'bold',
                             marginBottom: 5
                         }}>{`طرف قرارداد(${data.covered_villages[0].village.approved_name})`}</Text>
                         <Text style={{fontSize: 8}}>{data.name}</Text>
@@ -234,25 +232,24 @@ const renderSignatoriesByJobTitle = (data) => {
         return (
             <>
                 <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
-                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
-                        <Text style={{fontSize: 10, fontWeight: 'bold', marginBottom: 5}}>{`طرف قرارداد`}</Text>
-                        <Text style={{fontSize: 8}}>{data.name}</Text>
-                    </View>
-                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
-                        <Text style={{fontSize: 10, fontWeight: 'bold', marginBottom: 5}}>{`دهیاری منتخب`}</Text>
-                        <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
-                    </View>
                     {data.signatureData.covered_villages.map((region, index) => (
                         <View key={index}
                               style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                             <Text style={{
                                 fontSize: 10,
-                                fontWeight: 'bold',
                                 marginBottom: 5
                             }}> {` بخشدار ${region.region_name}`}</Text>
                             <Text style={{fontSize: 8}}>{region.bakhshdar.full_name}</Text>
                         </View>
                     ))}
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`دهیاری منتخب (${data.villageName})`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (امور مالی)`}</Text>
+                        <Text style={{fontSize: 8}}>{data.name}</Text>
+                    </View>
                 </View>
             </>
         );
@@ -334,8 +331,8 @@ const MyDocument = ({data}) => (
                         rowStyle={styles.whiteRow}
                         data={[
                             {width: '40%', text: `محل تولد: ${data.birthPlace}`},
-                            {width: '30%', text: `سمت: ${data.job_name}`},
-                            {width: '30%', text: `محل صدور شناسنامه: ${data.issuePlace}`}
+                            {width: '30%', text: `محل صدور شناسنامه: ${data.issuePlace}`},
+                            {width: '30%', text: `سمت: ${data.job_name}`}
                         ]}
                     />
                     <TableRow
@@ -346,7 +343,7 @@ const MyDocument = ({data}) => (
                                 text: `مدت این قرارداد: از تاریخ : ${data.contractStartDate} تا تاریخ : ${data.contractEndDate}`
                             },
                             {width: '25%', text: `تاریخ انتصاب: ${data.appointmentDate}`},
-                            {width: '25%', text: `سابقه کار(ماه) : ${data.experience}`}
+                            {width: '25%', text: `سابقه کار (ماه) : ${data.experience}`}
                         ]}
                     />
                     <TableRow
@@ -555,7 +552,7 @@ const MyDocument = ({data}) => (
                         data={[
                             {
                                 width: '100%',
-                                text: `.${data.contractClause2}`
+                                text: `${data.contractClause2}`
                             }
                         ]}
                     />
@@ -599,7 +596,13 @@ const MyDocument = ({data}) => (
                         data={[
                             {
                                 width: '100%',
-                                text: `${data.signingNote}`
+                                text: (
+                                    <Text>
+                                        {data.signingNotePart1}
+                                        <Text style={{fontWeight: 'bold'}}>{data.villageName}</Text>
+                                        {data.signingNotePart2}
+                                    </Text>
+                                )
                             }
                         ]}
                     />
@@ -615,9 +618,9 @@ const MyDocument = ({data}) => (
                         <TableRow
                             rowStyle={[styles.whiteRow]}
                             data={[
-                                { width: '20%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
-                                { width: '40%', text: `شناسه یکتا : ${data.uniqueId}` },
-                                { width: '40%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}` }
+                                { width: '40%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
+                                { width: '25%', text: `شناسه یکتا : ${data.uniqueId}` },
+                                { width: '35%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}` }
                             ]}
                         />
                         {renderSignatoriesByJobTitle(data)}
