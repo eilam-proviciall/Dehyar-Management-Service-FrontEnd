@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#EDEDED',
         padding: 2,
         fontWeight: 'bold',
-        borderBottom: '1px solid #dfdfdf',
+        border: '1px solid #dfdfdf',
         textAlign: 'right',
     },
     highlightedText: {
@@ -82,6 +82,8 @@ const styles = StyleSheet.create({
     tableCol: {
         padding: 1.5,
         borderBottom: '1px solid #dfdfdf',
+        borderRight: '1px solid #dfdfdf',
+        borderLeft: '1px solid #dfdfdf',
         textAlign: 'right',
         flexWrap: 'nowrap',
     },
