@@ -330,9 +330,9 @@ const MyDocument = ({data}) => (
                     <TableRow
                         rowStyle={styles.whiteRow}
                         data={[
-                            {width: '40%', text: `محل تولد: ${data.birthPlace}`},
+                            {width: '30%', text: `محل تولد: ${data.birthPlace}`},
                             {width: '30%', text: `محل صدور شناسنامه: ${data.issuePlace}`},
-                            {width: '30%', text: `سمت: ${data.job_name}`}
+                            {width: '40%', text: `سمت: ${data.job_name}`}
                         ]}
                     />
                     <TableRow
@@ -598,9 +598,7 @@ const MyDocument = ({data}) => (
                                 width: '100%',
                                 text: (
                                     <Text>
-                                        {data.signingNotePart1}
-                                        <Text style={{fontWeight: 'bold'}}>{data.villageName}</Text>
-                                        {data.signingNotePart2}
+                                        {data.signingNote}
                                     </Text>
                                 )
                             }
@@ -618,8 +616,8 @@ const MyDocument = ({data}) => (
                         <TableRow
                             rowStyle={[styles.whiteRow]}
                             data={[
-                                { width: '40%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
-                                { width: '25%', text: `شناسه یکتا : ${data.uniqueId}` },
+                                { width: '30%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
+                                { width: '45%', text: `شناسه یکتا : ${data.uniqueId}` },
                                 { width: '35%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}` }
                             ]}
                         />
