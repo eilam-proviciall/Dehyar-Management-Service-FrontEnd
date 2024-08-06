@@ -97,6 +97,8 @@ class HumanResourceDTO {
         this.remainDay = humanResourceData.salary?.remain_day
         this.signatureData = humanResourceData.signature_data
         this.lastGrade = humanResourceData?.last_grade ?? null
+        this.convertStatus = humanResourceData.convert_status
+
     }
 
     joinArray(arr) {
