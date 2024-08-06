@@ -206,7 +206,7 @@ const renderSignatoriesByJobTitle = (data) => {
     if (data.job_type_id === 1) {
         return (
             <>
-                <View style={{flexDirection: 'row', marginVertical: 5, backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                         <Text style={{fontSize: 10, fontWeight: 'bold', marginBottom: 5}}>{`بخشدار مرکزی`}</Text>
                         <Text style={{fontSize: 8}}>{data.signatureData.goverment.full_name}</Text>
@@ -233,7 +233,7 @@ const renderSignatoriesByJobTitle = (data) => {
     } else if (data.job_type_id === 3 || data.job_type_id === 4) {
         return (
             <>
-                <View style={{flexDirection: 'row', marginVertical: 5, backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                         <Text style={{fontSize: 10, fontWeight: 'bold', marginBottom: 5}}>{`طرف قرارداد`}</Text>
                         <Text style={{fontSize: 8}}>{data.name}</Text>
@@ -612,15 +612,16 @@ const MyDocument = ({data}) => (
                             }
                         ]}
                     />
-                    <TableRow
-                        rowStyle={[styles.whiteRow]}
-                        data={[
-                            {width: '33%', text: `تاریخ اجرای قرارداد: ${data.executionDate}`},
-                            {width: '33%', text: `شناسه یکتا : ${data.uniqueId}`},
-                            {width: '33%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}`}
-                        ]}
-                    />
-                    {renderSignatoriesByJobTitle(data)}
+                        <TableRow
+                            rowStyle={[styles.whiteRow]}
+                            data={[
+                                { width: '20%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
+                                { width: '40%', text: `شناسه یکتا : ${data.uniqueId}` },
+                                { width: '40%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}` }
+                            ]}
+                        />
+                        {renderSignatoriesByJobTitle(data)}
+
                 </View>
 
                 <Footer/>

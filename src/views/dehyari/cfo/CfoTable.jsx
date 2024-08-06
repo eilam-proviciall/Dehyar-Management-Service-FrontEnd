@@ -45,21 +45,15 @@ function CfoTable(props) {
             const blob = await asPdf.toBlob();
 
             const url = URL.createObjectURL(blob);
-            const iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed';
-            iframe.style.width = '0';
-            iframe.style.height = '0';
-            iframe.style.border = 'none';
-            iframe.src = url;
-            document.body.appendChild(iframe);
-            iframe.onload = () => {
-                iframe.contentWindow.print();
-                toast.success('محاسبه موفق بود', { position: "top-center" });
-            };
+            window.open(url, '_blank');
+
+            toast.success('محاسبه موفق بود', { position: "top-center" });
         } catch (error) {
-            handleError(error);
+            console.error('Error downloading or rendering PDF:', error);
+            toast.error('خطا در دانلود یا رندر PDF', { position: "top-center" });
         }
     };
+
 
     const handleError = (error) => {
         if (error.response && error.response.data && error.response.data.message) {
