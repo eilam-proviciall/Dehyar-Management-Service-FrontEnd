@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View } from '@react-pdf/renderer';
 import PropTypes from 'prop-types';
 
 let counter = 1;
+
+export const resetCounter = () => {
+    counter = 1;
+};
+
 const styles = {
     container: {
         display: 'flex',
@@ -16,7 +21,12 @@ const styles = {
         flex: 1,
     },
 };
+
 const NumberedText = ({ text, showNumber = true }) => {
+    useEffect(() => {
+        resetCounter(); // Reset counter when component is first rendered
+    }, []);
+
     const persianNumber = (num) => {
         if (num === undefined || num === null) {
             return '';
@@ -29,7 +39,7 @@ const NumberedText = ({ text, showNumber = true }) => {
 
     return (
         <View style={styles.container}>
-            {showNumber && <Text style={styles.number}> - {persianNumber(number)} </Text>}
+            {showNumber && <Text style={styles.number}> - {number} </Text>}
             <Text style={styles.text}>{text}</Text>
         </View>
     );
