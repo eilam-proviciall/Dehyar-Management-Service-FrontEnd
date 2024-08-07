@@ -332,7 +332,7 @@ const MyDocument = ({data}) => (
                         data={[
                             {width: '30%', text: `محل تولد: ${data.birthPlace}`},
                             {width: '30%', text: `محل صدور شناسنامه: ${data.issuePlace}`},
-                            {width: '40%', text: `سمت: ${data.job_name}`}
+                            {width: '40%', text: `سمت: ${data.jobName}`}
                         ]}
                     />
                     <TableRow
