@@ -31,7 +31,7 @@ const AccessGuard = ({ children }) => {
                 setIsAuthorized(true);
             } else {
                 setIsAuthorized(false);
-                router.replace('/403');
+                router.replace('/login');
             }
         }
     }, [user, loading, router]);

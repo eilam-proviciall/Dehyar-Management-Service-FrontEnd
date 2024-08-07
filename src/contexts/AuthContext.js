@@ -1,12 +1,11 @@
-"use client";
-import { createContext, useContext, useEffect, useState } from 'react';
+"use client"
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { login, me } from "@/Services/Auth/AuthService";
 import { toast } from "react-toastify";
 import accessControl from "@components/layout/vertical/accessControl";
 
-// Auth Context
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -29,7 +28,11 @@ const AuthProvider = ({ children }) => {
                         });
                         setUser(response.data.data.user.original);
                     } catch (error) {
-                        toast.error('اطلاعات نادرست است');
+                        toast.error('توکن شما منقضی شده است',{
+                            position: "top-center",
+                            duration: 3000
+                        });
+                        router.push('/login');
                         setUser(null);
                         if (router.pathname !== '/login') {
                             router.push('/login');
@@ -83,7 +86,7 @@ const AuthProvider = ({ children }) => {
                 const firstPage = allowedPages[0].href;
                 router.push(firstPage);
             } else {
-                router.push('/403');
+                router.push('/login');
             }
         } catch (error) {
             toast.error('اطلاعات وارد شده صحیح نمیباشد', {
