@@ -50,7 +50,7 @@ function CfoTable(props) {
             toast.success('محاسبه موفق بود', { position: "top-center" });
         } catch (error) {
             console.error('Error downloading or rendering PDF:', error);
-            toast.error('خطا در دانلود یا رندر PDF', { position: "top-center" });
+            toast.error(error.response.data.message, { position: "top-center" });
         }
     };
 
