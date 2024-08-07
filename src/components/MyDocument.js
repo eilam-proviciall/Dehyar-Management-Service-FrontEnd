@@ -291,7 +291,7 @@ const MyDocument = ({data}) => (
     <Document>
         <Page style={styles.page}>
             <View style={styles.container}>
-                <Header title={`قرارداد${data.convertStatus ? " دائم" : ""} مدت معین و حکم حقوقی ${data.job_name} ${data.contract_type}`}/>
+                <Header title={`قرارداد${data.convertStatus ? " دائم" : ""} مدت معین و حکم حقوقی ${data.jobName} ${data.contractType}`}/>
 
                 <View style={styles.table}>
                     {renderTableRowsByJobTitle(data, data.job_type_id)}
