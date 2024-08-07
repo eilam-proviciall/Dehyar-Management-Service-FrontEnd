@@ -100,7 +100,7 @@ class HumanResourceDTO {
             this.contractType = contractType[humanResourceData.contract_type];
             this.contractTypeId = humanResourceData.contract_type;
             this.villageEmployer = humanResourceData.village_employer;
-            // this.remainDay = formatCurrency(humanResourceData.salary?.remain_day);
+            this.remainDay = formatCurrency(humanResourceData.salary?.remain_day);
             this.signatureData = humanResourceData.signature_data;
             this.lastGrade = humanResourceData?.last_grade || null;
             this.convertStatus = humanResourceData.convert_status || null;
