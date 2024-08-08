@@ -29,10 +29,10 @@ function StatusBar({ onVillageSelect }) {
                     const defaultVillage = villageData[0].village.hierarchy_code;
                     setSelectedVillage(defaultVillage);
                     setVillageInfo({
-                        grade: villageData[0].village.village_information?.grade || '',
-                        gradeDate: villageData[0].village.village_information?.grade_date || '',
+                        grade: villageData[0].village.villageInformation?.grade || '',
+                        gradeDate: villageData[0].village.villageInformation?.grade_date || '',
                         coverCount: villageData[0].cover_count || 0,
-                        population: villageData[0].village.village_information?.populations[0] || {}
+                        population: villageData[0].village.villageInformation?.latest_population || {}
                     });
                     onVillageSelect(defaultVillage);
                 }
@@ -48,10 +48,10 @@ function StatusBar({ onVillageSelect }) {
         const selectedVillageData = villages.find(village => village.village.hierarchy_code === villageId);
         if (selectedVillageData) {
             setVillageInfo({
-                grade: selectedVillageData.village.village_information?.grade || '',
-                gradeDate: selectedVillageData.village.village_information?.grade_date || '',
+                grade: selectedVillageData.village.villageInformation?.grade || '',
+                gradeDate: selectedVillageData.village.villageInformation?.grade_date || '',
                 coverCount: selectedVillageData.cover_count || 0,
-                population: selectedVillageData.village.village_information?.populations[0] || {}
+                population: selectedVillageData?.latest_population || {}
             });
         }
         onVillageSelect(villageId);
