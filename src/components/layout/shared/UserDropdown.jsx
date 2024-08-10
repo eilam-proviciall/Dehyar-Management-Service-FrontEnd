@@ -88,13 +88,13 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         className='mis-2'
       >
-        {/*<Avatar*/}
-        {/*  ref={anchorRef}*/}
-        {/*  alt={session?.user?.name || ''}*/}
-        {/*  src={session?.user?.image || ''}*/}
-        {/*  onClick={handleDropdownOpen}*/}
-        {/*  className='cursor-pointer bs-[38px] is-[38px]'*/}
-        {/*/>*/}
+        <Avatar
+          ref={anchorRef}
+          // alt={session?.user?.name || ''}
+          // src={session?.user?.image || ''}
+          onClick={handleDropdownOpen}
+          className='cursor-pointer bs-[38px] is-[38px]'
+        />
       </Badge>
       <Popper
         open={open}

@@ -7,6 +7,7 @@ import NavToggle from './NavToggle';
 import ModeDropdown from '@components/layout/shared/ModeDropdown';
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses';
 import {toast} from "react-toastify";
+import UserDropdown from "@components/layout/shared/UserDropdown";
 
 const NavbarContent = () => {
 
@@ -32,6 +33,7 @@ const NavbarContent = () => {
                 <IconButton onClick={logout} title="خروج">
                     <LogoutIcon />
                 </IconButton>
+                <UserDropdown />
             </div>
         </div>
     );

@@ -34,6 +34,15 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import accessControl from "@components/layout/vertical/accessControl";
 
+
+
+
+const persianToEnglishDigits = (str) => {
+  const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+  const englishDigits = "0123456789";
+  return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
+};
+
 const schema = object({
   email: string([minLength(1, 'این فیلد الزامی است')]),
   password: string([
@@ -151,9 +160,10 @@ const Login = ({ mode }) => {
                           autoFocus
                           type='email'
                           label='نام کاربری'
-                          onChange={e => {
-                            field.onChange(e.target.value)
-                            errorState !== null && setErrorState(null)
+                          onChange={(e) => {
+                            const value = persianToEnglishDigits(e.target.value);
+                            field.onChange(value);
+                            errorState !== null && setErrorState(null);
                           }}
                           {...((errors.email || errorState !== null) && {
                             error: true,

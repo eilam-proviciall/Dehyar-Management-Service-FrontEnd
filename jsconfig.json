@@ -53,6 +53,9 @@
       ],
       "@contexts/*": [
         "./src/contexts/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
       ]
     }
   },
