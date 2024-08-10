@@ -34,9 +34,6 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import accessControl from "@components/layout/vertical/accessControl";
 
-
-
-
 const persianToEnglishDigits = (str) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
   const englishDigits = "0123456789";
@@ -160,6 +157,11 @@ const Login = ({ mode }) => {
                           autoFocus
                           type='email'
                           label='نام کاربری'
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }  // مرکزچین کردن متن داخل فیلد ورودی
+                            }
+                          }}
                           onChange={(e) => {
                             const value = persianToEnglishDigits(e.target.value);
                             field.onChange(value);
@@ -172,6 +174,7 @@ const Login = ({ mode }) => {
                       />
                   )}
               />
+
               <Controller
                   name='password'
                   control={control}
@@ -180,6 +183,7 @@ const Login = ({ mode }) => {
                       <TextField
                           {...field}
                           fullWidth
+                          style={{textAlign: 'center'}}
                           label='رمز عبور'
                           id='login-password'
                           type={isPasswordShown ? 'text' : 'password'}
@@ -188,6 +192,9 @@ const Login = ({ mode }) => {
                             errorState !== null && setErrorState(null)
                           }}
                           InputProps={{
+                            inputProps: {
+                              style: { textAlign: 'center' }  // مرکزچین کردن متن داخل فیلد ورودی
+                            },
                             endAdornment: (
                                 <InputAdornment position='end'>
                                   <IconButton
