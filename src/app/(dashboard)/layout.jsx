@@ -1,4 +1,3 @@
-// MUI Imports
 import Button from '@mui/material/Button'
 
 // Layout Imports
@@ -25,8 +24,7 @@ const Layout = async ({children, params}) => {
     const direction = "rtl"
     const mode = getMode()
     const systemMode = getSystemMode()
-
-    return (
+        return (
         <Providers direction={direction}>
             <AuthProvider>
                 <AccessGuard>
