@@ -82,7 +82,17 @@ const Login = ({ mode }) => {
       borderedDarkIllustration
   )
 
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+  const handleClickShowPassword = () => {
+    setIsPasswordShown(show => !show);
+
+    const passwordField = document.getElementById('login-password');
+    const currentCursorPosition = passwordField.selectionStart;
+
+    setTimeout(() => {
+      passwordField.focus();
+      passwordField.setSelectionRange(currentCursorPosition, currentCursorPosition);
+    }, 0);
+  }
 
   const onSubmit = async data => {
     await auth.login(data, () => {
