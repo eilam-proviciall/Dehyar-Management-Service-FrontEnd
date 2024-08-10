@@ -121,6 +121,20 @@ function DehyariList({ selectedVillage }) {
         columns,
         data,
         initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        state: {
+            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
+            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
+        },
+        muiSkeletonProps: {
+            animation: 'wave', // تنظیم انیمیشن Skeletons
+            height: 28, // ارتفاع Skeletons
+        },
+        muiLinearProgressProps: {
+            color: 'primary', // رنگ Progress Bars
+        },
+        muiCircularProgressProps: {
+            color: 'secondary', // رنگ Circular Progress (در صورت استفاده)
+        },
         muiPaginationProps: {
             color: 'primary',
             shape: 'rounded',
@@ -134,10 +148,6 @@ function DehyariList({ selectedVillage }) {
         },
         paginationDisplayMode: 'pages',
     });
-
-    if (loading) {
-        return <div>در حال بارگذاری...</div>;
-    }
 
     return (
         <MaterialReactTable
