@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         fontWeight: '100',
         fontFamily: 'iranSans',
         textAlign: 'right',
+
     },
     container: {
         display: 'flex',
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
         width: 'auto',
         borderCollapse: 'collapse', // Added
         marginBottom: 5,
+        borderLeft: '1px solid #dfdfdf',
     },
     tableColHeader: {
         backgroundColor: '#EDEDED',
@@ -83,7 +85,6 @@ const styles = StyleSheet.create({
         padding: 1.5,
         borderBottom: '1px solid #dfdfdf',
         borderRight: '1px solid #dfdfdf',
-        borderLeft: '1px solid #dfdfdf',
         textAlign: 'right',
         flexWrap: 'nowrap',
     },
@@ -293,7 +294,7 @@ const MyDocument = ({data}) => (
             <View style={styles.container}>
                 <Header title={`قرارداد${data.convertStatus ? " دائم" : ""} مدت معین و حکم حقوقی ${data.jobName} ${data.contractType}`}/>
 
-                <View style={styles.table}>
+                <View style={[styles.table]}>
                     {renderTableRowsByJobTitle(data, data.job_type_id)}
                     <TableRow
                         rowStyle={styles.whiteRow}
@@ -347,26 +348,26 @@ const MyDocument = ({data}) => (
                         ]}
                     />
                     <TableRow
-                        rowStyle={styles.whiteRow}
+                        rowStyle={[styles.whiteRow]}
                         data={[
                             {width: '100%', text: `موضوع قرارداد: ${data.contractSubject}`}
                         ]}
                     />
-                    <View style={[styles.tableRow, {flexDirection: 'row-reverse'}]}>
+                    <View style={[styles.tableRow, {flexDirection: 'row-reverse',        borderRight: '1px solid #dfdfdf',
+                    }]}>
                         <View style={{
                             width: '40%',
-                            ...styles.tableCol,
-                            padding: 10,
                             margin: 10,
                             lineHeight: 2,
                             direction: 'rtl',
-                            position: 'relative'
+                            position: 'relative',
+
                         }}>
                             <Text style={{
                                 textAlign: 'right',
                                 direction: 'rtl',
                                 writingDirection: 'rtl',
-                                display: 'block'
+                                display: 'block',
                             }}>
                                 {data.contractDescription.split('\n').slice(-1)}
                             </Text>
@@ -538,7 +539,7 @@ const MyDocument = ({data}) => (
                     </View>
 
                     <TableRow
-                        rowStyle={styles.whiteRow}
+                        rowStyle={[styles.whiteRow,{        borderTop: '1px solid #dfdfdf',}]}
                         data={[
                             {
                                 width: '100%',
