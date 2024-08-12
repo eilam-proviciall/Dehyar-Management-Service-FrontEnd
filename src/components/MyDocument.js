@@ -277,7 +277,7 @@ const renderSignatoriesByJobTitle = (data) => {
                         <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
                     </View>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
-                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (مسئول امور فنی)`}</Text>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (امور فنی)`}</Text>
                         <Text style={{fontSize: 8}}>{data.name}</Text>
                     </View>
                 </View>
