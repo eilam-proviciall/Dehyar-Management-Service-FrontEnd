@@ -130,7 +130,13 @@ const StepPersonalDetails = ({ validation }) => {
                             render={({ field: { onChange, value } }) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}
-                                    onChange={(date) => onChange(date ? date.toUnix() : "")}
+                                    onChange={(date) => {
+                                        const selectedDate = date ? date.toUnix() : "";
+                                        console.log("Selected Date (UTC):", new Date(selectedDate * 1000).toISOString());
+                                        console.log("Selected Date (Local):", new Date(selectedDate * 1000).toLocaleString());
+                                        console.log("Selected Date (UnixTimeStamp):",selectedDate);
+                                        onChange(selectedDate);
+                                    }}
                                     calendar={persian}
                                     locale={persian_fa}
                                     calendarPosition="bottom-right"
@@ -151,6 +157,7 @@ const StepPersonalDetails = ({ validation }) => {
                         />
                     </FormControl>
                 </Grid>
+
 
                 <Grid item xs={12} sm={4}>
                     <Controller
