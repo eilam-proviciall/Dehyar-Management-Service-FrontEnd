@@ -223,13 +223,13 @@ const renderSignatoriesByJobTitle = (data) => {
                         <Text style={{
                             fontSize: 10,
                             marginBottom: 5
-                        }}>{`طرف قرارداد(${data.covered_villages[0].village.approved_name})`}</Text>
+                        }}>{`طرف قرارداد (${data.covered_villages[0].village.approved_name})`}</Text>
                         <Text style={{fontSize: 8}}>{data.name}</Text>
                     </View>
                 </View>
             </>
         );
-    } else if (data.job_type_id === 3 || data.job_type_id === 4) {
+    } else if (data.job_type_id === 3) {
         return (
             <>
                 <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
@@ -249,6 +249,35 @@ const renderSignatoriesByJobTitle = (data) => {
                     </View>
                     <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
                         <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (امور مالی)`}</Text>
+                        <Text style={{fontSize: 8}}>{data.name}</Text>
+                    </View>
+                </View>
+            </>
+        );
+    }else if(data.job_type_id === 4){
+        return (
+            <>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                    {data.signatureData.covered_villages.map((region, index) => (
+                        <View key={index}
+                              style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                            <Text style={{
+                                fontSize: 10,
+                                marginBottom: 5
+                            }}> {` بخشدار ${region.region_name}`}</Text>
+                            <Text style={{fontSize: 8}}>{region.bakhshdar.full_name}</Text>
+                        </View>
+                    ))}
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`مسئول امور مالی دهیاری ها`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.financial_responsible}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`دهیاری منتخب (${data.villageName})`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (مسئول امور فنی)`}</Text>
                         <Text style={{fontSize: 8}}>{data.name}</Text>
                     </View>
                 </View>
