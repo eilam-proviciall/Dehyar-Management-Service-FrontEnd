@@ -89,9 +89,9 @@ class HumanResourceDTO {
         this.commitment4 = "طرف قرارداد مسئول حفظ و نگهداری وسایل و اموال در اختیار است و در صورت ایجاد خسارت ،دهیاری می تواند از محل قرارداد خسارت را جبران کند";
         this.signingNote = getContractRole(humanResourceData).signNote;
         this.finalNote = "این قرارداد در ۵ نسخه تنظیم و هر نسخه حکم واحد را دارد و پس از امضا و مهر و ثبت معتبر خواهد بود";
-        this.executionDate = "۱۴۰۲/۰۱/۰۱";
+        this.executionDate = humanResourceData.execute_start;
         this.uniqueId = "پیش نویس";
-        this.contractNumber = "۴۰۷ - ۱۴۰۲/۰۴/۲۶";
+        this.contractNumber = `۴۰۷ - ${this.executionDate}`;
         this.jobName = getJobTitleLabel(humanResourceData.job_type_id)
         this.contractType = contractType[humanResourceData.contract_type]
         this.contract_type_id = humanResourceData.contract_type
