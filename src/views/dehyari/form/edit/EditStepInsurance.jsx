@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { Grid, Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, TextField, IconButton, FormControl, InputLabel, Select, MenuItem, Typography, Box, Chip, Avatar } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
@@ -52,7 +53,103 @@ const EditStepInsurance = ({ validation }) => {
                             <Card key={item.id} sx={{ mb: 2 }}>
                                 <CardContent>
                                     <Grid container spacing={2}>
-                                        {/* فیلدهای فرم مانند قبل */}
+                                        <Grid item xs={12} sm={4}>
+                                            <Controller
+                                                name={`insurances[${index}].workplace`}
+                                                control={control}
+                                                defaultValue={item.workplace}
+                                                render={({ field }) => (
+                                                    <TextField
+                                                        fullWidth
+                                                        size="small"
+                                                        label="محل کار"
+                                                        placeholder="محل کار"
+                                                        {...field}
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <Controller
+                                                name={`insurances[${index}].insurancePeriod`}
+                                                control={control}
+                                                defaultValue={item.insurancePeriod}
+                                                render={({ field }) => (
+                                                    <TextField
+                                                        fullWidth
+                                                        size="small"
+                                                        label="مدت بیمه (ماه)"
+                                                        placeholder="مدت بیمه"
+                                                        {...field}
+                                                    />
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl fullWidth size="small">
+                                                <Controller
+                                                    name={`insurances[${index}].employmentStartDate`}
+                                                    control={control}
+                                                    defaultValue={item.employmentStartDate}
+                                                    render={({ field }) => (
+                                                        <DatePicker
+                                                            value={field.value ? new Date(field.value * 1000) : ""}
+                                                            onChange={(date) => field.onChange(date ? date.toUnix() : "")}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            render={
+                                                                <TextField
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    label="تاریخ شروع"
+                                                                    inputProps={{
+                                                                        style: { textAlign: 'end' }
+                                                                    }}
+                                                                />
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <FormControl fullWidth size="small">
+                                                <Controller
+                                                    name={`insurances[${index}].employmentEndDate`}
+                                                    control={control}
+                                                    defaultValue={item.employmentEndDate}
+                                                    render={({ field }) => (
+                                                        <DatePicker
+                                                            value={field.value ? new Date(field.value * 1000) : ""}
+                                                            onChange={(date) => field.onChange(date ? date.toUnix() : "")}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            render={
+                                                                <TextField
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    label="تاریخ پایان"
+                                                                    inputProps={{
+                                                                        style: { textAlign: 'end' }
+                                                                    }}
+                                                                />
+                                                            }
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={2}>
+                                            <IconButton
+                                                aria-label="حذف"
+                                                onClick={() => remove(index)}
+                                                sx={{ mt: 2 }}
+                                            >
+                                                <DeleteIcon color="error" />
+                                            </IconButton>
+                                        </Grid>
                                     </Grid>
                                 </CardContent>
                             </Card>

@@ -1,11 +1,21 @@
 import React from 'react';
 import { Button, Card, CardContent } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 const EditButtonGroup = ({ onSubmit }) => {
     return (
         <Card>
             <CardContent className='flex flex-col gap-4'>
+                <Button
+                    fullWidth
+                    variant="contained"
+                    color="error"
+                    startIcon={<PictureAsPdfIcon />}
+                    onClick={() => console.log('sd')}
+                >
+                    حکم کارگزینی
+                </Button>
                 <Button
                     type="submit"
                     fullWidth

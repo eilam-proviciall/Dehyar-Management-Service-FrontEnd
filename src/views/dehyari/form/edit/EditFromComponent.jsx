@@ -47,9 +47,9 @@ function EditFromComponent() {
             <FormProvider {...methods}>
                 <Grid item xs={12} md={9}>
                     <Card>
-                        <CardContent className='sm:!p-12'>
+                        {/*<CardContent className='sm:!p-12'>*/}
                             <EditFormContent validationSchemas={validationSchemas}/>
-                        </CardContent>
+                        {/*</CardContent>*/}
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={3}>
