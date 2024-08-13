@@ -10,9 +10,6 @@ import ButtonGroup from './ButtonGroup';
 import FormContent from './FormContent';
 import { GetHumanResource, humanResources } from '@/Services/humanResources';
 import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
-import MyDocument from '@components/MyDocument';
-import { pdf } from '@react-pdf/renderer';
-import { getSalary } from '@/Services/Salary';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 
 const Forms = ({ invoiceData }) => {

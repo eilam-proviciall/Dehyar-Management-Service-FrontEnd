@@ -1,10 +1,11 @@
 import React from 'react';
+import EditFromComponent from "@views/dehyari/form/edit/EditFromComponent";
 
 function Page(props) {
     return (
-        <div>
-            <h1>salaam</h1>
-        </div>
+        <>
+            <EditFromComponent />
+        </>
     );
 }
 
