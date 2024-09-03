@@ -15,6 +15,7 @@ const accessControl = {
     [WORK_GROUPS.GOVERNOR]: [
         { label: 'لیست پرسنل', href: '/dehyari/governor/table' },
         { label: 'کاربران سامانه', href: '/municipality/list' },
+        { label: 'درجه بندی', href: '/dehyari/form/grading-information-registration' },
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         { label: 'لیست پرسنل', href: '/dehyari/bakhshdar/table' },

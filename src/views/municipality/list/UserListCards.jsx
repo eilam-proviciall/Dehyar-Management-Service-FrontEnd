@@ -8,7 +8,6 @@ import axios from 'axios'
 import { user } from '@/Services/Auth/AuthService'
 import { set } from 'js-cookie'
 import { Skeleton } from '@mui/material'
-import ContentLoader from 'react-content-loader'
 
 
 const UserListCards = ({ loading, setLoading }) => {
