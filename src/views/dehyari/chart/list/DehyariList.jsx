@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MaterialReactTable } from 'material-react-table';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
@@ -45,8 +45,6 @@ function DehyariList({ selectedVillage }) {
             });
         }
     }, [selectedVillage]);
-
-    const tableData = useMemo(() => data, [data]);
 
     const columns = useMemo(
         () => [
@@ -119,14 +117,41 @@ function DehyariList({ selectedVillage }) {
         [anchorEl, selectedRow]
     );
 
-    if (loading) {
-        return <div>در حال بارگذاری...</div>;
-    }
+    const table = useMaterialReactTable({
+        columns,
+        data,
+        initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        state: {
+            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
+            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
+        },
+        muiSkeletonProps: {
+            animation: 'wave', // تنظیم انیمیشن Skeletons
+            height: 28, // ارتفاع Skeletons
+        },
+        muiLinearProgressProps: {
+            color: 'primary', // رنگ Progress Bars
+        },
+        muiCircularProgressProps: {
+            color: 'secondary', // رنگ Circular Progress (در صورت استفاده)
+        },
+        muiPaginationProps: {
+            color: 'primary',
+            shape: 'rounded',
+            showRowsPerPage: false,
+            variant: 'outlined',
+            sx: {
+                button: {
+                    borderRadius: '50%', // تبدیل دکمه‌ها به دایره‌ای
+                },
+            },
+        },
+        paginationDisplayMode: 'pages',
+    });
 
     return (
         <MaterialReactTable
-            columns={columns}
-            data={tableData}
+            table={table}
         />
     );
 }

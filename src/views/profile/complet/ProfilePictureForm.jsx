@@ -32,13 +32,11 @@ const ProfilePictureForm = ({ onNext, onBack }) => {
     };
 
     const handleSubmit = () => {
-        console.log(formData);
         onNext();
     };
 
     useEffect(() => {
-        console.log('formData updated:', formData);
-    }, [formData]);
+   }, [formData]);
 
     return (
         <CustomGrid container spacing={5}>

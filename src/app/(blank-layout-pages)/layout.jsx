@@ -9,7 +9,6 @@ import {getSystemMode} from '@core/utils/serverHelpers'
 const Layout = ({children, params}) => {
     // Vars
     const systemMode = getSystemMode()
-    console.log(23)
 
     return (
         <Providers direction={"rtl"}>

@@ -1,4 +1,3 @@
-// MUI Imports
 import Button from '@mui/material/Button'
 
 // Layout Imports
@@ -13,7 +12,6 @@ import Header from '@components/layout/horizontal/Header'
 import Navbar from '@components/layout/vertical/Navbar'
 import VerticalFooter from '@components/layout/vertical/Footer'
 import HorizontalFooter from '@components/layout/horizontal/Footer'
-import Customizer from '@core/components/customizer'
 import ScrollToTop from '@core/components/scroll-to-top'
 
 // Util Imports
@@ -26,8 +24,7 @@ const Layout = async ({children, params}) => {
     const direction = "rtl"
     const mode = getMode()
     const systemMode = getSystemMode()
-
-    return (
+        return (
         <Providers direction={direction}>
             <AuthProvider>
                 <AccessGuard>
@@ -54,7 +51,6 @@ const Layout = async ({children, params}) => {
                             <i className='ri-arrow-up-line'/>
                         </Button>
                     </ScrollToTop>
-                    {/*<Customizer dir={direction} disableDirection/>*/}
                 </AccessGuard>
             </AuthProvider>
         </Providers>

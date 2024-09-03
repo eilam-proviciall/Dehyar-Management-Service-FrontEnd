@@ -27,6 +27,9 @@ const GetJobTitles = () => {
     return `${BaseUrl}/job-titles`
 }
 
+const DownloadHumanResourcePdf = () => {
+    return `${BaseUrl}/human-resources/download`
+}
 
 export {
     humanResources,
@@ -36,5 +39,6 @@ export {
     GetHumanResourcesForGovernor,
     GetHumanCoverdVillageForCfo,
     GetJobTitles,
-    GetFieldStudy
+    GetFieldStudy,
+    DownloadHumanResourcePdf
 }

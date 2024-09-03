@@ -1,497 +1,666 @@
-    import React from 'react';
-    import {Document, Font, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
+import React from 'react';
+import {Document, Font, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
+import moment from "moment-jalaali";
+import NumberedText from './NumberedText'; // فرض کنیم این فایل را در همین دایرکتوری ذخیره کرده‌ایم
 
-    Font.register({
-        family: 'iranSans',
-        src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSans-Regular.ttf`,
-    });
-    // تعریف استایل‌ها
-    const styles = StyleSheet.create({
-        page: {
-            padding: 10, // کاهش حاشیه‌های صفحه
-            fontSize: 10, // کاهش سایز فونت
-            fontFamily: 'iranSans',
-            textAlign: 'right',
-        },
-        container: {
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 10, // کاهش padding
-            backgroundColor: '#fff',
-        },
-        row: {
-            flexDirection: 'row',
-            borderBottom: '1px solid black',
-            paddingBottom: 2, // کاهش padding
-            marginBottom: 2, // کاهش margin
-        },
-        header: {
-            textAlign: 'center',
-            marginBottom: 5, // کاهش margin
-        },
-        textCenter: {
-            textAlign: 'center',
-        },
-        textEnd: {
-            textAlign: 'end',
-        },
-        borderBox: {
-            border: '1px solid #dfdfdf',
-            backgroundColor: '#ededed',
-            padding: 2, // کاهش padding
-        },
-        border: {
-            border: '1px solid #dfdfdf',
-            padding: 2, // کاهش padding
-        },
-        tableCell: {
-            padding: 2, // کاهش padding
-            fontSize: 9, // کاهش سایز فونت
-        },
-        footer: {
-            borderTop: '1px solid black',
-            paddingTop: 5, // کاهش padding
-            marginTop: 10, // کاهش margin
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-        },
-        headerContainer: {
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: 5, // کاهش margin
-            borderBottom: '1px solid black',
-            paddingBottom: 2, // کاهش padding
-        },
-        headerTitle: {
-            textAlign: 'center',
-            fontSize: 10, // کاهش سایز فونت
-            fontWeight: 'bold',
-        },
-        headerDate: {
-            textAlign: 'left',
-            fontSize: 9, // کاهش سایز فونت
-        },
-        table: {
-            display: 'table',
-            width: 'auto',
-            borderCollapse: 'collapse',
-            marginBottom: 5, // کاهش margin
-        },
-        tableRow: {
-            flexDirection: 'row',
-        },
-        tableColHeader: {
-            backgroundColor: '#EDEDED',
-            padding: 2, // کاهش padding
-            fontWeight: 'bold',
-            border: '1px solid #dfdfdf',
-            textAlign: 'right',
-        },
-        tableCol: {
-            marginTop: 0,
-            padding: 2, // کاهش padding
-            border: '1px solid #dfdfdf',
-            textAlign: 'right',
-            flexWrap: 'nowrap',
-        },
-        highlightedText: {
-            color: 'red',
-        },
-        highlightedRow: {
-            backgroundColor: '#f0f0f0',
-            marginTop: 2, // کاهش margin
-            flexDirection: 'row-reverse',
-            padding: 0,
-            margin: 0,
-            flexWrap: 'nowrap',
-        },
-        whiteRow: {
-            backgroundColor: '#ffffff',
-            flexDirection: 'row-reverse',
-            flexWrap: 'nowrap',
-            fontSize: "9px", // کاهش سایز فونت
-        },
-        noWrapText: {
-            whiteSpace: 'nowrap',
-            flexShrink: 1,
-        },
-        numberText: {
-            marginLeft: 2,
-            textAlign: 'right',
-        },
-        textContainer: {
-            flex: 1,
-        },
-        greyBackground: {
-            backgroundColor: '#EDEDED',
-            flexDirection: 'row-reverse'
-        },
-        centerAlign: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        descriptionContainer: {
-            marginTop: 5, // کاهش margin
-            padding: 5, // کاهش padding
-            borderTop: '1px solid black',
-        },
-        descriptionText: {
-            marginBottom: 2, // کاهش margin
-            fontSize: 9, // کاهش سایز فونت
-            textAlign: 'right',
-        },
+// ثبت فونت
+Font.register({
+    family: 'iranSans',
+    fonts: [
+        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`, fontWeight: 'normal' },
+        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSans-Bold.ttf`, fontWeight: '500' },
+    ]});
+moment.loadPersian({dialect: 'persian-modern', usePersianDigits: true});
+
+const styles = StyleSheet.create({
+    page: {
+        padding: 10,
+        fontSize: 9,
+        fontWeight: '100',
+        fontFamily: 'iranSans',
+        textAlign: 'right',
+
+    },
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 10,
+        backgroundColor: '#fff',
+    },
+    headerContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: 5,
+        borderBottom: '1px solid black',
+        paddingBottom: 2,
+    },
+    headerTitle: {
+        textAlign: 'center',
+        fontSize: 10,
+    },
+    headerDate: {
+        textAlign: 'left',
+        fontSize: 9,
+    },
+    table: {
+        display: 'table',
+        width: 'auto',
+        borderCollapse: 'collapse', // Added
+        marginBottom: 5,
+        borderLeft: '1px solid #dfdfdf',
+    },
+    tableColHeader: {
+        backgroundColor: '#EDEDED',
+        padding: 2,
+        border: '1px solid #dfdfdf',
+        textAlign: 'right',
+    },
+    highlightedText: {
+        color: 'red',
+    },
+    number: {
+        marginRight: 2,
+    },
+    footer: {
+        borderTop: '1px solid black',
+        paddingTop: 5,
+        marginTop: 10,
+        fontSize: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    greyBackground: {
+        backgroundColor: '#EDEDED',
+        flexDirection: 'row-reverse',
+    },
+    centerAlign: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    tableRow: {
+        flexDirection: 'row',
+    },
+    tableCol: {
+        padding: 1.5,
+        borderBottom: '1px solid #dfdfdf',
+        borderRight: '1px solid #dfdfdf',
+        textAlign: 'right',
+        flexWrap: 'nowrap',
+    },
+    textCenter: {
+        textAlign: 'center',
+    },
+    justifiedText: {
+        textAlign: 'justify',
+        padding: 5,
+        margin: 5,
+        lineHeight: 1.5,
+        fontSize: 10,
+    },
+    highlightedRow: {
+        backgroundColor: '#f0f0f0',
+        flexDirection: 'row-reverse',
+        borderBottom: 'none', // Remove bottom border to avoid double border
+    },
+    whiteRow: {
+        backgroundColor: '#ffffff',
+        flexDirection: 'row-reverse',
+        flexWrap: 'nowrap',
+        borderBottom: 'none', // Remove bottom border to avoid double border
+    },
+    tableRowLast: {
+        flexDirection: 'row',
+        borderBottom: '1px solid #dfdfdf', // Add bottom border for last row
+    },
+});
+
+const Header = ({title}) => (
+    <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>{title}</Text>
+    </View>
+);
+
+const TableRow = ({rowStyle, data, isLastRow = false}) => (
+    <View style={[styles.tableRow, rowStyle, isLastRow && styles.tableRowLast]}>
+        {data.map((col, index) => (
+            <View key={index} style={{width: col.width || 'auto', ...styles.tableCol}}>
+                <NumberedText text={col.text} showNumber={col.showNumber !== false}/>
+            </View>
+        ))}
+    </View>
+);
+
+
+const Footer = () => {
+    const now = moment();
+    const formattedDate = now.format('HH:mm:ss jYYYY/jMM/jDD dddd');
+
+    return (
+        <View style={styles.footer}>
+            <Text>{formattedDate}</Text>
+            <Text>پنجره واحد خدمات سازمان خدمات شهرداری ها و دهیاری ها</Text>
+        </View>
+    );
+};
+const renderTableRowsByJobTitle = (data, jobTitleId) => {
+    let rowNumber = 1;
+
+    const getRowData = (text, showNumber = true, width = 'auto') => ({
+        number: rowNumber++,
+        text,
+        showNumber,
+        width
     });
 
-    const MyDocument = () => {
+    if (jobTitleId === 3 || jobTitleId === 4) {
         return (
-            <Document>
-                <Page style={styles.page}>
-                    <View style={styles.container}>
-                        <View style={styles.headerContainer}>
-                            <Text style={styles.headerTitle}>
-                                قرارداد مدت معین و حکم حقوقی مسئول امور مالی پاره وقت - چهار ساعته
-                            </Text>
-                            <Text style={styles.headerDate}>
-                                ۱۱:۲۴:۴۱ ۱۴۰۳/۰۳/۱۶ چهارشنبه
-                            </Text>
+            <>
+                <TableRow
+                    rowStyle={styles.highlightedRow}
+                    data={[
+                        getRowData(`استان: ${data.province}`, true, '25%'),
+                        getRowData(`شهرستان: ${data.county}`, false, '25%'),
+                        getRowData(`بخش: ${data.section}`, false, '30%'),
+                        getRowData(`تعداد دهیاری: ${data.villageCount}`, false, '20%')
+                    ]}
+                />
+                <TableRow
+                    rowStyle={styles.highlightedRow}
+                    data={[
+                        getRowData(`دهیاری های طرف قرارداد: ${data.villages}`, true, '100%')
+                    ]}
+                />
+            </>
+        );
+    } else if (jobTitleId === 1) {
+        if (data.covered_villages.length === 1) {
+            return (
+                <>
+                    <TableRow
+                        rowStyle={styles.highlightedRow}
+                        data={[
+                            getRowData(`استان: ${data.province}`, true, '20%'),
+                            getRowData(`شهرستان: ${data.county}`, false, '20%'),
+                            getRowData(`بخش: ${data.section}`, false, '20%'),
+                            getRowData(`دهیاری: ${data.covered_villages[0].village.approved_name}`, false, '20%'),
+                            getRowData(`درجه دهیاری: ${data?.lastGrade}`, false, '20%')
+                        ]}
+                    />
+                </>
+            );
+        } else {
+            return (
+                <>
+                </>
+            );
+        }
+    } else {
+        return (
+            <>
+                <Text>نا مشخص</Text>
+            </>
+        );
+    }
+};
+const renderSignatoriesByJobTitle = (data) => {
+    if (data.job_type_id === 1) {
+        return (
+            <>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`بخشدار مرکزی`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.goverment.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{
+                            fontSize: 10,
+                            marginBottom: 5
+                        }}>{`مسئول امور مالی دهیاری`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.financial_responsible.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{
+                            fontSize: 10,
+                            marginBottom: 5
+                        }}>{`طرف قرارداد (${data.covered_villages[0].village.approved_name})`}</Text>
+                        <Text style={{fontSize: 8}}>{data.name}</Text>
+                    </View>
+                </View>
+            </>
+        );
+    } else if (data.job_type_id === 3) {
+        return (
+            <>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                    {data.signatureData.covered_villages.map((region, index) => (
+                        <View key={index}
+                              style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                            <Text style={{
+                                fontSize: 10,
+                                marginBottom: 5
+                            }}> {` بخشدار ${region.region_name}`}</Text>
+                            <Text style={{fontSize: 8}}>{region.bakhshdar.full_name}</Text>
                         </View>
-
-                        <View style={styles.table}>
-                            <View style={[styles.tableRow, styles.highlightedRow]}>
-                                <View style={{flex: 1, ...styles.tableColHeader}}>
-                                    <Text>۱ -استان: ایلام</Text>
-                                </View>
-                                <View style={{flex: 1, ...styles.tableColHeader}}>
-                                    <Text>شهرستان: ایلام</Text>
-                                </View>
-                                <View style={{flex: 2, ...styles.tableColHeader}}>
-                                    <Text>بخش: مرکزی / سیوان</Text>
-                                </View>
-                                <View style={{flex: 1, ...styles.tableColHeader}}>
-                                    <Text>تعداد دهیاری: ۳</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.highlightedRow]}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>۲ -دهیاری های تحت پوشش: زیفل / <Text style={styles.highlightedText}>پاکل گراب</Text> / کله کبود /</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 3.9, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>نام و نام خانوادگی طرف قرارداد : کبری جوانمردی</Text>
-                                    <Text style={{ marginLeft: -1 }}>-3</Text>
-                                </View>
-                                <View style={{ flex: 1.5, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>نام پدر : کرمرضا</Text>
-                                    <Text style={{ marginLeft: -1 }}>-4</Text>
-                                </View>
-                                <View style={{ flex: 2, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>کد ملی : 6340081738</Text>
-                                    <Text style={{ marginLeft: -1 }}>-5</Text>
-                                </View>
-                                <View style={{ flex: 1.8, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>وضعیت تاهل: مجرد</Text>
-                                    <Text style={{ marginLeft: -1 }}>-6</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 2, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>ﺷﻤﺎره ﺷﻨﺎﺳﻨﺎﻣﻪ: ۶۳۴۰۰۸۱۷۳۸</Text>
-                                    <Text style={{ marginLeft: -1 }}>-7</Text>
-                                </View>
-                                <View style={{ flex: 1.8, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>ﺗﺎرﯾﺦ ﺗﻮﻟﺪ: ۱۳۶۵/۰۴/۱۶</Text>
-                                    <Text style={{ marginLeft: -1 }}>-8</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>ﺟﻨﺴﯿﺖ: زن</Text>
-                                    <Text style={{ marginLeft: -1 }}>-9</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text>ﺗﻌﺪاد ﻓﺮزﻧﺪان:</Text>
-                                    <Text style={{ marginLeft: -1 }}>-10</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> وضعیت نظام وظیفه: ندارد</Text>
-                                    <Text style={{ marginLeft: 2 }}>-11</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text style={{ marginLeft: 2 }}>-12</Text>
-                                    <Text> وضعیت ایثارگری: ندارد</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> محل تولد: ایلام - سیروان</Text>
-                                    <Text style={{ marginLeft: 2 }}>-13</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> محل صدور شناسنامه: ایلام - ایلام</Text>
-                                    <Text style={{ marginLeft: 2 }}>-14</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> مدرک تحصیلی: کارشناسی ناپیوسته</Text>
-                                    <Text style={{ marginLeft: 2 }}>-15</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> رشته تحصیلی: مدیریت بازرگانی</Text>
-                                    <Text style={{ marginLeft: 2 }}>-16</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> تاریخ انتصاب: ۱۳۹۹/۱۰/۰۱</Text>
-                                    <Text style={{ marginLeft: 2 }}>-17</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> سابقه کار(ماه) : ۱۴</Text>
-                                    <Text style={{ marginLeft: 2 }}>-18</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> شماره حکم : ۹۷۸/۱۳/ه/گ/م</Text>
-                                    <Text style={{ marginLeft: 2 }}>-19</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> عنوان سمت: مسئول مالی دهیاری</Text>
-                                    <Text style={{ marginLeft: 2 }}>-20</Text>
-                                </View>
-                                <View style={{ flex: 1, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> مدت این قرارداد: از تاریخ : ۱۴۰۲/۰۱/۰۱ تا تاریخ : ۱۴۰۲/۱۲/۲۹</Text>
-                                    <Text style={{ marginLeft: 2 }}>-21</Text>
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow, styles.whiteRow]}>
-                                <View style={{ flex: 6, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> موضوع قرارداد: انجام وظایف تعیین شده برای امور مالی در چهار قوانین و مقررات</Text>
-                                    <Text style={{ marginLeft: 2 }}>-22</Text>
-                                </View>
-                                <View style={{ flex: 2, ...styles.tableCol, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                    <Text> محل اجرا : دهیاری های بند 2 قرارداد</Text>
-                                    {/*<Text style={{ marginLeft: 2 }}>-23</Text>*/}
-                                </View>
-                            </View>
-
-                            <View style={[styles.tableRow, { flexDirection: 'row-reverse' }]}>
-                                <View style={{ flex: 1, ...styles.tableCol, textAlign: 'right', padding: 5 }}>
-                                    <Text>۲۴- دستمزد ماهیانه به شرح زیر تعیین می‌شود: </Text>
-                                    <Text>دستمزد ماهیانه به شرح زیر تعیین می‌شود :</Text>
-                                    <Text>براساس دستورالعمل نحوه تعیین حقوق و مزایای امور مالی موضوع بخشنامه شماره ۱۶۱۹۸</Text>
-                                    <Text>مورخ ۱۴۰۲/۰۴/۰۳ سازمان شهرداری ها و دهیاریهای کشور و</Text>
-                                    <Text>بخشنامه شماره ۱۳۴۵۹۹/ت۵۸۷۵۶ شورا عالی کار حقوق و مزایای</Text>
-                                    <Text>شما طبق ارقام مندرج در ردیف ۲۳ این حکم تعیین می‌گردد که با</Text>
-                                    <Text>رعایت قانون و مقررات و پس از کسورات قانونی قابل پرداخت می‌باشد.</Text>
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <View style={[styles.tableRow, styles.greyBackground]}>
-                                        <View style={{ flex: 1, ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign }}>
-                                            <Text>الف- مزد ثابت</Text>
-                                        </View>
-                                        <View style={{ flex: 2 }}>
-                                            <View style={[styles.tableRow, styles.greyBackground]}>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>حقوق مبنا:</Text>
-                                                </View>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>۲۶,۹۸۳,۷۷۷ ریال</Text>
-                                                </View>
-                                            </View>
-                                            <View style={[styles.tableRow, styles.greyBackground]}>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>پایه سنواتی:</Text>
-                                                </View>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>۲,۵۶۵,۵۶۸ ریال</Text>
-                                                </View>
-                                            </View>
-                                            <View style={[styles.tableRow, styles.greyBackground]}>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>ﻓﻮق اﻟﻌﺎده ﺷﻐﻞ:</Text>
-                                                </View>
-                                                <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                                    <Text>۲,۴۲۸,۵۳۹ ریال</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۳۱,۹۷۷,۸۸۴ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>جمع مزد ثابت:</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۰ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>ب- کمک هزینه عائله مندی(حق اولاد):</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۴,۵۰۰,۰۰۰ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>ج- کمک هزینه مسکن:</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۵,۵۰۰,۰۰۰ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>د- کمک هزینه اقلام مصرفی خانوار:</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۵,۳۹۶,۷۵۵ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>ذ- فوق العاده محرومیت از تسهیلات زندگی:</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۰ ریال</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>ر- فوق العاده ایثارگری:</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={[styles.tableRow]}>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>جمع حقوق مزایا:</Text>
-                                        </View>
-                                        <View style={{ flex: 1, ...styles.tableCol, ...styles.textCenter }}>
-                                            <Text>۴۷,۳۷۴,۶۳۹ ریال</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۲۵- ﻃﺮف ﻗﺮارداد ﺗﺎﺑﻊ ﻣﻘﺮرات،ﺿﻮاﺑﻂ و آﺋﯿﻦ ﻧﺎﻣﻪ ﻫﺎی ﻣﺮﺑﻮط ﺑﻪ دﻫﯿﺎری ، ﻗﺎﻧﻮن کار و
-                                        ﻗﺎﻧﻮن ﺗﺎﻣﯿﻦ اﺟﺘﻤﺎﻋی ﺑﻮده و از ﻣﺰاﯾﺎی ﻗﻮاﻧﯿﻦ ﻣﺬکﻮر ﺑﻬﺮه ﻣﻨﺪ می ﺷﻮد.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۲۶ - ﻣﻮارد ﺧﺎﺗﻤﻪ کﺎر ﻃﺮف ﻗﺮارداد ﺑﻪ اﺳﺘﻨﺎد ﻣﺎده ۲۱ ﻗﺎﻧﻮن کﺎر ﻣی ﺑﺎﺷﺪ.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۲۷- ﻣﺎﻣﻮرﯾﺖ و ﻣﺮﺧﺼی اﻣﻮرﻣﺎﻟی دﻫﯿﺎری ﺑﻪ اﺳﺘﻨﺎد اﺻﻼﺣﯿﻪ ﻣﺎده ۱۲ آﺋﯿﻦ ﻧﺎﻣﻪ اﺳﺘﺨﺪاﻣی
-                                        دﻫﯿﺎری ﻫﺎی کﺸﻮر ﺑﺎ تایید ﺑﺨﺸﺪار ﺻﻮرت ﻣی گﯿﺮد.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۲۸ - ﻣﺰاﯾﺎی پﺎﯾﺎن ﻗﺮارداد ﻃﺒﻖ ﻗﺎﻧﻮن کﺎر و ﺑﺮاﺳﺎس ﺣﻘﻮق و دﺳﺘﻤﺰد ﻣﻨﺪرج در ﻗﺮارداد از
-                                        ﻣﺤﻞ اﻋﺘﺒﺎرات دﻫﯿﺎری ﻫﺎی ﺑﻨﺪ ۲ ﻃﺮف ﻗﺮارداد پﺮداﺧﺖ ﻣی ﺷﻮد.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        <Text style={styles.textCenter}>۲۹ - ﺗﻌﻬﺪات ﻗﺮارداد:</Text>
-                                        - ﻃﺮف ﻗﺮارداد ﻣﺘﻬﻌﺪ اﺳﺖ ﻣﻄﺎﺑﻖ ﺷﺮح وﻇﺎﯾﻒ ﻣﻨﺪرج در ﻣﻘﺮرات و ﺿﻮاﺑﻂ،ﻧﺴﺒﺖ ﺑﻪ اﻧﺠﺎم ﻣﻮﺿﻮع
-                                        ﻗﺮارداد اﻗﺪام کﻨﺪ.
-                                        - ﻃﺮف ﻗﺮارداد اﻗﺮار ﻣی کﻨﺪ ﻣﺸﻤﻮل ﻗﺎﻧﻮن ﻣﻨﻊ ﻣﺪاﺧﻠﻪ کﺎرکﻨﺎن دوﻟﺖ در ﻣﻌﺎﻟﻤﺎت دوﻟﺘی ﻣﺼﻮب
-                                        ۱۳۷۷ ﻧﯿﺴﺖ .
-                                        - ﻋﻘﺪ ﻗﺮارداد ﻫﯿﭽﮕﻮﻧﻪ ﺗﻌﻬﺪی ﻣﺒﻨﯽ ﺑﺮ اﺳﺘﺨﺪام اﻋﻢ از رﺳﻤﯽ ﯾﺎ پﯿﻤﺎﻧﯽ اﻋﻢ از ﺳﻮی دﻫﯿﺎری
-                                        ﺑﺮای ﻃﺮف ﻗﺮارداد اﯾﺠﺎد ﻧﻤی کﻨﺪ.
-                                        - ﻃﺮف ﻗﺮارداد ﻣﺴﺌﻮل ﺣﻔﻆ و نگهداری وﺳﺎﯾﻞ و اﻣﻮال در اﺧﺘﯿﺎر اﺳﺖ و در ﺻﻮرت اﯾﺠﺎد ﺧﺴﺎرت
-                                        ،دﻫﯿﺎری ﻣی ﺗﻮاﻧﺪ از ﻣﺤﻞ ﻗﺮارداد ﺧﺴﺎرت را ﺟﺒﺮان کﻨﺪ
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۳۰- اﻣﻀﺎی ذﯾﻞ اﯾﻦ ﻗﺮارداد از ﺳﻮی ﺑﺨﺸﺪار ﺻﺮﻓﺎ ﺟﻬﺖ اﺟﺮای ﻣﺎده ۱۶ اﺳﺎﺳﻨﺎﻣﻪ ، ﺗﺴﻬﯿﻼت و
-                                        ﺳﺎزﻣﺎن دﻫﯿﺎری ﻫﺎ ﻣﺼﻮب ۱۳۸۰ و اﻣﻀﺎی ﻣﺴﺌﻮل اﻣﻮرﻣﺎﻟی دﻫﯿﺎری دﻫﯿﺎری ﺑﻪ اﺳﺘﻨﺎد ﻣﺎده ۱۱
-                                        آﻦ ﻧﺎﻣﻪ اﺳﺘﺨﺪاﻣی دﻫﯿﺎری ﻫﺎی کﺸﻮر ﻣی ﺑﺎﺷﺪ دﻫﯿﺎری پﺎکﻞ گﺮاب ﺑﻪ ﻧﻤﺎﯾﻨﺪگی از دﻫﯿﺎری ﻫﺎی
-                                        ﺑﻨﺪ ۲ اﯾﻦ ﻗﺮارداد ﺑﻪ ﻋﻨﻮان دﻫﯿﺎری کﺎرﻓﺮﻣﺎ ﺗﻌﻦ ﻣی گﺮدد.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>
-                                        ۳۱- اﯾﻦ ﻗﺮارداد در ۵ ﻧﺴﺨﻪ ﺗﻨﻈﯿﻢ و ﻫﺮ ﻧﺴﺨﻪ ﺣکﻢ واﺣﺪ را دارد و پﺲ از اﻣﻀﺎ و ﻣﻬﺮ و ﺛﺒﺖ
-                                        ﻣﻌﺘﺒﺮ ﺧﻮاﻫﺪ ﺑﻮد.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>۳۲- ﺗﺎرﯾﺦ اﺟﺮای ﻗﺮارداد: ۱۴۰۲/۰۱/۰۱</Text>
-                                </View>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>۳۳- ﺷﻨﺎﺳﻪ یکتا : ۱۴۰۰۸۸۱۲۹۳۴</Text>
-                                </View>
-                                <View style={{flex: 1, ...styles.tableCol}}>
-                                    <Text>۳۴- ﺷﻤﺎره و ﺗﺎرﯾﺦ ﺻﺪور ﻗﺮارداد: ۴۰۷ - ۱۴۰۲/۰۴/۲۶</Text>
-                                </View>
-                            </View>
-                            <View style={styles.tableRow}>
-                                <View style={[styles.tableCol, {flex: 1, textAlign: 'center'}]}>
-                                    <Text>ﻃﺮف ﻗﺮارداد ( امورمالی دﻫﯿﺎری )</Text>
-                                    <Text>کﺒﺮی ﺟﻮاﻧﻤﺮدی</Text>
-                                </View>
-                                <View style={[styles.tableCol, {flex: 1, textAlign: 'center'}]}>
-                                    <Text>دﻫﯿﺎری کارفرما ( پاکل گراب )</Text>
-                                    <Text>ﻧﻌﻤﺖ اﷲ ﻧﻮری</Text>
-                                </View>
-                                <View style={[styles.tableCol, {flex: 1, textAlign: 'center'}]}>
-                                    <Text>ﺑﺨﺸﺪار مرکزی</Text>
-                                    <Text>ﺻﻔﯿﻪ علی اوﻻد</Text>
-                                </View>
-                                <View style={[styles.tableCol, {flex: 1, textAlign: 'center'}]}>
-                                    <Text>ﺑﺨﺸﺪار ﺳﯿﻮان</Text>
-                                    <Text>آزاد شریفی ﻧژاد</Text>
-                                </View>
-                            </View>
+                    ))}
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`دهیاری منتخب (${data.villageName})`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (امور مالی)`}</Text>
+                        <Text style={{fontSize: 8}}>{data.name}</Text>
+                    </View>
+                </View>
+            </>
+        );
+    }else if(data.job_type_id === 4){
+        return (
+            <>
+                <View style={{flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap'}}>
+                    {data.signatureData.covered_villages.map((region, index) => (
+                        <View key={index}
+                              style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                            <Text style={{
+                                fontSize: 10,
+                                marginBottom: 5
+                            }}> {` بخشدار ${region.region_name}`}</Text>
+                            <Text style={{fontSize: 8}}>{region.bakhshdar.full_name}</Text>
                         </View>
+                    ))}
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`مسئول امور مالی دهیاری ها`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.financial_responsible}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`دهیاری منتخب (${data.villageName})`}</Text>
+                        <Text style={{fontSize: 8}}>{data.signatureData.village_employer.full_name}</Text>
+                    </View>
+                    <View style={{flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center'}}>
+                        <Text style={{fontSize: 10, marginBottom: 5}}>{`طرف قرارداد (امور فنی)`}</Text>
+                        <Text style={{fontSize: 8}}>{data.name}</Text>
+                    </View>
+                </View>
+            </>
+        );
+    }
+};
 
-                        <View style={styles.footer}>
-                            <Text>ﺻﻔﺤﻪ ١</Text>
-                            <Text>ﺳﺎﻣﺎﻧﻪ ﻋﻤﻠکﺮد دﻫﯿﺎری ﻫﺎ - dehyar.net</Text>
+const renderRemainDay = (contract_type, data) => {
+    if (contract_type == 1) {
+        return (
+            <>
+                <View style={[styles.tableRow]}>
+                    <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                            <Text style={{marginRight: 4}}>ریال</Text>
+                            <Text>{data.remainDay}</Text>
                         </View>
                     </View>
-                </Page>
-            </Document>
+                    <View style={{flex: 2.130, ...styles.tableCol, ...styles.textCenter}}>
+                        <Text>:مابه التفاوت روز های کارکرد</Text>
+                    </View>
+                </View>
+            </>
         );
-    };
+    }
+};
 
-    export default MyDocument;
+const renderJobType = (data) => {
+    const jobTypeId = data.job_type_id;
+    if (jobTypeId === 1) {
+        return ':مزایای سرپرستی';
+    } else if (jobTypeId === 3 || jobTypeId === 4) {
+        return ':حق مسئولیت ';
+    } else {
+        return '';
+    }
+};
+
+const MyDocument = ({data}) => (
+    <Document>
+        <Page style={styles.page}>
+            <View style={styles.container}>
+                <Header title={`قرارداد${data.convertStatus ? " دائم" : ""} مدت معین و حکم حقوقی ${data.jobName} ${data.contractType}`}/>
+
+                <View style={[styles.table]}>
+                    {renderTableRowsByJobTitle(data, data.job_type_id)}
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {width: '40%', text: `نام و نام خانوادگی : ${data.name}`},
+                            {width: '25%', text: `نام پدر : ${data.fatherName}`},
+                            {width: '35%', text: `کد ملی : ${data.nationalId}`},
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {width: '20%', text: `وضعیت تاهل: ${data.maritalStatus}`},
+                            {width: '30%', text: `شماره شناسنامه: ${data.idNumber}`},
+                            {width: '30%', text: `تاریخ تولد: ${data.birthDate}`},
+                            {width: '20%', text: `جنسیت: ${data.gender}`},
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {width: '20%', text: `تعداد فرزندان: ${data.childrenCount}`},
+                            {width: '40%', text: `وضعیت ایثارگری: ${data.isaarStatus}`},
+                            {width: '40%', text: `وضعیت نظام وظیفه: ${data.militaryStatus}`},
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {width: '40%', text: `مدرک تحصیلی: ${data.education}`},
+                            {width: '60%', text: `رشته تحصیلی: ${data.major}`}
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {width: '30%', text: `محل تولد: ${data.birthPlace}`},
+                            {width: '30%', text: `محل صدور شناسنامه: ${data.issuePlace}`},
+                            {width: '40%', text: `سمت: ${data.jobName}`}
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '50%',
+                                text: `مدت این قرارداد: از تاریخ : ${data.contractStartDate} تا تاریخ : ${data.contractEndDate}`
+                            },
+                            {width: '25%', text: `تاریخ انتصاب: ${data.appointmentDate}`},
+                            {width: '25%', text: `سابقه کار (ماه) : ${data.experience}`}
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={[styles.whiteRow]}
+                        data={[
+                            {width: '100%', text: `موضوع قرارداد: ${data.contractSubject}`}
+                        ]}
+                    />
+                    <View style={[styles.tableRow, {flexDirection: 'row-reverse',        borderRight: '1px solid #dfdfdf',
+                    }]}>
+                        <View style={{
+                            width: '40%',
+                            margin: 10,
+                            lineHeight: 2,
+                            direction: 'rtl',
+                            position: 'relative',
+
+                        }}>
+                            <Text style={{
+                                textAlign: 'right',
+                                direction: 'rtl',
+                                writingDirection: 'rtl',
+                                display: 'block',
+                            }}>
+                                {data.contractDescription.split('\n').slice(-1)}
+                            </Text>
+                        </View>
+                        <View style={{width: '60%'}}>
+                            <View style={[styles.tableRow, styles.greyBackground]}>
+                                <View
+                                    style={{width: '100%', ...styles.tableColHeader, ...styles.textCenter, ...styles.centerAlign}}>
+                                    <Text>الف- مزد ثابت</Text>
+                                </View>
+                                <View style={{width: '100%'}}>
+                                    <View style={[styles.tableRow, styles.greyBackground]}>
+                                        <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:حقوق مبنا</Text>
+                                        </View>
+                                        <View style={{
+                                            width: '50%', ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.baseSalary}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.tableRow, styles.greyBackground]}>
+                                        <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:پایه سنواتی</Text>
+                                        </View>
+                                        <View style={{
+                                            width: '50%', ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.yearlyBase}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.tableRow, styles.greyBackground]}>
+                                        <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>:فوق‌العاده شغل</Text>
+                                        </View>
+                                        <View style={{
+                                            width: '50%', ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.jobBonus}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.tableRow, styles.greyBackground]}>
+                                        <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                            <Text>{renderJobType(data)}</Text>
+                                        </View>
+                                        <View style={{
+                                            width: '50%', ...styles.tableCol, ...styles.textCenter,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-start'
+                                        }}>
+                                            <Text style={{marginRight: 4}}>ریال</Text>
+                                            <Text>{data.supervisor_benefits}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.totalFixedWage}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:جمع مزد ثابت</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.married_benifits}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:حق تاهل</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.familyAllowance}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه عائله‌مندی(حق اولاد)</Text>
+                                </View>
+                            </View>
+                            {renderRemainDay(data.contract_type_id, data)}
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.housingAllowance}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه مسکن</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.householdAllowance}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:کمک هزینه اقلام مصرفی خانوار</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        whiteSpace: 'nowrap',
+                                        flexShrink: 0
+                                    }}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.deprivationBonus}</Text>
+                                    </View>
+                                </View>
+                                <View style={{
+                                    width: '50%', ...styles.tableCol, ...styles.textCenter,
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    <Text>:فوق العاده محرومیت از تسهیلات زندگی</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.veteransBonus}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:فوق العاده ایثارگری</Text>
+                                </View>
+                            </View>
+
+                            <View style={[styles.tableRow]}>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+                                        <Text style={{marginRight: 4}}>ریال</Text>
+                                        <Text>{data.totalSalary}</Text>
+                                    </View>
+                                </View>
+                                <View style={{width: '50%', ...styles.tableCol, ...styles.textCenter}}>
+                                    <Text>:جمع حقوق مزایا</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+
+                    <TableRow
+                        rowStyle={[styles.whiteRow,{        borderTop: '1px solid #dfdfdf',}]}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `${data.contractClause1}`
+                            }
+                        ]}
+                    />
+
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `${data.contractClause2}`
+                            }
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `.${data.contractClause3}`
+                            }
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `.${data.contractClause4}`
+                            }
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `: تعهدات قرارداد \n${data.commitment1}\n ${data.commitment2}\n ${data.commitment3}\n ${data.commitment4}`,
+                                style: {
+                                    flexDirection: 'row',
+                                    alignItems: 'flex-start',
+                                    padding: '5px',
+                                    width: '100%',
+                                    whiteSpace: 'pre-wrap'
+                                }
+                            }
+                        ]}
+                    />
+
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: (
+                                    <Text>
+                                        {data.signingNote}
+                                    </Text>
+                                )
+                            }
+                        ]}
+                    />
+                    <TableRow
+                        rowStyle={styles.whiteRow}
+                        data={[
+                            {
+                                width: '100%',
+                                text: `${data.finalNote}`
+                            }
+                        ]}
+                    />
+                        <TableRow
+                            rowStyle={[styles.whiteRow]}
+                            data={[
+                                { width: '30%', text: `تاریخ اجرای قرارداد: ${data.executionDate}` },
+                                { width: '45%', text: `شناسه یکتا : ${data.uniqueId}` },
+                                { width: '35%', text: `شماره و تاریخ قرارداد: ${data.contractNumber}` }
+                            ]}
+                        />
+                        {renderSignatoriesByJobTitle(data)}
+
+                </View>
+
+                <Footer/>
+            </View>
+        </Page>
+    </Document>
+);
+
+export default MyDocument;
+
+

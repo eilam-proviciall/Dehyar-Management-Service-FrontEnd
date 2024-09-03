@@ -28,7 +28,7 @@ const jobTitleOptions = [
   }
 ];
 
-export const getJobTitleLabel = (value) => {
+const getJobTitleLabel = (value) => {
   for (const group of jobTitleOptions) {
     const title = group.titles.find(title => title.value === value);
     if (title) {
@@ -37,4 +37,6 @@ export const getJobTitleLabel = (value) => {
   }
   return "عنوان نامشخص"; // در صورتی که عنوان پیدا نشود
 };
+
+export { getJobTitleLabel };
 export default jobTitleOptions;

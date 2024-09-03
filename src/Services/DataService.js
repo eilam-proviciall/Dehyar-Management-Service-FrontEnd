@@ -5,5 +5,8 @@ const getCfoCoveredVillage= () => {
     return `${BaseUrl}/cfo-covered-village`
 }
 
+const getVillageEmployerDetail =() => {
+    return `${BaseUrl}/village-employer/detail`
+}
 
-export {getCfoCoveredVillage}
+export {getCfoCoveredVillage,getVillageEmployerDetail}

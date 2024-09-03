@@ -14,6 +14,7 @@ import { getCfoCoveredVillage } from "@/Services/DataService";
 function StatusBar({ onVillageSelect }) {
     const [villages, setVillages] = useState([]);
     const [selectedVillage, setSelectedVillage] = useState('');
+    const [villageInfo, setVillageInfo] = useState({ grade: '', gradeDate: '', coverCount: 0, population: {} });
 
     useEffect(() => {
         axios.get(getCfoCoveredVillage(), {
@@ -26,8 +27,13 @@ function StatusBar({ onVillageSelect }) {
                 setVillages(villageData);
                 if (villageData.length > 0) {
                     const defaultVillage = villageData[0].village.hierarchy_code;
-                    console.log(defaultVillage)
                     setSelectedVillage(defaultVillage);
+                    setVillageInfo({
+                        grade: villageData[0].village.villageInformation?.grade || '',
+                        gradeDate: villageData[0].village.villageInformation?.grade_date || '',
+                        coverCount: villageData[0].cover_count || 0,
+                        population: villageData[0].village.villageInformation?.latest_population || {}
+                    });
                     onVillageSelect(defaultVillage);
                 }
             })
@@ -39,7 +45,21 @@ function StatusBar({ onVillageSelect }) {
     const handleVillageChange = (event) => {
         const villageId = event.target.value;
         setSelectedVillage(villageId);
+        const selectedVillageData = villages.find(village => village.village.hierarchy_code === villageId);
+        if (selectedVillageData) {
+            setVillageInfo({
+                grade: selectedVillageData.village.villageInformation?.grade || '',
+                gradeDate: selectedVillageData.village.villageInformation?.grade_date || '',
+                coverCount: selectedVillageData.cover_count || 0,
+                population: selectedVillageData?.latest_population || {}
+            });
+        }
         onVillageSelect(villageId);
+    };
+
+    const getProgressValue = (value, max) => {
+        if (!value) return 0;
+        return (value / max) * 100;
     };
 
     return (
@@ -79,17 +99,17 @@ function StatusBar({ onVillageSelect }) {
                                 <Typography className='font-medium' color='text.primary'>
                                     درجه دهیاری :
                                 </Typography>
-                                <Typography>{4}</Typography>
+                                <Typography>{villageInfo.grade || 'نامشخص'}</Typography>
                             </div>
-                            <Chip size='small' variant='tonal' color="primary" label={`1402/03/08`} />
+                            {villageInfo.gradeDate && (
+                                <Chip size='small' variant='tonal' color="primary" label={villageInfo.gradeDate} />
+                            )}
                         </div>
                         <div>
-                            <div className='flex items-center justify-between mbe-2'>
-                            </div>
                             <LinearProgress
                                 color='primary'
                                 variant='determinate'
-                                value={Math.round(80)}
+                                value={getProgressValue(villageInfo.grade, 6)}
                                 className='bs-2'
                             />
                         </div>
@@ -104,17 +124,17 @@ function StatusBar({ onVillageSelect }) {
                                 <Typography className='font-medium' color='text.primary'>
                                     پست سازمانی:
                                 </Typography>
-                                <Typography>{4}</Typography>
+                                <Typography>{villageInfo.coverCount}</Typography>
                             </div>
-                            <Chip size='small' variant='tonal' color="primary" label={`11/2`} />
+                            {villageInfo.coverCount > 0 && (
+                                <Chip size='small' variant='tonal' color="primary" label={villageInfo.coverCount} />
+                            )}
                         </div>
                         <div>
-                            <div className='flex items-center justify-between mbe-2'>
-                            </div>
                             <LinearProgress
                                 color='primary'
                                 variant='determinate'
-                                value={Math.round(80)}
+                                value={getProgressValue(villageInfo.coverCount, 11)}
                                 className='bs-2'
                             />
                         </div>
@@ -122,7 +142,7 @@ function StatusBar({ onVillageSelect }) {
                 </Card>
             </Box>
             <Box item xs={12} sm={6} lg={3}>
-                <FamillyStatus />
+                <FamillyStatus population={villageInfo.population} />
             </Box>
         </div>
     );

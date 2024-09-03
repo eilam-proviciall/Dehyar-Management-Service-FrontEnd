@@ -53,11 +53,16 @@ const ModeDropdown = () => {
       return 'ri-sun-line'
     }
   }
-
+  const getModeTitle = (mode) => ({
+    dark: 'تیره',
+    light: 'روشن',
+    system: 'سیستم'
+  }[mode] || '');
+  const title = `تم ${getModeTitle(settings.mode)}`;
   return (
     <>
       <Tooltip
-        title={settings.mode + ' Mode'}
+        title={title}
         onOpen={() => setTooltipOpen(true)}
         onClose={() => setTooltipOpen(false)}
         open={open ? false : tooltipOpen ? true : false}
@@ -89,7 +94,7 @@ const ModeDropdown = () => {
                     selected={settings.mode === 'light'}
                   >
                     <i className='ri-sun-line' />
-                    Light
+                    روشن
                   </MenuItem>
                   <MenuItem
                     className='gap-3 pli-4'
@@ -97,7 +102,7 @@ const ModeDropdown = () => {
                     selected={settings.mode === 'dark'}
                   >
                     <i className='ri-moon-clear-line' />
-                    Dark
+                    تیره
                   </MenuItem>
                   <MenuItem
                     className='gap-3 pli-4'
@@ -105,7 +110,7 @@ const ModeDropdown = () => {
                     selected={settings.mode === 'system'}
                   >
                     <i className='ri-computer-line' />
-                    System
+                    سیستم
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
