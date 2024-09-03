@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Chart from "@views/dehyari/chart/Chart";
 
 function Page(props) {
@@ -28,7 +28,7 @@ function Page(props) {
     }, []);
     return (
         <div>
-            <Chart/>
+            <Chart />
         </div>
     );
 }
