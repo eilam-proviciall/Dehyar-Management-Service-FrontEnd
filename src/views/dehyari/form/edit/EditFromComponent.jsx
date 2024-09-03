@@ -7,6 +7,7 @@ import EditFormContent from './EditFormContent';
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 import EditProfilePictureUpload from "@views/dehyari/form/edit/EditProfilePictureUpload";
 import validationSchemas from "@views/dehyari/form/validationSchemas";
+import EditTableComponent from "@views/dehyari/form/edit/Tables/EditTableComponent";
 
 const sampleData = {
     fullName: 'علی رضایی',
@@ -45,22 +46,13 @@ function EditFromComponent() {
     return (
         <Grid container spacing={6}>
             <FormProvider {...methods}>
-                <Grid item xs={12} md={9}>
+                <Grid item xs={12} md={8}>
                     <Card>
-                        {/*<CardContent className='sm:!p-12'>*/}
-                            <EditFormContent validationSchemas={validationSchemas}/>
-                        {/*</CardContent>*/}
+                        <EditFormContent validationSchemas={validationSchemas} />
                     </Card>
                 </Grid>
-                <Grid item xs={12} md={3}>
-                    <Grid container spacing={6}>
-                        <Grid item xs={12}>
-                            <EditProfilePictureUpload />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} />
-                        </Grid>
-                    </Grid>
+                <Grid item xs={12} md={4}>
+                    <EditTableComponent />
                 </Grid>
             </FormProvider>
         </Grid>

@@ -1,33 +1,29 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {MaterialReactTable} from 'material-react-table';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MaterialReactTable } from 'material-react-table';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import axios from 'axios';
+import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from '@/Services/humanResources';
 import Chip from "@mui/material/Chip";
-import {IconButton, Menu, MenuItem} from '@mui/material';
-import axios from "axios";
-import {DownloadHumanResourcePdf, GetHumanResourcesForCfo} from "@/Services/humanResources";
-import contractType from "@data/contractType.json";
-import PersonalOption from "@data/PersonalOption.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import MyDocument from "@components/MyDocument";
-import {pdf} from "@react-pdf/renderer";
-import HumanResourceDTO from "@/utils/HumanResourceDTO";
-
-function CfoTable(props) {
+import { pdf } from "@react-pdf/renderer";
+import HumanResourceDTO from "@utils/HumanResourceDTO";
+import contractType from "@data/contractType.json";
+import PersonalOption from "@data/PersonalOption.json";
+function InsuranceTable() {
     const [data, setData] = useState([]);
-    const [humanResourceData, setHumanResourceData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
-    const router = useRouter();
-    const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption
+
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
     };
+
     const handleDownloadPdf = async (row) => {
         try {
             const response = await axios.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {
@@ -36,9 +32,8 @@ function CfoTable(props) {
                 }
             });
 
-            const humanResourceData = response. data;
+            const humanResourceData = response.data;
             const data = new HumanResourceDTO(humanResourceData);
-            console.log(humanResourceData)
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
@@ -54,21 +49,6 @@ function CfoTable(props) {
         }
     };
 
-
-    const handleError = (error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-            toast.error(`محاسبه ناموفق بود: ${error.response.data.message}`, { position: "top-center" });
-        } else if (error.response && error.response.data.errors) {
-            Object.keys(error.response.data.errors).forEach((key) => {
-                error.response.data.errors[key].forEach((message) => {
-                    toast.error(message, { position: "top-center" });
-                });
-            });
-        } else {
-            toast.error("محاسبه ناموفق بود", { position: "top-center" });
-        }
-        console.error("Error fetching human resource data:", error);
-    };
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -82,7 +62,6 @@ function CfoTable(props) {
                     },
                 });
                 setData(response.data);
-                setLoading(false);
             } catch (error) {
                 if (error.response && error.response.status === 403) {
                     toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!', {
@@ -91,7 +70,6 @@ function CfoTable(props) {
                 } else {
                     toast.error('خطا در دریافت اطلاعات');
                 }
-                setLoading(false);
             }
         };
 
@@ -106,29 +84,29 @@ function CfoTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'full_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_type',
                 header: 'نوع قرار داد',
                 size: 150,
-                Cell: ({cell}) => {
+                Cell: ({ cell }) => {
                     const role = cell.getValue();
                     return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary"/>
+                        <div style={{ textAlign: 'right' }}>
+                            <Chip label={contractType[role]} color="primary" />
                         </div>
                     );
                 },
@@ -137,18 +115,18 @@ function CfoTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                         <IconButton
                             aria-label="more"
                             aria-controls={open ? 'long-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
                             aria-haspopup="true"
                             onClick={(event) => handleClick(event, row)}
-                            style={{paddingLeft: 0}}
+                            style={{ paddingLeft: 0 }}
                         >
                             <MoreVertIcon
-                                style={{textAlign: "center", justifyContent: 'center', alignItems: 'center'}}/>
+                                style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
                         </IconButton>
                         <Menu
                             id="long-menu"
@@ -175,10 +153,6 @@ function CfoTable(props) {
         [anchorEl, selectedRow]
     );
 
-    if (loading) {
-        return <div>در حال بارگذاری...</div>;
-    }
-
     return (
         <MaterialReactTable
             columns={columns}
@@ -187,4 +161,4 @@ function CfoTable(props) {
     );
 }
 
-export default CfoTable;
+export default InsuranceTable;
