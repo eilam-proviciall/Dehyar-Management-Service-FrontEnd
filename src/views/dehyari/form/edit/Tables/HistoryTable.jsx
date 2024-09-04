@@ -1,28 +1,44 @@
 "use client";
 import React, { useMemo, useState, useEffect } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
+import { Box, Button, Modal, Backdrop, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion'; // Import framer-motion
 import axios from "axios";
 import { GetHumanResourcesForCfo } from '@/Services/humanResources';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import contractType from "@data/contractType.json";
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 40,
+    p: 4,
+};
+
 function HistoryTable() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
-    const open = Boolean(anchorEl);
+    const [open, setOpen] = useState(false); // State برای مدیریت باز و بسته شدن Modal
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
     };
 
-    const handleClose = () => {
+    const handleCloseMenu = () => {
         setAnchorEl(null);
     };
+
+    const handleOpenModal = () => setOpen(true); // باز کردن Modal
+    const handleCloseModal = () => setOpen(false); // بستن Modal
 
     useEffect(() => {
         setLoading(true);
@@ -60,7 +76,7 @@ function HistoryTable() {
             },
             {
                 accessorKey: 'contract_type',
-                header: 'نوع قرار داد',
+                header: 'نوع قرارداد',
                 size: 150,
                 Cell: ({ cell }) => {
                     const role = cell.getValue();
@@ -93,10 +109,10 @@ function HistoryTable() {
                                 'aria-labelledby': 'long-button',
                             }}
                             anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
+                            open={Boolean(anchorEl)}
+                            onClose={handleCloseMenu}
                         >
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem onClick={handleCloseMenu}>
                                 <Link href={`/dehyari/form?mode=edit&id=${row.original.id}`}>
                                     ویرایش
                                 </Link>
@@ -106,12 +122,19 @@ function HistoryTable() {
                 ),
             },
         ],
-        [anchorEl, selectedRow]
+        [anchorEl]
     );
 
     const table = useMaterialReactTable({
         columns,
         data,
+        renderTopToolbarCustomActions: () => (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                    افزودن کاربر
+                </Button>
+            </Box>
+        ),
         initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
         state: {
             isLoading: loading, // نشان دادن لودینگ پیش‌فرض
@@ -139,9 +162,42 @@ function HistoryTable() {
     });
 
     return (
-        <MaterialReactTable
-            table={table}
-        />
+        <div>
+            <MaterialReactTable table={table} />
+
+            {/* Modal Component */}
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={open}
+                onClose={handleCloseModal}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                    sx: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)', // تنظیم رنگ تیره با شفافیت 50%
+                    },
+                }}
+            >
+
+            <AnimatePresence>
+                    {open && (
+                        <motion.div
+                        >
+                            <Box sx={style}>
+                                <Typography id="transition-modal-title" variant="h6" component="h2">
+                                    افزودن کاربر
+                                </Typography>
+                                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                                    این یک مثال از محتویات داخل یک modal است.
+                                </Typography>
+                            </Box>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </Modal>
+        </div>
     );
 }
 
