@@ -1,6 +1,6 @@
-"use client"
-import React from 'react';
-import { Grid, Card, CardContent } from '@mui/material';
+"use client";
+import React, { useState } from 'react';
+import { Grid, Card } from '@mui/material';
 import { useForm, FormProvider } from 'react-hook-form';
 import EditButtonGroup from './EditButtonGroup';
 import EditFormContent from './EditFormContent';
@@ -8,6 +8,7 @@ import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 import EditProfilePictureUpload from "@views/dehyari/form/edit/EditProfilePictureUpload";
 import validationSchemas from "@views/dehyari/form/validationSchemas";
 import EditTableComponent from "@views/dehyari/form/edit/Tables/EditTableComponent";
+import { motion, AnimatePresence } from 'framer-motion'; // Import Framer Motion and AnimatePresence
 
 const sampleData = {
     fullName: 'علی رضایی',
@@ -34,13 +35,19 @@ const sampleData = {
 function EditFromComponent() {
     // تبدیل JSON به یک نمونه از DTO
     const dto = new EditHumanResourceFormDTO(sampleData);
-    console.log(dto)
+    console.log(dto);
     const methods = useForm({
         defaultValues: dto,
     });
 
+    const [showTable, setShowTable] = useState(false); // State for switching between form and table
+
     const onSubmit = data => {
         console.log('Form Data:', data);
+    };
+
+    const handleSwitch = () => {
+        setShowTable(!showTable); // Toggle between form and table
     };
 
     return (
@@ -48,7 +55,30 @@ function EditFromComponent() {
             <FormProvider {...methods}>
                 <Grid item xs={12} md={9}>
                     <Card>
-                            <EditFormContent validationSchemas={validationSchemas}/>
+                        <AnimatePresence mode="wait">
+                            {/* Animation for switching between form and table */}
+                            {showTable ? (
+                                <motion.div
+                                    key="table"
+                                    initial={{ opacity: 0, x: 50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <EditTableComponent />
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="form"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 50 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    <EditFormContent validationSchemas={validationSchemas} />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={3}>
@@ -57,7 +87,7 @@ function EditFromComponent() {
                             <EditProfilePictureUpload />
                         </Grid>
                         <Grid item xs={12}>
-                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} />
+                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} onSwitch={handleSwitch} />
                         </Grid>
                     </Grid>
                 </Grid>
