@@ -1,20 +1,16 @@
-"use client"
-import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable } from 'material-react-table';
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import axios from 'axios';
+"use client";
+import React, { useMemo, useState, useEffect } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import axios from "axios";
 import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from '@/Services/humanResources';
-import Chip from "@mui/material/Chip";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
-import { toast } from "react-toastify";
-import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
-import HumanResourceDTO from "@utils/HumanResourceDTO";
 import contractType from "@data/contractType.json";
-import PersonalOption from "@data/PersonalOption.json";
+
 function InsuranceTable() {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
@@ -24,59 +20,23 @@ function InsuranceTable() {
         setSelectedRow(row);
     };
 
-    const handleDownloadPdf = async (row) => {
-        try {
-            const response = await axios.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                }
-            });
-
-            const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
-            const asPdf = pdf([]);
-            asPdf.updateContainer(doc);
-            const blob = await asPdf.toBlob();
-
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            toast.success('محاسبه موفق بود', { position: "top-center" });
-        } catch (error) {
-            console.error('Error downloading or rendering PDF:', error);
-            toast.error(error.response.data.message, { position: "top-center" });
-        }
-    };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(GetHumanResourcesForCfo(), {
-                    headers: {
-                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                    },
-                });
-                setData(response.data);
-            } catch (error) {
-                if (error.response && error.response.status === 403) {
-                    toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!', {
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error('خطا در دریافت اطلاعات');
-                }
-            }
-        };
-
-        fetchData();
+        setLoading(true);
+        axios.get(GetHumanResourcesForCfo(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+            },
+        }).then((response) => {
+            setData(response.data);
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
     }, []);
-
-    const tableData = useMemo(() => data, [data]);
 
     const columns = useMemo(
         () => [
@@ -125,8 +85,7 @@ function InsuranceTable() {
                             onClick={(event) => handleClick(event, row)}
                             style={{ paddingLeft: 0 }}
                         >
-                            <MoreVertIcon
-                                style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
+                            <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
                         </IconButton>
                         <Menu
                             id="long-menu"
@@ -142,9 +101,6 @@ function InsuranceTable() {
                                     ویرایش
                                 </Link>
                             </MenuItem>
-                            <MenuItem onClick={() => handleDownloadPdf(selectedRow.original)}>
-                                حکم کارگزینی
-                            </MenuItem>
                         </Menu>
                     </div>
                 ),
@@ -153,10 +109,38 @@ function InsuranceTable() {
         [anchorEl, selectedRow]
     );
 
+    const table = useMaterialReactTable({
+        columns,
+        data,
+        initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        state: {
+            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
+            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
+        },
+        muiSkeletonProps: {
+            animation: 'wave', // تنظیم انیمیشن Skeletons
+            height: 28, // ارتفاع Skeletons
+        },
+        muiLinearProgressProps: {
+            color: 'primary', // رنگ Progress Bars
+        },
+        muiPaginationProps: {
+            color: 'primary',
+            shape: 'rounded',
+            showRowsPerPage: false,
+            variant: 'outlined',
+            sx: {
+                button: {
+                    borderRadius: '50%', // تبدیل دکمه‌ها به دایره‌ای
+                },
+            },
+        },
+        paginationDisplayMode: 'pages',
+    });
+
     return (
         <MaterialReactTable
-            columns={columns}
-            data={tableData}
+            table={table}
         />
     );
 }

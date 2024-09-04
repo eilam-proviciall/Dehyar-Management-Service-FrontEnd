@@ -60,9 +60,8 @@ function EditFromComponent() {
                             {showTable ? (
                                 <motion.div
                                     key="table"
-                                    initial={{ opacity: 0, x: 50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.5 }}
                                 >
                                     <EditTableComponent />
@@ -70,9 +69,8 @@ function EditFromComponent() {
                             ) : (
                                 <motion.div
                                     key="form"
-                                    initial={{ opacity: 0, x: -50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 50 }}
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.5 }}
                                 >
                                     <EditFormContent validationSchemas={validationSchemas} />
@@ -80,6 +78,7 @@ function EditFromComponent() {
                             )}
                         </AnimatePresence>
                     </Card>
+
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={6}>
