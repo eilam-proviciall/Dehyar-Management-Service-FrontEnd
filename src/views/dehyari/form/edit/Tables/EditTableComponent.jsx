@@ -84,7 +84,7 @@ function EditTableComponent(props) {
                     >
                         <Tab
                             label={
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px',padding:"8px" }}>
                                     <span>سوابق بیمه</span>
                                     <Badge color="primary" badgeContent={insuranceData.length} showZero />
                                 </Box>
@@ -92,7 +92,7 @@ function EditTableComponent(props) {
                         />
                         <Tab
                             label={
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px',padding :"8px" }}>
                                     <span>سوابق</span>
                                     <Badge color="primary" badgeContent={historyData.length} showZero />
                                 </Box>
@@ -102,8 +102,8 @@ function EditTableComponent(props) {
 
                     </Tabs>
                     <Box sx={{ mt: 2 }}>
-                        {tabIndex === 0 && <InsuranceTable data={insuranceData} />} {/* Pass data to tables */}
-                        {tabIndex === 1 && <HistoryTable data={historyData} />} {/* Pass data to tables */}
+                        {tabIndex === 0 && <HistoryTable data={historyData} />} {/* Pass data to tables */}
+                        {tabIndex === 1 && <InsuranceTable data={insuranceData} />} {/* Pass data to tables */}
                     </Box>
                 </>
             )}
