@@ -46,13 +46,20 @@ function EditFromComponent() {
     return (
         <Grid container spacing={6}>
             <FormProvider {...methods}>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={9}>
                     <Card>
-                        <EditFormContent validationSchemas={validationSchemas} />
+                            <EditFormContent validationSchemas={validationSchemas}/>
                     </Card>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                    <EditTableComponent />
+                <Grid item xs={12} md={3}>
+                    <Grid container spacing={6}>
+                        <Grid item xs={12}>
+                            <EditProfilePictureUpload />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </FormProvider>
         </Grid>
