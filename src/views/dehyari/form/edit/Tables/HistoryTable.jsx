@@ -8,6 +8,7 @@ import { GetHumanResourcesForCfo } from '@/Services/humanResources';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import contractType from "@data/contractType.json";
+import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryTableModal";
 
 const style = {
     position: 'absolute',
@@ -165,38 +166,7 @@ function HistoryTable() {
         <div>
             <MaterialReactTable table={table} />
 
-            {/* Modal Component */}
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                open={open}
-                onClose={handleCloseModal}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                    sx: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)', // تنظیم رنگ تیره با شفافیت 50%
-                    },
-                }}
-            >
-
-            <AnimatePresence>
-                    {open && (
-                        <motion.div
-                        >
-                            <Box sx={style}>
-                                <Typography id="transition-modal-title" variant="h6" component="h2">
-                                    افزودن کاربر
-                                </Typography>
-                                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                                    این یک مثال از محتویات داخل یک modal است.
-                                </Typography>
-                            </Box>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </Modal>
+            <HistoryTableModal open={open} handleClose={handleCloseModal} />
         </div>
     );
 }
