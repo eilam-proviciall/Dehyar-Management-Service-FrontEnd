@@ -116,7 +116,34 @@ const StepTwoFields = ({ validation }) => {
                     />
                 </FormControl>
             </Grid>
-
+            <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                    <Controller
+                        name="contractExecute"
+                        control={control}
+                        defaultValue={null}
+                        rules={validation.contractEnd}
+                        render={({ field }) => (
+                            <DatePicker
+                                value={field.value ? new Date(field.value * 1000) : null}
+                                onChange={(date) => field.onChange(date ? date.toUnix() : null)}
+                                calendar={persian}
+                                locale={persian_fa}
+                                calendarPosition="bottom-right"
+                                render={
+                                    <TextField
+                                        fullWidth
+                                        label="تاریخ اجرای قرارداد"
+                                        size="small"
+                                        error={!!errors.contractExecute}
+                                        helperText={errors.contractExecute?.message}
+                                    />
+                                }
+                            />
+                        )}
+                    />
+                </FormControl>
+            </Grid>
             {/* فیلد توضیحات (یک خط کامل) */}
             <Grid item xs={12}>
                 <Controller

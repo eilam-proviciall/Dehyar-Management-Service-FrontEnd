@@ -1,8 +1,13 @@
-import React, {useState} from 'react';
-import {Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography} from '@mui/material';
-import {FormProvider, useForm} from 'react-hook-form';
+import React, { useState } from 'react';
+import { Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton } from '@mui/material';
+import { FormProvider, useForm } from 'react-hook-form';
 import StepOneFields from './StepOneFields';
 import StepTwoFields from './StepTwoFields';
+import CloseIcon from '@mui/icons-material/Close';
+import axios from "axios";
+import {HumanContract} from "@/Services/humanResources";
+import {toast} from "react-toastify";
+import HumanContractDTO from "@utils/HumanContractDTO"; // آیکون برای ضربدر
 
 const modalStyle = {
     position: 'absolute',
@@ -15,6 +20,7 @@ const modalStyle = {
     p: 4,
     borderRadius: 3,
 };
+
 const validationSchemas = {
     jobTitle: {
         required: 'پست سازمانی الزامی است',
@@ -39,12 +45,15 @@ const validationSchemas = {
     },
     coveredVillages: {
         required: 'انتخاب دهیاری‌های تحت پوشش الزامی است',
+    }, contractExecute: {
+        required: 'تاریخ اجرا الزامی است',
     },
 };
 
 const steps = ['ساختار تشکیلاتی', 'اطلاعات قرارداد'];
-
-const HistoryTableModal = ({open, handleClose}) => {
+const queryParams = new URLSearchParams(window.location.search);
+const param = queryParams.get('param');
+const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
     const [activeStep, setActiveStep] = useState(0);
     const methods = useForm();
 
@@ -64,31 +73,63 @@ const HistoryTableModal = ({open, handleClose}) => {
         methods.reset();
     };
 
-    const handleSubmit = async (data) => {
-        const isValid = await methods.trigger();
-        if (isValid) {
-            console.log('Submitted Data:', data);
+    const handleSubmit = async (formData) => {
+        const dto = HumanContractDTO.fromForm(formData, param); // تبدیل داده‌ها به فرمت مناسب
+        try {
+            const response = await axios.post(HumanContract(), dto, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                }
+            });
+            toast.success("قرارداد با موفقیت ثبت شد");
+            methods.reset(); // ریست فرم
             handleClose();
+            refreshData();// بستن مودال پس از موفقیت
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.errors) {
+                Object.keys(error.response.data.errors).forEach((key) => {
+                    toast.error(error.response.data.errors[key][0], { position: 'top-center' });
+                });
+            } else {
+                toast.error("خطا در ثبت اطلاعات", { position: 'top-center' });
+            }
+            console.error("Error submitting form:", error);
         }
-
     };
+
 
     return (
         <Modal
             aria-labelledby="stepper-modal-title"
             aria-describedby="stepper-modal-description"
             open={open}
-            onClose={handleClose}
+            onClose={null}
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
-                sx: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
             }}
         >
             <Box sx={modalStyle}>
-                <Typography variant="h5" sx={{justifyContent:"center",textAlign:"center",marginBottom:"20px"}}>ثبت اطلاعات حکم کارگزینی</Typography>
-                <Stepper activeStep={activeStep} sx={{width:"50%",margin: '0 auto',  paddingBottom: '16px'}}>
+                <IconButton
+                    aria-label="close"
+                    onClick={handleClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+
+                <Typography variant="h5" sx={{ justifyContent: "center", textAlign: "center", marginBottom: "20px" }}>
+                    ثبت اطلاعات حکم کارگزینی
+                </Typography>
+
+                <Stepper activeStep={activeStep} sx={{ width: "50%", margin: '0 auto', paddingBottom: '16px' }}>
                     {steps.map((label, index) => (
                         <Step key={index}>
                             <StepLabel>{label}</StepLabel>
@@ -97,11 +138,11 @@ const HistoryTableModal = ({open, handleClose}) => {
                 </Stepper>
 
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(handleSubmit)} style={{marginTop:8}}>
-                        {activeStep === 0 && <StepOneFields validation={validationSchemas}/>}
-                        {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
+                    <form onSubmit={methods.handleSubmit(handleSubmit)} style={{ marginTop: 8 }}>
+                        {activeStep === 0 && <StepOneFields validation={validationSchemas} />}
+                        {activeStep === 1 && <StepTwoFields validation={validationSchemas} />}
 
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', pt: 7}}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}

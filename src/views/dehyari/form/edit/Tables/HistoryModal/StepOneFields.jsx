@@ -129,33 +129,40 @@ const StepOneFields = ({ validation }) => {
                         label="نوع قرارداد"
                         inputComponent={() => null} // خالی گذاشتن کامپوننت ورودی برای سفارشی‌سازی محتوا
                         endAdornment={
-                            <Box
-                                display="flex"
-                                alignItems="center"
-                                sx={{
-                                    mt: 2,
-                                    ml:2,
-                                    px: 2,
-                                    py: 1,
-                                    width: '100%',
-                                    gap: 2,
-                                }}
-                            >
-                                <Slider
-                                    value={contractTypeValue}
-                                    onChange={handleSliderChange}
-                                    step={1}
-                                    min={1}
-                                    max={30}
-                                    valueLabelDisplay="auto"
-                                    sx={{ width: '80%', color: 'primary.main' }}
-                                />
-                                <Typography sx={{pl:"18px"}}>
-                                    {contractTypeValue === 30 ? 'تمام وقت' : `${contractTypeValue} روز کارکرد`}
-                                </Typography>
-                            </Box>
+                            <Controller
+                                name="contractType"
+                                control={control}
+                                defaultValue={1} // مقدار پیش‌فرض
+                                render={({ field }) => (
+                                    <Box
+                                        display="flex"
+                                        alignItems="center"
+                                        sx={{
+                                            mt: 2,
+                                            ml: 2,
+                                            px: 2,
+                                            py: 1,
+                                            width: '100%',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Slider
+                                            {...field} // اتصال Slider به فرم
+                                            step={1}
+                                            min={1}
+                                            max={30}
+                                            valueLabelDisplay="auto"
+                                            sx={{ width: '80%', color: 'primary.main' }}
+                                        />
+                                        <Typography sx={{ pl: "18px" }}>
+                                            {field.value === 30 ? 'تمام وقت' : `${field.value} روز کارکرد`}
+                                        </Typography>
+                                    </Box>
+                                )}
+                            />
                         }
                     />
+                    {errors.contractType && <Typography color="error">{errors.contractType.message}</Typography>}
                 </FormControl>
             </Grid>
             {/* شغل فعلی */}
@@ -169,9 +176,9 @@ const StepOneFields = ({ validation }) => {
                         rules={validation.currentJob}
                         render={({ field }) => (
                             <Select {...field} label="شغل فعلی">
-                                <MenuItem value="employee-village">کارمند دهیاری</MenuItem>
-                                <MenuItem value="employee-government">کارمند دولت</MenuItem>
-                                <MenuItem value="private-sector">بخش خصوصی</MenuItem>
+                                <MenuItem value="1">کارمند دهیاری</MenuItem>
+                                <MenuItem value="2">کارمند دولت</MenuItem>
+                                <MenuItem value="3">بخش خصوصی</MenuItem>
                             </Select>
                         )}
                     />

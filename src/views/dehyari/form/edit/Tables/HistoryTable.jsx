@@ -4,7 +4,7 @@ import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import { Box, Button, Modal, Backdrop, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion'; // Import framer-motion
 import axios from "axios";
-import { GetHumanResourcesForCfo } from '@/Services/humanResources';
+import {GetHumanResourcesForCfo, HumanContract} from '@/Services/humanResources';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import contractType from "@data/contractType.json";
@@ -40,53 +40,56 @@ function HistoryTable() {
 
     const handleOpenModal = () => setOpen(true); // باز کردن Modal
     const handleCloseModal = () => setOpen(false); // بستن Modal
-
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
     useEffect(() => {
         setLoading(true);
-        axios.get(GetHumanResourcesForCfo(), {
+        axios.get(`${HumanContract()}/${param}`, {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             },
         }).then((response) => {
+            console.log(response.data);
             setData(response.data);
             setLoading(false);
         }).catch(() => {
             setLoading(false);
         });
     }, []);
-
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`${HumanContract()}/${param}`, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            });
+            setData(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false); // مخفی کردن لودر
+        }
+    };
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'village',
-                header: 'دهیاری',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
-            },
-            {
-                accessorKey: 'full_name',
-                header: 'نام و نام خانوادگی',
+                accessorKey: 'contract_start',
+                header: 'تاریخ شروع قرارداد',
                 size: 150,
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'nid',
-                header: 'کدملی',
+                accessorKey: 'contract_end',
+                header: 'تاریخ پایان قرارداد',
                 size: 150,
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'contract_type',
-                header: 'نوع قرارداد',
+                accessorKey: 'title_contract',
+                header: 'عنوان قرارداد',
                 size: 150,
-                Cell: ({ cell }) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={contractType[role]} color="primary" />
-                        </div>
-                    );
-                },
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'actions',
@@ -113,10 +116,10 @@ function HistoryTable() {
                             open={Boolean(anchorEl)}
                             onClose={handleCloseMenu}
                         >
-                            <MenuItem onClick={handleCloseMenu}>
-                                <Link href={`/dehyari/form?mode=edit&id=${row.original.id}`}>
+                            <MenuItem >
+                                {/*<Link >*/}
                                     ویرایش
-                                </Link>
+                                {/*</Link>*/}
                             </MenuItem>
                         </Menu>
                     </div>
@@ -166,7 +169,7 @@ function HistoryTable() {
         <div>
             <MaterialReactTable table={table} />
 
-            <HistoryTableModal open={open} handleClose={handleCloseModal} />
+            <HistoryTableModal open={open} handleClose={handleCloseModal} refreshData={fetchData} />
         </div>
     );
 }

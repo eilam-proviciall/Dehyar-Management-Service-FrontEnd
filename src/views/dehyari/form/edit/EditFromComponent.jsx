@@ -32,8 +32,6 @@ function EditFromComponent() {
                 .then((response) => {
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
-                    console.log(response.data)
-                    console.log(dto)
                     methods.reset(dto);
                 })
                 .catch((error) => {
@@ -53,10 +51,8 @@ function EditFromComponent() {
                 }
             });
             toast.success('اطلاعات با موفقیت ذخیره شد');
-            console.log('API Response:', response.data);
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
-                // اگر خطاهای ولیدیشن وجود داشته باشد
                 Object.keys(error.response.data.errors).forEach((key) => {
                     toast.error(error.response.data.errors[key][0], { position: 'top-center' });
                 });
