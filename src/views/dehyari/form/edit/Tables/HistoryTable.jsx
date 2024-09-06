@@ -8,7 +8,7 @@ import { GetHumanResourcesForCfo } from '@/Services/humanResources';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import contractType from "@data/contractType.json";
-import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryTableModal";
+import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
 
 const style = {
     position: 'absolute',

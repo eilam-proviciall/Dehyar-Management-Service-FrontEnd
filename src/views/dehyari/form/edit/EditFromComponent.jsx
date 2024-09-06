@@ -29,6 +29,9 @@ const sampleData = {
     insurances: [
         { workplace: 'شرکت XYZ', insurancePeriod: '12', employmentStartDate: 1609459200, employmentEndDate: 1640995200 }
     ],
+    contacts: [
+
+    ],
     profilePicture: ''
 };
 

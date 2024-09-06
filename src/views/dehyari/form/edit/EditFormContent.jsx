@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, Grid } from '@mui/material';
 import EditStepPersonalDetails from './EditStepPersonalDetails';
 import EditStepEducation from './EditStepEducation';
-import EditStepInsurance from './EditStepInsurance';
+import PhoneNumberStepContact from './PhoneNumberStepContact';
 
 const EditFormContent = ({  validationSchemas }) => (
     <Card>
@@ -10,7 +10,7 @@ const EditFormContent = ({  validationSchemas }) => (
             <Grid container spacing={6}>
                 <EditStepPersonalDetails  validation={validationSchemas}/>
                 <EditStepEducation validation={validationSchemas}/>
-                <EditStepInsurance validation={validationSchemas}/>
+                <PhoneNumberStepContact validation={validationSchemas}/>
             </Grid>
         </CardContent>
     </Card>
