@@ -87,37 +87,47 @@ const PhoneNumberStepContact = ({ validation }) => {
                                                         <Select
                                                             labelId={`social-network-label-${index}`}
                                                             label="شبکه اجتماعی"
-                                                            {...field}
+                                                            multiple // افزودن این ویژگی برای چند انتخابی
+                                                            value={field.value || []}
+                                                            onChange={field.onChange}
+                                                            renderValue={(selected) => (
+                                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                                    {selected.map((value) => (
+                                                                        <Chip key={value} label={value} />
+                                                                    ))}
+                                                                </Box>
+                                                            )}
                                                         >
                                                             <MenuItem value="eitaa">
-                                                                <Typography sx={{ mr: 'auto', color: 'white' }}>ایتا</Typography>
                                                                 <IconButton edge="end" disabled>
-                                                                    <EitaaIcon sx={{ color: 'white' }} />
+                                                                    <EitaaIcon />
                                                                 </IconButton>
+                                                                <Typography sx={{ mr: 'auto' }}>ایتا</Typography>
                                                             </MenuItem>
                                                             <MenuItem value="bale">
-                                                                <Typography sx={{ mr: 'auto', color: 'white' }}>بله</Typography>
                                                                 <IconButton edge="end" disabled>
-                                                                    <BaleIcon sx={{ color: 'white' }} />
+                                                                    <BaleIcon />
                                                                 </IconButton>
+                                                                <Typography sx={{ mr: 'auto' }}>بله</Typography>
                                                             </MenuItem>
                                                             <MenuItem value="shad">
-                                                                <Typography sx={{ mr: 'auto', color: 'white' }}>شاد</Typography>
                                                                 <IconButton edge="end" disabled>
-                                                                    <ShadIcon sx={{ color: 'white' }} />
+                                                                    <ShadIcon />
                                                                 </IconButton>
+                                                                <Typography sx={{ mr: 'auto' }}>شاد</Typography>
                                                             </MenuItem>
-                                                            <MenuItem value="shad">
-                                                                <Typography sx={{ mr: 'auto', color: 'white' }}>شماره ضروری</Typography>
+                                                            <MenuItem value="contactPhone">
                                                                 <IconButton edge="end" disabled>
-                                                                    <ContactPhoneIcon sx={{ color: 'white' }} />
+                                                                    <ContactPhoneIcon />
                                                                 </IconButton>
+                                                                <Typography sx={{ mr: 'auto' }}>شماره ضروری</Typography>
                                                             </MenuItem>
                                                         </Select>
                                                     </FormControl>
                                                 )}
                                             />
                                         </Grid>
+
 
                                         <Grid item xs={12} sm={4}>
                                             <Controller

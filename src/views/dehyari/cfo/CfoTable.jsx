@@ -80,6 +80,7 @@ function CfoTable(props) {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
+                console.log(response.data)
                 setData(response.data);
                 setLoading(false);
             } catch (error) {

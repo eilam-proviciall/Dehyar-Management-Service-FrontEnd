@@ -32,6 +32,7 @@ function EditFromComponent() {
                 .then((response) => {
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
+                    console.log(response.data)
                     console.log(dto)
                     methods.reset(dto);
                 })

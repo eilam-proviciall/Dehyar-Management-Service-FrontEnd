@@ -1,5 +1,6 @@
 class HumanResourceDTO {
     constructor(apiData) {
+        console.log(apiData)
         this.fullName = apiData.full_name;
         this.id = apiData.id;
         this.fatherName = apiData.father_name;
@@ -34,9 +35,11 @@ class HumanResourceDTO {
         this.coveredVillages = apiData.covered_villages.map(village => ({
             villageCode: village.village_code
         }));
-        // this.contacts:{
-        //
-        // }
+        this.contacts = apiData.contact_informations.map(contact => ({
+            phoneNumber: contact.phone_number,
+            socialNetwork: JSON.parse(contact.social_network),  // پارس کردن social_network
+            description: contact.description,
+        }));
     }
 
     static fromForm(formData) {
