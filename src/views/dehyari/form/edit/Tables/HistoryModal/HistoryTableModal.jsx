@@ -87,8 +87,8 @@ const HistoryTableModal = ({open, handleClose}) => {
             }}
         >
             <Box sx={modalStyle}>
-                <Typography variant="h6">فرم دو مرحله‌ای</Typography>
-                <Stepper activeStep={activeStep}>
+                <Typography variant="h5" sx={{justifyContent:"center",textAlign:"center",marginBottom:"20px"}}>ثبت اطلاعات حکم کارگزینی</Typography>
+                <Stepper activeStep={activeStep} sx={{width:"50%",margin: '0 auto',  paddingBottom: '16px'}}>
                     {steps.map((label, index) => (
                         <Step key={index}>
                             <StepLabel>{label}</StepLabel>
@@ -97,11 +97,11 @@ const HistoryTableModal = ({open, handleClose}) => {
                 </Stepper>
 
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(handleSubmit)}>
+                    <form onSubmit={methods.handleSubmit(handleSubmit)} style={{marginTop:8}}>
                         {activeStep === 0 && <StepOneFields validation={validationSchemas}/>}
                         {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
 
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', pt: 2}}>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between', pt: 7}}>
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
