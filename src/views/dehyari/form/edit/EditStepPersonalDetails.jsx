@@ -26,25 +26,6 @@ const EditStepPersonalDetails = ({ validation }) => {
         return true;
     };
 
-    const handlePhoneKeyDown = (event, field, params) => {
-        const phoneValue = params.inputProps.value;
-
-        if ((event.key === 'Tab' || event.key === 'Enter') || phoneValue.length === 10) {
-            event.preventDefault();
-            if (validatePhoneNumber(phoneValue)) {
-                const currentValues = Array.isArray(field.value) ? field.value : [];
-                const newValue = [...currentValues, phoneValue];
-                setValue('phoneNumbers', newValue);
-                field.onChange(newValue);
-                params.inputProps.onChange({ target: { value: '' } });
-            } else {
-                const newValue = Array.isArray(field.value) ? field.value.filter(phone => phone !== phoneValue) : [];
-                setValue('phoneNumbers', newValue);
-                field.onChange(newValue);
-            }
-        }
-    };
-
     return (
         <>
             <Grid container spacing={2} mt={1}>

@@ -26,12 +26,13 @@ class HumanResourceDTO {
             dehyariTitle: insurance.dehyari_title,
             contractType: insurance.contract_type
         }));
-        this.childrens = apiData.childrens.map(child => ({
-            fullName: child.full_name,
+        this.children = apiData.childrens.map(child => ({
             nid: child.nid,
-            birthDate: child.birth_date ? new Date(child.birth_date * 1000) : '',
-            gender: child.gender
+            fullName: child.full_name,
+            birthDate: child.birth_date,
+            gender: child.gender,
         }));
+
         this.coveredVillages = apiData.covered_villages.map(village => ({
             villageCode: village.village_code
         }));
@@ -66,7 +67,13 @@ class HumanResourceDTO {
                 phone_number: contact.phoneNumber,
                 social_network: contact.socialNetwork,
                 description: contact.description,
-            }))
+            })),
+            children: formData.children.map(child => ({
+                nid: child.nid,
+                full_name: child.fullName,
+                birth_date: child.birthDate,
+                gender: child.gender,
+            })),
         };
     }
 }

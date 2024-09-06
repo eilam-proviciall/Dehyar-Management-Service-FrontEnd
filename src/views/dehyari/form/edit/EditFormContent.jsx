@@ -3,6 +3,7 @@ import { Card, CardContent, Grid } from '@mui/material';
 import EditStepPersonalDetails from './EditStepPersonalDetails';
 import EditStepEducation from './EditStepEducation';
 import PhoneNumberStepContact from './PhoneNumberStepContact';
+import EditStepChildren from "@views/dehyari/form/edit/EditStepChildren";
 
 const EditFormContent = ({  validationSchemas }) => (
     <Card>
@@ -11,6 +12,7 @@ const EditFormContent = ({  validationSchemas }) => (
                 <EditStepPersonalDetails  validation={validationSchemas}/>
                 <EditStepEducation validation={validationSchemas}/>
                 <PhoneNumberStepContact validation={validationSchemas}/>
+                <EditStepChildren validation={validationSchemas} />
             </Grid>
         </CardContent>
     </Card>
