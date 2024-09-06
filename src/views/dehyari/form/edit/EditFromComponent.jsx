@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
+import {toast} from "react-toastify";
 
 function EditFromComponent() {
     const [defaultValue, setDefaultValue] = useState({});
@@ -31,7 +32,7 @@ function EditFromComponent() {
                 .then((response) => {
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
-                    // استفاده از reset برای بروزرسانی مقادیر فرم
+                    console.log(dto)
                     methods.reset(dto);
                 })
                 .catch((error) => {
@@ -42,8 +43,27 @@ function EditFromComponent() {
 
     const [showTable, setShowTable] = useState(false); // State for switching between form and table
 
-    const onSubmit = data => {
-        console.log('Form Data:', data);
+    const onSubmit = async (formData) => {
+        const apiData = EditHumanResourceFormDTO.fromForm(formData);
+        try {
+            const response = await axios.put(`${humanResources()}/update/${formData.id}`, apiData, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                }
+            });
+            toast.success('اطلاعات با موفقیت ذخیره شد');
+            console.log('API Response:', response.data);
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.errors) {
+                // اگر خطاهای ولیدیشن وجود داشته باشد
+                Object.keys(error.response.data.errors).forEach((key) => {
+                    toast.error(error.response.data.errors[key][0], { position: 'top-center' });
+                });
+            } else {
+                toast.error('خطا در ذخیره اطلاعات', { position: 'top-center' });
+            }
+            console.error('Error updating human resource:', error);
+        }
     };
 
     const handleSwitch = () => {

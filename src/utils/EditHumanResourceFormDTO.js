@@ -1,6 +1,7 @@
 class HumanResourceDTO {
     constructor(apiData) {
         this.fullName = apiData.full_name;
+        this.id = apiData.id;
         this.fatherName = apiData.father_name;
         this.nationalCode = apiData.nid;
         this.birthDate = apiData.birth_date ? new Date(apiData.birth_date * 1000) : '';
@@ -33,6 +34,37 @@ class HumanResourceDTO {
         this.coveredVillages = apiData.covered_villages.map(village => ({
             villageCode: village.village_code
         }));
+        // this.contacts:{
+        //
+        // }
+    }
+
+    static fromForm(formData) {
+        return {
+            full_name: formData.fullName,
+            father_name: formData.fatherName,
+            nid: formData.nid,
+            birth_date: formData.birthDate,
+            personal_id: formData.personalId,
+            gender: formData.gender,
+            married_status: formData.marriedStatus,
+            birth_place: formData.birthPlace,
+            issue_place: formData.issuePlace,
+            eisargari_status: formData.eisargariStatus,
+            nezam_vazife: formData.nezamVazife,
+            contract_type: formData.contractType,
+            employment_status: formData.employmentStatus,
+            description_contract: formData.descriptionContract,
+            title_contract: formData.titleContract,
+            education_histories: formData.educations,
+            insurance_histories: formData.insurances,
+            covered_villages: formData.coveredVillages,
+            contacts: formData.contacts.map(contact => ({
+                phone_number: contact.phoneNumber,
+                social_network: contact.socialNetwork,
+                description: contact.description,
+            }))
+        };
     }
 }
 
