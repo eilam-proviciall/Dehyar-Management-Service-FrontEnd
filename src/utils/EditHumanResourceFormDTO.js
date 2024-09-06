@@ -5,7 +5,7 @@ class HumanResourceDTO {
         this.id = apiData.id;
         this.fatherName = apiData.father_name;
         this.nationalCode = apiData.nid;
-        this.birthDate = apiData.birth_date ? new Date(apiData.birth_date * 1000) : '';
+        this.birthDate = apiData.birth_date;
         this.personalId = apiData.personal_id;
         this.gender = apiData.gender;
         this.maritalStatus = apiData.married_status;
@@ -50,11 +50,11 @@ class HumanResourceDTO {
             birth_date: formData.birthDate,
             personal_id: formData.personalId,
             gender: formData.gender,
-            married_status: formData.marriedStatus,
+            married_status: formData.maritalStatus,
             birth_place: formData.birthPlace,
             issue_place: formData.issuePlace,
-            eisargari_status: formData.eisargariStatus,
-            nezam_vazife: formData.nezamVazife,
+            eisargari_status: formData.veteranStatus,
+            nezam_vazife: formData.militaryService,
             contract_type: formData.contractType,
             employment_status: formData.employmentStatus,
             description_contract: formData.descriptionContract,
