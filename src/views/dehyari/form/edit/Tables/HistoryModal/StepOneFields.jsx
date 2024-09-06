@@ -6,6 +6,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import jobTitleOptions from "@data/jobTitles";
 import { GetHumanCoverdVillageForCfo } from "@/Services/humanResources";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const StepOneFields = ({ validation }) => {
     const { control, formState: { errors }, setValue, getValues } = useFormContext();
@@ -119,27 +120,44 @@ const StepOneFields = ({ validation }) => {
                     {errors.jobTitle && <Typography color="error">{errors.jobTitle.message}</Typography>}
                 </FormControl>
             </Grid>
-
             {/* نوع قرارداد با Slider */}
             <Grid item xs={12} sm={6}>
-                <Typography gutterBottom>نوع قرارداد</Typography>
-                <Box display="flex" alignItems="center">
-                    <Slider
-                        value={contractTypeValue}
-                        onChange={handleSliderChange}
-                        aria-labelledby="contract-slider"
-                        step={1}
-                        min={1}
-                        max={30}
-                        valueLabelDisplay="auto"
-                        sx={{ width: '80%' }}
+                <FormControl fullWidth variant="outlined">
+                    <InputLabel shrink>نوع قرارداد</InputLabel>
+                    <OutlinedInput
+                        notched
+                        label="نوع قرارداد"
+                        inputComponent={() => null} // خالی گذاشتن کامپوننت ورودی برای سفارشی‌سازی محتوا
+                        endAdornment={
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                sx={{
+                                    mt: 2,
+                                    ml:2,
+                                    px: 2,
+                                    py: 1,
+                                    width: '100%',
+                                    gap: 2,
+                                }}
+                            >
+                                <Slider
+                                    value={contractTypeValue}
+                                    onChange={handleSliderChange}
+                                    step={1}
+                                    min={1}
+                                    max={30}
+                                    valueLabelDisplay="auto"
+                                    sx={{ width: '80%', color: 'primary.main' }}
+                                />
+                                <Typography sx={{pl:"18px"}}>
+                                    {contractTypeValue === 30 ? 'تمام وقت' : `${contractTypeValue} روز کارکرد`}
+                                </Typography>
+                            </Box>
+                        }
                     />
-                    <Typography sx={{ marginLeft: 2 }}>
-                        {contractTypeValue === 30 ? 'تمام وقت' : `${contractTypeValue} روز کارکرد`}
-                    </Typography>
-                </Box>
+                </FormControl>
             </Grid>
-
             {/* شغل فعلی */}
             <Grid item xs={12} sm={3}>
                 <FormControl fullWidth size="small" error={!!errors.currentJob}>
