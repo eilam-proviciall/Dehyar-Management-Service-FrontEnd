@@ -38,7 +38,6 @@ function CfoTable(props) {
 
             const humanResourceData = response. data;
             const data = new HumanResourceDTO(humanResourceData);
-            console.log(humanResourceData)
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
@@ -160,9 +159,13 @@ function CfoTable(props) {
                             onClose={handleClose}
                         >
                             <MenuItem onClick={handleClose}>
-                                <Link href={`/dehyari/form?mode=edit&id=${row.original.id}`}>
-                                    ویرایش
-                                </Link>
+                                {selectedRow && selectedRow.original ? (
+                                    <Link href={`/dehyari/form/edit?param=${selectedRow.original.nid}`}>
+                                        ویرایش
+                                    </Link>
+                                ) : (
+                                    <span>ویرایش</span> // یا هر محتوای دیگری در صورت نبود selectedRow
+                                )}
                             </MenuItem>
                             <MenuItem onClick={() => handleDownloadPdf(selectedRow.original)}>
                                 حکم کارگزینی
