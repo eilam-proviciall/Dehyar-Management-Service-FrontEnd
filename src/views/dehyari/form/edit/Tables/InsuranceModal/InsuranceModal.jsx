@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Backdrop, Box, Button, Modal, Grid, TextField, Typography, IconButton, FormControl } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
@@ -34,35 +34,75 @@ const validationSchemas = {
     },
 };
 
-const InsuranceModal = ({ open, handleClose, refreshData ,nid}) => {
+const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editId = null }) => {
     const methods = useForm();
     const [loading, setLoading] = useState(false);
+
+    // اگر در حالت ویرایش هستیم، اطلاعات رکورد را دریافت می‌کنیم
+    useEffect(() => {
+        if (mode === 'edit' && editId) {
+            console.log('edit')
+            setLoading(true);
+            axios.get(`${InsuranceHistory()}/show/${editId}`, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            })
+                .then((response) => {
+                    console.log({
+                        start_date: response.data.data.start_date,
+                        end_date: response.data.data.end_date,
+                        month: response.data.data.month,
+                    })
+                    methods.reset({
+                        start_date: response.data.data.start_date,
+                        end_date: response.data.data.end_date,
+                        month: response.data.data.month,
+                    });
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    toast.error('خطا در دریافت اطلاعات');
+                    setLoading(false);
+                });
+        }
+    }, [mode, editId, methods]);
 
     const handleSubmit = async (formData) => {
         setLoading(true);
         try {
-            // اعتبارسنجی سمت کلاینت
             const isValid = await methods.trigger();
             if (!isValid) {
                 setLoading(false);
                 return;
             }
-             formData.human_resource_nid = nid
-            // ارسال درخواست به سرور
-            const response = await axios.post(InsuranceHistory(), formData, {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                },
-            });
 
-            // چک کردن موفقیت پاسخ از سرور
-            if (response.status === 201) {
-                toast.success('سابقه بیمه با موفقیت ثبت شد');
-                methods.reset(); // ریست کردن فرم بعد از پاسخ موفق
-                handleClose(); // بستن مودال
-                refreshData(); // بروز رسانی جدول
-            } else {
-                throw new Error('خطا در ثبت اطلاعات');
+            if (mode === 'create') {
+                // حالت ایجاد
+                const response = await axios.post(InsuranceHistory(), formData, {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
+                });
+                if (response.status === 201) {
+                    toast.success('سابقه بیمه با موفقیت ثبت شد');
+                    methods.reset();
+                    handleClose();
+                    refreshData();
+                }
+            } else if (mode === 'edit' && editId) {
+                // حالت ویرایش
+                const response = await axios.put(`${InsuranceHistory()}/${editId}`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
+                });
+                if (response.status === 200) {
+                    toast.success('سابقه بیمه با موفقیت ویرایش شد');
+                    methods.reset();
+                    handleClose();
+                    refreshData();
+                }
             }
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
@@ -74,10 +114,9 @@ const InsuranceModal = ({ open, handleClose, refreshData ,nid}) => {
             }
             console.error('Error submitting form:', error);
         } finally {
-            setLoading(false); // مخفی کردن لودر
+            setLoading(false);
         }
     };
-
 
     return (
         <Modal
@@ -105,7 +144,7 @@ const InsuranceModal = ({ open, handleClose, refreshData ,nid}) => {
                 </IconButton>
 
                 <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
-                    ثبت سابقه بیمه
+                    {mode === 'create' ? 'ثبت سابقه بیمه' : 'ویرایش سابقه بیمه'}
                 </Typography>
 
                 <FormProvider {...methods}>

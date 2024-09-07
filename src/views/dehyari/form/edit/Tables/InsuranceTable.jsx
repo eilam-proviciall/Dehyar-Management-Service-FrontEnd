@@ -3,8 +3,8 @@ import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import InsuranceModal from "@views/dehyari/form/edit/Tables/InsuranceModal/InsuranceModal";
 import {InsuranceHistory} from "@/Services/humanResources";
+import InsuranceModal from "@views/dehyari/form/edit/Tables/InsuranceModal/InsuranceModal";
 
 function InsuranceTable() {
     const [data, setData] = useState([]);
@@ -12,10 +12,11 @@ function InsuranceTable() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const [openModal, setOpenModal] = useState(false); // برای مدیریت مودال
+    const [editId, setEditId] = useState(null); // برای مدیریت id رکوردی که در حال ویرایش است
+    const [mode, setMode] = useState('create'); // برای تعیین حالت ایجاد یا ویرایش مودال
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
     const open = Boolean(anchorEl);
-
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
@@ -44,6 +45,13 @@ function InsuranceTable() {
     useEffect(() => {
         fetchInsuranceHistory(); // دریافت داده‌ها هنگام لود شدن کامپوننت
     }, []);
+
+    const handleEditClick = (row) => {
+        console.log(row.original.id)
+        setEditId(row.original.id); // تنظیم شناسه رکورد برای ویرایش
+        setMode('edit'); // تنظیم مودال روی حالت ویرایش
+        setOpenModal(true); // باز کردن مودال
+    };
 
     const columns = useMemo(() => [
         {
@@ -78,15 +86,14 @@ function InsuranceTable() {
                         open={open}
                         onClose={handleCloseMenu}
                     >
-                        <MenuItem onClick={handleCloseMenu}>
+                        <MenuItem onClick={() => handleEditClick(selectedRow)}>
                             ویرایش
                         </MenuItem>
                     </Menu>
                 </div>
             ),
         },
-    ], [anchorEl]);
-
+    ], [anchorEl,selectedRow]);
     const table = useMaterialReactTable({
         columns,
         data,
@@ -103,7 +110,14 @@ function InsuranceTable() {
     return (
         <>
             <MaterialReactTable table={table} />
-            <InsuranceModal open={openModal} handleClose={() => setOpenModal(false)} refreshData={fetchInsuranceHistory} nid={param}/>
+            {/* مودال ایجاد یا ویرایش */}
+            <InsuranceModal
+                open={openModal}
+                handleClose={() => setOpenModal(false)}
+                refreshData={fetchInsuranceHistory}
+                mode={mode} // ارسال حالت مودال (ایجاد یا ویرایش)
+                editId={editId} // ارسال شناسه رکورد در صورت ویرایش
+            />
         </>
     );
 }
