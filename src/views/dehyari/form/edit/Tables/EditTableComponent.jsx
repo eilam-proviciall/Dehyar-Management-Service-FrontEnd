@@ -4,7 +4,7 @@ import { Box, Badge, Tab, Tabs, CircularProgress } from '@mui/material';
 import InsuranceTable from "@views/dehyari/form/edit/Tables/InsuranceTable";
 import HistoryTable from "@views/dehyari/form/edit/Tables/HistoryTable";
 import axios from 'axios'; // برای لود کردن داده‌ها
-import { GetHumanResourcesForCfo } from '@/Services/humanResources';
+import {GetHumanResourcesForCfo, HumanContract, InsuranceHistory} from '@/Services/humanResources';
 import { styled } from '@mui/material/styles';
 
 // استایل برای Badge برای قرارگیری بهتر
@@ -24,17 +24,17 @@ function EditTableComponent(props) {
     const [insuranceData, setInsuranceData] = useState([]);
     const [historyData, setHistoryData] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
     useEffect(() => {
         // Load both data sets in parallel
-        const fetchInsuranceData = axios.get(GetHumanResourcesForCfo(), {
+        const fetchInsuranceData = axios.get(`${InsuranceHistory()}/${param}`, {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             },
             params: { type: 'insurance' }, // فرض کنید نوع داده برای بیمه مشخص شده
         });
-
-        const fetchHistoryData = axios.get(GetHumanResourcesForCfo(), {
+        const fetchHistoryData = axios.get(`${HumanContract()}/${param}`, {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             },
@@ -85,16 +85,16 @@ function EditTableComponent(props) {
                         <Tab
                             label={
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px',padding:"8px" }}>
-                                    <span>سوابق بیمه</span>
-                                    <Badge color="primary" badgeContent={insuranceData.length} showZero />
+                                    <span>سوابق قرارداد</span>
+                                    <Badge color="primary" badgeContent={historyData.length} showZero />
                                 </Box>
                             }
                         />
                         <Tab
                             label={
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '19px',padding :"8px" }}>
-                                    <span>سوابق</span>
-                                    <Badge color="primary" badgeContent={historyData.length} showZero />
+                                    <span>سوابق بیمه</span>
+                                    <Badge color="primary" badgeContent={insuranceData.length} showZero />
                                 </Box>
                             }
                         />

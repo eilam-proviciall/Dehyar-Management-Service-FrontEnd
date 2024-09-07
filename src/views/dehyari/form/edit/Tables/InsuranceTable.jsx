@@ -33,7 +33,7 @@ function InsuranceTable() {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                 },
             });
-            setData(response.data.histories);
+            setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -103,7 +103,7 @@ function InsuranceTable() {
     return (
         <>
             <MaterialReactTable table={table} />
-            <InsuranceModal open={openModal} handleClose={() => setOpenModal(false)} refreshData={fetchInsuranceHistory} />
+            <InsuranceModal open={openModal} handleClose={() => setOpenModal(false)} refreshData={fetchInsuranceHistory} nid={param}/>
         </>
     );
 }
