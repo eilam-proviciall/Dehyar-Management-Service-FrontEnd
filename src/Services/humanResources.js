@@ -33,6 +33,10 @@ const DownloadHumanResourcePdf = () => {
 const HumanContract = () => {
     return `${BaseUrl}/human-contract`
 }
+
+const InsuranceHistory = () => {
+    return `${BaseUrl}/insurance-history`
+}
 export {
     humanResources,
     GetHumanResource,
@@ -43,5 +47,6 @@ export {
     GetJobTitles,
     GetFieldStudy,
     DownloadHumanResourcePdf,
-    HumanContract
+    HumanContract,
+    InsuranceHistory
 }
