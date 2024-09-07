@@ -23,6 +23,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             last_name: "",
             nid: '',
             role: '',
+            covered_villages: [],
         },
     });
     const {
@@ -45,6 +46,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         setValue('first_name', sidebarDetails.defaultValues.first_name);
         setValue('last_name', sidebarDetails.defaultValues.last_name);
         setValue('role', sidebarDetails.defaultValues.work_group);
+        setValue('covered_villages', sidebarDetails.defaultValues.covered_villages)
         setValues(prevValues => ({ ...prevValues, role: `${sidebarDetails.defaultValues.work_group}` }));
     }, [sidebarDetails])
 
