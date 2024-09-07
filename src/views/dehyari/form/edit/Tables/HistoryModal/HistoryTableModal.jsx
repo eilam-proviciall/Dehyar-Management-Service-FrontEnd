@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
 import StepOneFields from './StepOneFields';
 import StepTwoFields from './StepTwoFields';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
-import {HumanContract} from "@/Services/humanResources";
-import {toast} from "react-toastify";
-import HumanContractDTO from "@utils/HumanContractDTO"; // آیکون برای ضربدر
+import { HumanContract } from "@/Services/humanResources";
+import { toast } from "react-toastify";
+import HumanContractDTO from "@utils/HumanContractDTO";
 
 const modalStyle = {
     position: 'absolute',
@@ -45,17 +45,53 @@ const validationSchemas = {
     },
     coveredVillages: {
         required: 'انتخاب دهیاری‌های تحت پوشش الزامی است',
-    }, contractExecute: {
+    },
+    contractExecute: {
         required: 'تاریخ اجرا الزامی است',
     },
 };
 
 const steps = ['ساختار تشکیلاتی', 'اطلاعات قرارداد'];
-const queryParams = new URLSearchParams(window.location.search);
-const param = queryParams.get('param');
-const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
+
+const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => {
     const [activeStep, setActiveStep] = useState(0);
     const methods = useForm();
+    const [loading, setLoading] = useState(false);
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
+    useEffect(() => {
+        if (mode === 'edit' && editId) {
+            console.log('edit')
+            console.log(editId)
+            const fetchData = async () => {
+                try {
+                    const response = await axios.get(`${HumanContract()}/show/${editId}`, {
+                        headers: {
+                            Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                        },
+                    });
+                    console.log(response.data)
+                    const mappedData = {
+                        contractStart: response.data.contract_start,
+                        contractType: response.data.contract_type,
+                        contractEnd: response.data.contract_end,
+                        contractExecute: response.data.execute_start,
+                        appointmentDate: response.data.appointment_date,
+                        descriptionContract: response.data.description_contract,
+                        titleContract: response.data.title_contract,
+                        jobTitle: response.data.job_type_id,
+                        currentJob: response.data.main_work,
+                    };
+
+                    methods.reset(mappedData);
+                } catch (error) {
+                    toast.error('خطا در دریافت اطلاعات');
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchData();
+        }
+    }, [editId, mode]);
 
     const handleNext = async () => {
         const isValid = await methods.trigger();
@@ -74,17 +110,29 @@ const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
     };
 
     const handleSubmit = async (formData) => {
+        setLoading(true);
         const dto = HumanContractDTO.fromForm(formData, param); // تبدیل داده‌ها به فرمت مناسب
         try {
-            const response = await axios.post(HumanContract(), dto, {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                }
-            });
-            toast.success("قرارداد با موفقیت ثبت شد");
-            methods.reset(); // ریست فرم
+            let response;
+            if (mode === 'edit') {
+                // در حالت ویرایش، ارسال درخواست PUT برای به‌روزرسانی داده‌ها
+                response = await axios.put(`${HumanContract()}/update/${editId}`, dto, {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
+                });
+                toast.success("قرارداد با موفقیت ویرایش شد");
+            } else {
+                response = await axios.post(HumanContract(), dto, {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
+                });
+                toast.success("قرارداد با موفقیت ثبت شد");
+            }
+            methods.reset();
             handleClose();
-            refreshData();// بستن مودال پس از موفقیت
+            refreshData();
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
                 Object.keys(error.response.data.errors).forEach((key) => {
@@ -94,16 +142,17 @@ const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
                 toast.error("خطا در ثبت اطلاعات", { position: 'top-center' });
             }
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
-
 
     return (
         <Modal
             aria-labelledby="stepper-modal-title"
             aria-describedby="stepper-modal-description"
             open={open}
-            onClose={null}
+            onClose={null} // غیرفعال کردن بستن مودال با کلیک خارج از آن
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
@@ -126,7 +175,7 @@ const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
                 </IconButton>
 
                 <Typography variant="h5" sx={{ justifyContent: "center", textAlign: "center", marginBottom: "20px" }}>
-                    ثبت اطلاعات حکم کارگزینی
+                    {mode === 'edit' ? 'ویرایش قرارداد' : 'ثبت اطلاعات حکم کارگزینی'}
                 </Typography>
 
                 <Stepper activeStep={activeStep} sx={{ width: "50%", margin: '0 auto', paddingBottom: '16px' }}>
@@ -153,8 +202,9 @@ const HistoryTableModal = ({ open, handleClose ,refreshData}) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={activeStep === steps.length - 1 ? methods.handleSubmit(handleSubmit) : handleNext}
+                                disabled={loading}
                             >
-                                {activeStep === steps.length - 1 ? 'اتمام' : 'بعدی'}
+                                {loading ? 'در حال ارسال...' : activeStep === steps.length - 1 ? (mode === 'edit' ? 'ویرایش' : 'اتمام') : 'بعدی'}
                             </Button>
                         </Box>
                     </form>

@@ -1,14 +1,11 @@
 "use client";
 import React, { useMemo, useState, useEffect } from 'react';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
-import { Box, Button, Modal, Backdrop, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion'; // Import framer-motion
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import axios from "axios";
-import {GetHumanResourcesForCfo, HumanContract} from '@/Services/humanResources';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Link from 'next/link';
-import contractType from "@data/contractType.json";
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
+import {HumanContract} from "@/Services/humanResources";
 
 const style = {
     position: 'absolute',
@@ -27,7 +24,11 @@ function HistoryTable() {
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [open, setOpen] = useState(false); // State برای مدیریت باز و بسته شدن Modal
+    const [openModal, setOpenModal] = useState(false); // مدیریت باز و بسته شدن مودال
+    const [editMode, setEditMode] = useState(false); // تعیین حالت ویرایش یا ایجاد
+    const [editId, setEditId] = useState(null); // نگه‌داری ID رکوردی که ویرایش می‌شود
+
+    const open = Boolean(anchorEl);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -38,10 +39,22 @@ function HistoryTable() {
         setAnchorEl(null);
     };
 
-    const handleOpenModal = () => setOpen(true); // باز کردن Modal
-    const handleCloseModal = () => setOpen(false); // بستن Modal
+    const handleOpenModal = () => {
+        setEditMode(false); // حالت ایجاد
+        setEditId(null);
+        setOpenModal(true); // باز کردن مودال
+    };
+
+    const handleEdit = () => {
+        setEditMode(true); // حالت ویرایش
+        setEditId(selectedRow.original.id); // دریافت ID برای ویرایش
+        setOpenModal(true); // باز کردن مودال
+        handleCloseMenu();
+    };
+
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
+
     useEffect(() => {
         setLoading(true);
         axios.get(`${HumanContract()}/${param}`, {
@@ -49,13 +62,13 @@ function HistoryTable() {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             },
         }).then((response) => {
-            console.log(response.data);
             setData(response.data);
             setLoading(false);
         }).catch(() => {
             setLoading(false);
         });
     }, []);
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -68,66 +81,58 @@ function HistoryTable() {
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
-            setLoading(false); // مخفی کردن لودر
+            setLoading(false);
         }
     };
-    const columns = useMemo(
-        () => [
-            {
-                accessorKey: 'contract_start',
-                header: 'تاریخ شروع قرارداد',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
-            },
-            {
-                accessorKey: 'contract_end',
-                header: 'تاریخ پایان قرارداد',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
-            },
-            {
-                accessorKey: 'title_contract',
-                header: 'عنوان قرارداد',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
-            },
-            {
-                accessorKey: 'actions',
-                header: 'عملیات',
-                size: 150,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <IconButton
-                            aria-label="more"
-                            aria-controls={open ? 'long-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-haspopup="true"
-                            onClick={(event) => handleClick(event, row)}
-                            style={{ paddingLeft: 0 }}
-                        >
-                            <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                        </IconButton>
-                        <Menu
-                            id="long-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'long-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleCloseMenu}
-                        >
-                            <MenuItem >
-                                {/*<Link >*/}
-                                    ویرایش
-                                {/*</Link>*/}
-                            </MenuItem>
-                        </Menu>
-                    </div>
-                ),
-            },
-        ],
-        [anchorEl]
-    );
+
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'contract_start',
+            header: 'تاریخ شروع قرارداد',
+            size: 150,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+        },
+        {
+            accessorKey: 'contract_end',
+            header: 'تاریخ پایان قرارداد',
+            size: 150,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+        },
+        {
+            accessorKey: 'title_contract',
+            header: 'عنوان قرارداد',
+            size: 150,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+        },
+        {
+            accessorKey: 'actions',
+            header: 'عملیات',
+            size: 150,
+            Cell: ({ row }) => (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <IconButton
+                        aria-label="more"
+                        aria-controls={open ? 'long-menu' : undefined}
+                        aria-expanded={open ? 'true' : undefined}
+                        aria-haspopup="true"
+                        onClick={(event) => handleClick(event, row)}
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseMenu}
+                    >
+                        <MenuItem onClick={handleEdit}>
+                            ویرایش
+                        </MenuItem>
+                    </Menu>
+                </div>
+            ),
+        },
+    ], [anchorEl, selectedRow]);
 
     const table = useMaterialReactTable({
         columns,
@@ -135,32 +140,27 @@ function HistoryTable() {
         renderTopToolbarCustomActions: () => (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                    افزودن کاربر
+                    افزودن قرارداد
                 </Button>
             </Box>
         ),
-        initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        initialState: { density: 'compact' },
         state: {
-            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
-            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
+            isLoading: loading,
+            showProgressBars: loading,
         },
         muiSkeletonProps: {
-            animation: 'wave', // تنظیم انیمیشن Skeletons
-            height: 28, // ارتفاع Skeletons
+            animation: 'wave',
+            height: 28,
         },
         muiLinearProgressProps: {
-            color: 'primary', // رنگ Progress Bars
+            color: 'primary',
         },
         muiPaginationProps: {
             color: 'primary',
             shape: 'rounded',
             showRowsPerPage: false,
             variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%', // تبدیل دکمه‌ها به دایره‌ای
-                },
-            },
         },
         paginationDisplayMode: 'pages',
     });
@@ -168,8 +168,13 @@ function HistoryTable() {
     return (
         <div>
             <MaterialReactTable table={table} />
-
-            <HistoryTableModal open={open} handleClose={handleCloseModal} refreshData={fetchData} />
+            <HistoryTableModal
+                open={openModal}
+                handleClose={() => setOpenModal(false)}
+                refreshData={fetchData}
+                mode={editMode ? 'edit' : 'create'}
+                editId={editId}
+            />
         </div>
     );
 }

@@ -10,6 +10,7 @@ class HumanContractDTO {
         this.job_type_id = formData.jobTypeId;
         this.main_work = formData.mainWork;
         this.human_resource_nid = formData.humanResourceNid;
+        this.cover_village = formData.coveredVillages;
     }
     static fromForm(formData,nid) {
         return new HumanContractDTO({
@@ -22,7 +23,9 @@ class HumanContractDTO {
             titleContract: formData.titleContract,
             jobTypeId: formData.jobTitle,
             mainWork: formData.currentJob,
-            humanResourceNid: nid
+            humanResourceNid: nid,
+            coveredVillages : formData.coveredVillages
+
         });
     }
 }
