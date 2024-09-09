@@ -47,14 +47,19 @@ function InsuranceTable() {
     }, []);
 
     const handleEditClick = (row) => {
-        console.log(row.original.id)
         setEditId(row.original.id); // تنظیم شناسه رکورد برای ویرایش
         setMode('edit'); // تنظیم مودال روی حالت ویرایش
         setOpenModal(true); // باز کردن مودال
     };
 
     const columns = useMemo(() => [
+
         {
+            accessorKey: 'dehyari_title',
+            header: 'عنوان محل کار',
+            size: 150,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+        },{
             accessorKey: 'start_date',
             header: 'تاریخ شروع',
             size: 150,
@@ -67,10 +72,10 @@ function InsuranceTable() {
             Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
         },
         {
-            accessorKey: 'month',
-            header: 'سابقه به ماه',
+            accessorKey: 'days',
+            header: 'سابقه به روز',
             size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()} روز</div>,
         },
         {
             accessorKey: 'actions',

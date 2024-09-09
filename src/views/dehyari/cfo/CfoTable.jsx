@@ -17,17 +17,19 @@ import HumanResourceDTO from "@/utils/HumanResourceDTO";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
-    const [humanResourceData, setHumanResourceData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);  // مدیریت نمایش منو
+    const [currentRow, setCurrentRow] = useState(null); // ردیف جاری
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const {militaryServiceOptions, veteranStatusOptions, degreeOptions} = PersonalOption
+
+    // کنترل کلیک روی دکمه عملیات
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
-        setSelectedRow(row);
+        setCurrentRow(row.original);  // ردیف انتخاب شده
     };
+
+    // دانلود فایل PDF
     const handleDownloadPdf = async (row) => {
         try {
             const response = await axios.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {
@@ -36,7 +38,7 @@ function CfoTable(props) {
                 }
             });
 
-            const humanResourceData = response. data;
+            const humanResourceData = response.data;
             const data = new HumanResourceDTO(humanResourceData);
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
@@ -53,23 +55,10 @@ function CfoTable(props) {
         }
     };
 
-
-    const handleError = (error) => {
-        if (error.response && error.response.data && error.response.data.message) {
-            toast.error(`محاسبه ناموفق بود: ${error.response.data.message}`, { position: "top-center" });
-        } else if (error.response && error.response.data.errors) {
-            Object.keys(error.response.data.errors).forEach((key) => {
-                error.response.data.errors[key].forEach((message) => {
-                    toast.error(message, { position: "top-center" });
-                });
-            });
-        } else {
-            toast.error("محاسبه ناموفق بود", { position: "top-center" });
-        }
-        console.error("Error fetching human resource data:", error);
-    };
+    // بستن منو
     const handleClose = () => {
         setAnchorEl(null);
+        setCurrentRow(null);  // پاک کردن ردیف جاری
     };
 
     useEffect(() => {
@@ -80,7 +69,6 @@ function CfoTable(props) {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
-                console.log(response.data)
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
@@ -160,15 +148,15 @@ function CfoTable(props) {
                             onClose={handleClose}
                         >
                             <MenuItem onClick={handleClose}>
-                                {selectedRow && selectedRow.original ? (
-                                    <Link href={`/dehyari/form/edit?param=${selectedRow.original.nid}`}>
+                                {currentRow ? (
+                                    <Link href={`/dehyari/form/edit?param=${currentRow.nid}`}>
                                         ویرایش
                                     </Link>
                                 ) : (
-                                    <span>ویرایش</span> // یا هر محتوای دیگری در صورت نبود selectedRow
+                                    <span>ویرایش</span>
                                 )}
                             </MenuItem>
-                            <MenuItem onClick={() => handleDownloadPdf(selectedRow.original)}>
+                            <MenuItem onClick={() => handleDownloadPdf(currentRow)}>
                                 حکم کارگزینی
                             </MenuItem>
                         </Menu>
@@ -176,7 +164,7 @@ function CfoTable(props) {
                 ),
             },
         ],
-        [anchorEl, selectedRow]
+        [anchorEl, currentRow]
     );
 
     if (loading) {

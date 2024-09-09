@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Backdrop, Box, Button, Modal, Grid, TextField, Typography, IconButton, FormControl } from '@mui/material';
+import {
+    Backdrop,
+    Box,
+    Button,
+    Modal,
+    Grid,
+    TextField,
+    Typography,
+    IconButton,
+    FormControl,
+    InputLabel, Select, MenuItem
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import axios from 'axios';
@@ -28,7 +39,7 @@ const validationSchemas = {
     end_date: {
         required: 'تاریخ پایان الزامی است',
     },
-    month: {
+    day: {
         required: 'تعداد ماه الزامی است',
         min: { value: 1, message: 'حداقل ۱ ماه' },
     },
@@ -41,7 +52,6 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
     // اگر در حالت ویرایش هستیم، اطلاعات رکورد را دریافت می‌کنیم
     useEffect(() => {
         if (mode === 'edit' && editId) {
-            console.log('edit')
             setLoading(true);
             axios.get(`${InsuranceHistory()}/show/${editId}`, {
                 headers: {
@@ -49,15 +59,13 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                 },
             })
                 .then((response) => {
-                    console.log({
-                        start_date: response.data.data.start_date,
-                        end_date: response.data.data.end_date,
-                        month: response.data.data.month,
-                    })
                     methods.reset({
                         start_date: response.data.data.start_date,
                         end_date: response.data.data.end_date,
                         month: response.data.data.month,
+                        days: response.data.data.days,
+                        dehyari_title: response.data.data.dehyari_title,
+                        insuranceWorkshop: response.data.data.insurance_workshop, // اطمینان از استفاده از نام صحیح فیلد
                     });
                     setLoading(false);
                 })
@@ -69,6 +77,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
     }, [mode, editId, methods]);
 
     const handleSubmit = async (formData) => {
+        formData.human_resource_nid = new URLSearchParams(window.location.search).get('param')
         setLoading(true);
         try {
             const isValid = await methods.trigger();
@@ -76,6 +85,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                 setLoading(false);
                 return;
             }
+            console.log(formData)
 
             if (mode === 'create') {
                 // حالت ایجاد
@@ -213,21 +223,55 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                             {/* تعداد ماه */}
                             <Grid item xs={12} sm={6}>
                                 <Controller
-                                    name="month"
+                                    name="days"
                                     control={methods.control}
                                     defaultValue=""
-                                    rules={validationSchemas.month}
+                                    rules={validationSchemas.days}
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
-                                            label="تعداد ماه"
+                                            label="تعداد روز"
                                             fullWidth
                                             size="small"
-                                            error={!!methods.formState.errors.month}
-                                            helperText={methods.formState.errors.month?.message}
+                                            error={!!methods.formState.errors.days}
+                                            helperText={methods.formState.errors.days?.message}
                                         />
                                     )}
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Controller
+                                    name="dehyari_title"
+                                    control={methods.control}
+                                    defaultValue=""
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            label="عنوان محل کار"
+                                            fullWidth
+                                            size="small"
+                                            error={!!methods.formState.errors.dehyari_title}
+                                            helperText={methods.formState.errors.dehyari_title?.message}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+
+                            {/* کارگاه بیمه */}
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel>کارگاه بیمه</InputLabel>
+                                    <Controller
+                                        name="insuranceWorkshop"
+                                        control={methods.control}
+                                        render={({ field }) => (
+                                            <Select {...field} label="کارگاه بیمه" size="small">
+                                                <MenuItem value="1">دهیاری</MenuItem>
+                                                <MenuItem value="2">سایر کارگاه‌ها</MenuItem>
+                                            </Select>
+                                        )}
+                                    />
+                                </FormControl>
                             </Grid>
                         </Grid>
 

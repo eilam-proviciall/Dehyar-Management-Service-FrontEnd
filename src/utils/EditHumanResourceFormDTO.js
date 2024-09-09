@@ -20,9 +20,9 @@ class HumanResourceDTO {
             graduationDate: education.education_date ? new Date(education.education_date * 1000) : '',
         }));
         this.insurances = apiData.insurance_histories.map(insurance => ({
-            startDate: insurance.start_date ? new Date(insurance.start_date * 1000) : '',
-            endDate: insurance.end_date ? new Date(insurance.end_date * 1000) : '',
-            month: insurance.month,
+            startDate: insurance.start_date ,
+            endDate: insurance.end_date,
+            days: insurance.days,
             dehyariTitle: insurance.dehyari_title,
             contractType: insurance.contract_type
         }));
