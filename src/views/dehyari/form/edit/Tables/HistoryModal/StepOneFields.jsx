@@ -8,7 +8,7 @@
     import { GetHumanCoverdVillageForCfo } from "@/Services/humanResources";
     import OutlinedInput from "@mui/material/OutlinedInput";
 
-    const StepOneFields = ({ validation }) => {
+    const StepOneFields = ({ validation ,mode }) => {
         const { control, formState: { errors }, setValue, getValues } = useFormContext();
         const [contractTypeValue, setContractTypeValue] = useState(1);
         const [selectedJobTitle, setSelectedJobTitle] = useState('');
@@ -81,8 +81,18 @@
         };
 
         useEffect(() => {
-            fetchVillages(selectedJobTitle);
-        }, [selectedJobTitle]);
+            if (mode === 'edit') {
+                // در حالت ویرایش، jobTitle را از مقدار فعلی فرم بخوانید
+                const currentJobTitle = getValues('jobTitle');
+
+                // اگر jobTitle موجود بود، دهیاری‌ها را فچ کنید
+                if (currentJobTitle) {
+                    fetchVillages(currentJobTitle);
+                    setSelectedJobTitle(currentJobTitle);  // مقداردهی selectedJobTitle برای ویرایش
+                }
+            }
+        }, [mode, getValues, fetchVillages]);
+
 
         const options = jobTitleOptions.flatMap(group =>
             group.titles.map(title => ({
@@ -188,7 +198,12 @@
 
                 {/* دهیاری‌های تحت پوشش */}
                 <Grid item xs={12} sm={9}>
-                    <FormControl fullWidth size="small" error={!!errors.coveredVillages} disabled={!selectedJobTitle}>
+                    <FormControl
+                        fullWidth
+                        size="small"
+                        error={!!errors.coveredVillages}
+                        disabled={mode === 'create' && !selectedJobTitle}
+                    >
                         <InputLabel>دهیاری‌های تحت پوشش</InputLabel>
                         <Controller
                             name="coveredVillages"

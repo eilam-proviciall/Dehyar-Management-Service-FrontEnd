@@ -67,6 +67,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
     }, [open]);
 
     useEffect(() => {
+        console.log("mode:", mode, "editId:", editId);
         if (mode === 'edit' && editId) {
             const fetchData = async () => {
                 try {
@@ -85,6 +86,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                         titleContract: response.data.title_contract,
                         jobTitle: response.data.job_type_id,
                         currentJob: response.data.main_work,
+                        coveredVillages: response.data.cover_villages.map(village => village.village_code),
                     };
 
                     methods.reset(mappedData); // Populate the form with fetched data
@@ -95,6 +97,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
             fetchData();
         }
     }, [editId, mode]);
+
 
     const handleNext = async () => {
         const isValid = await methods.trigger();
@@ -128,6 +131,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                     },
                 });
                 toast.success("قرارداد با موفقیت ثبت شد");
+
             }
             methods.reset(); // Reset form after submission
             handleClose(); // Close modal after submission
@@ -186,7 +190,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
 
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(handleSubmit)}>
-                        {activeStep === 0 && <StepOneFields validation={validationSchemas}/>}
+                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode}/>}
                         {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
