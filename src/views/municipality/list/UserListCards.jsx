@@ -64,20 +64,20 @@ const UserListCards = ({ loading, setLoading }) => {
 
   const fetchData = () => {
     setLoading(true);
-    axios.get(`${user()}?order_by=geo_region`, {
+    axios.get(user(), {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     }).then((response) => {
-      setUserList(response.data.data[0]);
+      setUserList(response.data.data);
       setLoading(false);
-      response.data.data[0].map(item => {
+      response.data.data.map(item => {
         item.work_group == 13 ? setCFODetails(prevItems => [...prevItems, item])
           : item.work_group == 14 ? setBakhshdarDetails(prevItems => [...prevItems, item])
             : null
       })
     }).catch(
-      () => setLoading(false)
+      () => { setLoading(false) }
     );
   }
 

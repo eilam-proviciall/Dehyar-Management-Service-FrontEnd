@@ -18,23 +18,27 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
     const [users, setUsers] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
+    const [page, setPage] = useState(0);
+    const [perPage, setPerPage] = useState(10);
     const open = Boolean(anchorEl);
 
-    const fetchUsers = () => {
+    const fetchUsers = async () => {
         setLoading(true);
-        axios.get(`${user()}?order_by=geo_region`, {
+        const response = await axios.get(`${user()}?page${page + 1}&per_page${perPage}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         }).then((response) => {
-            setUsers(response.data.data[0])
+            setUsers(response.data.data)
+            console.log(response.data);
             setLoading(false);
         })
+
     }
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [page, perPage]);
 
     const tableData = useMemo(() => users, [users]); // Memoize table data
 
@@ -275,7 +279,14 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                 </Button>
             </Box>
         ),
-        initialState: { density: 'compact' },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        initialState: {
+            density: 'compact',
+            pagination: {
+                pageIndex: page,
+                pageSize: perPage,
+            }
+        },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        rowCount: users.length,
         state: {
             isLoading: loading, // نشان دادن لودینگ پیش‌فرض
             showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری

@@ -107,7 +107,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
                     }
                 })
         ) : (
-            axios.put(`${user()}/${1}`, processedData,
+            axios.put(`${user()}/${processedData.id}`, processedData,
                 { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
                 .then(() => {
                     toast.success("کاربر با موفقیت ویرایش شد", {
