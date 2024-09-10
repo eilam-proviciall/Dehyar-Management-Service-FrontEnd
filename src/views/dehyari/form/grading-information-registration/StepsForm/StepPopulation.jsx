@@ -26,7 +26,7 @@ const StepPopulation = ({ data, setData, step, setStep }) => {
                     name={name}
                     control={control}
                     rules={{ required: true }}
-                    render={({ field: { value = '', onChange } }) => (
+                    render={({ field: { value, onChange } }) => (
                         <TextField
                             label={label}
                             value={value}
@@ -79,7 +79,7 @@ const StepPopulation = ({ data, setData, step, setStep }) => {
         if (allObjectsHaveValues(newData) == true || newData.length == 0) {
             const id = newData.length;
             const newValue = {
-                'id': newData.length,
+                'id': Date.now(),
                 [`population_fields.${id}.year`]: '',
                 [`population_fields.${id}.population`]: '',
                 [`population_fields.${id}.family`]: '',
@@ -109,7 +109,6 @@ const StepPopulation = ({ data, setData, step, setStep }) => {
         const updatePopulationFields = data.population_fields.filter((field) => field.id !== id);
         setData(prevValues => ({ ...prevValues, population_fields: updatePopulationFields }));
         console.log("Data Then Deleted => ", data.population_fields);
-
     }
 
     const onSubmit = (data) => {
@@ -124,13 +123,13 @@ const StepPopulation = ({ data, setData, step, setStep }) => {
             <Grid className='w-full'>
                 {data.population_fields.map((field) => (
                     <div className='my-5'>
-                        <div className='grid md:grid-cols-3 gap-2'>
+                        <div className='grid md:grid-cols-6 gap-2'>
                             {renderTextField(field.id, `population_fields.${field.id}.year`, 'سال', 'وارد کردن سال الزامی است')}
                             {renderTextField(field.id, `population_fields.${field.id}.population`, 'جمعیت', 'وارد کردن جمعیت الزامی است')}
                             {renderTextField(field.id, `population_fields.${field.id}.family`, 'خانوار', 'وارد کردن خانوار الزامی است')}
                             {renderTextField(field.id, `population_fields.${field.id}.man_count`, 'مرد', 'وارد کردن مرد الزامی است')}
                             {renderTextField(field.id, `population_fields.${field.id}.woman_count`, 'زن', 'وارد کردن زن الزامی است')}
-                            <Button sx={{ height: '75%' }} variant='contained' color='error' onClick={() => { handleDeletePopulationField(field.id) }}>حذف</Button>
+                            <Button sx={{ height: '75%' }} variant='contained' color='error' onClick={() => { handleDeletePopulationField(field.id) }}><i className='ri-delete-bin-line'></i></Button>
                         </div>
                         <Divider />
                     </div>

@@ -12,6 +12,7 @@ import persian_fa from "react-date-object/locales/persian_fa"
 
 // Component Imports
 import DividerSimple from '@/components/common/Divider/DividerSimple'
+import { toast } from 'react-toastify';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -23,6 +24,7 @@ const persianToEnglishDigits = (str) => {
 const StepBasicInformation = ({ data, setData, step, setStep }) => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
+            organization_type: data.organization_type,
             hierarchical_code: data.hierarchical_code,
             village_code: data.village_code,
             nid: data.nid,
@@ -37,6 +39,11 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
             grade: data.grade,
         }
     });
+
+    const organizations = [
+        { value: 1, label: "دهیاری" },
+        { value: 2, label: "شهرداری" }
+    ]
 
     const centralityStatus = [
         { value: 0, label: "نمیباشد" },
@@ -60,15 +67,9 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
     ]
 
     const [errorState, setErrorState] = useState(null);
-    const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('');
-
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
 
     const renderTextField = (name, label, errorText) => (
-        <FormControl fullWidth className='mbe-5'>
+        <FormControl fullWidth>
             <Controller
                 name={name}
                 control={control}
@@ -92,7 +93,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
     );
 
     const renderSelect = (name, label, option, errorText) => (
-        <FormControl >
+        <FormControl fullWidth  >
             <InputLabel id={name}>{label}</InputLabel>
             <Controller
                 name={name}
@@ -121,61 +122,82 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
     )
 
     const renderDatePicker = (name, label, errorText) => (
-        <Controller
-            name={name}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-                <DatePicker
-                    value={value}
-                    calendar={persian}
-                    locale={persian_fa}
-                    onChange={onChange}
-                    render={(value, onChange) => (
-                        <TextField
-                            label={label}
-                            value={value}
-                            onClick={onChange}
-                            onFocus={onChange}
-                            onMouseLeave={() => {
-                                setData(prevValues => ({ ...prevValues, [name]: value }));
-                            }}
-                            helperText={!data[name] ? errorText : ''}
-                            fullWidth
-                        />
-                    )}
-                />
-            )}
-        />
+        <FormControl fullWidth>
+            <Controller
+                name={name}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                        value={value}
+                        calendar={persian}
+                        locale={persian_fa}
+                        onChange={onChange}
+                        render={(value, onChange) => (
+                            <TextField
+                                label={label}
+                                value={value}
+                                onClick={onChange}
+                                onFocus={onChange}
+                                onMouseLeave={() => {
+                                    setData(prevValues => ({ ...prevValues, [name]: value }));
+                                }}
+                                helperText={!data[name] ? errorText : ''}
+                                fullWidth
+                            />
+                        )}
+                    />
+                )}
+            />
+        </FormControl>
     );
 
     const onSubmit = data => {
-        setStep(step + 1);
+        data.organization_type === '' ? toast.error("شما باید یک سازمان را برای رفتن به مرحله بعد انتخاب نمایید", {
+            position: "top-center",
+            duration: 3000,
+        }) : setStep(1);
     }
 
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} mb={5}>
-                <DividerSimple title={data.organization_type} />
+                <DividerSimple title={data.organization_type ? data.organization_type : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
             </Grid>
             <form onSubmit={handleSubmit(onSubmit)} className='w-full'>
-                <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-5'>
-                    {renderTextField('hierarchical_code', 'کد سلسله مراتبی', 'کد سلسله مراتبی الزامی است')}
-                    {renderTextField('village_code', 'کد آبادی', 'کد آبادی مراتبی الزامی است')}
-                    {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
-                    {renderSelect('dehyari_status', 'انتخاب دهیاری', dehyariStatus, 'انتخاب دهیاری الزامی است')}
-                    {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
-                    {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
-                    {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
-                    {renderTextField('postal_code', 'کد پستی', 'کد پستی الزامی است')}
-                    {renderTextField('fire_station', 'پایگاه آتش نشانی', 'پایگاه آتش نشانی الزامی است')}
-                    {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
-                    {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
-                    {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
-                </div>
-                <Box display={'flex'} mt={2} gap={5} justifyContent={'center'} >
-                    <Button variant='contained' color='secondary' onClick={() => { setStep(step - 1) }}>برگشت</Button>
+                <Grid container gap={5}>
+                    <div className='grid md:grid-cols-4 w-full gap-5'>
+                        {renderSelect('organization_type', 'انتخاب سازمان', organizations, 'انتخاب سازمان الزامی است')}
+                        {renderTextField('hierarchical_code', 'کد سلسله مراتبی', 'کد سلسله مراتبی الزامی است')}
+                        {renderTextField('village_code', 'کد آبادی', 'کد آبادی مراتبی الزامی است')}
+                        {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
+                    </div>
+                    <div className='grid md:grid-cols-4 w-full gap-5'>
+                        {renderSelect('dehyari_status', 'انتخاب دهیاری', dehyariStatus, 'انتخاب دهیاری الزامی است')}
+                        {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
+                        {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
+                        {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
+                    </div>
+                    <div className='grid md:grid-cols-3 w-full gap-5'>
+                        {renderTextField('postal_code', 'کد پستی', 'کد پستی الزامی است')}
+                        {renderTextField('fire_station', 'پایگاه آتش نشانی', 'پایگاه آتش نشانی الزامی است')}
+                        {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
+                    </div>
+                    {data.organization_type == 'شهرداری' ? (
+                        [
+                            <div className='grid md:grid-cols-2 w-full gap-5'>
+                                {renderTextField('grade_city', 'درجه شهرستان', 'وارد کردن درجه شهرستان الزامی است')}
+                                {renderTextField('grade_state', 'درجه استان', 'وارد کردن درجه استان الزامی است')}
+                            </div>
+                        ]
+                    ) : ''
+                    }
+                    <div className='grid md:grid-cols-2 w-full gap-5'>
+                        {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
+                        {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
+                    </div>
+                </Grid>
+                <Box display={'flex'} mt={2} gap={5} justifyContent={'end'} >
                     <Button type='submit' variant='contained' color='primary' >بعدی</Button>
-                    {/* <Button variant='contained' color='success' onClick={() => { }}>ثبت</Button> */}
                 </Box>
             </form>
         </Grid>

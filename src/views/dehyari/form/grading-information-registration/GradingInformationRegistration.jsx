@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 
 // MUI Imports
-import { Box, Button, Grid, Modal, Paper } from '@mui/material';
+import { Box, Button, Divider, Grid, Modal, Paper } from '@mui/material';
 
 // ThirdParty Imports
 import { toast } from 'react-toastify';
@@ -14,13 +14,15 @@ import StepOrganization from './StepsForm/StepOrganization';
 import StepBasicInformation from './StepsForm/StepBasicInformation';
 import StepPopulation from './StepsForm/StepPopulation';
 import StepIncome from './StepsForm/StepIncome';
+import StepPopulationNew from './StepsForm/StepPopulationNew';
+import StepIncomeNew from './StepsForm/StepIncomeNew';
 
 const GradingInformationRegistration = () => {
 
     // States
     const [openModal, setOpenModal] = useState(false);
     const [handleSubmit, setHandleSubmit] = useState(false);
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(2);
     const [data, setData] = useState({
         organization_type: '',
         hierarchical_code: '',
@@ -36,44 +38,27 @@ const GradingInformationRegistration = () => {
         date_grading: '',
         grade: '',
         population_fields: [{
-            'id': 0,
-            'population_fields.0.year': '',
-            'population_fields.0.population': '',
-            'population_fields.0.family': '',
-            'population_fields.0.man_count': '',
-            'population_fields.0.woman_count': '',
+            // 'id': 0,
+            'year': '',
+            'population': '',
+            'family': '',
+            'man_count': '',
+            'woman_count': '',
         }],
         income_fields: [{
-            'id': 0,
-            'income_fields.0.year': '',
-            'income_fields.0.per_income': '',
+            // 'id': 0,
+            year: '',
+            per_income: '',
         }]
     });
 
     const steps = [
-        { step: 0, name: "انتخاب سازمان", content: (<StepOrganization data={data} setData={setData} step={step} setStep={setStep} />) },
+        // { step: 0, name: "انتخاب سازمان", content: (<StepOrganization data={data} setData={setData} step={step} setStep={setStep} />) },
         { step: 1, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 2, name: "جمعیت", content: (<StepPopulation data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 3, name: "درآمد", content: (<StepIncome data={data} setData={setData} step={step} setStep={setStep} setOpenModal={setOpenModal} />) }
+        { step: 2, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
+        { step: 3, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} setOpenModal={setOpenModal} />) }
     ]
 
-    // Handlers
-    const handleNextStep = () => {
-        switch (step) {
-            case 0: {
-                break;
-            }
-            case 1: {
-                setHandleSubmit(true);
-                console.log(handleSubmit);
-                break;
-            }
-            case 2: {
-                setStep(3);
-                break;
-            }
-        }
-    }
     const handleOpenForm = () => setOpenModal(true);
     const handleCloseForm = () => {
         setStep(0);
@@ -88,10 +73,12 @@ const GradingInformationRegistration = () => {
                     <div className='bg-backgroundPaper h-full lg:h-auto rounded-2xl'>
                         <Button onClick={handleCloseForm}><i className='ri-close-fill' /></Button>
                         <Grid container >
-                            <Grid display={'flex'} item xs={12} gap={5} justifyContent={'center'}>
+                            <Grid display={'flex'} item xs={12} gap={2} justifyContent={'center'}>
                                 {steps.map((currentStep) => (
-                                    <div className={`${currentStep.step == steps[step].step ? 'border-primary text-primary' : 'sm:block hidden'} p-4 border-b-2 `}>
-                                        {currentStep.name}
+                                    <div className={`flex ${currentStep.step == steps[step].step ? 'border-primary text-primary font-bold' : 'sm:flex hidden'} gap-2 items-center justify-between `}>
+                                        <div className={`flex rounded-full justify-center items-center h-8 w-8  ${currentStep.step == steps[step].step ? 'border-primary text-primary' : 'border-secondary text-secondary'} font-bold border-4`}>{currentStep.step}</div>
+                                        <div>{currentStep.name}</div>
+                                        {currentStep.step !== steps.length ? <div className='sm:block hidden text-secondary font-medium'>------------------------------------------------------</div> : ''}
                                     </div>
                                 ))}
                             </Grid>
