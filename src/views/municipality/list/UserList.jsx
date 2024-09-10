@@ -14,7 +14,7 @@ const UserList = ({ userData }) => {
     const [sidebarDetails, setSidebarDetails] = useState({
         status: 'add', defaultValues: {}
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
     const calendarStore = useSelector(state => state.calendarReducer)
 

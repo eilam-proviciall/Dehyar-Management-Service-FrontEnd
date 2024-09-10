@@ -60,6 +60,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     const onSubmit = (data) => {
 
         data.villages ? data.villages = data.villages.map(village => village.toString()) : null
+        console.log("Data =>", data);
 
 
         console.log(data)
@@ -77,6 +78,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         }
 
         console.log("Processed Data : ", processedData)
+        console.log("Status => ", sidebarDetails.status);
 
         sidebarDetails.status == 'add' ? (
             axios.post(user(), processedData,

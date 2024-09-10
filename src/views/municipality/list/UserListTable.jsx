@@ -8,7 +8,6 @@ import Chip from "@mui/material/Chip";
 import axios from "axios";
 import { user } from "@/Services/Auth/AuthService";
 import roles from "@data/roles.json"
-import { Cell } from "recharts";
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
@@ -24,7 +23,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
 
     const fetchUsers = async () => {
         setLoading(true);
-        const response = await axios.get(`${user()}?page${page + 1}&per_page${perPage}`, {
+        await axios.get(`${user()}?page${page + 1}&per_page${perPage}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -37,8 +36,8 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
     }
 
     useEffect(() => {
-        fetchUsers();
-    }, [page, perPage]);
+        loading ? fetchUsers() : null;
+    }, [loading]);
 
     const tableData = useMemo(() => users, [users]); // Memoize table data
 
@@ -80,7 +79,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
     }
 
     const handleDeleteUser = (row) => {
-        axios.delete(`${user()}/${0}`,
+        axios.delete(`${user()}/${row.original.id}`,
             { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
             .then(() => {
                 toast.success("کاربر با موفقیت حذف شد", {
