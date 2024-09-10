@@ -68,12 +68,24 @@ const VerticalMenu = ({ scrollMenu }) => {
             );
         }
 
-        return menuItems.map(item => (
+        // Filter out items where showOnSidebar is false
+        const filteredItems = menuItems.filter(item => item.showOnSidebar !== false);
+
+        if (filteredItems.length === 0) {
+            return (
+                <MenuItem>
+                    <span>No visible items</span>
+                </MenuItem>
+            );
+        }
+
+        return filteredItems.map(item => (
             <MenuItem key={item.href} href={item.href}>
                 {item.label}
             </MenuItem>
         ));
     };
+
 
     return (
         // eslint-disable-next-line lines-around-comment

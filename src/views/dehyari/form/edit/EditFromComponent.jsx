@@ -122,7 +122,7 @@ function EditFromComponent() {
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={6}>
                         <Grid item xs={12}>
-                            <EditProfilePictureUpload />
+                            <EditProfilePictureUpload defaultProfilePicture={defaultValue?.profilePicture} />
                         </Grid>
                         <Grid item xs={12}>
                             <EditButtonGroup

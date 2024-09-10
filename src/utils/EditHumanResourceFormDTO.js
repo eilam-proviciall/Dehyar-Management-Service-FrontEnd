@@ -44,6 +44,7 @@ class HumanResourceDTO {
             socialNetwork: JSON.parse(contact.social_network),  // پارس کردن social_network
             description: contact.description,
         }));
+        this.profilePicture = apiData.profile_picture.image_hash; // افزودن عکس پروفایل
     }
 
     static fromForm(formData) {
@@ -80,6 +81,7 @@ class HumanResourceDTO {
                 end_academic_deferment: child.endOfStudyExemption,
                 death_date: child.deathDate,
             })),
+            profile_picture_base64: formData.profilePicture,
         };
     }
 }
