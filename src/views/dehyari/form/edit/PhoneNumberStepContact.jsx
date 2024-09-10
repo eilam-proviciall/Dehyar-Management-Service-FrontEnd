@@ -36,6 +36,12 @@ const PhoneNumberStepContact = ({ validation }) => {
         }
     }, [fields, append]);
 
+    const socialNetworks = [
+        { value: 'eitaa', label: 'ایتا' },
+        { value: 'bale', label: 'بله' },
+        { value: 'shad', label: 'شاد' },
+        { value: 'contactPhone', label: 'شماره ضروری' }
+    ];
 
     return (
         <Grid container spacing={2} mt={1}>
@@ -92,9 +98,10 @@ const PhoneNumberStepContact = ({ validation }) => {
                                                             onChange={field.onChange}
                                                             renderValue={(selected) => (
                                                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                                    {selected.map((value) => (
-                                                                        <Chip key={value} label={value} />
-                                                                    ))}
+                                                                    {selected.map((value) => {
+                                                                        const network = socialNetworks.find((network) => network.value === value);
+                                                                        return <Chip key={value} label={network ? network.label : value} />;
+                                                                    })}
                                                                 </Box>
                                                             )}
                                                         >
