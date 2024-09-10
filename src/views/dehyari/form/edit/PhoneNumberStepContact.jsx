@@ -52,7 +52,7 @@ const PhoneNumberStepContact = ({ validation }) => {
                             <Card key={item.id} sx={{ mb: 2 }}>
                                 <CardContent>
                                     <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={4}>
+                                        <Grid item xs={12} sm={6}>
                                             <Controller
                                                 name={`contacts[${index}].phoneNumber`}
                                                 control={control}
@@ -76,7 +76,7 @@ const PhoneNumberStepContact = ({ validation }) => {
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12} sm={4}>
+                                        <Grid item xs={12} sm={6}>
                                             <Controller
                                                 name={`contacts[${index}].socialNetwork`}
                                                 control={control}
@@ -127,25 +127,6 @@ const PhoneNumberStepContact = ({ validation }) => {
                                                 )}
                                             />
                                         </Grid>
-
-
-                                        <Grid item xs={12} sm={4}>
-                                            <Controller
-                                                name={`contacts[${index}].description`}
-                                                control={control}
-                                                defaultValue={item.description}
-                                                render={({ field }) => (
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        label="توضیحات"
-                                                        placeholder="توضیحات"
-                                                        {...field}
-                                                    />
-                                                )}
-                                            />
-                                        </Grid>
-
                                         <Grid item xs={12} sm={2}>
                                             <IconButton
                                                 aria-label="حذف"
