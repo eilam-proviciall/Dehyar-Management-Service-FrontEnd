@@ -204,6 +204,84 @@ const EditStepChildren = ({ validation }) => {
                                                     )}
                                                 />
                                             </Grid>
+                                            <Grid item xs={12} sm={3}>
+                                                <Controller
+                                                    name={`children.${index}.marriageDate`}
+                                                    control={control}
+                                                    defaultValue=""
+                                                    render={({ field: { onChange, value } }) => (
+                                                        <DatePicker
+                                                            value={value ? new Date(value * 1000) : ""}
+                                                            onChange={(date) => {
+                                                                onChange(date ? date.toUnix() : "");
+                                                                validateChild(index);
+                                                            }}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            render={<TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="تاریخ ازدواج"
+                                                                error={!!errors?.children?.[index]?.marriageDate}
+                                                                helperText={errors?.children?.[index]?.marriageDate && errors.children[index].marriageDate.message}
+                                                            />}
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={3}>
+                                                <Controller
+                                                    name={`children.${index}.endOfStudyExemption`}
+                                                    control={control}
+                                                    defaultValue=""
+                                                    render={({ field: { onChange, value } }) => (
+                                                        <DatePicker
+                                                            value={value ? new Date(value * 1000) : ""}
+                                                            onChange={(date) => {
+                                                                onChange(date ? date.toUnix() : "");
+                                                                validateChild(index);
+                                                            }}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            render={<TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="پایان معافیت تحصیلی"
+                                                                error={!!errors?.children?.[index]?.endOfStudyExemption}
+                                                                helperText={errors?.children?.[index]?.endOfStudyExemption && errors.children[index].endOfStudyExemption.message}
+                                                            />}
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={3}>
+                                                <Controller
+                                                    name={`children.${index}.deathDate`}
+                                                    control={control}
+                                                    defaultValue=""
+                                                    render={({ field: { onChange, value } }) => (
+                                                        <DatePicker
+                                                            value={value ? new Date(value * 1000) : ""}
+                                                            onChange={(date) => {
+                                                                onChange(date ? date.toUnix() : "");
+                                                                validateChild(index);
+                                                            }}
+                                                            calendar={persian}
+                                                            locale={persian_fa}
+                                                            calendarPosition="bottom-right"
+                                                            render={<TextField
+                                                                size="small"
+                                                                fullWidth
+                                                                label="تاریخ وفات"
+                                                                error={!!errors?.children?.[index]?.deathDate}
+                                                                helperText={errors?.children?.[index]?.deathDate && errors.children[index].deathDate.message}
+                                                            />}
+                                                        />
+                                                    )}
+                                                />
+                                            </Grid>
                                             {/* دکمه حذف */}
                                             <Grid item xs={12} sm={3}>
                                                 <IconButton

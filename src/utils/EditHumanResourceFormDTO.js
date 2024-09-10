@@ -31,6 +31,9 @@ class HumanResourceDTO {
             fullName: child.full_name,
             birthDate: child.birth_date,
             gender: child.gender,
+            marriageDate: child.married_date,
+            endOfStudyExemption: child.end_academic_deferment,
+            deathDate: child.death_date,
         }));
 
         this.coveredVillages = apiData.covered_villages.map(village => ({
@@ -73,6 +76,9 @@ class HumanResourceDTO {
                 full_name: child.fullName,
                 birth_date: child.birthDate,
                 gender: child.gender,
+                married_date: child.marriageDate,
+                end_academic_deferment: child.endOfStudyExemption,
+                death_date: child.deathDate,
             })),
         };
     }

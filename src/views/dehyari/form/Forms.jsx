@@ -36,7 +36,7 @@ const Forms = ({ invoiceData }) => {
             militaryService: '',
             educations: [{ degree: '', fieldOfStudy: '', graduationDate: '' }],
             insurances: [{ workplace: '', insurancePeriod: '', insuranceType: '', employmentStartDate: '', employmentEndDate: '' }],
-            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', deathDate: '' }],
+            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', death_date: '' }],
             contractType: '',
             employmentStatus: '',
             contractStart: '',
