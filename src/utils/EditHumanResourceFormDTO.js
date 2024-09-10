@@ -78,7 +78,11 @@ class HumanResourceDTO {
             residence_address: formData.residenceAddress, // آدرس محل سکونت
             landline_number: formData.landlineNumber, // شماره تماس ثابت
 
-            education_histories: formData.educations,
+            educations: formData.educations.map(education => ({
+                education_degree: education.degree, // ذخیره مدرک تحصیلی
+                education_field: education.fieldOfStudy, // ذخیره کد رشته تحصیلی
+                education_date: education.graduationDate, // تاریخ فارغ‌التحصیلی
+            })),
             insurance_histories: formData.insurances,
             covered_villages: formData.coveredVillages,
             contacts: formData.contacts.map(contact => ({

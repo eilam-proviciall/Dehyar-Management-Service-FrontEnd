@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Grid, Accordion, AccordionDetails, AccordionSummary, Card, CardContent, TextField, FormControl, InputLabel, Select, MenuItem, Button, IconButton, Typography, Box, Chip, Avatar } from '@mui/material';
+import { Grid, Accordion, AccordionDetails, AccordionSummary, Card, CardContent, TextField, FormControl, InputLabel, Select, MenuItem, Button, IconButton, Typography, Box, Chip, Avatar, Autocomplete } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -9,6 +9,8 @@ import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from '@components/common/Divider/DividerSimple';
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
+import {GetFieldStudy} from "@/Services/humanResources"; // Import axios for fetching data
 
 const EditStepEducation = ({ validation }) => {
     const { control, formState: { errors } } = useFormContext();
@@ -18,6 +20,8 @@ const EditStepEducation = ({ validation }) => {
     });
 
     const [expanded, setExpanded] = useState(false);
+    const [educationFields, setEducationFields] = useState([]); // State to store education fields
+
     const educationDegrees = [
         { title: "بی سواد", value: 41 },
         { title: "سیکل", value: 42 },
@@ -28,15 +32,29 @@ const EditStepEducation = ({ validation }) => {
         { title: "دکترا", value: 47 },
     ];
 
+    // Fetch education fields from API
+    useEffect(() => {
+        const fetchEducationFields = async () => {
+            try {
+                const response = await axios.get(GetFieldStudy());
+                setEducationFields(response.data);
+            } catch (error) {
+                console.error("Error fetching education fields:", error);
+            }
+        };
+
+        fetchEducationFields();
+    }, []);
+
     useEffect(() => {
         if (Object.keys(errors.educations || {}).length > 0) {
             setExpanded(true);
         }
     }, [errors.educations]);
+
     const getLatestDegreeTitle = () => {
         if (!fields.length) return "بدون مدرک";
 
-        // پیدا کردن مدرک با بالاترین value
         const highestDegree = fields.reduce((prev, current) => {
             return prev.degree > current.degree ? prev : current;
         });
@@ -96,20 +114,29 @@ const EditStepEducation = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
                                             <Controller
-                                                name={`educations[${index}].fieldOfStudy`}
+                                                name={`educations[${index}].fieldOfStudy`} // اینجا می‌خواهیم code ذخیره کنیم
                                                 control={control}
                                                 defaultValue={item.fieldOfStudy}
                                                 render={({ field }) => (
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        label="رشته تحصیلی"
-                                                        placeholder="رشته تحصیلی"
+                                                    <Autocomplete
                                                         {...field}
+                                                        options={educationFields}
+                                                        getOptionLabel={(option) => option.name || ""}
+                                                        value={educationFields.find((option) => option.code === field.value) || null} // استفاده از code برای مقدار value
+                                                        onChange={(_, value) => field.onChange(value ? value.code : "")} // ذخیره code در فرم
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="رشته تحصیلی"
+                                                                fullWidth
+                                                                size="small"
+                                                            />
+                                                        )}
                                                     />
                                                 )}
                                             />
                                         </Grid>
+
                                         <Grid item xs={12} sm={4}>
                                             <FormControl fullWidth size="small">
                                                 <Controller

@@ -63,6 +63,7 @@ function EditFromComponent() {
 
     const onSubmit = async (formData) => {
         const apiData = EditHumanResourceFormDTO.fromForm(formData);
+        console.log(apiData);
         try {
             const response = await axios.put(`${humanResources()}/update/${formData.id}`, apiData, {
                 headers: {
