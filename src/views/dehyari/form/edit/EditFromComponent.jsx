@@ -125,7 +125,11 @@ function EditFromComponent() {
                             <EditProfilePictureUpload />
                         </Grid>
                         <Grid item xs={12}>
-                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} onSwitch={handleSwitch} />
+                            <EditButtonGroup
+                                onSubmit={methods.handleSubmit(onSubmit)}
+                                onSwitch={handleSwitch}
+                                showTable={showTable}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>

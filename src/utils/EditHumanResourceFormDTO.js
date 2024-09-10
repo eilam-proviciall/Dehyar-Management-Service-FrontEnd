@@ -17,7 +17,7 @@ class HumanResourceDTO {
         this.educations = apiData.education_histories.map(education => ({
             degree: education.education_degree,
             fieldOfStudy: education.education_field,
-            graduationDate: education.education_date ? new Date(education.education_date * 1000) : '',
+            graduationDate: education.education_date,
         }));
         this.insurances = apiData.insurance_histories.map(insurance => ({
             startDate: insurance.start_date ,
