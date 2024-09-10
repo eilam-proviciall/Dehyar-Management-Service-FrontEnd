@@ -67,7 +67,9 @@
             setValue('coveredVillages', currentSelection);
             setChipsKey(prevKey => prevKey + 1);
         }, [employerVillage, getValues, setValue]);
-
+        useEffect(() => {
+            fetchVillages(selectedJobTitle);
+        }, [selectedJobTitle]);
         const handleChange = (selectedVillages) => {
             if (!Array.isArray(selectedVillages)) return;
 
