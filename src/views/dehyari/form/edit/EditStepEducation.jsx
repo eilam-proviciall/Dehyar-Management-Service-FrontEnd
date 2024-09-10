@@ -33,6 +33,17 @@ const EditStepEducation = ({ validation }) => {
             setExpanded(true);
         }
     }, [errors.educations]);
+    const getLatestDegreeTitle = () => {
+        if (!fields.length) return "بدون مدرک";
+
+        // پیدا کردن مدرک با بالاترین value
+        const highestDegree = fields.reduce((prev, current) => {
+            return prev.degree > current.degree ? prev : current;
+        });
+
+        const foundDegree = educationDegrees.find(degree => degree.value === highestDegree.degree);
+        return foundDegree ? foundDegree.title : "بدون مدرک";
+    };
 
     return (
         <Grid container spacing={2} mt={1}>
@@ -46,7 +57,7 @@ const EditStepEducation = ({ validation }) => {
                             <Typography>سوابق تحصیلی</Typography>
                             <Chip
                                 avatar={<Avatar>{/* محاسبه بالاترین مدرک */}</Avatar>}
-                                label="آخرین مدرک"
+                                label={getLatestDegreeTitle()}
                                 variant="outlined"
                                 style={{
                                     textAlign: 'center',
