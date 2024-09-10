@@ -33,8 +33,10 @@ const EditStepChildren = ({ validation }) => {
             setExpanded(true);
         }
     }, [errors.children]);
+  // هر زمان که children تغییر کند، این اثر فراخوانی می‌شود.
 
     const children = watch('children') || [];
+
 
     useEffect(() => {
         children.forEach((child, index) => {
@@ -65,9 +67,12 @@ const EditStepChildren = ({ validation }) => {
         return children.filter(child => child.gender === gender).length;
     };
 
-    const girlsCount = countChildrenByGender('0');
-    const boysCount = countChildrenByGender('1');
-
+    let girlsCount = countChildrenByGender(0);
+    let boysCount = countChildrenByGender(1);
+    useEffect(() => {
+         girlsCount = countChildrenByGender('0'); // دخترها
+         boysCount = countChildrenByGender('1'); // پسرها
+    }, [children]);
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
@@ -166,8 +171,8 @@ const EditStepChildren = ({ validation }) => {
                                                                 }}
                                                                 value={field.value}
                                                             >
-                                                                <MenuItem value="1">پسر</MenuItem>
-                                                                <MenuItem value="0">دختر</MenuItem>
+                                                                <MenuItem value={1}>پسر</MenuItem>
+                                                                <MenuItem value={0}>دختر</MenuItem>
                                                             </Select>
                                                         )}
                                                     />

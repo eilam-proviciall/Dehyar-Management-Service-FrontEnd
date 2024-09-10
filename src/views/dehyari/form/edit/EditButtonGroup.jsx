@@ -17,7 +17,7 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                             startIcon={<PictureAsPdfIcon />}
                             onClick={onSwitch}
                         >
-                            {showTable ? "اطلاعات فردی" : "حکم کارگزینی"} {/* تغییر متن دکمه */}
+                            {showTable ? "اطلاعات فردی" : "اطلاعات منابع انسانی"} {/* تغییر متن دکمه */}
                         </Button>
                     </motion.div>
                 </AnimatePresence>
