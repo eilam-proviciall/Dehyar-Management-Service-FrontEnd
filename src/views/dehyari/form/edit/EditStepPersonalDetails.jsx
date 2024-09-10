@@ -33,27 +33,45 @@ const EditStepPersonalDetails = ({ validation }) => {
                     <DividerSimple title='اطلاعات شخصی' />
                 </Grid>
 
-                {/* نام و نام خانوادگی */}
                 <Grid item xs={12} sm={4}>
                     <Controller
-                        name="fullName"
+                        name="firstName"
                         control={control}
                         defaultValue=""
-                        rules={validation.fullName}
+                        rules={validation.firstName}
                         render={({ field }) => (
                             <TextField
                                 fullWidth
                                 size="small"
-                                label="نام و نام خانوادگی"
-                                placeholder="نام و نام خانوادگی"
+                                label="نام"
+                                placeholder="نام"
                                 {...field}
-                                error={!!errors.fullName}
-                                helperText={errors.fullName && errors.fullName.message}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName && errors.firstName.message}
                             />
                         )}
                     />
                 </Grid>
-
+                {/* نام خانوادگی */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="lastName"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.lastName}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="نام خانوادگی"
+                                placeholder="نام خانوادگی"
+                                {...field}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName && errors.lastName.message}
+                            />
+                        )}
+                    />
+                </Grid>
                 {/* نام پدر */}
                 <Grid item xs={12} sm={4}>
                     <Controller
@@ -325,6 +343,69 @@ const EditStepPersonalDetails = ({ validation }) => {
                         {errors.militaryService && <FormHelperText>{errors.militaryService.message}</FormHelperText>}
                     </FormControl>
                 </Grid>
+                {/* کدپستی */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="postalCode"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.postalCode}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="کدپستی"
+                                placeholder="کدپستی"
+                                {...field}
+                                error={!!errors.postalCode}
+                                helperText={errors.postalCode && errors.postalCode.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                {/* آدرس محل سکونت */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="residenceAddress"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.residenceAddress}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="آدرس محل سکونت"
+                                placeholder="آدرس محل سکونت"
+                                {...field}
+                                error={!!errors.residenceAddress}
+                                helperText={errors.residenceAddress && errors.residenceAddress.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                {/* شماره تماس ثابت */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="landlineNumber"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.landlineNumber}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="شماره تماس ثابت"
+                                placeholder="شماره تماس ثابت"
+                                {...field}
+                                error={!!errors.landlineNumber}
+                                helperText={errors.landlineNumber && errors.landlineNumber.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
             </Grid>
         </>
     );
