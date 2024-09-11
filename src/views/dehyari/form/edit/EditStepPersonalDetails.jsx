@@ -405,7 +405,25 @@ const EditStepPersonalDetails = ({ validation }) => {
                         )}
                     />
                 </Grid>
-
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="insuranceIdentifier"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.insuranceIdentifier}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                size="small"
+                                label="شناسه تامین اجتماعی"
+                                placeholder="شناسه تامین اجتماعی"
+                                {...field}
+                                error={!!errors.insuranceIdentifier}
+                                helperText={errors.insurance_identifier && errors.insuranceIdentifier.message}
+                            />
+                        )}
+                    />
+                </Grid>
             </Grid>
         </>
     );

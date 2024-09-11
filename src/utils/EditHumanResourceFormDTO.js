@@ -15,8 +15,6 @@ class HumanResourceDTO {
         this.veteranStatus = apiData.eisargari_status;
         this.militaryService = apiData.nezam_vazife;
         this.phoneNumbers = JSON.parse(apiData.phone_numbers);
-
-        // افزودن فیلدهای جدید
         this.postalCode = apiData.postal_code; // کدپستی
         this.residenceAddress = apiData.residence_address; // آدرس محل سکونت
         this.landlineNumber = apiData.landline_number; // شماره تماس ثابت
@@ -48,10 +46,11 @@ class HumanResourceDTO {
         }));
         this.contacts = apiData.contact_informations.map(contact => ({
             phoneNumber: contact.phone_number,
-            socialNetwork: JSON.parse(contact.social_network),  // پارس کردن social_network
+            socialNetwork: JSON.parse(contact.social_network),
             description: contact.description,
         }));
-        this.profilePicture = apiData.profile_picture.image_hash; // افزودن عکس پروفایل
+        this.profilePicture = apiData.profile_picture.image_hash;
+        this.insuranceIdentifier = apiData.insurance_identifier;
     }
 
     static fromForm(formData) {
@@ -72,6 +71,7 @@ class HumanResourceDTO {
             employment_status: formData.employmentStatus,
             description_contract: formData.descriptionContract,
             title_contract: formData.titleContract,
+            insurance_identifier: formData.insuranceIdentifier,
 
             // افزودن فیلدهای جدید
             postal_code: formData.postalCode, // کدپستی

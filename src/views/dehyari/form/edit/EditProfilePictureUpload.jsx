@@ -35,9 +35,6 @@ const EditProfilePictureUpload = ({defaultProfilePicture}) => {
     const pondRef = useRef(null);
     useEffect(() => {
         if (defaultProfilePicture) {
-            console.log(defaultProfilePicture)
-            console.log("defaultProfilePicture")
-            // اگر عکس پروفایل به صورت base64 موجود بود، آن را به عنوان فایل پیش‌فرض به FilePond اضافه کن
             setFiles([
                 {
                     source: `data:image/jpeg;base64,${defaultProfilePicture}`,

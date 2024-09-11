@@ -62,12 +62,15 @@ const validationSchemas = {
             required: 'این فیلد الزامی است',
         },
         landlineNumber: {
-            required: 'این فیلد الزامی است',
+            // required: 'این فیلد الزامی است',
             pattern: {
                 value: /^[0-9]{11}$/,
                 message: 'شماره تماس ثابت باید ۱۱ رقم باشد'
             }
         },
+        insuranceIdentifier:{
+
+        }
     },
     education: {
         degree: {
