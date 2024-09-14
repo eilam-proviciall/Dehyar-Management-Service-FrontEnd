@@ -31,16 +31,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     const resetToEmptyValues = useCallback(() => {
         setValue('title', '');
         setValues({
-            title: '',
             nid: '',
-            role: ''
+            role: '',
+            villages: '',
         });
         setSidebarDetails({ status: sidebarDetails.status, defaultValues: {} })
     }, [setValue]);
 
     const handleSidebarClose = () => {
         setValues({
-            title: '',
             nid: '',
             role: ''
         });

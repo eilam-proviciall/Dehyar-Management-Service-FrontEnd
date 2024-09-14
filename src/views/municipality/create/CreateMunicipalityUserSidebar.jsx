@@ -135,6 +135,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         errors={errors}
                         isLoading={values.role == "14" ? isRegionsLoading : isVillagesLoading}
                         options={values.role == "14" ? regions : villages}
+                        selectedOptions={values.role == '14' ? sidebarDetails.defaultValues.geo_region : sidebarDetails.defaultValues.covered_villages}
                     />
                     <SidebarFooter
                         sidebarStatus={sidebarDetails.status}

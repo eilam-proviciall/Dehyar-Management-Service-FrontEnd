@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const RoleFields = ({ role, control, errors, isLoading, options }) => {
+const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions }) => {
 
     if (role && (!options || options.length === 0)) {
         return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
@@ -27,8 +27,12 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
+                                       
                                         onChange(newValue.hierarchy_code);
                                     }}
+                                    defaultValue={
+                                        selectedOptions && options.filter(option => selectedOptions === option.hierarchy_code)
+                                    }
                                     getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (
                                         <TextField
@@ -65,6 +69,9 @@ const RoleFields = ({ role, control, errors, isLoading, options }) => {
                                     onChange={(event, newValue) => {
                                         onChange(newValue.map(item => item.hierarchy_code));
                                     }}
+                                    defaultValue={
+                                        selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code))
+                                    }
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
