@@ -21,7 +21,7 @@ const persianToEnglishDigits = (str) => {
 };
 
 const StepBasicInformation = ({ data, setData, step, setStep }) => {
-    const { control, formState: { errors } } = useFormContext();
+    const { control, handleSubmit, formState: { errors } } = useFormContext();
 
     const organizations = [
         { value: 1, label: "دهیاری" },
@@ -56,7 +56,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
 
     const [errorState, setErrorState] = useState(null);
 
-    const renderTextField = (name, label) => (
+    const renderTextField = (name, label, errorText) => (
         <FormControl fullWidth >
             <Controller
                 name={name}
@@ -65,7 +65,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                 render={({ field: { value, onChange } }) => (
                     <TextField
                         InputProps={
-                            { style: { height: 45 } }
+                            { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
                         }
                         label={label}
                         value={value}
@@ -76,13 +76,15 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                             errorState !== null && setErrorState(null);
                         }}
                         fullWidth
+                        error={errors[name]}
+                        helperText={errors?.[name]?.message || errorState?.message[0]}
                     />
                 )}
             />
         </FormControl>
     );
 
-    const renderSelect = (name, label, option) => (
+    const renderSelect = (name, label, option, errorText) => (
         <FormControl fullWidth  >
             <InputLabel id={name}>{label}</InputLabel>
             <Controller
@@ -100,6 +102,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                             }, 0);
                         }}
                         fullWidth
+                        error={errors[name]}
                         sx={{ height: 45 }}
                     >
                         {Object.entries(option.map(({ value, label }) => (
@@ -111,7 +114,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
         </FormControl>
     )
 
-    const renderDatePicker = (name, label) => (
+    const renderDatePicker = (name, label, errorText) => (
         <FormControl fullWidth>
             <Controller
                 name={name}
@@ -124,22 +127,27 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                         onChange={date => {
                             const newDate = `${date.year}/${date.month}/${date.day}`
                             console.log("New Date => ", newDate);
-                            setData(prevData => ({ ...prevData, [name]: newDate }))
+                            setTimeout(() => {
+                                setData(prevValues => ({ ...prevValues, [name]: newDate }));
+                                onChange(newDate)
+                            }, 0);
                         }
                         }
                         render={(value, onChange) => (
                             <TextField
                                 label={label}
                                 value={value}
+                                error={errors[name]}
+                                helperText={errors?.[name]?.message || errorState?.message[0]}
                                 onClick={e => {
-                                    const newValue = e.target.value;
+                                    const newValue = persianToEnglishDigits(e.target.value);
                                     setTimeout(() => {
                                         setData(prevValues => ({ ...prevValues, [name]: newValue }));
                                         onChange(newValue)
                                     }, 0);
                                 }}
                                 InputProps={
-                                    { style: { height: 45 } }
+                                    { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
                                 }
                                 fullWidth
                             />
@@ -150,23 +158,24 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
         </FormControl>
     );
 
-    const checkValues = (currentData) => {
-        return Object.values(currentData).every(value => value !== null && value !== undefined && value !== '');
-    };
+    // const checkValues = (currentData) => {
+    //     return Object.values(currentData).every(value => value !== null && value !== undefined && value !== '');
+    // };
 
-    const onSubmit = data => {
-        console.log("Is Data => ", checkValues(data));
-        data.organization_type === ''
-            ? toast.error("شما باید یک سازمان را برای رفتن به مرحله بعد انتخاب نمایید", {
-                position: "top-center",
-                duration: 3000,
-            })
-            : checkValues(data) == false
-                ? toast.error("شما باید تمامی مقادیر را تکمیل کنید", {
-                    position: "top-center",
-                    duration: 3000,
-                })
-                : setStep(1);
+    const onSubmit = newData => {
+        // data.organization_type === ''
+        //     ? toast.error("شما باید یک سازمان را برای رفتن به مرحله بعد انتخاب نمایید", {
+        //         position: "top-center",
+        //         duration: 3000,
+        //     })
+        //     : checkValues(data) == false
+        //         ? toast.error("شما باید تمامی مقادیر را تکمیل کنید", {
+        //             position: "top-center",
+        //             duration: 3000,
+        //         })
+        //         : setStep(1);
+        console.log("new Data => ", newData);
+        setStep(1);
     }
 
     return (
@@ -174,7 +183,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
             <Grid item xs={12} mb={5}>
                 <DividerSimple title={data.organization_type ? data.organization_type : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
             </Grid>
-            <form className='w-full'>
+            <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='grid md:grid-cols-4 w-full gap-5'>
                         {renderSelect('organization_type', 'انتخاب سازمان', organizations, 'انتخاب سازمان الزامی است')}
@@ -206,7 +215,7 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                     </div>
                 </Grid>
                 <Box display={'flex'} mt={2} gap={5} justifyContent={'end'} >
-                    <Button variant='contained' color='primary' onClick={() => { onSubmit(data) }} >بعدی</Button>
+                    <Button variant='contained' color='primary' type='submit' >بعدی</Button>
                 </Box>
             </form>
         </Grid>

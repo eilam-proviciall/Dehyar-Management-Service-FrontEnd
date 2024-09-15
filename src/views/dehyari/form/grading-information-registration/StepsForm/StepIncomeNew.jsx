@@ -21,48 +21,55 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
     });
 
     const onSubmit = (newData) => {
+
+        if (newData.income_fields.length) {
+            setData(prevValues => ({ ...prevValues, income_fields: newData.income_fields }));
+            const gradingDTO = new GradingInformationDTO(data);
+            const finallyData = {
+                id: mode == 'add' ? Date.now() : gradingDTO.id,
+                organization_type: gradingDTO.organizationType,
+                hierarchical_code: gradingDTO.hierarchicalCode,
+                village_code: gradingDTO.villageCode,
+                nid: gradingDTO.nid,
+                dehyari_status: gradingDTO.dehyariStatus,
+                wide: gradingDTO.wide,
+                centrality_status: gradingDTO.centralityStatus,
+                tourism_status: gradingDTO.tourismStatus,
+                postal_code: gradingDTO.postalCode,
+                fire_station: gradingDTO.fireStation,
+                date_established: gradingDTO.dateEstablished,
+                date_grading: gradingDTO.dateGrading,
+                grade: gradingDTO.grade,
+                population_fields: gradingDTO.populationFields,
+                income_fields: newData.income_fields
+            }
+            methods = finallyData;
+            console.log("Methods =>", methods);
+            if (mode == 'add') {
+                setUsers([...users, finallyData]);
+                toast.success("اطلاعات با موفقیت ثبت شد", {
+                    position: "top-center",
+                    duration: 3000,
+                });
+            } else {
+                console.log("Finally Data => ", finallyData);
+                const newUsers = users.map(user => user.id == data.id ? { ...user, ...finallyData } : user);
+                setUsers(newUsers);
+                toast.success("اطلاعات با موفقیت ویرایش شد", {
+                    position: "top-center",
+                    duration: 3000,
+                });
+            }
+            onClose();
+            setStep(0);
+        } else {
+            toast.error("شما باید حداقل یک ردیف ایجاد کنید", {
+                position: "top-center",
+                duration: 3000,
+            })
+        }
         console.log("Mode => ", mode);
         console.log("New Data => ", newData);
-
-        setData(prevValues => ({ ...prevValues, income_fields: newData.income_fields }));
-        const gradingDTO = new GradingInformationDTO(data);
-        const finallyData = {
-            id: mode == 'add' ? Date.now() : gradingDTO.id,
-            organization_type: gradingDTO.organizationType,
-            hierarchical_code: gradingDTO.hierarchicalCode,
-            village_code: gradingDTO.villageCode,
-            nid: gradingDTO.nid,
-            dehyari_status: gradingDTO.dehyariStatus,
-            wide: gradingDTO.wide,
-            centrality_status: gradingDTO.centralityStatus,
-            tourism_status: gradingDTO.tourismStatus,
-            postal_code: gradingDTO.postalCode,
-            fire_station: gradingDTO.fireStation,
-            date_established: gradingDTO.dateEstablished,
-            date_grading: gradingDTO.dateGrading,
-            grade: gradingDTO.grade,
-            population_fields: gradingDTO.populationFields,
-            income_fields: newData.income_fields
-        }
-        methods = finallyData;
-        console.log("Methods =>", methods);
-        if (mode == 'add') {
-            setUsers([...users, finallyData]);
-            toast.success("اطلاعات با موفقیت ثبت شد", {
-                position: "top-center",
-                duration: 3000,
-            });
-        } else {
-            console.log("Finally Data => ", finallyData);
-            const newUsers = users.map(user => user.id == data.id ? { ...user, ...finallyData } : user);
-            setUsers(newUsers);
-            toast.success("اطلاعات با موفقیت ویرایش شد", {
-                position: "top-center",
-                duration: 3000,
-            });
-        }
-        onClose();
-        setStep(0);
     }
 
     const renderTextField = (name, label) => {
@@ -75,12 +82,13 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
                     render={({ field: { value, onChange } }) => (
                         <TextField
                             InputProps={
-                                { style: { height: 45 } }
+                                { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
                             }
                             label={label}
                             value={value}
                             onChange={(e) => {
                                 const value = persianToEnglishDigits(e.target.value);
+                                setData(prevValues => ({ ...prevValues, [name]: value }));
                                 onChange(value);
                             }}
                         />

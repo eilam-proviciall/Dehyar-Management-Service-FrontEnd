@@ -12,12 +12,95 @@ import StepPopulationNew from './StepsForm/StepPopulationNew';
 import StepIncomeNew from './StepsForm/StepIncomeNew';
 import GradingTable from './list/GradingTable';
 import { FormProvider, useForm } from 'react-hook-form';
-import axios from 'axios';
+import { valibotResolver } from '@hookform/resolvers/valibot';
+import { maxLength, minLength, object, string, array } from 'valibot';
 
+const schemas = [
+    object({
+        organization_type: string([minLength(1, 'این فیلد الزامی است')]),
+        hierarchical_code: string([minLength(1, 'این فیلد الزامی است')]),
+        village_code: string([minLength(1, 'این فیلد الزامی است')]),
+        nid: string([
+            minLength(1, 'این فیلد الزامی است'),
+            minLength(10, 'کد ملی باید 10 رقمی باشد'),
+            maxLength(10, 'کد ملی  نمیتواند بیشتر از 10 رقم باشد')
+        ],
+        ),
+        dehyari_status: string([minLength(1, 'این فیلد الزامی است')]),
+        wide: string([minLength(1, 'این فیلد الزامی است')]),
+        centrality_status: string([minLength(1, 'این فیلد الزامی است')]),
+        tourism_status: string([minLength(1, 'این فیلد الزامی است')]),
+        postal_code: string([minLength(1, 'این فیلد الزامی است')]),
+        fire_station: string([minLength(1, 'این فیلد الزامی است')]),
+        date_established: string([minLength(1, 'این فیلد الزامی است')]),
+        date_grading: string([minLength(1, 'این فیلد الزامی است')]),
+        grade: string([minLength(1, 'این فیلد الزامی است')]),
+    }),
+    object({
+        population_fields:
+            array(
+                object({
+                    year: string(
+                        [
+                            minLength(1, 'این فیلد الزامی است'),
+                            minLength(4, 'سال باید 4 رقمی باشد'),
+                            maxLength(4, 'سال نمیتواند بیشتر از 4 رقم باشد')
+                        ]
+                    ),
+                    population: string([minLength(1, 'این فیلد الزامی است')]),
+                    family: string([minLength(1, 'این فیلد الزامی است')]),
+                    man_count: string([minLength(1, 'این فیلد الزامی است')]),
+                    woman_count: string([minLength(1, 'این فیلد الزامی است')]),
+                })
+            ),
+    }),
+    object({
+        income_fields:
+            array(
+                object({
+                    year: string(
+                        [
+                            minLength(1, 'این فیلد الزامی است'),
+                            minLength(4, 'سال باید 4 رقمی باشد'),
+                            maxLength(4, 'سال نمیتواند بیشتر از 4 رقم باشد')
+                        ]
+                    ),
+                    per_income: string([minLength(1, 'این فیلد الزامی است')]),
+                })
+            ),
+    }),
+]
 
 const GradingInformationRegistration = () => {
 
+    // States
+    const [users, setUsers] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [mode, setMode] = useState('add');
+    const [step, setStep] = useState(0);
+    const [data, setData] = useState({
+        id: Date.now(),
+        organization_type: '',
+        hierarchical_code: '',
+        village_code: '',
+        nid: '',
+        dehyari_status: '',
+        wide: '',
+        centrality_status: '',
+        tourism_status: '',
+        postal_code: '',
+        fire_station: '',
+        date_established: '',
+        date_grading: '',
+        grade: '',
+        population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
+        income_fields: [{ year: '', per_income: '' }]
+    });
+
     const methods = useForm({
+        resolver: valibotResolver(schemas[step]),
         id: Date.now(),
         organization_type: '',
         hierarchical_code: '',
@@ -36,14 +119,6 @@ const GradingInformationRegistration = () => {
         income_fields: [{ year: '', per_income: '' }]
     })
 
-    // States
-    const [users, setUsers] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [mode, setMode] = useState('add');
-    const [step, setStep] = useState(0);
-    const [data, setData] = useState({});
     console.log("Data => ", data);
     console.log();
 
@@ -53,15 +128,32 @@ const GradingInformationRegistration = () => {
     const handleOpenForm = () => setOpenModal(true);
     const handleCloseForm = () => {
         methods.reset();
-        setData({});
+        setData({
+            id: Date.now(),
+            organization_type: '',
+            hierarchical_code: '',
+            village_code: '',
+            nid: '',
+            dehyari_status: '',
+            wide: '',
+            centrality_status: '',
+            tourism_status: '',
+            postal_code: '',
+            fire_station: '',
+            date_established: '',
+            date_grading: '',
+            grade: '',
+            population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
+            income_fields: [{ year: '', per_income: '' }]
+        });
         setStep(0);
         setOpenModal(false);
     };
 
     const steps = [
-        { step: 1, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 2, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 3, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
+        { step: 0, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} />) },
+        { step: 1, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
+        { step: 2, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
     ];
 
 

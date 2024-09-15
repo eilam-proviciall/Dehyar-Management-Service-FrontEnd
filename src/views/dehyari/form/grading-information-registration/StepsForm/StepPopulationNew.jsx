@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Divider, FormControl, TextField } from '@mui/material';
 import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -12,7 +13,6 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
 
     console.log("Data : ", data);
 
-
     const { control, handleSubmit, formState: { errors } } = useFormContext();
 
     const { fields, append, remove } = useFieldArray({
@@ -22,9 +22,19 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
 
     const onSubmit = (newData) => {
         console.log("New Data => ", newData);
-        setData(prevValues => ({ ...prevValues, population_fields: newData.population_fields }));
-        setStep(step + 1)
+        if (newData.population_fields.length) {
+            setData(prevValues => ({ ...prevValues, population_fields: newData.population_fields }));
+            setStep(step + 1)
+        } else {
+            toast.error("شما باید حداقل یک ردیف ایجاد کنید", {
+                position: "top-center",
+                duration: 3000,
+            })
+        }
     }
+
+    console.log("ERRORS => ", errors);
+
 
     const renderTextField = (name, label) => {
         return (
@@ -36,14 +46,17 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
                     render={({ field: { value, onChange } }) => (
                         <TextField
                             InputProps={
-                                { style: { height: 45 } }
+                                { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
                             }
                             label={label}
                             value={value}
                             onChange={(e) => {
                                 const value = persianToEnglishDigits(e.target.value);
+                                setData(prevValues => ({ ...prevValues, [name]: value }));
                                 onChange(value);
                             }}
+                            error={errors[name]}
+                            helperText={errors?.[name]?.message}
                         />
                     )}
                 />
