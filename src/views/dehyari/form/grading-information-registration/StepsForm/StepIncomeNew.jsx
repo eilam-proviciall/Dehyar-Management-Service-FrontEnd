@@ -13,7 +13,7 @@ const persianToEnglishDigits = (str) => {
 const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers, mode, methods }) => {
     console.log("Data : ", data);
 
-    const { control, handleSubmit } = useFormContext();
+    const { control, handleSubmit, formState: { errors } } = useFormContext();
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -72,7 +72,7 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
         console.log("New Data => ", newData);
     }
 
-    const renderTextField = (name, label) => {
+    const renderTextField = (index, endName, name, label) => {
         return (
             <FormControl fullWidth>
                 <Controller
@@ -91,6 +91,10 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
                                 setData(prevValues => ({ ...prevValues, [name]: value }));
                                 onChange(value);
                             }}
+                            {...((errors?.income_fields && errors?.income_fields[index] && errors?.income_fields[index]?.[endName]) && {
+                                error: errors?.income_fields[index]?.[endName],
+                                helperText: errors?.income_fields[index]?.[endName].message
+                            })}
                         />
                     )}
                 />
@@ -103,8 +107,8 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
             {fields.map((field, index) => (
                 <>
                     <div key={field.id} className='md:flex grid mb-2 gap-2'>
-                        {renderTextField(`income_fields.${index}.year`, 'سال')}
-                        {renderTextField(`income_fields.${index}.per_income`, 'سرانه درآمد (ریال)')}
+                        {renderTextField(index, 'year', `income_fields.${index}.year`, 'سال')}
+                        {renderTextField(index, 'per_income', `income_fields.${index}.per_income`, 'سرانه درآمد (ریال)')}
                         <Button variant="contained" color="error" onClick={() => remove(index)} >
                             <i className='ri-delete-bin-line'></i>
                         </Button>
