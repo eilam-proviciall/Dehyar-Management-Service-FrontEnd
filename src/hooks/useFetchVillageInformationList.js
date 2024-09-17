@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getCity, getVillageInformationList } from "@/Services/CountryDivision";
+import {getCity, getVillageInformationList} from "@/Services/CountryDivision";
 
 export const useFetchVillageInformationList = (shouldFetchCities) => {
     const [villages, setVillages] = useState([]);

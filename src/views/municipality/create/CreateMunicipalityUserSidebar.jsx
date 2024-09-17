@@ -12,24 +12,15 @@ import {
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
 import roles from '@data/roles';
-import { useFetchRegions } from "@hooks/useFetchRegions";
-import { user } from "@/Services/Auth/AuthService";
+import {useFetchRegions} from "@hooks/useFetchRegions";
+import { user} from "@/Services/Auth/AuthService";
 
-const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading }) => {
-    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: {
-            title: '',
-            first_name: "",
-            last_name: "",
-            nid: '',
-            role: '',
-            covered_villages: [],
-        },
-    });
+const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle }) => {
+    const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({ defaultValues: { title: '', role: '' } });
     const {
         values, setValues, handleSidebarClose, handleDeleteButtonClick,
         onSubmit, resetToStoredValues
-    } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading);
+    } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle);
 
     const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
@@ -42,19 +33,10 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages);
 
     useEffect(() => {
-        setValue('nid', sidebarDetails.defaultValues.nid);
-        setValue('first_name', sidebarDetails.defaultValues.first_name);
-        setValue('last_name', sidebarDetails.defaultValues.last_name);
-        setValue('role', sidebarDetails.defaultValues.work_group);
-        setValue('covered_villages', sidebarDetails.defaultValues.covered_villages)
-        setValues(prevValues => ({ ...prevValues, role: `${sidebarDetails.defaultValues.work_group}` }));
-    }, [sidebarDetails])
-
-    useEffect(() => {
         setFetchState(prevState => ({
             ...prevState,
-            shouldFetchRegion: values.role == "14",
-            shouldFetchVillages: values.role == "13"
+            shouldFetchRegion: values.role === "14",
+            shouldFetchVillages: values.role === "13"
         }));
     }, [values.role]);
 
@@ -86,7 +68,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             sx={{ '& .MuiDrawer-paper': { width: ['100%', 400] } }}
         >
             <Box className='flex justify-between items-center sidebar-header pli-5 plb-4 border-be'>
-                <Typography variant='h5'>{sidebarDetails.status == "add" ? "افزودن کاربر جدید" : "ویرایش کاربر"}</Typography>
+                <Typography variant='h5'>افزودن کاربر جدید</Typography>
                 <Box className='flex items-center' sx={{ gap: 1 }}>
                     {calendarStore.selectedEvent?.title?.length > 0 && (
                         <IconButton size='small' onClick={handleDeleteButtonClick}>
@@ -133,12 +115,10 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         role={values.role}
                         control={control}
                         errors={errors}
-                        isLoading={values.role == "14" ? isRegionsLoading : isVillagesLoading}
-                        options={values.role == "14" ? regions : villages}
-                        selectedOptions={values.role == '14' ? sidebarDetails.defaultValues.geo_region : sidebarDetails.defaultValues.covered_villages}
+                        isLoading={values.role === "14" ? isRegionsLoading : isVillagesLoading}
+                        options={values.role === "14" ? regions : villages}
                     />
                     <SidebarFooter
-                        sidebarStatus={sidebarDetails.status}
                         isUpdate={calendarStore.selectedEvent?.title?.length > 0}
                         onReset={resetToStoredValues}
                         onSubmit={onSubmit}

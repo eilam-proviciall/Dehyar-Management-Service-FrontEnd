@@ -1,11 +1,11 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 
-const SidebarFooter = ({ isUpdate, onReset, onSubmit, sidebarStatus }) => {
+const SidebarFooter = ({ isUpdate, onReset, onSubmit }) => {
     return (
         <div className='flex gap-4'>
             <Button type='submit' variant='contained'>
-                {sidebarStatus == "edit" ? 'به روزرسانی' : 'افزودن'}
+                {isUpdate ? 'Update' : 'افزودن'}
             </Button>
             <Button variant='outlined' color='secondary' onClick={onReset}>
                 بازنشانی
