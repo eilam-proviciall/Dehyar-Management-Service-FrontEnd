@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 
 // Component Imports
 import DividerSimple from '@/components/common/Divider/DividerSimple'
+import SectionLivingInformation from './SectionLivingInformation';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -20,7 +21,7 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const StepBasicInformation = ({ data, setData, step, setStep }) => {
+const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
     const { control, handleSubmit, formState: { errors } } = useFormContext();
 
     const organizations = [
@@ -191,18 +192,25 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                         {renderTextField('village_code', 'کد آبادی', 'کد آبادی مراتبی الزامی است')}
                         {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
                     </div>
-                    <div className='grid md:grid-cols-4 w-full gap-5'>
+                    <div className='grid md:grid-cols-5 w-full gap-5'>
                         {renderSelect('dehyari_status', 'انتخاب دهیاری', dehyariStatus, 'انتخاب دهیاری الزامی است')}
                         {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
                         {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
                         {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
-                    </div>
-                    <div className='grid md:grid-cols-3 w-full gap-5'>
                         {renderTextField('postal_code', 'کد پستی', 'کد پستی الزامی است')}
-                        {renderSelect('fire_station', 'پایگاه آتش نشانی', fireStation, 'انتخاب پایگاه آتش نشانی الزامی است')}
-                        {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
                     </div>
                     <div className='grid md:grid-cols-4 w-full gap-5'>
+                        {renderSelect('fire_station', 'پایگاه آتش نشانی', fireStation, 'انتخاب پایگاه آتش نشانی الزامی است')}
+                        {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
+                        {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
+                        {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
+                    </div>
+                    {console.log("Organization Type  => ", data.organization_type)
+                    }
+                    {data.organization_type !== '' && (
+                        <SectionLivingInformation fieldKey={data.organization_type} />
+                    )}
+                    <div className='grid md:grid-cols-5 w-full gap-5'>
                         {data.organization_type == 'شهرداری' ? (
                             [
                                 renderTextField('grade_city', 'درجه شهرستان', 'وارد کردن درجه شهرستان الزامی است'),
@@ -210,8 +218,6 @@ const StepBasicInformation = ({ data, setData, step, setStep }) => {
                             ]
                         ) : ''
                         }
-                        {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
-                        {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
                     </div>
                 </Grid>
                 <Box display={'flex'} mt={2} gap={5} justifyContent={'end'} >
