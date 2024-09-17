@@ -1,9 +1,9 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {deleteEvent, selectedEvent} from '@/redux-store/slices/calendar';
-import axios from "axios";
-import { user} from "@/Services/Auth/AuthService";
-import {toast} from "react-toastify";
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deleteEvent, selectedEvent } from '@/redux-store/slices/calendar';
+import { user } from "@/Services/Auth/AuthService";
+import { toast } from "react-toastify";
+import api from '@/utils/axiosInstance';
 
 const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAddEventSidebarToggle) => {
     const dispatch = useDispatch();
@@ -68,32 +68,13 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             processedData.villages = data.villages;
         }
         console.log(processedData)
-        const response = axios.post(user(), processedData,
-            {headers: {Authorization: `Bearer ${window.localStorage.getItem('token')}`}})
-            .then((response) =>{
-                toast.success("کاربر با موفقیت ایجاد شد",{
+        api.post(user(), processedData, { requiresAuth: true })
+            .then(() => {
+                toast.success("کاربر با موفقیت ایجاد شد", {
                     position: "top-center"
                 });
                 handleSidebarClose();
-            }).catch((error) => {
-                if (error.response && error.response.data.errors) {
-                    const errors = error.response.data.errors;
-                    Object.keys(errors).forEach((key) => {
-                        errors[key].forEach((message) => {
-                            toast.error(message);
-                        });
-                    });
-                } else if (error.response && error.response.data.message) {
-                    console.log(error.response)
-                    toast.error(error.response.data.message,{
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error("خطای ناشناخته",{
-                        position: "top-center"
-                    });
-                }
-            });
+            }).catch((error) => error);
 
     };
 

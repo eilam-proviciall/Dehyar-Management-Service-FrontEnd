@@ -19,16 +19,6 @@ const UserList = ({ userData }) => {
     const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        api.get(`/user`, { requiresAuth: true })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }, [])
-
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
