@@ -32,7 +32,7 @@ const EditStepEducation = ({validation}) => {
     const [expanded, setExpanded] = useState(false);
     const [educationFields, setEducationFields] = useState([]); // State to store education fields
     const handleFieldDisabling = (degree) => {
-        if (degree === 41) {
+        if (degree === 41 || degree === 42 || degree ===43) {
             return {
                 disableFieldOfStudy: true,
                 disableGraduationDate: true
@@ -151,6 +151,8 @@ const EditStepEducation = ({validation}) => {
                                                         <Autocomplete
                                                             {...field}
                                                             options={educationFields}
+                                                            disableClearable={disableFieldOfStudy}
+                                                            open={!disableFieldOfStudy}
                                                             getOptionLabel={(option) => option.name || ""}
                                                             value={educationFields.find((option) => option.code === field.value) || null} // استفاده از code برای مقدار value
                                                             onChange={(_, value) => field.onChange(value ? value.code : "")} // ذخیره code در فرم
