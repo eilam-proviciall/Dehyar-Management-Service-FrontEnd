@@ -89,6 +89,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                 return;
             }
             if (mode === 'create') {
+                console.log(formData)
                 // حالت ایجاد
                 const response = await axios.post(InsuranceHistory(), formData, {
                     headers: {
@@ -263,7 +264,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                 <FormControl fullWidth>
                                     <InputLabel>کارگاه بیمه</InputLabel>
                                     <Controller
-                                        name="insuranceWorkshop"
+                                        name="insurance_workshop"
                                         control={methods.control}
                                         render={({ field }) => (
                                             <Select {...field} label="کارگاه بیمه" size="small">

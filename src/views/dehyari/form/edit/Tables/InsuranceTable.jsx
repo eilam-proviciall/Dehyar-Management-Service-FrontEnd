@@ -65,8 +65,14 @@ function InsuranceTable() {
             accessorKey: 'insurance_workshop',
             header: 'کارگاه بیمه',
             size: 50,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue() ?  "کارگاه": "دهیاری"}</div>,
-        },
+            Cell: ({ cell }) => {
+                const value = cell.getValue();
+                return (
+                    <div style={{ textAlign: 'right' }}>
+                        {value === 1 ? "دهیاری" : value === 2 ? "کارگاه" : ""}
+                    </div>
+                );
+            },        },
         {
             accessorKey: 'start_date',
             header: 'تاریخ شروع',
