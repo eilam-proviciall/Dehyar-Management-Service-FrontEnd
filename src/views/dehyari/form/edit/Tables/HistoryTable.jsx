@@ -6,7 +6,7 @@
     import MoreVertIcon from '@mui/icons-material/MoreVert';
     import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
     import {HumanContract} from "@/Services/humanResources";
-
+   import {getJobTitleLabel} from "@data/jobTitles";
     const style = {
         position: 'absolute',
         top: '50%',
@@ -60,8 +60,9 @@
             axios.get(`${HumanContract()}/${param}`, {
                 headers: {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                },
+                }
             }).then((response) => {
+                console.log(response.data)
                 setData(response.data);
                 setLoading(false);
             }).catch(() => {
@@ -93,21 +94,29 @@
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
+                accessorKey: 'title_contract',
+                header: 'وضعیت',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>پیش نویس</div>,
+            },
+            {
+                accessorKey: 'job_type_id',
+                header: 'پست سازمانی',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
+            },
+            {
                 accessorKey: 'contract_end',
                 header: 'تاریخ پایان قرارداد',
                 size: 150,
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
-            {
-                accessorKey: 'title_contract',
-                header: 'عنوان قرارداد',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
-            },
+
+
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
-                size: 150,
+                size: 100,
                 Cell: ({ row }) => (
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                         <IconButton

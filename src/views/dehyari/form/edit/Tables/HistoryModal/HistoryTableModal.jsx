@@ -67,7 +67,6 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
     }, [open]);
 
     useEffect(() => {
-        console.log("mode:", mode, "editId:", editId);
         if (mode === 'edit' && editId) {
             const fetchData = async () => {
                 try {

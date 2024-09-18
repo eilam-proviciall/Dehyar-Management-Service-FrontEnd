@@ -43,6 +43,9 @@ const validationSchemas = {
         required: 'تعداد ماه الزامی است',
         min: { value: 1, message: 'حداقل ۱ ماه' },
     },
+    insuranceWorkshop: {
+        required: 'انتخاب کارگاه الزامی است',
+    },
 };
 
 const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editId = null }) => {
@@ -85,8 +88,6 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                 setLoading(false);
                 return;
             }
-            console.log(formData)
-
             if (mode === 'create') {
                 // حالت ایجاد
                 const response = await axios.post(InsuranceHistory(), formData, {
