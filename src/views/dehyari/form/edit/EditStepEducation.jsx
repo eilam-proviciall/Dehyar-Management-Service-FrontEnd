@@ -187,7 +187,7 @@ const EditStepEducation = ({validation}) => {
                                                                         size="small"
                                                                         label="تاریخ فارغ‌التحصیلی"
                                                                         inputProps={{
-                                                                            style: { textAlign: 'end' }
+                                                                            style: { textAlign: 'end', zIndex: 13000000 }  // افزایش z-index
                                                                         }}
                                                                         disabled={disableGraduationDate}
                                                                     />
