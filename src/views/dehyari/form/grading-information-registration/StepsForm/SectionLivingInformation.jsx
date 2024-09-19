@@ -59,6 +59,7 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
 
                 const stateCitiesResponse = await api.get(getStateWithCitiesData(), { requiresAuth: true });
                 dispatch({ type: 'SET_STATE_CITIES', payload: stateCitiesResponse.data });
+                console.log("State Cities Response => ", stateCitiesResponse);
 
                 if (initialLivingLocation) {
                     const { state_city, region, dehestan, village, locationName } = initialLivingLocation;
@@ -106,6 +107,8 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
         }
 
         const regionsResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.city_hierarchy_code}`, { requiresAuth: true });
+        console.log("Region Response => ", regionsResponse);
+
         dispatch({ type: 'SET_REGIONS', payload: regionsResponse.data });
     };
 

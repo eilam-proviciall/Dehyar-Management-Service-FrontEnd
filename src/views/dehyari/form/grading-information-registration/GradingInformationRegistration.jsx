@@ -32,23 +32,23 @@ const schemas = [
         grade: string([minLength(1, 'این فیلد الزامی است')]),
         grade_state: string([minLength(1, 'این فیلد الزامی است')]),
         grade_city: string([minLength(1, 'این فیلد الزامی است')]),
-        municipality: array(
-            object({
-                states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                departments: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-            })
-        ),
-        dehyari: array(
-            object({
-                states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                dehestans: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-                villages: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-            })
-        ),
+        // municipality: array(
+        //     object({
+        //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         departments: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //     })
+        // ),
+        // dehyari: array(
+        //     object({
+        //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         dehestans: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         villages: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //     })
+        // ),
     }),
     object({
         population_fields:
