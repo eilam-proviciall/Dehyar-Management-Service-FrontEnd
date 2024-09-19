@@ -29,7 +29,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
     const {
         values, setValues, handleSidebarClose, handleDeleteButtonClick,
         onSubmit, resetToStoredValues
-    } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading);
+    } = useMunicipalityUserForm(calendarStore, setValue, clearErrors, handleAddEventSidebarToggle, setLoading);
 
     const isBelowSmScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
