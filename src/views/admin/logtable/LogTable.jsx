@@ -2,10 +2,10 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { IconButton, Menu, MenuItem } from '@mui/material';
+import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DownloadIcon from '@mui/icons-material/Download';
 import { getLogs } from "@/Services/Admin";
-import api from '@/utils/axiosInstance';
 
 // تابع برای تبدیل تاریخ میلادی به شمسی
 const toPersianDate = (dateString) => {
@@ -39,14 +39,16 @@ function LogTable() {
 
     useEffect(() => {
         setLoading(true);
-        api.get(getLogs(), { requiresAuth: true })
-            .then((response) => {
-                setData(response.data);
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+        axios.get(getLogs(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+            }
+        }).then((response) => {
+            setData(response.data);
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
     }, []);
 
     const downloadJson = (properties) => {

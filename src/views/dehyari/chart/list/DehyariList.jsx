@@ -2,13 +2,13 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { Box, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import contractType from "@data/contractType.json";
-import { getJobTitleLabel } from "@data/jobTitles";
-import api from '@/utils/axiosInstance';
+import {getJobTitleLabel} from "@data/jobTitles";
 
 function DehyariList({ selectedVillage }) {
     const [data, setData] = useState([]);
@@ -30,8 +30,10 @@ function DehyariList({ selectedVillage }) {
     useEffect(() => {
         if (selectedVillage) {
             setLoading(true);
-            api.get(humanResources(), {
-                requiresAuth: true,
+            axios.get(humanResources(), {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
                 params: {
                     village_code: selectedVillage
                 }

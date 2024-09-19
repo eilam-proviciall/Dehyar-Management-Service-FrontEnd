@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select, FormHelperText } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
+import axios from 'axios';
 import { GetFieldStudy } from "@/Services/humanResources";
-import api from '@/utils/axiosInstance';
 
 const EducationFields = ({ index, validation, watch, errors }) => {
     const { control, getValues } = useFormContext();
@@ -21,7 +21,7 @@ const EducationFields = ({ index, validation, watch, errors }) => {
     const fetchFieldsOfStudy = async (grade) => {
         grade = grade[0];
         try {
-            const response = await api.get(GetFieldStudy(), {
+            const response = await axios.get(GetFieldStudy(), {
                 params: { grade }
             });
             setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));

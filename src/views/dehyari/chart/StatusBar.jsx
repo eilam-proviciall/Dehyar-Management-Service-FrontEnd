@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -9,7 +10,6 @@ import Chip from "@mui/material/Chip";
 import LinearProgress from "@mui/material/LinearProgress";
 import FamillyStatus from "@views/dehyari/chart/FamillyStatus";
 import { getCfoCoveredVillage } from "@/Services/DataService";
-import api from '@/utils/axiosInstance';
 
 function StatusBar({ onVillageSelect }) {
     const [villages, setVillages] = useState([]);
@@ -17,7 +17,11 @@ function StatusBar({ onVillageSelect }) {
     const [villageInfo, setVillageInfo] = useState({ grade: '', gradeDate: '', coverCount: 0, population: {} });
 
     useEffect(() => {
-        api.get(getCfoCoveredVillage(), { requiresAuth: true })
+        axios.get(getCfoCoveredVillage(), {
+            headers: {
+                'Authorization': `Bearer ${window.localStorage.getItem('token')}`,
+            },
+        })
             .then(response => {
                 const villageData = response.data;
                 setVillages(villageData);
@@ -33,7 +37,9 @@ function StatusBar({ onVillageSelect }) {
                     onVillageSelect(defaultVillage);
                 }
             })
-            .catch(error => error);
+            .catch(error => {
+                console.error('Error fetching villages:', error);
+            });
     }, []);
 
     const handleVillageChange = (event) => {

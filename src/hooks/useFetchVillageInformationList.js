@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getVillageInformationList } from "@/Services/CountryDivision";
-import api from '@/utils/axiosInstance';
+import axios from 'axios';
+import { getCity, getVillageInformationList } from "@/Services/CountryDivision";
 
 export const useFetchVillageInformationList = (shouldFetchCities) => {
     const [villages, setVillages] = useState([]);
@@ -10,10 +10,18 @@ export const useFetchVillageInformationList = (shouldFetchCities) => {
     useEffect(() => {
         const fetchVillages = async () => {
             setIsLoading(true);
-            await api.get(getVillageInformationList(), { requiresAuth: true })
-                .then(response => setVillages(response.data))
-                .catch(err => setError(err))
-                .finally(setIsLoading(false));
+            try {
+                const response = await axios.get(getVillageInformationList(), {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                    },
+                });
+                setVillages(response.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         if (shouldFetchCities) {

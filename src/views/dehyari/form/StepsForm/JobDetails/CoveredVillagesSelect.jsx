@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { FormControl, InputLabel, MenuItem, Select, Chip, Typography, IconButton } from '@mui/material';
+import axios from 'axios';
 import { Controller, useFormContext } from 'react-hook-form';
 import { GetHumanCoverdVillageForCfo } from "@/Services/humanResources";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
-import api from '@/utils/axiosInstance';
 
 const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, setValue }) => {
     const { getValues } = useFormContext();
@@ -53,9 +53,11 @@ const CoveredVillagesSelect = ({ control, validation, errors, selectedJobTitle, 
         const fetchVillages = async () => {
             try {
                 if (selectedJobTitle) {
-                    const response = await api.get(GetHumanCoverdVillageForCfo(), {
+                    const response = await axios.get(GetHumanCoverdVillageForCfo(), {
                         params: { job_title: selectedJobTitle },
-                        requiresAuth: true
+                        headers: {
+                            Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                        },
                     });
                     setVillages(response.data);
                 }

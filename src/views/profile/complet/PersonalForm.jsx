@@ -8,9 +8,9 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import PersonalOptions from "@data/PersonalOption.json";
 import Button from "@mui/material/Button";
+import axios from 'axios';
 import { GetFieldStudy } from "@/Services/humanResources";
 import { styled } from '@mui/material/styles';
-import api from '@/utils/axiosInstance';
 
 const CustomGrid = styled(Grid)(({ theme }) => ({
     maxWidth: '1300px',
@@ -33,12 +33,13 @@ const PersonalForm = ({ onNext }) => {
     const fetchFieldsOfStudy = async (grade) => {
         grade = grade[0];
         try {
-            const response = await api.get(GetFieldStudy(), {
-                requiresAuth: true,
+            const response = await axios.get(GetFieldStudy(), {
                 params: { grade }
             });
             setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));
-        } catch (error) { return error }
+        } catch (error) {
+            console.error('Error fetching fields of study:', error);
+        }
     };
 
     const handleDegreeChange = (e, field) => {

@@ -1,10 +1,10 @@
 "use client"
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { login, me } from "@/Services/Auth/AuthService";
 import { toast } from "react-toastify";
 import accessControl from "@components/layout/vertical/accessControl";
-import api from '@/utils/axiosInstance';
 
 const AuthContext = createContext();
 
@@ -20,21 +20,26 @@ const AuthProvider = ({ children }) => {
             if (typeof window !== 'undefined') {
                 const storedToken = window.localStorage.getItem('token');
                 if (storedToken) {
-                    await api.get(me(), { requiresAuth: true })
-                        .then(
-                            response => setUser(response.data.data.user.original)
-                        )
-                        .catch(
-                            error => {
-                                toast.error(error, { position: "top-center" })
-                                router.push('/login');
-                                setUser(null);
-                                if (router.pathname !== '/login') {
-                                    router.push('/login');
-                                }
-                            }
-                        )
-                    setLoading(false);
+                    try {
+                        const response = await axios.get(me(), {
+                            headers: {
+                                Authorization: `Bearer ${storedToken}`,
+                            },
+                        });
+                        setUser(response.data.data.user.original);
+                    } catch (error) {
+                        toast.error('توکن شما منقضی شده است',{
+                            position: "top-center",
+                            duration: 3000
+                        });
+                        router.push('/login');
+                        setUser(null);
+                        if (router.pathname !== '/login') {
+                            router.push('/login');
+                        }
+                    } finally {
+                        setLoading(false);
+                    }
                 } else {
                     if (router.pathname !== '/login') {
                         router.push('/login');
@@ -43,15 +48,15 @@ const AuthProvider = ({ children }) => {
                 }
             }
         };
+
         initAuth();
     }, [router]);
 
     const handleLogin = async (params) => {
         try {
-            const res = await api.post(login(), {
-                requiresAuth: true,
+            const res = await axios.post(login(), {
                 nid: params.email,
-                password: params.password
+                password: params.password,
             });
             const { access_token } = res.data.data;
             if (typeof window !== 'undefined') {
@@ -61,13 +66,20 @@ const AuthProvider = ({ children }) => {
                 position: "top-center",
                 duration: 3000
             });
-            const userResponse = await api.get(me(), { requiresAuth: true });
+
+            const userResponse = await axios.get(me(), {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             const userData = userResponse.data.data.user.original;
             setUser(userData);
+
             if (userData.status === 81) {
                 router.push('/profile/complete');
                 return;
             }
+
             const workGroup = userData.work_group;
             const allowedPages = accessControl[workGroup];
             if (allowedPages && allowedPages.length > 0) {

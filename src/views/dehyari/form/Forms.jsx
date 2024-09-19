@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Grid, CircularProgress, Alert } from '@mui/material';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import ButtonGroup from './ButtonGroup';
 import FormContent from './FormContent';
@@ -13,7 +14,6 @@ import MyDocument from '@components/MyDocument';
 import { pdf } from '@react-pdf/renderer';
 import { getSalary } from '@/Services/Salary';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
-import api from '@/utils/axiosInstance';
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();
@@ -58,7 +58,11 @@ const Forms = ({ invoiceData }) => {
 
         if (mode === 'edit' && id) {
             setLoading(true);
-            api.get(GetHumanResource(id), { requiresAuth: true })
+            axios.get(GetHumanResource(id), {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                }
+            })
                 .then(response => {
                     methods.reset(dtoToEmployee(response.data));
                     console.log(dtoToEmployee(response.data))
@@ -76,9 +80,9 @@ const Forms = ({ invoiceData }) => {
         const queryParams = new URLSearchParams(window.location.search);
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
-        const request = mode === 'create'
-            ? api.post(humanResources(), formattedData, { requiresAuth: true })
-            : api.put(`${humanResources()}/human-resources/${id}`, formattedData, { requiresAuth: true });
+            const request = mode === 'create'
+            ? axios.post(humanResources(), formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
+            : axios.put(`${humanResources()}/human-resources/${id}`, formattedData, { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } });
 
         request.then((res) => handleResponse(res.data)).catch(handleError);
     };
@@ -117,7 +121,19 @@ const Forms = ({ invoiceData }) => {
         });
     };
 
-    const handleError = (error) => error;
+    const handleError = (error) => {
+        if (error.response && error.response.data.errors) {
+            Object.keys(error.response.data.errors).forEach((key) => {
+                error.response.data.errors[key].forEach((message) => {
+                    toast.error(message);
+                });
+            });
+        } else if (error.response && error.response.data.message) {
+            toast.error(error.response.data.message, { position: "top-center" });
+        } else {
+            toast.error("خطای ناشناخته", { position: "top-center" });
+        }
+    };
 
     if (loading) return <CircularProgress />;
     if (error) return <Alert severity="error">{error.message}</Alert>;

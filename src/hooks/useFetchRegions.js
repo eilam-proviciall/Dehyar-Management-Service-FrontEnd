@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getRegion } from "@/Services/CountryDivision";
-import api from '@/utils/axiosInstance';
+import axios from 'axios';
+import {getCity, getRegion} from "@/Services/CountryDivision";
 
 export const useFetchRegions = (shouldFetchRegions) => {
     const [regions, setRegions] = useState([]);
@@ -10,10 +10,18 @@ export const useFetchRegions = (shouldFetchRegions) => {
     useEffect(() => {
         const fetchRegions = async () => {
             setIsLoading(true);
-            await api.get(getRegion(), { requiresAuth: true })
-                .then(response => setRegions(response.data.data))
-                .catch(err => setError(err))
-                .finally(setIsLoading(false));
+            try {
+                const response = await axios.get(getRegion(), {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+                    },
+                });
+                setRegions(response.data.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         if (shouldFetchRegions) {
