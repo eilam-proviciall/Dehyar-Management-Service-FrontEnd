@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid'
 // Component Imports
 import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { user } from '@/Services/Auth/AuthService'
 import { set } from 'js-cookie'
 import { Skeleton } from '@mui/material'
+import api from '@/utils/axiosInstance'
 
 
 const UserListCards = ({ loading, setLoading }) => {
@@ -64,21 +64,19 @@ const UserListCards = ({ loading, setLoading }) => {
 
   const fetchData = () => {
     setLoading(true);
-    axios.get(user(), {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    }).then((response) => {
-      setUserList(response.data.data);
-      setLoading(false);
-      response.data.data.map(item => {
-        item.work_group == 13 ? setCFODetails(prevItems => [...prevItems, item])
-          : item.work_group == 14 ? setBakhshdarDetails(prevItems => [...prevItems, item])
-            : null
+    api.get(user(), { requiresAuth: true })
+      .then((response) => {
+        setUserList(response.data.data);
+        setLoading(false);
+        response.data.data.map(item => {
+          item.work_group == 13 ? setCFODetails(prevItems => [...prevItems, item])
+            : item.work_group == 14 ? setBakhshdarDetails(prevItems => [...prevItems, item])
+              : null
+        })
       })
-    }).catch(
-      () => { setLoading(false) }
-    );
+      .catch(
+        () => { setLoading(false) }
+      );
   }
 
   useEffect(() => {

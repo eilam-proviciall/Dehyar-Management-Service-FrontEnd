@@ -5,12 +5,12 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { selectedEvent } from "@/redux-store/slices/calendar";
 import Chip from "@mui/material/Chip";
-import axios from "axios";
 import { user } from "@/Services/Auth/AuthService";
 import roles from "@data/roles.json"
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
+import api from '@/utils/axiosInstance';
 
 
 const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading }) => {
@@ -23,15 +23,12 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
 
     const fetchUsers = async () => {
         setLoading(true);
-        await axios.get(`${user()}?page${page + 1}&per_page${perPage}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then((response) => {
-            setUsers(response.data.data)
-            console.log(response.data);
-            setLoading(false);
-        })
+        await api.get(`${user()}?page${page + 1}&per_page${perPage}`, { requiresAuth: true })
+            .then((response) => {
+                setUsers(response.data.data)
+                console.log(response.data);
+                setLoading(false);
+            })
 
     }
 
@@ -79,32 +76,13 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
     }
 
     const handleDeleteUser = (row) => {
-        axios.delete(`${user()}/${row.original.id}`,
-            { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` } })
+        api.delete(`${user()}/${row.original.id}`, { requiresAuth: true })
             .then(() => {
                 toast.success("کاربر با موفقیت حذف شد", {
                     position: "top-center"
                 });
                 setLoading(true);
-            }).catch((error) => {
-                if (error.response && error.response.data.errors) {
-                    const errors = error.response.data.errors;
-                    Object.keys(errors).forEach((key) => {
-                        errors[key].forEach((message) => {
-                            toast.error(message);
-                        });
-                    });
-                } else if (error.response && error.response.data.message) {
-                    console.log(error.response)
-                    toast.error(error.response.data.message, {
-                        position: "top-center"
-                    });
-                } else {
-                    toast.error("خطای ناشناخته", {
-                        position: "top-center"
-                    });
-                }
-            })
+            }).catch((error) => error)
         // toast.warning("این قابلیت به زودی افزوده میشود!",
         //     {
         //         position: "top-center",

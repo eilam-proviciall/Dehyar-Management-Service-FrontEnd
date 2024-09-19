@@ -27,11 +27,10 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                       
-                                        onChange(newValue.hierarchy_code);
+                                        onChange(newValue);
                                     }}
                                     defaultValue={
-                                        selectedOptions && options.filter(option => selectedOptions === option.hierarchy_code)
+                                        selectedOptions && options.find(option => selectedOptions === option.hierarchy_code)
                                     }
                                     getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (

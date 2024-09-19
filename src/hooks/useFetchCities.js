@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { getCity } from "@/Services/CountryDivision";
+import api from '@/utils/axiosInstance';
 
 export const useFetchCities = (shouldFetchCities) => {
     const [cities, setCities] = useState([]);
@@ -10,20 +10,11 @@ export const useFetchCities = (shouldFetchCities) => {
     useEffect(() => {
         const fetchCities = async () => {
             setIsLoading(true);
-            try {
-                const response = await axios.get(getCity(), {
-                    headers: {
-                        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-                    },
-                });
-                setCities(response.data.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
+            await api.get(getCity(), { requiresAuth: true })
+                .then(response => setCities(response.data.data))
+                .catch(err => setError(err))
+                .finally(setIsLoading(false));
+        }
         if (shouldFetchCities) {
             fetchCities();
         }

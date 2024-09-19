@@ -25,9 +25,9 @@ import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Badge from "@mui/material/Badge";
-import axios from 'axios';
 import { GetFieldStudy } from "@/Services/humanResources";
 import AddIcon from "@mui/icons-material/Add";
+import api from '@/utils/axiosInstance';
 
 const StepEducation = ({ validation }) => {
     const { control, watch, getValues, formState: { errors }, trigger } = useFormContext();
@@ -82,7 +82,8 @@ const StepEducation = ({ validation }) => {
     const fetchFieldsOfStudy = async (grade) => {
         grade = grade[0];
         try {
-            const response = await axios.get(GetFieldStudy(), {
+            const response = await api.get(GetFieldStudy(), {
+                requiresAuth: false,
                 params: { grade }
             });
             setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));
@@ -145,7 +146,7 @@ const StepEducation = ({ validation }) => {
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} sm={3}>
                                             <FormControl fullWidth size="small"
-                                                         error={!!errors?.educations?.[index]?.degree}>
+                                                error={!!errors?.educations?.[index]?.degree}>
                                                 <InputLabel>مدرک تحصیلی</InputLabel>
                                                 <Controller
                                                     name={`educations.${index}.degree`}
@@ -173,7 +174,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
                                             <FormControl fullWidth size="small"
-                                                         error={!!errors?.educations?.[index]?.fieldOfStudy}>
+                                                error={!!errors?.educations?.[index]?.fieldOfStudy}>
                                                 <InputLabel>رشته تحصیلی</InputLabel>
                                                 <Controller
                                                     name={`educations.${index}.fieldOfStudy`}
@@ -216,7 +217,7 @@ const StepEducation = ({ validation }) => {
                                                         value={getValues("graduationDate")}
                                                         render={
                                                             <TextField
-                                                                sx={{textAlign :"center"}}
+                                                                sx={{ textAlign: "center" }}
                                                                 fullWidth
                                                                 size="small"
                                                                 label="تاریخ اخذ مدرک تحصیلی"
@@ -233,7 +234,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
                                             <IconButton color="error" aria-label="delete" size="large"
-                                                        onClick={() => remove(index)}>
+                                                onClick={() => remove(index)}>
                                                 <DeleteIcon fontSize="inherit" />
                                             </IconButton>
                                         </Grid>

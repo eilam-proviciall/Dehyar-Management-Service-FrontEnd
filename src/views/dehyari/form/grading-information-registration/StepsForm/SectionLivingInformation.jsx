@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
 import LivingInformationInputs from './LivingInformationInputs';
-import axios from 'axios';
 import { useFormContext } from 'react-hook-form';
 import { getGeoData, getStateWithCitiesData } from "@/Services/DataService";
+import api from '@/utils/axiosInstance';
 
 // // مقداردهی اولیه state کامپوننت
 const initialState = {
@@ -44,101 +44,103 @@ const reducer = (state, action) => {
 };
 
 const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
-        const { setValue, watch } = useFormContext();
-        const queryParams = new URLSearchParams(window.location.search);
-        
-        const initialLivingLocation = watch(fieldKey);
-        const [state, dispatch] = useReducer(reducer, initialState);
+    const { setValue, watch } = useFormContext();
+    const queryParams = new URLSearchParams(window.location.search);
 
-        useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    dispatch({ type: 'SET_LOADING', payload: true });
+    const initialLivingLocation = watch(fieldKey);
+    console.log("Field Key =>", fieldKey);
 
-                    const stateCitiesResponse = await axios.get(getStateWithCitiesData());
-                    dispatch({ type: 'SET_STATE_CITIES', payload: stateCitiesResponse.data });
+    const [state, dispatch] = useReducer(reducer, initialState);
 
-                    if (initialLivingLocation) {
-                        const { state_city, region, dehestan, village, locationName } = initialLivingLocation;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                dispatch({ type: 'SET_LOADING', payload: true });
 
-                        if (state_city && state_city.city_hierarchy_code) {
-                            handleStateCityChange(state_city);
-                        }
+                const stateCitiesResponse = await api.get(getStateWithCitiesData(), { requiresAuth: true });
+                dispatch({ type: 'SET_STATE_CITIES', payload: stateCitiesResponse.data });
 
-                        if (region && region.hierarchy_code) {
-                            handleRegionChange(region);
-                        }
+                if (initialLivingLocation) {
+                    const { state_city, region, dehestan, village, locationName } = initialLivingLocation;
 
-                        if (dehestan && dehestan.hierarchy_code) {
-                            handleDehestanChange(dehestan);
-                        }
-
-                        if (village && village.hierarchy_code) {
-                            setValue(`${fieldKey}.village`, village);
-                        }
-
-                        if (locationName) {
-                            setValue(`${fieldKey}.locationName`, locationName);
-                        }
+                    if (state_city && state_city.city_hierarchy_code) {
+                        handleStateCityChange(state_city);
                     }
-                    dispatch({ type: 'SET_LOADING', payload: false });
-                } catch (error) {
-                    dispatch({ type: 'SET_ERROR', payload: error });
-                    dispatch({ type: 'SET_LOADING', payload: false });
+
+                    if (region && region.hierarchy_code) {
+                        handleRegionChange(region);
+                    }
+
+                    if (dehestan && dehestan.hierarchy_code) {
+                        handleDehestanChange(dehestan);
+                    }
+
+                    if (village && village.hierarchy_code) {
+                        setValue(`${fieldKey}.village`, village);
+                    }
+
+                    if (locationName) {
+                        setValue(`${fieldKey}.locationName`, locationName);
+                    }
                 }
-            };
-
-            fetchData();
-        }, [setValue]);
-
-        const handleStateCityChange = async (selectedStateCity) => {
-            dispatch({ type: 'SET_SELECTED_STATE_CITY', payload: selectedStateCity });
-
-            if (mode !== 'edit') {
-                setValue(`${fieldKey}.region`, null);
-                setValue(`${fieldKey}.dehestan`, null);
-                setValue(`${fieldKey}.village`, null);
-                dispatch({ type: 'SET_REGIONS', payload: [] });
-                dispatch({ type: 'SET_DEHESTANS', payload: [] });
-                dispatch({ type: 'SET_VILLAGES', payload: [] });
+                dispatch({ type: 'SET_LOADING', payload: false });
+            } catch (error) {
+                dispatch({ type: 'SET_ERROR', payload: error });
+                dispatch({ type: 'SET_LOADING', payload: false });
             }
-
-            const regionsResponse = await axios.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.city_hierarchy_code}`);
-            dispatch({ type: 'SET_REGIONS', payload: regionsResponse.data });
         };
 
-        const handleRegionChange = async (selectedRegion) => {
-            dispatch({ type: 'SET_SELECTED_REGION', payload: selectedRegion });
+        fetchData();
+    }, [setValue]);
 
-            if (mode !== 'edit') {
-                setValue(`${fieldKey}.dehestan`, null);
-                setValue(`${fieldKey}.village`, null);
-                dispatch({ type: 'SET_DEHESTANS', payload: [] });
-                dispatch({ type: 'SET_VILLAGES', payload: [] });
-            }
+    const handleStateCityChange = async (selectedStateCity) => {
+        dispatch({ type: 'SET_SELECTED_STATE_CITY', payload: selectedStateCity });
 
-            const dehestansResponse = await axios.get(`${getGeoData()}?level=dehestan&hierarchy_code=${selectedRegion.hierarchy_code}`);
-            dispatch({ type: 'SET_DEHESTANS', payload: dehestansResponse.data });
-        };
+        if (mode !== 'edit') {
+            setValue(`${fieldKey}.region`, null);
+            setValue(`${fieldKey}.dehestan`, null);
+            setValue(`${fieldKey}.village`, null);
+            dispatch({ type: 'SET_REGIONS', payload: [] });
+            dispatch({ type: 'SET_DEHESTANS', payload: [] });
+            dispatch({ type: 'SET_VILLAGES', payload: [] });
+        }
 
-        const handleDehestanChange = async (selectedDehestan) => {
-            dispatch({ type: 'SET_SELECTED_DEHESTAN', payload: selectedDehestan });
+        const regionsResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.city_hierarchy_code}`, { requiresAuth: true });
+        dispatch({ type: 'SET_REGIONS', payload: regionsResponse.data });
+    };
 
-            if (mode !== 'edit') {
-                setValue(`${fieldKey}.village`, null);
-                dispatch({ type: 'SET_VILLAGES', payload: [] });
-            }
+    const handleRegionChange = async (selectedRegion) => {
+        dispatch({ type: 'SET_SELECTED_REGION', payload: selectedRegion });
 
-            const villagesResponse = await axios.get(`${getGeoData()}?level=village&hierarchy_code=${selectedDehestan.hierarchy_code}`);
-            dispatch({ type: 'SET_VILLAGES', payload: villagesResponse.data });
-        };
+        if (mode !== 'edit') {
+            setValue(`${fieldKey}.dehestan`, null);
+            setValue(`${fieldKey}.village`, null);
+            dispatch({ type: 'SET_DEHESTANS', payload: [] });
+            dispatch({ type: 'SET_VILLAGES', payload: [] });
+        }
+
+        const dehestansResponse = await api.get(`${getGeoData()}?level=dehestan&hierarchy_code=${selectedRegion.hierarchy_code}`, { requiresAuth: true });
+        dispatch({ type: 'SET_DEHESTANS', payload: dehestansResponse.data });
+    };
+
+    const handleDehestanChange = async (selectedDehestan) => {
+        dispatch({ type: 'SET_SELECTED_DEHESTAN', payload: selectedDehestan });
+
+        if (mode !== 'edit') {
+            setValue(`${fieldKey}.village`, null);
+            dispatch({ type: 'SET_VILLAGES', payload: [] });
+        }
+
+        const villagesResponse = await api.get(`${getGeoData()}?level=village&hierarchy_code=${selectedDehestan.hierarchy_code}`, { requiresAuth: true });
+        dispatch({ type: 'SET_VILLAGES', payload: villagesResponse.data });
+    };
 
     return (
         <LivingInformationInputs
-            // state={state}
-            // handleStateCityChange={handleStateCityChange}
-            // handleRegionChange={handleRegionChange}
-            // handleDehestanChange={handleDehestanChange}
+            state={state}
+            handleStateCityChange={handleStateCityChange}
+            handleRegionChange={handleRegionChange}
+            handleDehestanChange={handleDehestanChange}
             fieldKey={fieldKey}
             setData={setData}
         />

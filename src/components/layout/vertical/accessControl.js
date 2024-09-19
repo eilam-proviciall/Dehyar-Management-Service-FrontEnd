@@ -10,7 +10,6 @@ const accessControl = {
     ],
     [WORK_GROUPS.Admin]: [
         { label: 'جدول خطاها', href: '/admin/logtable' },
-        { label: 'گروه مجوز ها', href: '/admin/roles' },
     ],
     [WORK_GROUPS.GOVERNOR]: [
         { label: 'لیست پرسنل', href: '/dehyari/governor/table' },
