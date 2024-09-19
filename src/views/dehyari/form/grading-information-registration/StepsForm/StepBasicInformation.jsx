@@ -1,5 +1,5 @@
 // React Imports
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // MUI Imports
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
@@ -22,7 +22,7 @@ const persianToEnglishDigits = (str) => {
 };
 
 const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
-    const { control, handleSubmit, formState: { errors } } = useFormContext();
+    const { control, handleSubmit, formState: { errors }, watch, setValue } = useFormContext();
 
     const organizations = [
         { value: 1, label: "دهیاری" },
@@ -56,6 +56,18 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
     ]
 
     const [errorState, setErrorState] = useState(null);
+
+    const selectedOrganizationType = watch("organization_type"); // مشاهده نوع سازمان انتخاب‌شده
+    useEffect(() => {
+        if (selectedOrganizationType === 'شهرداری') {
+            setValue("grade_state", "");
+            setValue("grade_city", "");
+        } else {
+            setValue("grade_state", " ");
+            setValue("grade_city", " ");
+        }
+    }, [setValue, selectedOrganizationType]);
+
 
     const renderTextField = (name, label, errorText) => (
         <FormControl fullWidth >
@@ -208,7 +220,7 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                     {console.log("Organization Type  => ", data.organization_type)
                     }
                     {data.organization_type !== '' && (
-                        <SectionLivingInformation fieldKey={data.organization_type} />
+                        <SectionLivingInformation fieldKey={data.organization_type == "شهرداری" ? 'municipality' : 'dehyari'} setData={setData} mode={mode} />
                     )}
                     <div className='grid md:grid-cols-5 w-full gap-5'>
                         {data.organization_type == 'شهرداری' ? (

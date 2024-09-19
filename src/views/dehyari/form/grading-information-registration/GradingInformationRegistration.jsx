@@ -13,19 +13,14 @@ import StepIncomeNew from './StepsForm/StepIncomeNew';
 import GradingTable from './list/GradingTable';
 import { FormProvider, useForm } from 'react-hook-form';
 import { valibotResolver } from '@hookform/resolvers/valibot';
-import { maxLength, minLength, object, string, array } from 'valibot';
+import { maxLength, minLength, object, string, array, number } from 'valibot';
 
 const schemas = [
     object({
         organization_type: string([minLength(1, 'این فیلد الزامی است')]),
         hierarchical_code: string([minLength(1, 'این فیلد الزامی است')]),
         village_code: string([minLength(1, 'این فیلد الزامی است')]),
-        nid: string([
-            minLength(1, 'این فیلد الزامی است'),
-            minLength(10, 'کد ملی باید 10 رقمی باشد'),
-            maxLength(10, 'کد ملی  نمیتواند بیشتر از 10 رقم باشد')
-        ],
-        ),
+        nid: string([minLength(1, 'این فیلد الزامی است')]),
         dehyari_status: string([minLength(1, 'این فیلد الزامی است')]),
         wide: string([minLength(1, 'این فیلد الزامی است')]),
         centrality_status: string([minLength(1, 'این فیلد الزامی است')]),
@@ -35,6 +30,25 @@ const schemas = [
         date_established: string([minLength(1, 'این فیلد الزامی است')]),
         date_grading: string([minLength(1, 'این فیلد الزامی است')]),
         grade: string([minLength(1, 'این فیلد الزامی است')]),
+        grade_state: string([minLength(1, 'این فیلد الزامی است')]),
+        grade_city: string([minLength(1, 'این فیلد الزامی است')]),
+        municipality: array(
+            object({
+                states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                departments: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+            })
+        ),
+        dehyari: array(
+            object({
+                states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                dehestans: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+                villages: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+            })
+        ),
     }),
     object({
         population_fields:
@@ -95,9 +109,25 @@ const GradingInformationRegistration = () => {
         date_established: '',
         date_grading: '',
         grade: '',
+        grade_state: '',
+        grade_city: '',
+        municipality: [{
+            states: { value: 0, name: '' },
+            cities: { value: 0, name: '' },
+            regions: { value: 0, name: '' },
+            departments: { value: 0, name: '' },
+        }],
+        dehyari: [{
+            states: { value: 0, name: '' },
+            cities: { value: 0, name: '' },
+            regions: { value: 0, name: '' },
+            dehestans: { value: 0, name: '' },
+            villages: { value: 0, name: '' },
+        }],
         population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
         income_fields: [{ year: '', per_income: '' }]
     });
+
 
     const methods = useForm({
         resolver: valibotResolver(schemas[step]),
@@ -115,14 +145,27 @@ const GradingInformationRegistration = () => {
         date_established: '',
         date_grading: '',
         grade: '',
+        grade_state: '',
+        grade_city: '',
+        municipality: [{
+            states: { value: 0, name: '' },
+            cities: { value: 0, name: '' },
+            regions: { value: 0, name: '' },
+            departments: { value: 0, name: '' },
+        }],
+        dehyari: [{
+            states: { value: 0, name: '' },
+            cities: { value: 0, name: '' },
+            regions: { value: 0, name: '' },
+            dehestans: { value: 0, name: '' },
+            villages: { value: 0, name: '' },
+        }],
         population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
         income_fields: [{ year: '', per_income: '' }]
     })
 
     console.log("Data => ", data);
     console.log();
-
-    useEffect(() => { }, [])
 
 
     const handleOpenForm = () => setOpenModal(true);
@@ -143,6 +186,19 @@ const GradingInformationRegistration = () => {
             date_established: '',
             date_grading: '',
             grade: '',
+            municipality: [{
+                states: { value: 0, name: '' },
+                cities: { value: 0, name: '' },
+                regions: { value: 0, name: '' },
+                departments: { value: 0, name: '' },
+            }],
+            dehyari: [{
+                states: { value: 0, name: '' },
+                cities: { value: 0, name: '' },
+                regions: { value: 0, name: '' },
+                dehestans: { value: 0, name: '' },
+                villages: { value: 0, name: '' },
+            }],
             population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
             income_fields: [{ year: '', per_income: '' }]
         });
@@ -151,9 +207,9 @@ const GradingInformationRegistration = () => {
     };
 
     const steps = [
-        { step: 0, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
-        { step: 1, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 2, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
+        { step: 1, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
+        { step: 2, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
+        { step: 3, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
     ];
 
 
@@ -163,8 +219,8 @@ const GradingInformationRegistration = () => {
             <Modal open={openModal} onClose={handleCloseForm} style={{ margin: '2%' }}>
                 <Paper style={{ maxHeight: '100%', overflowY: 'auto' }}>
                     <div className='bg-backgroundPaper h-full lg:h-auto rounded-2xl'>
-                        <Button onClick={handleCloseForm}><i className='ri-close-fill' /></Button>
-                        <Grid container >
+                        <Button className='absolute left-0' onClick={handleCloseForm}><i className='ri-close-fill' /></Button>
+                        <Grid container p={5} py={10} >
                             <Grid display={'flex'} item xs={12} gap={2} justifyContent={'center'}>
                                 {steps.map((currentStep) => (
                                     <div className={`flex ${currentStep.step == steps[step].step ? 'border-primary text-primary font-bold' : 'sm:flex hidden'} gap-2 items-center justify-between `}>

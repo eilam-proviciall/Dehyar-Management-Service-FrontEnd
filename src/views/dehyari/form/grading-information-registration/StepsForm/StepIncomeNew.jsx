@@ -41,6 +41,12 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
                 date_grading: gradingDTO.dateGrading,
                 grade: gradingDTO.grade,
                 population_fields: gradingDTO.populationFields,
+                states: gradingDTO.states,
+                cities: gradingDTO.cities,
+                regions: gradingDTO.regions,
+                departments: gradingDTO.departments,
+                dehestans: gradingDTO.dehestans,
+                villages: gradingDTO.villages,
                 income_fields: newData.income_fields
             }
             methods = finallyData;

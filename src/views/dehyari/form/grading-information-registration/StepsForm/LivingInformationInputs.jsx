@@ -1,40 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Autocomplete, TextField } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
 
-const LivingInformationInputs = ({ fieldKey }) => {
-    const { control } = useFormContext();
+const LivingInformationInputs = ({ fieldKey, setData }) => {
+    const { control, watch, setValue, formState: { errors } } = useFormContext();
     console.log("Field Key =>", fieldKey);
 
     const states = [
-        { value: 0, name: "خراسان رضوی" },
-        { value: 1, name: "خوزستان" },
-        { value: 2, name: "فارس" },
+        { value: 1, name: "خراسان رضوی" },
+        { value: 2, name: "خوزستان" },
+        { value: 3, name: "فارس" },
     ];
-    const [selectedState, setSelectedState] = useState([{ value: undefined, name: undefined }]);
+    const [selectedState, setSelectedState] = useState([{ value: 0, name: '' }]);
 
     const cities = [
         {
-            value: 0, citiesList: [
-                { value: 0, name: 'مشهد' },
-                { value: 1, name: 'نیشابور' },
-                { value: 2, name: 'کاشمر' },
-            ],
-        },
-        {
             value: 1, citiesList: [
-                { value: 0, name: 'امیدیه' },
-                { value: 1, name: 'باغ ملک' },
+                { value: 1, name: 'مشهد' },
+                { value: 2, name: 'نیشابور' },
+                { value: 3, name: 'کاشمر' },
             ],
         },
         {
             value: 2, citiesList: [
-                { value: 0, name: 'بیضاء' },
-                { value: 1, name: 'بختگان' },
+                { value: 1, name: 'امیدیه' },
+                { value: 2, name: 'باغ ملک' },
+            ],
+        },
+        {
+            value: 3, citiesList: [
+                { value: 1, name: 'بیضاء' },
+                { value: 2, name: 'بختگان' },
             ],
         },
     ];
+
+    const selectedOrganizationType = watch("organization_type"); // مشاهده نوع سازمان انتخاب‌شده
+    useEffect(() => {
+        if (selectedOrganizationType === 'شهرداری') {
+            setValue("dehestans", { value: 0, name: ' ' });
+            setValue("villages", { value: 0, name: ' ' });
+            setValue("departments", { value: 0, name: '' });
+        } else {
+            setValue("dehestans", { value: 0, name: '' });
+            setValue("villages", { value: 0, name: '' });
+            setValue("departments", { value: 0, name: ' ' });
+        }
+    }, [setValue, selectedOrganizationType])
 
     const renderAutocomplete = (name, label, options) => (
         <Controller
@@ -45,9 +58,6 @@ const LivingInformationInputs = ({ fieldKey }) => {
                 const selectedOption = options.find(
                     option => option.value === field.value?.value
                 );
-
-                console.log("Name =>", options);
-
                 return (
                     <Autocomplete
                         {...field}
@@ -58,7 +68,8 @@ const LivingInformationInputs = ({ fieldKey }) => {
                         }
                         onChange={(event, newValue) => {
                             field.onChange(newValue || null);
-                            name == "states" && (setSelectedState(newValue && newValue.value));
+                            setData(prevData => ({ ...prevData, [name]: newValue }));
+                            name == "states" && (setSelectedState(newValue && newValue.value - 1));
                         }}
                         value={selectedOption || null}
                         renderInput={(params) => (
@@ -67,8 +78,8 @@ const LivingInformationInputs = ({ fieldKey }) => {
                                 label={label}
                                 size="small"
                                 fullWidth
-                                error={!!field.error}
-                                helperText={field.error && field.error.message}
+                                error={errors[name]}
+                                helperText={errors?.[name]?.message}
                             />
                         )}
                     />
@@ -78,18 +89,24 @@ const LivingInformationInputs = ({ fieldKey }) => {
     );
 
 
-
     return (
-        <Grid className='grid md:grid-cols-5 w-full gap-5'>
-            {renderAutocomplete('states', "استان", states)}
-            {renderAutocomplete('cities', "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-            {renderAutocomplete('regions', "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-            {fieldKey == "شهرداری" && (
-                renderAutocomplete('regions', "بخش", cities[selectedState] ? cities[selectedState].citiesList : [{}])
-            )}
-            {fieldKey == "دهیاری" && renderAutocomplete('dehestan', "دهستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-            {fieldKey == "دهیاری" && renderAutocomplete('villages', "روستا", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-        </Grid>
+        fieldKey == 'municipality' ? (
+            <Grid className='grid md:grid-cols-5 w-full gap-5'>
+                {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
+                {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                {renderAutocomplete(`${fieldKey}.departments`, "بخش", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+            </Grid>
+        )
+            : fieldKey == 'dehyari' && (
+                <Grid className='grid md:grid-cols-5 w-full gap-5'>
+                    {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
+                    {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                    {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                    {renderAutocomplete(`${fieldKey}.dehestans`, "دهستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                    {renderAutocomplete(`${fieldKey}.villages`, "روستا", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
+                </Grid>
+            )
     );
 };
 
