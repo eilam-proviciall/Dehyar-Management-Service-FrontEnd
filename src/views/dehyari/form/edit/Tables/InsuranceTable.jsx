@@ -34,6 +34,7 @@ function InsuranceTable() {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                 },
             });
+            console.log(response.data)
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -47,35 +48,53 @@ function InsuranceTable() {
     }, []);
 
     const handleEditClick = (row) => {
-        console.log(row.original.id)
         setEditId(row.original.id); // تنظیم شناسه رکورد برای ویرایش
         setMode('edit'); // تنظیم مودال روی حالت ویرایش
         setOpenModal(true); // باز کردن مودال
     };
 
     const columns = useMemo(() => [
+
+        {
+            accessorKey: 'dehyari_title',
+            header: 'عنوان محل کار',
+            size: 50,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+        },
+        {
+            accessorKey: 'insurance_workshop',
+            header: 'کارگاه بیمه',
+            size: 50,
+            Cell: ({ cell }) => {
+                const value = cell.getValue();
+                return (
+                    <div style={{ textAlign: 'right' }}>
+                        {value === 1 ? "دهیاری" : value === 2 ? "کارگاه" : ""}
+                    </div>
+                );
+            },        },
         {
             accessorKey: 'start_date',
             header: 'تاریخ شروع',
-            size: 150,
+            size: 50,
             Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
         },
         {
             accessorKey: 'end_date',
             header: 'تاریخ پایان',
-            size: 150,
+            size: 20,
             Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
         },
         {
-            accessorKey: 'month',
-            header: 'سابقه به ماه',
-            size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            accessorKey: 'days',
+            header: 'سابقه به روز',
+            size: 20,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()} روز</div>,
         },
         {
             accessorKey: 'actions',
             header: 'عملیات',
-            size: 150,
+            size: 20,
             Cell: ({ row }) => (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <IconButton onClick={(event) => handleClick(event, row)}>
@@ -109,7 +128,12 @@ function InsuranceTable() {
 
     return (
         <>
-            <MaterialReactTable table={table} />
+            <MaterialReactTable
+                sx={{
+                    maxHeight: '400px', // تنظیم ارتفاع ثابت برای جدول
+                    overflowY: 'hidden' // غیرفعال کردن اسکرول عمودی
+                }}
+                table={table} />
             {/* مودال ایجاد یا ویرایش */}
             <InsuranceModal
                 open={openModal}

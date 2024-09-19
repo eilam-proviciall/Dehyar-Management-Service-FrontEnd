@@ -54,15 +54,20 @@ const validationSchemas = {
 const steps = ['ساختار تشکیلاتی', 'اطلاعات قرارداد'];
 
 const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => {
-    const [activeStep, setActiveStep] = useState(0);
-    const methods = useForm();
+    const methods = useForm(); // Initialize useForm
+    const [activeStep, setActiveStep] = useState(0); // Initialize step state
     const [loading, setLoading] = useState(false);
-    const queryParams = new URLSearchParams(window.location.search);
-    const param = queryParams.get('param');
+
+    useEffect(() => {
+        if (open === false) {
+            // Reset the form and stepper state when the modal is closed
+            methods.reset(); // Reset form data
+            setActiveStep(0); // Reset stepper to first step
+        }
+    }, [open]);
+
     useEffect(() => {
         if (mode === 'edit' && editId) {
-            console.log('edit')
-            console.log(editId)
             const fetchData = async () => {
                 try {
                     const response = await axios.get(`${HumanContract()}/show/${editId}`, {
@@ -70,7 +75,6 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                             Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                         },
                     });
-                    console.log(response.data)
                     const mappedData = {
                         contractStart: response.data.contract_start,
                         contractType: response.data.contract_type,
@@ -81,17 +85,18 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                         titleContract: response.data.title_contract,
                         jobTitle: response.data.job_type_id,
                         currentJob: response.data.main_work,
+                        coveredVillages: response.data.cover_villages.map(village => village.village_code),
                     };
 
-                    methods.reset(mappedData);
+                    methods.reset(mappedData); // Populate the form with fetched data
                 } catch (error) {
                     toast.error('خطا در دریافت اطلاعات');
-                    console.error('Error fetching data:', error);
                 }
             };
             fetchData();
         }
     }, [editId, mode]);
+
 
     const handleNext = async () => {
         const isValid = await methods.trigger();
@@ -103,19 +108,15 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
     const handleBack = () => {
         setActiveStep((prevStep) => prevStep - 1);
     };
-
-    const handleReset = () => {
-        setActiveStep(0);
-        methods.reset();
-    };
-
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
         setLoading(true);
-        const dto = HumanContractDTO.fromForm(formData, param); // تبدیل داده‌ها به فرمت مناسب
+        const dto = HumanContractDTO.fromForm(formData,param); // Convert data to DTO
         try {
             let response;
             if (mode === 'edit') {
-                // در حالت ویرایش، ارسال درخواست PUT برای به‌روزرسانی داده‌ها
+                // Edit mode: send PUT request to update
                 response = await axios.put(`${HumanContract()}/update/${editId}`, dto, {
                     headers: {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
@@ -129,10 +130,11 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                     },
                 });
                 toast.success("قرارداد با موفقیت ثبت شد");
+
             }
-            methods.reset();
-            handleClose();
-            refreshData();
+            methods.reset(); // Reset form after submission
+            handleClose(); // Close modal after submission
+            refreshData(); // Refresh data
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
                 Object.keys(error.response.data.errors).forEach((key) => {
@@ -141,7 +143,6 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
             } else {
                 toast.error("خطا در ثبت اطلاعات", { position: 'top-center' });
             }
-            console.error("Error submitting form:", error);
         } finally {
             setLoading(false);
         }
@@ -152,7 +153,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
             aria-labelledby="stepper-modal-title"
             aria-describedby="stepper-modal-description"
             open={open}
-            onClose={null} // غیرفعال کردن بستن مودال با کلیک خارج از آن
+            onClose={null} // Prevent closing the modal by clicking outside
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
@@ -174,7 +175,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                     <CloseIcon />
                 </IconButton>
 
-                <Typography variant="h5" sx={{ justifyContent: "center", textAlign: "center", marginBottom: "20px" }}>
+                <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
                     {mode === 'edit' ? 'ویرایش قرارداد' : 'ثبت اطلاعات حکم کارگزینی'}
                 </Typography>
 
@@ -187,9 +188,9 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                 </Stepper>
 
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(handleSubmit)} style={{ marginTop: 8 }}>
-                        {activeStep === 0 && <StepOneFields validation={validationSchemas} />}
-                        {activeStep === 1 && <StepTwoFields validation={validationSchemas} />}
+                    <form onSubmit={methods.handleSubmit(handleSubmit)}>
+                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode}/>}
+                        {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
                             <Button
@@ -209,10 +210,6 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                         </Box>
                     </form>
                 </FormProvider>
-
-                {activeStep === steps.length && (
-                    <Button onClick={handleReset}>شروع مجدد</Button>
-                )}
             </Box>
         </Modal>
     );

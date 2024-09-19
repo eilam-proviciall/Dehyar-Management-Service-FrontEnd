@@ -36,6 +36,11 @@ function getContractRole(humanResourceData) {
     }
 }
 
+function daysToMonths(days) {
+    const daysInMonth = 30; // فرض اینکه هر ماه 30 روز است
+    const months = Math.floor(days / daysInMonth); // به پایین گرد می‌کند
+    return months;
+}
 class HumanResourceDTO {
 
     constructor(humanResourceData) {
@@ -45,7 +50,7 @@ class HumanResourceDTO {
         this.section = this.joinArray(humanResourceData.locationData.regions);
         this.villageCount = humanResourceData.covered_villages?.length || 0;
         this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
-        this.name = humanResourceData.full_name || '';
+        this.name = `${humanResourceData.first_name} ${humanResourceData.last_name}` || '';
         this.fatherName = humanResourceData.father_name || '';
         this.nationalId = humanResourceData.nid || '';
         this.maritalStatus = humanResourceData.married_status === 0 ? "مجرد" : "متاهل";
@@ -59,10 +64,10 @@ class HumanResourceDTO {
         this.issuePlace = humanResourceData.issue_place || '';
         this.education = degreeOptions.find(option => option.value == humanResourceData.last_degree.education_degree)?.title || '';
         this.major = humanResourceData.last_degree.education_field || '';
-        this.appointmentDate = " ";
-        this.experience = humanResourceData.some_month_history || '';
+        this.experience = daysToMonths(humanResourceData.some_month_history) || '';
         this.contractStartDate = humanResourceData.contract_start || '';
         this.contractEndDate = humanResourceData.contract_end || '';
+        this.appointmentDate = humanResourceData.appointment_date || '';
         this.contractSubject = humanResourceData.title_contract || '';
         this.contractDescription = humanResourceData.description_contract || '';
         this.job_type_id = humanResourceData.job_type_id;
@@ -90,11 +95,11 @@ class HumanResourceDTO {
         this.signingNote = getContractRole(humanResourceData).signNote;
         this.finalNote = "این قرارداد در ۵ نسخه تنظیم و هر نسخه حکم واحد را دارد و پس از امضا و مهر و ثبت معتبر خواهد بود";
         this.executionDate = humanResourceData.execute_start;
-        this.uniqueId = "پیش نویس";
+        this.uniqueId = humanResourceData.salary.unique_identifier || "پیش نویس";
         this.contractNumber = `۴۰۷ - ${this.executionDate}`;
         this.jobName = getJobTitleLabel(humanResourceData.job_type_id)
-        this.contractType = contractType[humanResourceData.contract_type]
-        this.contract_type_id = humanResourceData.contract_type
+        this.contractType = contractType[humanResourceData.last_contract.contract_type]
+        this.contract_type_id = humanResourceData.last_contract.contract_type
         this.villageEmployer = humanResourceData.village_employer
         this.remainDay = humanResourceData.salary?.remain_day != null ? formatCurrency(humanResourceData.salary.remain_day) : null;
         this.signatureData = humanResourceData.signature_data

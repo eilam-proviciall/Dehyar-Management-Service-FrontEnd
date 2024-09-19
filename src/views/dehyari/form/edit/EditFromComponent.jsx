@@ -12,42 +12,61 @@ import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 import {toast} from "react-toastify";
+import { useRouter } from 'next/navigation';
 
 function EditFromComponent() {
-    const [defaultValue, setDefaultValue] = useState({});
+    const [defaultValue, setDefaultValue] = useState(null); // حالت اولیه خالی
+    const [loading, setLoading] = useState(true); // حالت بارگذاری
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
+    const router = useRouter();
 
     const methods = useForm({
-        defaultValues: defaultValue,
+        defaultValues: defaultValue || {}, // در ابتدا خالی
     });
 
     useEffect(() => {
+        const token = window.localStorage.getItem('token'); // دریافت توکن
+
+        if (!token) {
+            // اگر توکن موجود نبود، به صفحه لاگین هدایت کن
+            router.push('/login');
+            return;
+        }
+
         if (param) {
             axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
                 headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${token}`, // ارسال توکن در هدر
                 }
             })
                 .then((response) => {
                     const dto = new EditHumanResourceFormDTO(response.data);
-                    setDefaultValue(dto);
-                    methods.reset(dto);
+                    setDefaultValue(dto); // مقداردهی defaultValue
+                    methods.reset(dto); // ریست کردن فرم با داده‌ها
+                    setLoading(false); // پایان بارگذاری
                 })
                 .catch((error) => {
                     console.error('Error fetching human resource data:', error);
+                    if (error.response && error.response.status === 401) {
+                        // اگر توکن نامعتبر بود، کاربر را به صفحه لاگین هدایت کن
+                        router.push('/login');
+                    }
+                    setLoading(false); // در صورت خطا هم بارگذاری پایان یابد
                 });
+        } else {
+            setLoading(false); // در صورت نبود پارامتر، بارگذاری متوقف شود
         }
-    }, [param]);
+    }, [param, router, methods]);
 
-    const [showTable, setShowTable] = useState(false); // State for switching between form and table
+    const [showTable, setShowTable] = useState(false); // حالت بین فرم و جدول
 
     const onSubmit = async (formData) => {
         const apiData = EditHumanResourceFormDTO.fromForm(formData);
         try {
             const response = await axios.put(`${humanResources()}/update/${formData.id}`, apiData, {
                 headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`, // ارسال توکن
                 }
             });
             toast.success('اطلاعات با موفقیت ذخیره شد');
@@ -64,8 +83,13 @@ function EditFromComponent() {
     };
 
     const handleSwitch = () => {
-        setShowTable(!showTable); // Toggle between form and table
+        setShowTable(!showTable); // تغییر بین فرم و جدول
     };
+
+    // نمایش اسپینر بارگذاری در صورت عدم بارگذاری کامل داده‌ها
+    if (loading) {
+        return <div>در حال بارگذاری...</div>;
+    }
 
     return (
         <Grid container spacing={6}>
@@ -98,10 +122,14 @@ function EditFromComponent() {
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={6}>
                         <Grid item xs={12}>
-                            <EditProfilePictureUpload />
+                            <EditProfilePictureUpload defaultProfilePicture={defaultValue?.profilePicture} />
                         </Grid>
                         <Grid item xs={12}>
-                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} onSwitch={handleSwitch} />
+                            <EditButtonGroup
+                                onSubmit={methods.handleSubmit(onSubmit)}
+                                onSwitch={handleSwitch}
+                                showTable={showTable}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>

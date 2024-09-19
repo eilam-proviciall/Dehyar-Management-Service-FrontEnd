@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
@@ -29,11 +29,27 @@ const CenteredGrid = styled(Grid)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const EditProfilePictureUpload = () => {
+const EditProfilePictureUpload = ({defaultProfilePicture}) => {
     const { setValue } = useFormContext();
     const [files, setFiles] = useState([]);
     const pondRef = useRef(null);
-
+    useEffect(() => {
+        if (defaultProfilePicture) {
+            setFiles([
+                {
+                    source: `data:image/jpeg;base64,${defaultProfilePicture}`,
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: 'profile-picture.jpg',
+                            size: defaultProfilePicture.length,
+                            type: 'image/jpeg',
+                        },
+                    },
+                },
+            ]);
+        }
+    }, [defaultProfilePicture]);
     const handleFileChange = (fileItems) => {
         if (fileItems.length > 0) {
             const file = fileItems[0].file;

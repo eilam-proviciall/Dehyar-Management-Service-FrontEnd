@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, FormControl, Typography } from '@mui/material';
+import {Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem} from '@mui/material';
 import {Controller, useFormContext} from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
@@ -18,17 +18,22 @@ const StepTwoFields = ({ validation }) => {
                     defaultValue=""
                     rules={validation.titleContract}
                     render={({ field }) => (
-                        <TextField
-                            fullWidth
-                            label="عنوان قرارداد"
-                            size="small"
-                            {...field}
-                            error={!!errors.titleContract}
-                            helperText={errors.titleContract?.message}
-                        />
+                        <FormControl fullWidth size="small" error={!!errors.titleContract}>
+                            <InputLabel id="titleContract-label">عنوان قرارداد</InputLabel>
+                            <Select
+                                labelId="titleContract-label"
+                                label="عنوان قرارداد"
+                                {...field}
+                            >
+                                <MenuItem value="0">آیتم اول</MenuItem>
+                                <MenuItem value="1">آیتم دوم</MenuItem>
+                            </Select>
+                            <FormHelperText>{errors.titleContract?.message}</FormHelperText>
+                        </FormControl>
                     )}
                 />
             </Grid>
+
 
             {/* فیلد تاریخ شروع قرارداد */}
             <Grid item xs={12} sm={6}>
