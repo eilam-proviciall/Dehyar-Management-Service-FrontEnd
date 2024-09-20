@@ -26,6 +26,13 @@ function EditFromComponent() {
     });
 
     useEffect(() => {
+        if (defaultValue) {
+            methods.reset(defaultValue);
+            setLoading(false);
+        }
+    }, [defaultValue, methods]);
+
+    useEffect(() => {
         const token = window.localStorage.getItem('token'); // دریافت توکن
 
         if (!token) {
