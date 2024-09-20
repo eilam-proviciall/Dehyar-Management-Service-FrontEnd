@@ -67,7 +67,7 @@ const PhoneNumberStepContact = ({ validation }) => {
                             <Card key={item.id} sx={{ mb: 2 }}>
                                 <CardContent>
                                     <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={4}>
+                                        <Grid item xs={12} sm={3}>
                                             <Controller
                                                 name={`contacts[${index}].phoneNumber`}
                                                 control={control}
@@ -91,7 +91,7 @@ const PhoneNumberStepContact = ({ validation }) => {
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12} sm={8}>
+                                        <Grid item xs={12} sm={9}>
                                             <Controller
                                                 name={`contacts[${index}].socialNetwork`}
                                                 control={control}

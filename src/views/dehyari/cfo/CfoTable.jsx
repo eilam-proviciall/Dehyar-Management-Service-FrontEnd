@@ -14,6 +14,7 @@ import {toast} from "react-toastify";
 import MyDocument from "@components/MyDocument";
 import {pdf} from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
+import {getJobTitleLabel} from "@data/jobTitles";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -70,6 +71,7 @@ function CfoTable(props) {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
+                console.log(response.data)
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
@@ -102,6 +104,12 @@ function CfoTable(props) {
                 header: 'نام و نام خانوادگی',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+            },
+            {
+                accessorKey: 'job_type_id',
+                header: 'پست سازمانی',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'nid',

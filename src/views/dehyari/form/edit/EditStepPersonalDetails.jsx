@@ -364,22 +364,21 @@ const EditStepPersonalDetails = ({ validation }) => {
                     />
                 </Grid>
 
-                {/* آدرس محل سکونت */}
                 <Grid item xs={12} sm={4}>
                     <Controller
-                        name="residenceAddress"
+                        name="insuranceIdentifier"
                         control={control}
                         defaultValue=""
-                        rules={validation.residenceAddress}
+                        rules={validation.insuranceIdentifier}
                         render={({ field }) => (
                             <TextField
                                 fullWidth
                                 size="small"
-                                label="آدرس محل سکونت"
-                                placeholder="آدرس محل سکونت"
+                                label="شناسه تامین اجتماعی"
+                                placeholder="شناسه تامین اجتماعی"
                                 {...field}
-                                error={!!errors.residenceAddress}
-                                helperText={errors.residenceAddress && errors.residenceAddress.message}
+                                error={!!errors.insuranceIdentifier}
+                                helperText={errors.insurance_identifier && errors.insuranceIdentifier.message}
                             />
                         )}
                     />
@@ -405,21 +404,23 @@ const EditStepPersonalDetails = ({ validation }) => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+
+                {/* آدرس محل سکونت */}
+                <Grid item xs={12} sm={12}>
                     <Controller
-                        name="insuranceIdentifier"
+                        name="residenceAddress"
                         control={control}
                         defaultValue=""
-                        rules={validation.insuranceIdentifier}
+                        rules={validation.residenceAddress}
                         render={({ field }) => (
                             <TextField
                                 fullWidth
                                 size="small"
-                                label="شناسه تامین اجتماعی"
-                                placeholder="شناسه تامین اجتماعی"
+                                label="آدرس محل سکونت"
+                                placeholder="آدرس محل سکونت"
                                 {...field}
-                                error={!!errors.insuranceIdentifier}
-                                helperText={errors.insurance_identifier && errors.insuranceIdentifier.message}
+                                error={!!errors.residenceAddress}
+                                helperText={errors.residenceAddress && errors.residenceAddress.message}
                             />
                         )}
                     />

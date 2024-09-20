@@ -25,7 +25,7 @@ const modalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '60%',
+    width: '40%',
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
@@ -68,7 +68,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                         month: response.data.data.month,
                         days: response.data.data.days,
                         dehyari_title: response.data.data.dehyari_title,
-                        insuranceWorkshop: response.data.data.insurance_workshop, // اطمینان از استفاده از نام صحیح فیلد
+                        insurance_workshop: response.data.data.insurance_workshop, // اطمینان از استفاده از نام صحیح فیلد
                     });
                     setLoading(false);
                 })
@@ -163,7 +163,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                     <form onSubmit={methods.handleSubmit(handleSubmit)}>
                         <Grid container spacing={2}>
                             {/* تاریخ شروع */}
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <FormControl fullWidth>
                                     <Controller
                                         name="start_date"
@@ -193,7 +193,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                             </Grid>
 
                             {/* تاریخ پایان */}
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <FormControl fullWidth>
                                     <Controller
                                         name="end_date"
@@ -223,7 +223,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                             </Grid>
 
                             {/* تعداد ماه */}
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <Controller
                                     name="days"
                                     control={methods.control}
@@ -241,7 +241,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <Controller
                                     name="dehyari_title"
                                     control={methods.control}
@@ -260,7 +260,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                             </Grid>
 
                             {/* کارگاه بیمه */}
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={4}>
                                 <FormControl fullWidth>
                                     <InputLabel>کارگاه بیمه</InputLabel>
                                     <Controller
