@@ -68,15 +68,17 @@ function StatusBar({ onVillageSelect }) {
                 <Card>
                     <CardContent>
                         <div className='flex items-center justify-between gap-3'>
-                            <Typography className='font-medium' color='text.primary'>
-                                انتخاب روستا:
-                            </Typography>
+                            {/*<Typography className='font-medium' color='text.primary'>*/}
+                            {/*    انتخاب روستا:*/}
+                            {/*</Typography>*/}
                             <Select
                                 value={selectedVillage}
+                                label="شبکه اجتماعی"
+
                                 onChange={handleVillageChange}
                                 displayEmpty
-                                inputProps={{ 'aria-label': 'Select Village' }}
-                                sx={{ width: '150px' }}
+                                // inputProps={{ 'aria-label': 'Select Village' }}
+                                sx={{ width: '350px' }}
                             >
                                 <MenuItem value="" disabled>
                                     انتخاب کنید

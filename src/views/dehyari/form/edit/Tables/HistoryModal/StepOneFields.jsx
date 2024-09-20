@@ -119,7 +119,7 @@
                             render={({ field }) => (
                                 <Autocomplete
                                     {...field}
-                                    size="small"
+                                    // size="small"
                                     options={options}
                                     groupBy={(option) => option.group}
                                     getOptionLabel={(option) => option.label}
@@ -202,7 +202,7 @@
                 <Grid item xs={12} sm={9}>
                     <FormControl
                         fullWidth
-                        size="small"
+                        // size="small"
                         error={!!errors.coveredVillages}
                         disabled={mode === 'create' && !selectedJobTitle}
                     >
