@@ -25,31 +25,38 @@ function EditFromComponent() {
     });
 
     useEffect(() => {
-        const token = window.localStorage.getItem('token');
+        const fetchHumanResourceData = async () => {
+            const token = window.localStorage.getItem('token');
 
-        if (param) {
-            setLoading(true);
-            setError(false);
-            axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-                .then((response) => {
+            if (param) {
+                setLoading(true);
+                setError(false);
+                try {
+                    const response = await axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
                     methods.reset(dto);
-                })
-                .catch((error) => {
+                } catch (error) {
                     console.error('Error fetching human resource data:', error);
                     setError(true);
-
-                })
-                .finally(() => {
+                    if (error.response) {
+                        toast.error(`خطا در دریافت اطلاعات: ${error.response.status}`);
+                    } else {
+                        toast.error("خطا در ارتباط با سرور");
+                    }
+                } finally {
                     setLoading(false);
-                });
-        } else {
-            setLoading(false);
-        }
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        fetchHumanResourceData();
     }, [param, methods]);
+
 
     const [showTable, setShowTable] = useState(false);
 
@@ -62,11 +69,16 @@ function EditFromComponent() {
             toast.success('اطلاعات با موفقیت ذخیره شد');
         } catch (error) {
             console.error('Error updating human resource:', error);
-            error.response?.data?.errors?.forEach(error => {
-                toast.error(error);
-            });
+            if (error.response?.data?.errors) {
+                error.response.data.errors.forEach(err => {
+                    toast.error(err);
+                });
+            } else {
+                toast.error('خطا در به‌روزرسانی اطلاعات');
+            }
         }
     };
+
 
     const handleSwitch = () => setShowTable(!showTable);
 
