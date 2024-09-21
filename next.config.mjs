@@ -2,9 +2,6 @@
 const nextConfig = {
   output: "standalone",
   basePath: process.env.BASEPATH,
-  experimental: {
-    reactRefresh: false,
-  },
   redirects: async () => {
     return [
       {
