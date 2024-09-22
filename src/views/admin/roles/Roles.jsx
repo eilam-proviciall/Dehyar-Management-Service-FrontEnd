@@ -11,6 +11,7 @@ import { valibotResolver } from '@hookform/resolvers/valibot';
 import { minLength, object, string } from 'valibot';
 import RoleModal from './role-modal/RoleModal';
 import { toast } from 'react-toastify';
+import api from '@/utils/axiosInstance';
 
 function Roles() {
 
@@ -21,7 +22,7 @@ function Roles() {
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
     const [openModal, setOpenModal] = useState(false);
-    const [modalData, setModalData] = useState({ status: "add", name: "", guardName: "" });
+    const [modalData, setModalData] = useState({ status: "add", name: "", guard_name: "" });
 
     // Handlers
     const handleOpenModal = () => setOpenModal(true);
@@ -33,12 +34,14 @@ function Roles() {
     };
 
     const handleAddRole = () => {
-        setModalData({ status: "add", name: "", guardName: "" });
+        setModalData({ status: "add", name: "", guard_name: "" });
         setOpenModal(true);
     }
 
     const handleEditRole = (row) => {
-        setModalData({ status: "edit", id: row._valuesCache.id, name: row._valuesCache.name, guardName: row._valuesCache.guard_name });
+        console.log("Row => ", row);
+
+        setModalData({ status: "edit", id: row.original.id, name: row.original.name, guard_name: row.original.guard_name });
         setOpenModal(true);
     };
 
@@ -47,26 +50,20 @@ function Roles() {
     };
 
     const handleDeleteRole = async (row) => {
-        try {
-            await axios.delete(`${getRoles()}/${row._valuesCache.id}`,
-                { headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}`, } }
-            );
-            toast.success("نقش مورد نظر شما با موفقیت حذف شد",
-                {
-                    position: "top-center",
-                    duration: 3000
-                }
-            );
-            return fetchRoles();
-        }
-        catch {
-            return toast.error("حذف موفقیت آمیز نبود",
-                {
-                    position: "top-center",
-                    duration: 3000
-                }
-            );
-        }
+        await api.delete(`${getRoles()}/${row.original.id}`, { requiresAuth: true })
+            .then(() => {
+                toast.success("نقش مورد نظر شما با موفقیت حذف شد",
+                    {
+                        position: "top-center",
+                        duration: 3000
+                    }
+                );
+                return fetchRoles();
+            })
+            .catch((error) => {
+                return error;
+            })
+
     }
 
     const handleRefresh = () => {
@@ -75,19 +72,14 @@ function Roles() {
 
     const fetchRoles = async () => {
         setLoading(true);
-        await axios.get(getRoles(), {
-            headers: {
-                Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-            }
-        }).then((response) => {
-            console.log("Response => ", response);
-            setData(response.data.data);
-            console.log("Data => ", data);
-
-            setLoading(false);
-        }).catch(() => {
-            setLoading(false);
-        });
+        await api.get(getRoles(), { requiresAuth: true })
+            .then((response) => {
+                setData(response.data.data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     }
 
     useEffect(() => {

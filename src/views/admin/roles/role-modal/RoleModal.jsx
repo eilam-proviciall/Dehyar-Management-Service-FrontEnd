@@ -1,4 +1,5 @@
 import { getRoles } from '@/Services/Admin';
+import api from '@/utils/axiosInstance';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
@@ -16,7 +17,7 @@ const persianToEnglishDigits = (str) => {
 
 const schema = object({
     name: string([minLength(1, 'این فیلد الزامی است')]),
-    guardName: string([minLength(1, 'این فیلد الزامی است'),])
+    guard_name: string([minLength(1, 'این فیلد الزامی است'),])
 })
 
 const RoleModal = ({ data, allData, onRefresh, onClose }) => {
@@ -26,7 +27,7 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
     const rowId = data.id;
     const status = data.status;
     const name = data.name;
-    const guardName = data.guardName;
+    const guard_name = data.guard_name;
 
     const {
         control,
@@ -36,7 +37,7 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
         resolver: valibotResolver(schema),
         defaultValues: {
             name: status == "edit" ? name : "",
-            guardName: status == "edit" ? guardName : "",
+            guard_name: status == "edit" ? guard_name : "",
         }
     })
 
@@ -55,6 +56,8 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
 
 
     const onSubmit = async (data) => {
+        console.log("GuardName => ", data.guard_name);
+
         if (status == "add") {
             const exists = allData.some(item => item.name == data.name);
             if (exists) {
@@ -64,15 +67,13 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
                 });
             } else {
                 try {
-                    await axios.post(
+                    await api.post(
                         getRoles(),
                         {
                             name: data.name,
-                            guard_name: data.guardName,
+                            guard_name: data.guard_name,
                         },
-                        {
-                            headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}`, }
-                        }
+                        { requiresAuth: true }
                     );
                     toast.success('نقش جدید با موفقیت افزوده شد', {
                         position: "top-center",
@@ -90,17 +91,17 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
             }
         }
         try {
-            await axios.put(
+            await api.put(
                 `${getRoles()}/${rowId}`,
                 {
                     name: data.name,
-                    guard_name: data.guardName,
+                    guard_name: data.guard_name,
                 },
                 {
                     params: {
                         roleId: data.id
                     },
-                    headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}`, }
+                    requiresAuth: true,
                 },
             );
             toast.success('نقش مورد نظر شما ویرایش شد', {
@@ -160,7 +161,7 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
                     )}
                 />
                 <Controller
-                    name='guardName'
+                    name='guard_name'
                     control={control}
                     rules={{ required: true }}
                     render={({ field }) => (
@@ -175,9 +176,9 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
                                 field.onChange(value);
                                 errorState !== null && setErrorState(null);
                             }}
-                            {...((errors.guardName || errorState !== null) && {
+                            {...((errors.guard_name || errorState !== null) && {
                                 error: true,
-                                helperText: errors?.guardName?.message || errorState?.message[0]
+                                helperText: errors?.guard_name?.message || errorState?.message[0]
                             })}
                         />
                     )}
