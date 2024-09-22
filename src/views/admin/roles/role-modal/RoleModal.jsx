@@ -120,9 +120,12 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
 
     return (
         <Box sx={modalStyle}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                {`${status == "edit" ? "ویرایش" : "افزودن"} نقش`}
-            </Typography>
+            <div className='flex justify-between'>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    {`${status == "edit" ? "ویرایش" : "افزودن"} نقش`}
+                </Typography>
+                <Button className='rounded-full' color='inherit' onClick={onClose}><i className='ri-close-line'></i></Button>
+            </div>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 لطفا فیلد های زیر را با دقت پر کنید
             </Typography>
