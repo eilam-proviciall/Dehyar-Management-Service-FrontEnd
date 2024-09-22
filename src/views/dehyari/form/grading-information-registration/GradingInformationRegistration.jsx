@@ -86,6 +86,43 @@ const schemas = [
 ]
 
 const GradingInformationRegistration = () => {
+    const [step, setStep] = useState(0);
+    const methods = useForm({
+        resolver: valibotResolver(schemas[step]),
+        defaultValues: {
+            id: Date.now(),
+            organization_type: '',
+            hierarchical_code: '',
+            village_code: '',
+            nid: '',
+            dehyari_status: '',
+            wide: '',
+            centrality_status: '',
+            tourism_status: '',
+            postal_code: '',
+            fire_station: '',
+            date_established: '',
+            date_grading: '',
+            grade: '',
+            grade_state: '',
+            grade_city: '',
+            municipality: [{
+                states: { value: 0, name: '' },
+                cities: { value: 0, name: '' },
+                regions: { value: 0, name: '' },
+                departments: { value: 0, name: '' },
+            }],
+            dehyari: [{
+                states: { value: 0, name: '' },
+                cities: { value: 0, name: '' },
+                regions: { value: 0, name: '' },
+                dehestans: { value: 0, name: '' },
+                villages: { value: 0, name: '' },
+            }],
+            population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
+            income_fields: [{ year: '', per_income: '' }]
+        }
+    })
 
     // States
     const [users, setUsers] = useState([]);
@@ -93,76 +130,9 @@ const GradingInformationRegistration = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [mode, setMode] = useState('add');
-    const [step, setStep] = useState(0);
-    const [data, setData] = useState({
-        id: Date.now(),
-        organization_type: '',
-        hierarchical_code: '',
-        village_code: '',
-        nid: '',
-        dehyari_status: '',
-        wide: '',
-        centrality_status: '',
-        tourism_status: '',
-        postal_code: '',
-        fire_station: '',
-        date_established: '',
-        date_grading: '',
-        grade: '',
-        grade_state: '',
-        grade_city: '',
-        municipality: [{
-            states: { value: 0, name: '' },
-            cities: { value: 0, name: '' },
-            regions: { value: 0, name: '' },
-            departments: { value: 0, name: '' },
-        }],
-        dehyari: [{
-            states: { value: 0, name: '' },
-            cities: { value: 0, name: '' },
-            regions: { value: 0, name: '' },
-            dehestans: { value: 0, name: '' },
-            villages: { value: 0, name: '' },
-        }],
-        population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
-        income_fields: [{ year: '', per_income: '' }]
-    });
+    const [data, setData] = useState(methods);
 
 
-    const methods = useForm({
-        resolver: valibotResolver(schemas[step]),
-        id: Date.now(),
-        organization_type: '',
-        hierarchical_code: '',
-        village_code: '',
-        nid: '',
-        dehyari_status: '',
-        wide: '',
-        centrality_status: '',
-        tourism_status: '',
-        postal_code: '',
-        fire_station: '',
-        date_established: '',
-        date_grading: '',
-        grade: '',
-        grade_state: '',
-        grade_city: '',
-        municipality: [{
-            states: { value: 0, name: '' },
-            cities: { value: 0, name: '' },
-            regions: { value: 0, name: '' },
-            departments: { value: 0, name: '' },
-        }],
-        dehyari: [{
-            states: { value: 0, name: '' },
-            cities: { value: 0, name: '' },
-            regions: { value: 0, name: '' },
-            dehestans: { value: 0, name: '' },
-            villages: { value: 0, name: '' },
-        }],
-        population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
-        income_fields: [{ year: '', per_income: '' }]
-    })
 
     console.log("Data => ", data);
     console.log();
