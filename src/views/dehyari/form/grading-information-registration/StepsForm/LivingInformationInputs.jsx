@@ -5,7 +5,6 @@ import DividerSimple from "@components/common/Divider/DividerSimple";
 
 const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionChange, handleDehestanChange, fieldKey, setData }) => {
     const { control, formState: { errors } } = useFormContext();
-    console.log("Field Key =>", fieldKey);
 
     const renderAutocomplete = (name, label, options) => (
         <Controller

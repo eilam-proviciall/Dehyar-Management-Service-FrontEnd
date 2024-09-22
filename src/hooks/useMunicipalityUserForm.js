@@ -5,7 +5,7 @@ import { user } from "@/Services/Auth/AuthService";
 import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 
-const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAddEventSidebarToggle, setLoading) => {
+const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAddEventSidebarToggle, setLoading, sidebarDetails, setSidebarDetails) => {
     const dispatch = useDispatch();
     const [values, setValues] = useState({
         nid: '',
@@ -77,16 +77,28 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             processedData.geo_region = undefined;
             processedData.covered_villages = data.villages;
         }
-        console.log(processedData)
-        api.post(user(), processedData, { requiresAuth: true })
-            .then(() => {
-                toast.success("کاربر با موفقیت ایجاد شد", {
-                    position: "top-center"
-                });
-                handleSidebarClose();
-                setLoading(true);
-            }).catch((error) => error);
+        console.log(processedData);
+        console.log("Sidebar Details => ", sidebarDetails);
 
+        sidebarDetails.status == 'edit' ? (
+            api.put(`${user()}/${data.id}`, processedData, { requiresAuth: true })
+                .then(() => {
+                    toast.success("کاربر با موفقیت ویرایش شد", {
+                        position: "top-center"
+                    });
+                    handleSidebarClose();
+                    setLoading(true);
+                }).catch((error) => error)
+        ) : (
+            api.post(user(), processedData, { requiresAuth: true })
+                .then(() => {
+                    toast.success("کاربر با موفقیت ایجاد شد", {
+                        position: "top-center"
+                    });
+                    handleSidebarClose();
+                    setLoading(true);
+                }).catch((error) => error)
+        )
     };
 
     useEffect(() => {
