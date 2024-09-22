@@ -60,9 +60,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         let processedData = {
             nid: data.nid,
             work_group: data.role,
-            geo_state: data.geo_region.city.geo_state,
-            geo_city: data.geo_region.geo_cities,
-            geo_region: data.geo_region.hierarchy_code,
             ...data // include other necessary data
         };
 
