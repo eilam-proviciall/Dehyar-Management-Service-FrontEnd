@@ -80,7 +80,10 @@ function Roles() {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             }
         }).then((response) => {
-            setData(response.data.data.data);
+            console.log("Response => ", response);
+            setData(response.data.data);
+            console.log("Data => ", data);
+
             setLoading(false);
         }).catch(() => {
             setLoading(false);
