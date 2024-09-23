@@ -11,7 +11,6 @@ api.interceptors.request.use(
         // بررسی نیاز به احراز هویت
         if (config.requiresAuth) {
             const token = window.localStorage.getItem('token');
-            console.log("Token => ", token);
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             } else {
