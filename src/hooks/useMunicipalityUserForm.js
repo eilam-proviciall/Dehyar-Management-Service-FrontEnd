@@ -76,9 +76,8 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         }
         console.log(processedData);
         console.log("Sidebar Details => ", sidebarDetails);
-
         sidebarDetails.status == 'edit' ? (
-            api.put(`${user()}/${data.id}`, processedData, { requiresAuth: true })
+            api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
                     toast.success("کاربر با موفقیت ویرایش شد", {
                         position: "top-center"
