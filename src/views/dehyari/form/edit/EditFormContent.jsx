@@ -10,8 +10,8 @@ const EditFormContent = ({  validationSchemas }) => (
         <CardContent className='sm:!p-12'>
             <Grid container spacing={6}>
                 <EditStepPersonalDetails  validation={validationSchemas}/>
-                <EditStepEducation validation={validationSchemas}/>
-                <PhoneNumberStepContact validation={validationSchemas}/>
+                {/*<EditStepEducation validation={validationSchemas}/>*/}
+                {/*<PhoneNumberStepContact validation={validationSchemas}/>*/}
                 <EditStepChildren validation={validationSchemas} />
             </Grid>
         </CardContent>
