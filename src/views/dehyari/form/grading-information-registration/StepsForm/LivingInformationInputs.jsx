@@ -71,16 +71,15 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     defaultValue={null}
                     render={({ field }) => {
                         const selectedOption = state.stateCities.find(
-                            option => option.city_hierarchy_code === field.value?.city_hierarchy_code
+                            option => option.hierarchy_code === field.value?.hierarchy_code
                         );
-
                         return (
                             <Autocomplete
                                 {...field}
                                 options={state.stateCities}
-                                getOptionLabel={(option) => `${option.state_name} - ${option.city_name}`}
+                                getOptionLabel={(option) => `${option.approved_name}`}
                                 isOptionEqualToValue={(option, value) =>
-                                    option.city_hierarchy_code === value?.city_hierarchy_code
+                                    option.hierarchy_code === value?.hierarchy_code
                                 }
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);

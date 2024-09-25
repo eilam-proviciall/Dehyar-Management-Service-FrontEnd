@@ -58,13 +58,13 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
                 dispatch({ type: 'SET_LOADING', payload: true });
 
                 const stateCitiesResponse = await api.get(getStateWithCitiesData(), { requiresAuth: true });
-                dispatch({ type: 'SET_STATE_CITIES', payload: stateCitiesResponse.data });
+                dispatch({ type: 'SET_STATE_CITIES', payload: stateCitiesResponse.data.data });
                 console.log("State Cities Response => ", stateCitiesResponse);
 
                 if (initialLivingLocation) {
                     const { state_city, region, dehestan, village, locationName } = initialLivingLocation;
 
-                    if (state_city && state_city.city_hierarchy_code) {
+                    if (state_city && state_city.hierarchy_code) {
                         handleStateCityChange(state_city);
                     }
 
@@ -106,7 +106,7 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
             dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
-        const regionsResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.city_hierarchy_code}`, { requiresAuth: true });
+        const regionsResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.hierarchy_code}`, { requiresAuth: true });
         console.log("Region Response => ", regionsResponse);
 
         dispatch({ type: 'SET_REGIONS', payload: regionsResponse.data });
