@@ -287,7 +287,7 @@ const renderSignatoriesByJobTitle = (data) => {
 };
 
 const renderRemainDay = (contract_type, data) => {
-    if (contract_type == 1) {
+    if (contract_type == 30) {
         return (
             <>
                 <View style={[styles.tableRow]}>
