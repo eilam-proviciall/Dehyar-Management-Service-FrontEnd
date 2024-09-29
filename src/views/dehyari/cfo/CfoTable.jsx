@@ -71,7 +71,6 @@ function CfoTable(props) {
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
-                console.log(response.data)
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
@@ -100,10 +99,13 @@ function CfoTable(props) {
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
             },
             {
-                accessorKey: 'full_name',
+                accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({row}) => {
+                    const {first_name, last_name} = row.original;
+                    return <div style={{textAlign: 'right'}}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                },
             },
             {
                 accessorKey: 'job_type_id',
