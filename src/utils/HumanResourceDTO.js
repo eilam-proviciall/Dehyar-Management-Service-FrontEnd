@@ -13,21 +13,21 @@ function formatCurrency(num) {
 }
 
 function getVillageName(humanResourceData) {
-    if (humanResourceData.last_contract.job_type_id === 1) {
-        return humanResourceData.covered_villages[0].village.approved_name
-    } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.job_type_id === 4) {
-        return humanResourceData.signature_data.village_employer.approved_name
-    }
+    // if (humanResourceData.last_contract.job_type_id === 1) {
+    //     return humanResourceData.covered_villages[0].village.approved_name
+    // } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.job_type_id === 4) {
+    //     return humanResourceData.signature_data.village_employer.approved_name
+    // }
 }
 
 function getContractRole(humanResourceData) {
-    if (humanResourceData.job_type_id === 1) {
+    if (humanResourceData.last_contract.job_type_id === 1) {
         return {
             "contractClause2": "موارد خاتمه کار دهیار همان است که در ماده ۵۲ آیین نامه اجرایی تشکیلات,انتخابات داخلی و امورمالی شوراهای اسلامی روستا و نحوه انتخاب دهیار مصوب ۱۳۷۸واصلاحات بعدی آن پیش بینی شده است.",
             "contractClause3": "مدت مرخصی استحقاقی و مرخصی استعلاجی بر اساس ضوابط و مقررات قانون کار و قانون تامین اجتماعی می باشد.",
             "signNote" : ` امضای ذیل این قرارداد از سوی بخشدار صرفا جهت اجرای ماده ۱۶ اساسنامه,تشکیلات و سازمان دهیاری ها مصوب ۱۳۸۰ و امضای ﻣﺴﺌﻮل امور مالی دهیاری به استناد ماده۱۱ آیین نامه استخدامی دهیاری های کشور مصوب ۱۳۸۳ می باشد.کارفرما در این قرارداد دهیاری ${getVillageName(humanResourceData)} است `
         }
-    } else if (humanResourceData.job_type_id === 3 || humanResourceData.job_type_id === 4) {
+    } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.last_contract.job_type_id === 4) {
         return {
             "contractClause2": "موارد خاتمه کار طرف قرارداد به استناد ماده ۲۱ قانون کار می باشد.",
             "contractClause3" : "ماموریت و مرخصی امورمالی دهیاری به استناد اصلاحیه ماده ۱۲ آئین نامه استخدامی دهیاری های کشور با تایید بخشدار صورت می گیرد.",
@@ -49,7 +49,7 @@ class HumanResourceDTO {
         this.county = this.joinArray(humanResourceData.locationData.cities);
         this.section = this.joinArray(humanResourceData.locationData.regions);
         this.villageCount = humanResourceData.covered_villages?.length || 0;
-        // this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
+        this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
         this.name = `${humanResourceData.first_name} ${humanResourceData.last_name}` || '';
         this.fatherName = humanResourceData.father_name || '';
         this.nationalId = humanResourceData.nid || '';
@@ -70,7 +70,7 @@ class HumanResourceDTO {
         this.appointmentDate = humanResourceData.last_contract.appointment_date || '';
         this.contractSubject = humanResourceData.last_contract.title_contract || '';
         this.contractDescription = humanResourceData.last_contract.description_contract || '';
-        this.job_type_id = humanResourceData.job_type_id;
+        this.job_type_id = humanResourceData.last_contract.job_type_id;
         this.covered_villages = humanResourceData.covered_villages;
         this.baseSalary = formatCurrency(humanResourceData.salary?.base_salary || 0);
         this.yearlyBase = formatCurrency(humanResourceData.salary?.history_benefits || 0);
@@ -94,7 +94,7 @@ class HumanResourceDTO {
         this.commitment4 = "طرف قرارداد مسئول حفظ و نگهداری وسایل و اموال در اختیار است و در صورت ایجاد خسارت ،دهیاری می تواند از محل قرارداد خسارت را جبران کند";
         this.signingNote = getContractRole(humanResourceData).signNote;
         this.finalNote = "این قرارداد در ۵ نسخه تنظیم و هر نسخه حکم واحد را دارد و پس از امضا و مهر و ثبت معتبر خواهد بود";
-        this.executionDate = humanResourceData.execute_start;
+        this.executionDate = humanResourceData.last_contract.execute_start;
         this.uniqueId = humanResourceData.salary.unique_identifier || "پیش نویس";
         this.contractNumber = `۴۰۷ - ${this.executionDate}`;
         this.jobName = getJobTitleLabel(humanResourceData.job_type_id)
