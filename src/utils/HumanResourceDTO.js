@@ -13,9 +13,9 @@ function formatCurrency(num) {
 }
 
 function getVillageName(humanResourceData) {
-    if (humanResourceData.job_type_id === 1) {
+    if (humanResourceData.last_contract.job_type_id === 1) {
         return humanResourceData.covered_villages[0].village.approved_name
-    } else if (humanResourceData.job_type_id === 3 || humanResourceData.job_type_id === 4) {
+    } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.job_type_id === 4) {
         return humanResourceData.signature_data.village_employer.approved_name
     }
 }
@@ -49,7 +49,7 @@ class HumanResourceDTO {
         this.county = this.joinArray(humanResourceData.locationData.cities);
         this.section = this.joinArray(humanResourceData.locationData.regions);
         this.villageCount = humanResourceData.covered_villages?.length || 0;
-        this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
+        // this.villages = this.joinArray(humanResourceData.covered_villages?.map(village => village.village.approved_name));
         this.name = `${humanResourceData.first_name} ${humanResourceData.last_name}` || '';
         this.fatherName = humanResourceData.father_name || '';
         this.nationalId = humanResourceData.nid || '';
