@@ -27,10 +27,10 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        onChange(newValue);
+                                        onChange(newValue || null);
                                     }}
-                                    defaultValue={
-                                        selectedOptions && options.find(option => selectedOptions === option.hierarchy_code)
+                                    value={
+                                        selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
                                     }
                                     getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (
@@ -66,10 +66,10 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        onChange(newValue.map(item => item.hierarchy_code));
+                                        onChange(newValue.map(item => item.hierarchy_code || []));
                                     }}
-                                    defaultValue={
-                                        selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code))
+                                    value={
+                                        selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []
                                     }
                                     renderInput={(params) => (
                                         <TextField
