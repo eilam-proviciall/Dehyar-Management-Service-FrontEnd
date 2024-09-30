@@ -23,7 +23,7 @@ const RegionCell = ({ region }) => {
     }, [region]);
 
     return (
-        <div style={{ textAlign: 'right' }}>{currentRegion || ''}</div>
+        <div style={{ textAlign: 'right' }}>{region !== null ? currentRegion ? currentRegion : <span className='animate-pulse'>در حال بارگذاری</span> : ''}</div>
     );
 
 }

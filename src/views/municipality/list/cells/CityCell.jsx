@@ -21,7 +21,7 @@ const CityCell = ({ city }) => {
     }, [city]);
 
     return (
-        <div style={{ textAlign: 'right' }}>{currentCity || ''}</div>
+        <div style={{ textAlign: 'right' }}>{city !== null ? currentCity ? currentCity : <span className='animate-pulse'>در حال بارگذاری</span> : ''}</div>
     );
 
 }

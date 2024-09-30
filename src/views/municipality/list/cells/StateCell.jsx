@@ -25,7 +25,7 @@ const StateCell = ({ state }) => {
     }, [state]);
 
     return (
-        <div style={{ textAlign: 'right' }}>{currentState || ''}</div>
+        <div style={{ textAlign: 'right' }}>{state !== null ? currentState ? currentState : <span className='animate-pulse'>در حال بارگذاری</span> : ''}</div>
     );
 
 }
