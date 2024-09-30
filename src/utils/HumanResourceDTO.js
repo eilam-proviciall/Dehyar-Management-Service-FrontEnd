@@ -13,11 +13,11 @@ function formatCurrency(num) {
 }
 
 function getVillageName(humanResourceData) {
-    // if (humanResourceData.last_contract.job_type_id === 1) {
-    //     return humanResourceData.covered_villages[0].village.approved_name
-    // } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.job_type_id === 4) {
-    //     return humanResourceData.signature_data.village_employer.approved_name
-    // }
+        if (humanResourceData.last_contract.job_type_id === 1) {
+            return humanResourceData.covered_villages[0].village.approved_name
+        } else if (humanResourceData.last_contract.job_type_id === 3 || humanResourceData.job_type_id === 4) {
+            return humanResourceData.signature_data.village_employer.approved_name
+        }
 }
 
 function getContractRole(humanResourceData) {
