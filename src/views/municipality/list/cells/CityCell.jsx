@@ -5,18 +5,18 @@ import React, { useEffect, useState } from 'react'
 const CityCell = ({ city }) => {
     const [currentCity, setCurrentCity] = useState('');
 
-    useEffect(() => {
-        console.log("State => ", city);
 
+    useEffect(() => {
         const fetchData = async () => {
-            try {
-                const cityResponse = await api.get(`${getGeoData()}?level=city&hierarchy_code=${city}`, { requiresAuth: true });
-                setCurrentCity(cityResponse?.data[0]?.approved_name || '');
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (city !== null) {
+                try {
+                    const cityResponse = await api.get(`${getGeoData()}?level=city&hierarchy_code=${city}`, { requiresAuth: true });
+                    setCurrentCity(cityResponse?.data[0]?.approved_name || '');
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         };
-
         fetchData();
     }, [city]);
 

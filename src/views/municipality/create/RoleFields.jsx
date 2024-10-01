@@ -18,6 +18,9 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='geo_region'
                         control={control}
                         rules={{ required: true }}
+                        defaultValue={
+                            selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
+                        }
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
@@ -29,7 +32,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     onChange={(event, newValue) => {
                                         onChange(newValue || null);
                                     }}
-                                    value={
+                                    defaultValue={
                                         selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
                                     }
                                     getOptionSelected={(option, value) => option.hierarchy_code === value}
@@ -56,6 +59,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='villages'
                         control={control}
                         rules={{ required: true }}
+                        defaultValue={selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []}
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
@@ -68,7 +72,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     onChange={(event, newValue) => {
                                         onChange(newValue.map(item => item.hierarchy_code || []));
                                     }}
-                                    value={
+                                    defaultValue={
                                         selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []
                                     }
                                     renderInput={(params) => (

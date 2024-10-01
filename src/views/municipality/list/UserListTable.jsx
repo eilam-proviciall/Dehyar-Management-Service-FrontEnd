@@ -11,6 +11,9 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
+import StateCell from './cells/StateCell';
+import CityCell from './cells/CityCell';
+import RegionCell from './cells/RegionCell';
 
 
 const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading }) => {
@@ -29,14 +32,11 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                 console.log(response.data);
                 setLoading(false);
             })
-
     }
 
     useEffect(() => {
         loading ? fetchUsers() : null;
     }, [loading]);
-
-    const tableData = useMemo(() => users, [users]); // Memoize table data
 
     // Handlers
     const handleClick = (event, row) => {
@@ -118,6 +118,16 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
         }
     };
 
+    const tableData = useMemo(() => {
+        return users.map(user => ({
+            ...user,
+            geo_state: <StateCell state={user.geo_state} />,
+            geo_city: <CityCell city={user.geo_city} />,
+            geo_region: <RegionCell region={user.geo_region} />,
+        }
+        ));
+    }, [users]); // فقط زمانی که users تغییر کند
+
     const columns = useMemo(
         () => [
             {
@@ -139,22 +149,19 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                 accessorKey: 'geo_state',
                 header: 'استان',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => cell.getValue()
             },
             {
                 accessorKey: 'geo_city',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => cell.getValue()
             },
             {
                 accessorKey: 'geo_region',
                 header: 'بخش',
                 size: 150,
-                Cell: ({ cell }) => {
-                    const region = cell.getValue();
-                    return (<div style={{ textAlign: 'right' }}>{region == undefined ? '-' : region}</div>)
-                },
+                Cell: ({ cell }) => cell.getValue()
             },
             {
                 accessorKey: 'work_group',

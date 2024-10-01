@@ -4,9 +4,6 @@ import React, { useEffect, useState } from 'react'
 
 const StateCell = ({ state }) => {
     const [currentState, setCurrentState] = useState('');
-
-    console.log("State => ", state);
-
     useEffect(() => {
         if (state !== null) {
             const fetchData = async () => {
