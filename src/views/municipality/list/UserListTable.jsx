@@ -59,7 +59,6 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
 
     const handleEditUser = (row) => {
         console.log("User : ", row);
-
         setSidebarDetails({ status: 'edit', defaultValues: row.original });
         setAnchorEl(null);
         handleAddEventSidebarToggle();
@@ -118,15 +117,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
         }
     };
 
-    const tableData = useMemo(() => {
-        return users.map(user => ({
-            ...user,
-            geo_state: <StateCell state={user.geo_state} />,
-            geo_city: <CityCell city={user.geo_city} />,
-            geo_region: <RegionCell region={user.geo_region} />,
-        }
-        ));
-    }, [users]); // فقط زمانی که users تغییر کند
+    const tableData = useMemo(() => users, [users]); // فقط زمانی که users تغییر کند
 
     const columns = useMemo(
         () => [
@@ -149,19 +140,19 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                 accessorKey: 'geo_state',
                 header: 'استان',
                 size: 150,
-                Cell: ({ cell }) => cell.getValue()
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'geo_city',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({ cell }) => cell.getValue()
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'geo_region',
                 header: 'بخش',
                 size: 150,
-                Cell: ({ cell }) => cell.getValue()
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'work_group',

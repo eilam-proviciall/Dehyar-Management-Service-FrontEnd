@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions }) => {
+const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, setSidebarDetails }) => {
 
     if (role && (!options || options.length === 0)) {
         return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
@@ -30,6 +30,13 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
+                                        setSidebarDetails(prevState => ({
+                                            ...prevState,
+                                            defaultValues: {
+                                                ...prevState.defaultValues,
+                                                geo_region: newValue.hierarchy_code
+                                            }
+                                        }));
                                         onChange(newValue || null);
                                     }}
                                     defaultValue={
@@ -70,6 +77,13 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
+                                        setSidebarDetails(prevState => ({
+                                            ...prevState,
+                                            defaultValues: {
+                                                ...prevState.defaultValues,
+                                                covered_villages: newValue.map(item => item.hierarchy_code || [])
+                                            }
+                                        }));
                                         onChange(newValue.map(item => item.hierarchy_code || []));
                                     }}
                                     defaultValue={
