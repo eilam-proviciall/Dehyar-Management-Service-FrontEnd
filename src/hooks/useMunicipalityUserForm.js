@@ -55,8 +55,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     };
 
     const onSubmit = data => {
-        console.log(data)
-        data.villages ? data.villages = data.villages.map(village => `${village}`) : undefined;
+        console.log("Data => ", data);
+        console.log("Sidebar Details => ", sidebarDetails);
+        console.log("Data Covered Villages => ", sidebarDetails.defaultValues.covered_villages);
+        const finallyVillages = sidebarDetails.defaultValues.covered_villages.map(village => {
+            console.log("Village => ", village.village_code !== undefined);
+            return village.village_code ? `${village.village_code}` : `${village}`;
+        })
+        console.log("Finally villages => ", finallyVillages);
+
         let processedData = {
             nid: data.nid,
             work_group: data.role,
@@ -66,16 +73,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         if (values.role === "14") {
             processedData.geo_state = data.geo_region.city.geo_state;
             processedData.geo_city = data.geo_region.geo_cities;
-            processedData.geo_region = data.geo_region.hierarchy_code;
+            processedData.geo_region = sidebarDetails.defaultValues.geo_region;
             processedData.covered_villages = undefined;
             processedData.villages = undefined;
             // processedData.city = data.city; // or appropriate key
         } else if (values.role === "13") {
             processedData.geo_region = undefined;
-            processedData.covered_villages = data.villages;
+            processedData.villages = finallyVillages;
         }
         console.log(processedData);
-        console.log("Sidebar Details => ", sidebarDetails);
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
