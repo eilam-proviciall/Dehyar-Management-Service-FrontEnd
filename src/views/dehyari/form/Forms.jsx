@@ -9,9 +9,6 @@ import ButtonGroup from './ButtonGroup';
 import FormContent from './FormContent';
 import { GetHumanResource, humanResources } from '@/Services/humanResources';
 import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
-import MyDocument from '@components/MyDocument';
-import { pdf } from '@react-pdf/renderer';
-import { getSalary } from '@/Services/Salary';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 import api from '@/utils/axiosInstance';
 
@@ -39,7 +36,7 @@ const Forms = ({ invoiceData }) => {
             militaryService: '',
             educations: [{ degree: '', fieldOfStudy: '', graduationDate: '' }],
             insurances: [{ workplace: '', insurancePeriod: '', insuranceType: '', employmentStartDate: '', employmentEndDate: '' }],
-            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', deathDate: '' }],
+            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', death_date: '' }],
             contractType: '',
             employmentStatus: '',
             contractStart: '',

@@ -1,0 +1,37 @@
+[
+  {
+    "value": "1",
+    "label": "ایتا",
+    "icon": "EitaaIcon"
+  },
+  {
+    "value": "2",
+    "label": "بله",
+    "icon": "BaleIcon"
+  },
+  {
+    "value": "3",
+    "label": "روبیکا",
+    "icon": "RubikaIcon"
+  },
+  {
+    "value": "4",
+    "label": "آی گپ",
+    "icon": "IGapIcon"
+  },
+  {
+    "value": "5",
+    "label": "تلگرام",
+    "icon": "TelegramIcon"
+  },
+  {
+    "value": "6",
+    "label": "واتساپ",
+    "icon": "WhatsappIcon"
+  },
+  {
+    "value": "7",
+    "label": "شماره ضروری",
+    "icon": "ContactPhoneIcon"
+  }
+]

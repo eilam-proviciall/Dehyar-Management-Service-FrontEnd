@@ -13,28 +13,30 @@ import { toast } from "react-toastify";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
-import api from '@/utils/axiosInstance';
+import {getJobTitleLabel} from "@data/jobTitles";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
-    const [humanResourceData, setHumanResourceData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);  // مدیریت نمایش منو
+    const [currentRow, setCurrentRow] = useState(null); // ردیف جاری
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const { militaryServiceOptions, veteranStatusOptions, degreeOptions } = PersonalOption
+
+    // کنترل کلیک روی دکمه عملیات
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
-        setSelectedRow(row);
+        setCurrentRow(row.original);  // ردیف انتخاب شده
     };
+
+    // دانلود فایل PDF
     const handleDownloadPdf = async (row) => {
         try {
             const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, { requiresAuth: true });
 
             const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
             console.log(humanResourceData)
+            const data = new HumanResourceDTO(humanResourceData);
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
@@ -47,10 +49,10 @@ function CfoTable(props) {
         } catch (error) { return error }
     };
 
-
-    const handleError = (error) => error;
+    // بستن منو
     const handleClose = () => {
         setAnchorEl(null);
+        setCurrentRow(null);  // پاک کردن ردیف جاری
     };
 
     useEffect(() => {
@@ -79,10 +81,19 @@ function CfoTable(props) {
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
-                accessorKey: 'full_name',
+                accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({row}) => {
+                    const {first_name, last_name} = row.original;
+                    return <div style={{textAlign: 'right'}}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                },
+            },
+            {
+                accessorKey: 'job_type_id',
+                header: 'پست سازمانی',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'nid',
@@ -130,11 +141,15 @@ function CfoTable(props) {
                             onClose={handleClose}
                         >
                             <MenuItem onClick={handleClose}>
-                                <Link href={`/dehyari/form?mode=edit&id=${row.original.id}`}>
-                                    ویرایش
-                                </Link>
+                                {currentRow ? (
+                                    <Link href={`/dehyari/form/edit?param=${currentRow.nid}`}>
+                                        ویرایش
+                                    </Link>
+                                ) : (
+                                    <span>ویرایش</span>
+                                )}
                             </MenuItem>
-                            <MenuItem onClick={() => handleDownloadPdf(selectedRow.original)}>
+                            <MenuItem onClick={() => handleDownloadPdf(currentRow)}>
                                 حکم کارگزینی
                             </MenuItem>
                         </Menu>
@@ -142,7 +157,7 @@ function CfoTable(props) {
                 ),
             },
         ],
-        [anchorEl, selectedRow]
+        [anchorEl, currentRow]
     );
 
     if (loading) {

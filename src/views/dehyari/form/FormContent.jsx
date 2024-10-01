@@ -12,12 +12,12 @@ const FormContent = ({ invoiceData }) => (
     <Card>
         <CardContent className='sm:!p-12'>
             <Grid container spacing={6}>
-                <StepJobDetails invoiceData={invoiceData} validation={validationSchemas.jobDetails} />
+                {/*<StepJobDetails invoiceData={invoiceData} validation={validationSchemas.jobDetails} />*/}
                 <StepPersonalDetails validation={validationSchemas.personalDetails} />
                 <StepEducation validation={validationSchemas.education} />
-                <StepInsurance validation={validationSchemas.insurance} />
+                {/*<StepInsurance validation={validationSchemas.insurance} />*/}
                 <StepChildren validation={validationSchemas.children} />
-                <StepContract validation={validationSchemas.contract} />
+                {/*<StepContract validation={validationSchemas.contract} />*/}
             </Grid>
         </CardContent>
     </Card>

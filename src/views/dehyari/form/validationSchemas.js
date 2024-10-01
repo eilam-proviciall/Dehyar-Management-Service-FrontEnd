@@ -15,7 +15,10 @@ const validationSchemas = {
         },
     },
     personalDetails: {
-        fullName: {
+        firstName: {
+            required: 'این فیلد الزامی است',
+        },
+        lastName: {
             required: 'این فیلد الزامی است',
         },
         fatherName: {
@@ -48,6 +51,26 @@ const validationSchemas = {
         birthDate: {
             required: 'این فیلد الزامی است',
         },
+        postalCode: {
+            required: 'این فیلد الزامی است',
+            pattern: {
+                value: /^[0-9]{10}$/,
+                message: 'کدپستی باید ۱۰ رقم باشد'
+            }
+        },
+        residenceAddress: {
+            required: 'این فیلد الزامی است',
+        },
+        landlineNumber: {
+            // required: 'این فیلد الزامی است',
+            pattern: {
+                value: /^[0-9]{11}$/,
+                message: 'شماره تماس ثابت باید ۱۱ رقم باشد'
+            }
+        },
+        insuranceIdentifier:{
+
+        }
     },
     education: {
         degree: {

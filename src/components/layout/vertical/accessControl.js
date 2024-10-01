@@ -7,6 +7,7 @@ const accessControl = {
         {label: 'لیست پرسنل', href: '/dehyari/cfo/table'},
         {label: 'تشکیلات دهیاری', href: '/dehyari'},
         {label: 'ثبت اطلاعات پرسنلی', href: '/dehyari/form'},
+        {label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit' ,showOnSidebar : false},
     ],
     [WORK_GROUPS.Admin]: [
         {label: 'جدول خطاها', href: '/admin/logtable'},
