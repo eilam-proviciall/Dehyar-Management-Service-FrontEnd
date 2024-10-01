@@ -63,7 +63,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
             return (
                 <FormControl fullWidth className='mbe-5'>
                     <Controller
-                        name='villages'
+                        name='covered_villages'
                         control={control}
                         rules={{ required: true }}
                         defaultValue={selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []}
@@ -84,7 +84,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                                 covered_villages: newValue.map(item => item.hierarchy_code || [])
                                             }
                                         }));
-                                        onChange(newValue.map(item => item.hierarchy_code || []));
+                                        onChange(newValue.map(item => item || []));
                                     }}
                                     defaultValue={
                                         selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []
