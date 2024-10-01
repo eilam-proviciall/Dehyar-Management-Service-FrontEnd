@@ -58,10 +58,13 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         console.log("Data => ", data);
         console.log("Sidebar Details => ", sidebarDetails);
         console.log("Data Covered Villages => ", sidebarDetails.defaultValues.covered_villages);
-        const finallyVillages = sidebarDetails.defaultValues.covered_villages.map(village => {
-            console.log("Village => ", village.village_code !== undefined);
-            return village.village_code ? `${village.village_code}` : `${village}`;
-        })
+        const finallyVillages = sidebarDetails.defaultValues.covered_villages
+            ? sidebarDetails.defaultValues.covered_villages.map(village => {
+                return village.village_code ? `${village.village_code}` : `${village}`;
+            })
+            : data.covered_villages.map(village => {
+                return `${village.hierarchy_code}`;
+            });
         console.log("Finally villages => ", finallyVillages);
 
         let processedData = {
@@ -73,7 +76,9 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         if (values.role === "14") {
             processedData.geo_state = data.geo_region.city.geo_state;
             processedData.geo_city = data.geo_region.geo_cities;
-            processedData.geo_region = sidebarDetails.defaultValues.geo_region;
+            processedData.geo_region = sidebarDetails.defaultValues.geo_region
+                ? sidebarDetails.defaultValues.geo_region
+                : data.geo_region.hierarchy_code;
             processedData.covered_villages = undefined;
             processedData.villages = undefined;
             // processedData.city = data.city; // or appropriate key
