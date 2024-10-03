@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from 'react';
 import { Grid, Card } from '@mui/material';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -12,84 +12,78 @@ import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 import {toast} from "react-toastify";
-import { useRouter } from 'next/navigation';
 
 function EditFromComponent() {
-    const [defaultValue, setDefaultValue] = useState(null); // حالت اولیه خالی
-    const [loading, setLoading] = useState(true); // حالت بارگذاری
+    const [defaultValue, setDefaultValue] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
-    const router = useRouter();
 
     const methods = useForm({
-        defaultValues: defaultValue || {}, // در ابتدا خالی
+        defaultValues: {},
     });
 
     useEffect(() => {
-        const token = window.localStorage.getItem('token'); // دریافت توکن
+        const fetchHumanResourceData = async () => {
+            const token = window.localStorage.getItem('token');
 
-        if (!token) {
-            // اگر توکن موجود نبود، به صفحه لاگین هدایت کن
-            router.push('/login');
-            return;
-        }
-
-        if (param) {
-            axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // ارسال توکن در هدر
-                }
-            })
-                .then((response) => {
+            if (param) {
+                setLoading(true);
+                setError(false);
+                try {
+                    const response = await axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
                     const dto = new EditHumanResourceFormDTO(response.data);
-                    setDefaultValue(dto); // مقداردهی defaultValue
-                    methods.reset(dto); // ریست کردن فرم با داده‌ها
-                    setLoading(false); // پایان بارگذاری
-                })
-                .catch((error) => {
+                    setDefaultValue(dto);
+                    methods.reset(dto);
+                } catch (error) {
                     console.error('Error fetching human resource data:', error);
-                    if (error.response && error.response.status === 401) {
-                        // اگر توکن نامعتبر بود، کاربر را به صفحه لاگین هدایت کن
-                        router.push('/login');
+                    setError(true);
+                    if (error.response) {
+                        toast.error(`خطا در دریافت اطلاعات: ${error.response.status}`);
+                    } else {
+                        toast.error("خطا در ارتباط با سرور");
                     }
-                    setLoading(false); // در صورت خطا هم بارگذاری پایان یابد
-                });
-        } else {
-            setLoading(false); // در صورت نبود پارامتر، بارگذاری متوقف شود
-        }
-    }, [param, router, methods]);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
 
-    const [showTable, setShowTable] = useState(false); // حالت بین فرم و جدول
+        fetchHumanResourceData();
+    }, [param, methods]);
+
+
+    const [showTable, setShowTable] = useState(false);
 
     const onSubmit = async (formData) => {
         const apiData = EditHumanResourceFormDTO.fromForm(formData);
         try {
             const response = await axios.put(`${humanResources()}/update/${formData.id}`, apiData, {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`, // ارسال توکن
-                }
+                headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` }
             });
             toast.success('اطلاعات با موفقیت ذخیره شد');
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.errors) {
-                Object.keys(error.response.data.errors).forEach((key) => {
-                    toast.error(error.response.data.errors[key][0], { position: 'top-center' });
+            console.error('Error updating human resource:', error);
+            if (error.response?.data?.errors) {
+                error.response.data.errors.forEach(err => {
+                    toast.error(err);
                 });
             } else {
-                toast.error('خطا در ذخیره اطلاعات', { position: 'top-center' });
+                toast.error('خطا در به‌روزرسانی اطلاعات');
             }
-            console.error('Error updating human resource:', error);
         }
     };
 
-    const handleSwitch = () => {
-        setShowTable(!showTable); // تغییر بین فرم و جدول
-    };
 
-    // نمایش اسپینر بارگذاری در صورت عدم بارگذاری کامل داده‌ها
-    if (loading) {
-        return <div>در حال بارگذاری...</div>;
-    }
+    const handleSwitch = () => setShowTable(!showTable);
+
+    if (loading) return <div>در حال بارگذاری...</div>;
+    if (error) return <div>خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.</div>;
 
     return (
         <Grid container spacing={6}>
@@ -98,21 +92,11 @@ function EditFromComponent() {
                     <Card>
                         <AnimatePresence mode="wait">
                             {showTable ? (
-                                <motion.div
-                                    key="table"
-                                    initial={{ opacity: 0, scale: 0.5 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.5 }}
-                                >
+                                <motion.div key="table" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
                                     <EditTableComponent />
                                 </motion.div>
                             ) : (
-                                <motion.div
-                                    key="form"
-                                    initial={{ opacity: 0, scale: 0.5 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.5 }}
-                                >
+                                <motion.div key="form" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
                                     <EditFormContent validationSchemas={validationSchemas} />
                                 </motion.div>
                             )}
@@ -125,11 +109,7 @@ function EditFromComponent() {
                             <EditProfilePictureUpload defaultProfilePicture={defaultValue?.profilePicture} />
                         </Grid>
                         <Grid item xs={12}>
-                            <EditButtonGroup
-                                onSubmit={methods.handleSubmit(onSubmit)}
-                                onSwitch={handleSwitch}
-                                showTable={showTable}
-                            />
+                            <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} onSwitch={handleSwitch} showTable={showTable} />
                         </Grid>
                     </Grid>
                 </Grid>
