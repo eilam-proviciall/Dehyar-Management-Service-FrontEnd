@@ -12,8 +12,8 @@ export async function middleware(request) {
     const token = request.cookies.get('token');
     console.log("token")
     // چک کردن وجود توکن
-    // if (!token) {
-    //     return NextResponse.redirect(new URL('/login', req.url));
+    // if (!token && request.nextUrl.pathname !== '/login') {
+    //     return NextResponse.redirect(new URL('/login', request.url));
     // }
 }
 
