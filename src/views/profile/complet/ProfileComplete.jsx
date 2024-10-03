@@ -7,7 +7,6 @@ import StepperWrapper from '@core/styles/stepper';
 import StepperCustomDot from '@components/stepper-dot';
 import MuiStepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from '@/contexts/AuthContext';
 import { user } from "@/Services/Auth/AuthService";
@@ -17,6 +16,7 @@ import CardContent from "@mui/material/CardContent";
 import { Step, StepLabel } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
+import api from '@/utils/axiosInstance';
 
 const steps = [
     // { title: 'اطلاعات شخصی', subtitle: 'Enter your personal details' },
@@ -60,14 +60,14 @@ const ProfileComplete = () => {
                 toast.error('No token found');
                 return;
             }
-            const response = await axios.put(`${user()}/${authUser.id}`, formData, {
-                headers: { Authorization: `Bearer ${token}` }
+            await api.put(`${user()}/${authUser.id}`, formData, {
+                requiresAuth: true
             });
 
             toast.success("بروزرسانی اطلاعات با موفقیت انجام شد", {
                 position: "top-center"
             });
-             logout();
+            logout();
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 const errors = error.response.data.errors;
