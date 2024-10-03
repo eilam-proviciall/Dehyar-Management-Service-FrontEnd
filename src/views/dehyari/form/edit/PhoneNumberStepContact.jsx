@@ -102,7 +102,7 @@ const PhoneNumberStepContact = ({ validation }) => {
                                                         options={socialNetworks}
                                                         disableCloseOnSelect={true}
                                                         getOptionLabel={(option) => option.label}
-                                                        value={socialNetworks.filter((option) => field.value.includes(option.value))}
+                                                        value={socialNetworks.filter((option) => (Array.isArray(field.value) ? field.value.includes(option.value) : false))}
                                                         onChange={(_, newValue) => {
                                                             field.onChange(newValue.map((option) => option.value));
                                                         }}
