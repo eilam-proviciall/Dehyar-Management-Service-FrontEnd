@@ -225,7 +225,7 @@ const Login = ({ mode }) => {
         </div>
       </div>
       <div className='md:flex md:flex-col md:gap-5 md:p-5 flex-[2] hidden justify-center items-center'>
-        <Typography variant='h4'>پنجره واحد خدمات الکترونیکی شهرداری ها و دهیاری ها</Typography>
+        <Typography variant='h4' alignItems={"center"}>پنجره واحد خدمات الکترونیکی شهرداری ها و دهیاری ها</Typography>
         <Typography textAlign={'start'}>
           از آنجا که مسئولیت حسن اجرای ضوابط تعیین شده در متن قانونی مرتبط با شهرداری ها و دهیاری ها بر عهده وزارت کشور بوده که این موضوع از طریق سازمان شهرداری ها و دهیاری ها کشور انجام میگردد.
           لذا در راستای تسریع و تهسیل در فرایند نظارتی و پایش عملکرد شهرداری ها و دهیاری ها سامانه مذکور طراحی گردیده است.
