@@ -32,9 +32,11 @@ function BakhshdarTable(props) {
         const fetchData = async () => {
             try {
                 const response = await api.get(GetHumanResourcesForGovernor(), { requiresAuth: true });
+                console.log("Response => ", response);
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
+                console.log("Error => ", error);
                 if (error.response && error.response.status === 403) {
                     toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!', {
                         position: "top-center"
