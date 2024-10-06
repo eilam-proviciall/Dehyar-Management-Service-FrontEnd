@@ -3,6 +3,10 @@
 import WORK_GROUPS from './workGroups';
 
 const accessControl = {
+    [WORK_GROUPS.Dehyar]: [
+        { label: <div className='flex items-center gap-2'>< i class="ri-survey-line" />مرخصی</div>, href: '/dehyari/form/time-off' },
+        { label: <div className='flex items-center gap-2'>< i class="ri-sticky-note-add-line" />ماموریت</div>, href: '/dehyari/form/mission' },
+    ],
     [WORK_GROUPS.CFO]: [
         { label: 'لیست پرسنل', href: '/dehyari/cfo/table' },
         { label: 'تشکیلات دهیاری', href: '/dehyari' },
@@ -14,10 +18,10 @@ const accessControl = {
     ],
     [WORK_GROUPS.GOVERNOR]: [
         { label: 'لیست پرسنل', href: '/dehyari/governor/table' },
-        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         { label: 'لیست پرسنل', href: '/dehyari/bakhshdar/table' },
+        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
     ],
     [WORK_GROUPS.PUBLIC]: [
         { label: 'صفحه عمومی', href: '/profile/complete' },
