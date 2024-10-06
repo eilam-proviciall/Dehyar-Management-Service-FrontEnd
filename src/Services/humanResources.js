@@ -5,7 +5,7 @@ const humanResources = () => {
     return `${BaseUrl}/human-resources`
 }
 const GetHumanResource = (id) => {
-    return `${BaseUrl}/human-resources/human-resources/${id}`
+    return `${BaseUrl}/human-resources/findByIdOrNid/${id}`
 }
 const GetHumanResourcesForCfo = () => {
     return `${BaseUrl}/cfo/covered-villages`

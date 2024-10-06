@@ -162,7 +162,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                     const role = cell.getValue();
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            <Chip label={roles[role]} color={getChipColor(roles[role])} />
+                            <Chip sx={{ height: 27.5 }} label={roles[role]} color={getChipColor(roles[role])} />
                         </div>
                     );
                 },
@@ -239,7 +239,6 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
             <Box
                 sx={{
                     display: 'flex',
-                    gap: '16px',
                     padding: '8px',
                     flexWrap: 'wrap',
                 }}
@@ -288,9 +287,6 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
             },
         },
         paginationDisplayMode: 'pages',
-        muiTableBodyRowProps: () => ({
-            style: { height: '10px' } // تنظیم ارتفاع هر سطر با استفاده از استایل‌های inline
-        }),
     });
 
     return (

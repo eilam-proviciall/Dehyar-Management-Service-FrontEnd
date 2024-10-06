@@ -13,7 +13,8 @@ import { toast } from "react-toastify";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
-import {getJobTitleLabel} from "@data/jobTitles";
+import { getJobTitleLabel } from "@data/jobTitles";
+import api from '@/utils/axiosInstance';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -41,7 +42,6 @@ function CfoTable(props) {
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
             const blob = await asPdf.toBlob();
-
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
 
@@ -58,10 +58,11 @@ function CfoTable(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(GetHumanResourcesForCfo(), { requiresAuth: true });
+                const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
+                console.log("Error", error);
                 setLoading(false);
                 return error;
             }
@@ -84,9 +85,9 @@ function CfoTable(props) {
                 accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({row}) => {
-                    const {first_name, last_name} = row.original;
-                    return <div style={{textAlign: 'right'}}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                Cell: ({ row }) => {
+                    const { first_name, last_name } = row.original;
+                    return <div style={{ textAlign: 'right' }}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
                 },
             },
             {
