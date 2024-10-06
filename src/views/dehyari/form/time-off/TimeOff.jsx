@@ -33,25 +33,25 @@ const TimeOff = () => {
         }
     })
     const [openModal, setOpenModal] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState('add');
     const [data, setData] = useState(methods);
 
-
+    const handleToggle = () => {
+        setOpenModal(!openModal);
+    }
 
     const handleOpenForm = () => {
         setOpenModal(true);
     }
     const handleCloseForm = () => {
         methods.reset();
+        setMode('add');
         setOpenModal(false);
     };
 
-
     return (
         <>
-            <Button onClick={handleOpenForm}>افزودن مرخصی</Button>
-            {/* <TimeOffTable /> */}
+            <TimeOffTable handleToggle={handleToggle} setMode={setMode} />
             <Drawer open={openModal} onClose={handleCloseForm} anchor='right' ModalProps={{ keepMounted: true }} sx={{ '& .MuiDrawer-paper': { width: ['100%', 400] } }}
             >
                 <div className='bg-backgroundPaper h-full lg:h-auto rounded-2xl'>
