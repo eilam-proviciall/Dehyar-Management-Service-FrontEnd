@@ -16,16 +16,16 @@ const accessControl = {
         { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
     ],
     [WORK_GROUPS.Admin]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-error-warning-line" />جدول خطا ها</div>, href: '/admin/logtable' },
+        {  label: <div className='flex items-center gap-2'>< i class="ri-error-warning-line" />جدول خطا ها</div>, href: '/admin/logtable'  },
         { label: <div className='flex items-center gap-2'>< i class="ri-admin-line" />لیست نقش ها</div>, href: '/admin/roles' },
         { label: <div className='flex items-center gap-2'>< i class="ri-bar-chart-line" />درجه بندی</div>, href: '/dehyari/form/grading-information-registration' },
     ],
     [WORK_GROUPS.GOVERNOR]: [
         { label: 'لیست پرسنل', href: '/dehyari/governor/table' },
+        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         { label: 'لیست پرسنل', href: '/dehyari/bakhshdar/table' },
-        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
     ],
     [WORK_GROUPS.PUBLIC]: [
         { label: 'صفحه عمومی', href: '/profile/complete' },
