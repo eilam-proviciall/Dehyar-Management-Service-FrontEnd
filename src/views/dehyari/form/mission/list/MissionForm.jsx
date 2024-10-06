@@ -47,7 +47,7 @@ const MissionForm = ({ setData }) => {
     ];
 
     const [destination, setDestination] = useState([]);
-
+    console.log("Destination => ", destination);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -189,11 +189,11 @@ const MissionForm = ({ setData }) => {
                         {renderSelect('mission_type', 'نوع ماموریت', missionTypes)}
                         {renderTextField('subject', 'موضوع')}
                         {renderSelect('accommodation', 'محل اقامت', accommodations)}
-                        {renderSelect('destination', 'مقصد ماموریت', destination)}
                         {renderSelect('transportation', 'وسیله نقلیه', transportations)}
                         {renderSelect('mission_duration', 'مدت ماموریت', mission_durations)}
                         {renderDatePicker('start_date', 'تاریخ شروع ماموریت')}
                         {renderTextField('description', 'شرح ماموریت')}
+                        {renderSelect('destination', 'مقصد ماموریت', destination)}
                     </div>
                 </Grid>
                 <Button className='mt-5' variant='contained' fullWidth color='success' type='submit' >ثبت</Button>
