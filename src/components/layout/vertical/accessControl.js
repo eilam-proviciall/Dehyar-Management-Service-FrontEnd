@@ -16,6 +16,7 @@ const accessControl = {
     [WORK_GROUPS.Admin]: [
         { label: <div className='flex items-center gap-2'>< i class="ri-error-warning-line" />جدول خطا ها</div>, href: '/admin/logtable' },
         { label: <div className='flex items-center gap-2'>< i class="ri-admin-line" />لیست نقش ها</div>, href: '/admin/roles' },
+        { label: <div className='flex items-center gap-2'>< i class="ri-bar-chart-line" />درجه بندی</div>, href: '/dehyari/form/grading-information-registration' },
     ],
     [WORK_GROUPS.GOVERNOR]: [
         { label: 'لیست پرسنل', href: '/dehyari/governor/table' },
