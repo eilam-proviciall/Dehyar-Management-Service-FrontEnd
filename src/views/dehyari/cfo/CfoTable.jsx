@@ -91,10 +91,10 @@ function CfoTable(props) {
                 },
             },
             {
-                accessorKey: 'job_type_id',
+                accessorKey: 'job_type',
                 header: 'پست سازمانی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
