@@ -11,7 +11,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import api from '@/utils/axiosInstance';
 
 function EditFromComponent() {
     const [defaultValue, setDefaultValue] = useState(null);
@@ -32,23 +33,12 @@ function EditFromComponent() {
                 setLoading(true);
                 setError(false);
                 try {
-                    const response = await axios.get(`${humanResources()}/findByIdOrNid/${param}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, { requiresAuth: true });
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
                     methods.reset(dto);
-                } catch (error) {
-                    console.error('Error fetching human resource data:', error);
-                    setError(true);
-                    if (error.response) {
-                        toast.error(`خطا در دریافت اطلاعات: ${error.response.status}`);
-                    } else {
-                        toast.error("خطا در ارتباط با سرور");
-                    }
-                } finally {
-                    setLoading(false);
-                }
+                } catch (error) { return error }
+                finally { setLoading(false) }
             } else {
                 setLoading(false);
             }
@@ -63,20 +53,9 @@ function EditFromComponent() {
     const onSubmit = async (formData) => {
         const apiData = EditHumanResourceFormDTO.fromForm(formData);
         try {
-            const response = await axios.put(`${humanResources()}/update/${formData.id}`, apiData, {
-                headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` }
-            });
+            const response = await api.put(`${humanResources()}/update/${formData.id}`, apiData, { requiresAuth: true });
             toast.success('اطلاعات با موفقیت ذخیره شد');
-        } catch (error) {
-            console.error('Error updating human resource:', error);
-            if (error.response?.data?.errors) {
-                error.response.data.errors.forEach(err => {
-                    toast.error(err);
-                });
-            } else {
-                toast.error('خطا در به‌روزرسانی اطلاعات');
-            }
-        }
+        } catch (error) { return error }
     };
 
 
