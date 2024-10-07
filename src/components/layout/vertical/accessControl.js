@@ -9,6 +9,12 @@ const accessControl = {
         { label: <div className='flex items-center gap-2'>< i class="ri-car-line" />ماشین آلات</div>, href: '/dehyari/form/machinery' },
         { label: <div className='flex items-center gap-2'>< i class="ri-arrow-up-wide-fill" />ارتقاء درجه بندی</div>, href: '/dehyari/form/upgrade-village-rank' },
     ],
+    [WORK_GROUPS.Dehyar]: [
+        { label: <div className='flex items-center gap-2'>< i class="ri-survey-line" />مرخصی</div>, href: '/dehyari/form/time-off' },
+        { label: <div className='flex items-center gap-2'>< i class="ri-sticky-note-add-line" />ماموریت</div>, href: '/dehyari/form/mission' },
+        { label: <div className='flex items-center gap-2'>< i class="ri-car-line" />ماشین آلات</div>, href: '/dehyari/form/machinery' },
+        { label: <div className='flex items-center gap-2'>< i class="ri-arrow-up-wide-fill" />ارتقاء درجه بندی</div>, href: '/dehyari/form/upgrade-village-rank' },
+    ],
     [WORK_GROUPS.CFO]: [
         { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل مسئول مالی</div>, href: '/dehyari/cfo/table' },
         { label: <div className='flex items-center gap-2'>< i class="ri-organization-chart" />تشکیلات دهیاری</div>, href: '/dehyari' },
