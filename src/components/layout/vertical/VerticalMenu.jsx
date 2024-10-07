@@ -23,6 +23,7 @@ import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import { useAuth } from "@/contexts/AuthContext";
 import accessControl from "@components/layout/vertical/accessControl";
+import Loading from '@/@core/components/loading/Loading'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
     <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -40,7 +41,7 @@ const VerticalMenu = ({ scrollMenu }) => {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <div>Loading...</div>; // Or any loading spinner you prefer
+        return <Loading />
     }
 
     const { transitionDuration } = verticalNavOptions
