@@ -33,6 +33,7 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import accessControl from "@components/layout/vertical/accessControl";
+import { LoadingButton } from '@mui/lab'
 
 const persianToEnglishDigits = (str) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -50,8 +51,9 @@ const schema = object({
 
 const Login = ({ mode }) => {
   // States
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const [errorState, setErrorState] = useState(null)
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [errorState, setErrorState] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Vars
   const darkImg = '/images/pages/auth-v2-mask-1-dark.png'
@@ -101,6 +103,7 @@ const Login = ({ mode }) => {
   }
 
   const onSubmit = async data => {
+    setLoading(true);
     await auth.login(data, () => {
       // After login, you may want to redirect the user to the first page they have access to
       const workGroup = auth.user?.work_group;
@@ -111,7 +114,8 @@ const Login = ({ mode }) => {
       } else {
         router.push('/403');
       }
-    })
+    });
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -131,12 +135,11 @@ const Login = ({ mode }) => {
     <div className='flex justify-between h-full'>
       <div className='flex flex-1 h-full justify-center items-center bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
         <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset]'>
-          <div className='absolute top-5 left-5'>
-            <Logo component />
-          </div>
           <div>
             <Box sx={{ mb: 6, textAlign: 'center' }}>
-              <Typography variant='h5'> <span>{themeConfig.templateName}</span></Typography>
+              {/* <Logo component /> */}
+              <img className='w-[35%] mb-5' src="images/logos/logo.svg" alt="لوگو سایت" />
+              <Typography variant='h5'> <span>پنجره واحد خدمات الکترونیک</span></Typography>
             </Box>
           </div>
           <form
@@ -218,18 +221,30 @@ const Login = ({ mode }) => {
                 فراموشی رمز عبور
               </Typography>
             </div>
-            <Button fullWidth variant='contained' type='submit'>
+            <LoadingButton
+              fullWidth
+              variant='contained'
+              type='submit'
+              loading={loading}
+              loadingIndicator={<span className='text-backgroundPaper'>در حال پردازش...</span>}>
               ورود
-            </Button>
+            </LoadingButton>
           </form>
         </div>
       </div>
+<<<<<<< HEAD
+      <div className='md:flex md:flex-col md:gap-5 md:px-32 md:flex-1 lg:flex-[2] hidden justify-center items-center'>
+        <Typography className='mt-auto' variant='h4' alignItems={"center"} textAlign={"center"}>پنجره واحد خدمات الکترونیکی شهرداری ها و دهیاری ها</Typography>
+        <Typography mt={2} textAlign={'justify'} width={'85%'} style={{ lineHeight: '3' }}>
+=======
       <div className='md:flex md:flex-col md:gap-5 md:p-5 flex-[2] hidden justify-center items-center'>
         <Typography variant='h4' alignItems={"center"}>پنجره واحد خدمات الکترونیکی شهرداری ها و دهیاری ها</Typography>
         <Typography textAlign={'start'}>
+>>>>>>> 30ca0610a228468f9a7d4bb5a02909daf39121b3
           از آنجا که مسئولیت حسن اجرای ضوابط تعیین شده در متن قانونی مرتبط با شهرداری ها و دهیاری ها بر عهده وزارت کشور بوده که این موضوع از طریق سازمان شهرداری ها و دهیاری ها کشور انجام میگردد.
           لذا در راستای تسریع و تهسیل در فرایند نظارتی و پایش عملکرد شهرداری ها و دهیاری ها سامانه مذکور طراحی گردیده است.
         </Typography>
+        <img className='mt-auto' src="images/cards/smartCity.svg" alt="بنر شهرستان ها" />
       </div>
     </div>
   )

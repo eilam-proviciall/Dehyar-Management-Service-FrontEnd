@@ -31,17 +31,17 @@ function GovernorTable(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(GetHumanResourcesForBakhshdar(), {
-                    requiresAuth: true
-                });
+                const response = await api.get(`${GetHumanResourcesForBakhshdar()}`, { requiresAuth: true });
+                console.log("Response => ", response);
+
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
+                console.log("Error => ", error);
                 setLoading(false);
                 return error;
             }
         };
-
         fetchData();
     }, []);
 
