@@ -106,8 +106,8 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
             dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
-        const regionsResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedStateCity.hierarchy_code}`, { requiresAuth: true });
-        console.log("Region Response => ", regionsResponse);
+        const regionsResponse = await api.get(`${getGeoData()}?level=city&hierarchy_code=${selectedStateCity.hierarchy_code}`, { requiresAuth: true });
+        console.log("Region Response => ", regionsResponse.data);
 
         dispatch({ type: 'SET_REGIONS', payload: regionsResponse.data });
     };
@@ -122,7 +122,7 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
             dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
-        const dehestansResponse = await api.get(`${getGeoData()}?level=dehestan&hierarchy_code=${selectedRegion.hierarchy_code}`, { requiresAuth: true });
+        const dehestansResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedRegion.hierarchy_code}`, { requiresAuth: true });
         dispatch({ type: 'SET_DEHESTANS', payload: dehestansResponse.data });
     };
 
@@ -134,7 +134,7 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
             dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
-        const villagesResponse = await api.get(`${getGeoData()}?level=village&hierarchy_code=${selectedDehestan.hierarchy_code}`, { requiresAuth: true });
+        const villagesResponse = await api.get(`${getGeoData()}?level=dehestan&hierarchy_code=${selectedDehestan.hierarchy_code}`, { requiresAuth: true });
         dispatch({ type: 'SET_VILLAGES', payload: villagesResponse.data });
     };
 

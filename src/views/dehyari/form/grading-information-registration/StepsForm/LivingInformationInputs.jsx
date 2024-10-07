@@ -89,7 +89,7 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="منطقه (استان - شهرستان)"
+                                        label="شهرستان"
                                         size="small"
                                         fullWidth
                                         error={!!field.error}
@@ -108,14 +108,16 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.regions.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        const selectedOption = state.regions[0] ? (
+                            state.regions[0].regions.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
 
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.regions}
+                                options={state.regions[0] ? state.regions[0].regions : state.regions}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);
@@ -145,14 +147,16 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.dehestans.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        const selectedOption = state.dehestans[0] ? (
+                            state.dehestans[0].dehestans.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
 
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.dehestans}
+                                options={state.dehestans[0] ? state.dehestans[0].dehestans : state.dehestans}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);
@@ -182,14 +186,17 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.villages.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        console.log("State Regions => ", state.villages);
 
+                        const selectedOption = state.villages[0] ? (
+                            state.villages[0].villages.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.villages}
+                                options={state.villages[0] ? state.villages[0].villages : state.villages}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);

@@ -37,14 +37,6 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
         { value: 4, label: "استان" },
     ]
 
-    const dehyariStatus = [
-        { value: 0, label: "استان" },
-        { value: 1, label: "شهرستان" },
-        { value: 2, label: "بخش" },
-        { value: 3, label: "دهستان" },
-        { value: 4, label: "روستا" },
-    ]
-
     const tourismStatus = [
         { value: 0, label: "نمیباشد" },
         { value: 1, label: "میباشد" }
@@ -205,7 +197,6 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                         {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
                     </div>
                     <div className='grid md:grid-cols-5 w-full gap-5'>
-                        {renderSelect('dehyari_status', 'انتخاب دهیاری', dehyariStatus, 'انتخاب دهیاری الزامی است')}
                         {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
                         {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
                         {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
