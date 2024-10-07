@@ -7,61 +7,6 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
     const { control, formState: { errors } } = useFormContext();
     console.log("Field Key =>", fieldKey);
 
-    const renderAutocomplete = (name, label, options) => (
-        <Controller
-            name={name}
-            control={control}
-            defaultValue={null}
-            render={({ field }) => {
-                const selectedOption = options.find(
-                    option => option.value === field.value?.value
-                );
-                return (
-                    <Autocomplete
-                        {...field}
-                        options={options}
-                        getOptionLabel={(option) => `${option.name}`}
-                        onChange={(event, newValue) => {
-                            field.onChange(newValue || null);
-                            setData(prevData => ({ ...prevData, [name]: newValue }));
-                            name == "states" && (setSelectedState(newValue && newValue.value - 1));
-                        }}
-                        isOptionEqualToValue={(option, value) => option.value === value?.value}
-                        value={selectedOption || null}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={label}
-                                size="small"
-                                fullWidth
-                                error={errors[name]}
-                                helperText={errors?.[name]?.message}
-                            />
-                        )}
-                    />
-                );
-            }}
-        />
-    );
-
-    // fieldKey == 'municipality' ? (
-    //     <Grid className='grid md:grid-cols-5 w-full gap-5'>
-    //         {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
-    //         {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         {renderAutocomplete(`${fieldKey}.departments`, "بخش", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //     </Grid>
-    // )
-    //     : fieldKey == 'dehyari' && (
-    //         <Grid className='grid md:grid-cols-5 w-full gap-5'>
-    //             {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
-    //             {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.dehestans`, "دهستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.villages`, "روستا", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         </Grid>
-    //     )
-
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} sm={4}>

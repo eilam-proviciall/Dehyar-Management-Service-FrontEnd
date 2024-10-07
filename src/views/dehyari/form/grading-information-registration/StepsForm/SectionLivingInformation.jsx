@@ -98,12 +98,6 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
         dispatch({ type: 'SET_SELECTED_STATE_CITY', payload: selectedStateCity });
 
         if (mode !== 'edit') {
-            setValue(`${fieldKey}.region`, null);
-            setValue(`${fieldKey}.dehestan`, null);
-            setValue(`${fieldKey}.village`, null);
-            dispatch({ type: 'SET_REGIONS', payload: [] });
-            dispatch({ type: 'SET_DEHESTANS', payload: [] });
-            dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
         const regionsResponse = await api.get(`${getGeoData()}?level=city&hierarchy_code=${selectedStateCity.hierarchy_code}`, { requiresAuth: true });
@@ -116,10 +110,6 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
         dispatch({ type: 'SET_SELECTED_REGION', payload: selectedRegion });
 
         if (mode !== 'edit') {
-            setValue(`${fieldKey}.dehestan`, null);
-            setValue(`${fieldKey}.village`, null);
-            dispatch({ type: 'SET_DEHESTANS', payload: [] });
-            dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
         const dehestansResponse = await api.get(`${getGeoData()}?level=region&hierarchy_code=${selectedRegion.hierarchy_code}`, { requiresAuth: true });
@@ -130,8 +120,6 @@ const SectionLivingInformation = ({ fieldKey, setData, mode }) => {
         dispatch({ type: 'SET_SELECTED_DEHESTAN', payload: selectedDehestan });
 
         if (mode !== 'edit') {
-            setValue(`${fieldKey}.village`, null);
-            dispatch({ type: 'SET_VILLAGES', payload: [] });
         }
 
         const villagesResponse = await api.get(`${getGeoData()}?level=dehestan&hierarchy_code=${selectedDehestan.hierarchy_code}`, { requiresAuth: true });
