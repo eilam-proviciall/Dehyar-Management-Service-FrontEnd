@@ -22,12 +22,7 @@ const persianToEnglishDigits = (str) => {
 };
 
 const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
-    const { control, handleSubmit, formState: { errors }, watch, setValue } = useFormContext();
-
-    const organizations = [
-        { value: 1, label: "دهیاری" },
-        { value: 2, label: "شهرداری" }
-    ]
+    const { control, handleSubmit, formState: { errors }, watch, setValue, setError } = useFormContext();
 
     const centralityStatus = [
         { value: 0, label: "نمیباشد" },
@@ -35,14 +30,6 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
         { value: 2, label: "بخش" },
         { value: 3, label: "شهرستان" },
         { value: 4, label: "استان" },
-    ]
-
-    const dehyariStatus = [
-        { value: 0, label: "استان" },
-        { value: 1, label: "شهرستان" },
-        { value: 2, label: "بخش" },
-        { value: 3, label: "دهستان" },
-        { value: 4, label: "روستا" },
     ]
 
     const tourismStatus = [
@@ -57,7 +44,7 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
 
     const [errorState, setErrorState] = useState(null);
 
-    const selectedOrganizationType = watch("organization_type"); // مشاهده نوع سازمان انتخاب‌شده
+    const selectedOrganizationType = watch("organization_type");
     useEffect(() => {
         if (selectedOrganizationType === 'شهرداری') {
             setValue("grade_state", "");
@@ -86,6 +73,11 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                             const value = persianToEnglishDigits(e.target.value);
                             setData(prevValues => ({ ...prevValues, [name]: value }));
                             onChange(value);
+                            if (!value) {
+                                setError(name, { type: 'manual', message: 'این فیلد الزامی است' });
+                            } else {
+                                setError(name, { type: 'manual', message: '' }); // پاک کردن خطا
+                            }
                             errorState !== null && setErrorState(null);
                         }}
                         fullWidth
@@ -188,7 +180,7 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
         //         })
         //         : setStep(1);
         console.log("new Data => ", newData);
-        setStep(1);
+        setStep(prevValue => prevValue + 1);
     }
 
     return (
@@ -199,30 +191,17 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='grid md:grid-cols-4 w-full gap-5'>
-                        {renderSelect('organization_type', 'انتخاب سازمان', organizations, 'انتخاب سازمان الزامی است')}
                         {renderTextField('hierarchical_code', 'کد سلسله مراتبی', 'کد سلسله مراتبی الزامی است')}
                         {renderTextField('village_code', 'کد آبادی', 'کد آبادی مراتبی الزامی است')}
                         {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
-                    </div>
-                    <div className='grid md:grid-cols-5 w-full gap-5'>
-                        {renderSelect('dehyari_status', 'انتخاب دهیاری', dehyariStatus, 'انتخاب دهیاری الزامی است')}
                         {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
                         {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
                         {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
                         {renderTextField('postal_code', 'کد پستی', 'کد پستی الزامی است')}
-                    </div>
-                    <div className='grid md:grid-cols-4 w-full gap-5'>
                         {renderSelect('fire_station', 'پایگاه آتش نشانی', fireStation, 'انتخاب پایگاه آتش نشانی الزامی است')}
                         {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
                         {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
                         {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
-                    </div>
-                    {console.log("Organization Type  => ", data.organization_type)
-                    }
-                    {data.organization_type !== '' && (
-                        <SectionLivingInformation fieldKey={data.organization_type == "شهرداری" ? 'municipality' : 'dehyari'} setData={setData} mode={mode} />
-                    )}
-                    <div className='grid md:grid-cols-5 w-full gap-5'>
                         {data.organization_type == 'شهرداری' ? (
                             [
                                 renderTextField('grade_city', 'درجه شهرستان', 'وارد کردن درجه شهرستان الزامی است'),
@@ -233,6 +212,7 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                     </div>
                 </Grid>
                 <Box display={'flex'} mt={2} gap={5} justifyContent={'end'} >
+                    <Button variant='contained' color='secondary' onClick={() => { setStep(prevValue => prevValue - 1) }}>برگشت</Button>
                     <Button variant='contained' color='primary' type='submit' >بعدی</Button>
                 </Box>
             </form>

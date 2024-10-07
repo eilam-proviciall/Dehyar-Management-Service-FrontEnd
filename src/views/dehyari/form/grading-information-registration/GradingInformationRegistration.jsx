@@ -14,14 +14,24 @@ import GradingTable from './list/GradingTable';
 import { FormProvider, useForm } from 'react-hook-form';
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { maxLength, minLength, object, string, array, number } from 'valibot';
+import StepCountryDivision from './StepsForm/StepCountryDivision';
 
 const schemas = [
     object({
         organization_type: string([minLength(1, 'این فیلد الزامی است')]),
+        // municipality: array(
+        //     object({
+        //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //         departments: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
+        //     })
+        // ),
+    }),
+    object({
         hierarchical_code: string([minLength(1, 'این فیلد الزامی است')]),
         village_code: string([minLength(1, 'این فیلد الزامی است')]),
         nid: string([minLength(1, 'این فیلد الزامی است')]),
-        dehyari_status: string([minLength(1, 'این فیلد الزامی است')]),
         wide: string([minLength(1, 'این فیلد الزامی است')]),
         centrality_status: string([minLength(1, 'این فیلد الزامی است')]),
         tourism_status: string([minLength(1, 'این فیلد الزامی است')]),
@@ -32,14 +42,6 @@ const schemas = [
         grade: string([minLength(1, 'این فیلد الزامی است')]),
         grade_state: string([minLength(1, 'این فیلد الزامی است')]),
         grade_city: string([minLength(1, 'این فیلد الزامی است')]),
-        // municipality: array(
-        //     object({
-        //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-        //         cities: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-        //         regions: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-        //         departments: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
-        //     })
-        // ),
         // dehyari: array(
         //     object({
         //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
@@ -95,7 +97,6 @@ const GradingInformationRegistration = () => {
             hierarchical_code: '',
             village_code: '',
             nid: '',
-            dehyari_status: '',
             wide: '',
             centrality_status: '',
             tourism_status: '',
@@ -177,9 +178,10 @@ const GradingInformationRegistration = () => {
     };
 
     const steps = [
-        { step: 1, name: "اطلاعات پایه", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
-        { step: 2, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 3, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
+        { step: 1, name: "تقسیمات کشوری", content: (<StepCountryDivision data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
+        { step: 2, name: "اطلاعات تکمیلی", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
+        { step: 3, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
+        { step: 4, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
     ];
 
 
@@ -196,7 +198,7 @@ const GradingInformationRegistration = () => {
                                     <div className={`flex ${currentStep.step == steps[step].step ? 'border-primary text-primary font-bold' : 'sm:flex hidden'} gap-2 items-center justify-between `}>
                                         <div className={`flex rounded-full justify-center items-center h-8 w-8  ${currentStep.step == steps[step].step ? 'border-primary text-primary' : 'border-secondary text-secondary'} font-bold border-4`}>{currentStep.step}</div>
                                         <div>{currentStep.name}</div>
-                                        {currentStep.step !== steps.length ? <div className='sm:block hidden text-secondary font-medium'>------------------------------------------------------</div> : ''}
+                                        {currentStep.step !== steps.length ? <div className='sm:block hidden text-secondary font-medium'>----------------</div> : ''}
                                     </div>
                                 ))}
                             </Grid>
