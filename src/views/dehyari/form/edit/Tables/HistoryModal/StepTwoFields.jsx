@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
@@ -9,6 +9,7 @@ import textAlign from 'tailwindcss-logical/plugins/textAlign';
 const StepTwoFields = ({ validation }) => {
     const { control, formState: { errors }, setValue, getValues } = useFormContext();
     console.log("Start Date => ", getValues('contractStart'));
+    console.log("End Date => ", getValues('contractEnd'));
 
 
     return (
@@ -45,9 +46,8 @@ const StepTwoFields = ({ validation }) => {
                         defaultValue={null}
                         rules={validation.contractStart}
                         render={({ field }) => (
-                            console.log("Field => ", field.value),
                             <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
+                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
@@ -79,7 +79,7 @@ const StepTwoFields = ({ validation }) => {
                         rules={validation.contractEnd}
                         render={({ field }) => (
                             <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
+                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
@@ -102,6 +102,7 @@ const StepTwoFields = ({ validation }) => {
                         )}
                     />
                 </FormControl>
+
                 <FormControl fullWidth>
                     <Controller
                         name="appointmentDate"
@@ -109,7 +110,6 @@ const StepTwoFields = ({ validation }) => {
                         defaultValue={null}
                         rules={validation.appointmentDate}
                         render={({ field }) => (
-                            console.log("Field => ", field.value),
                             <DatePicker
                                 value={field.value ? new Date(field.value * 1000) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
