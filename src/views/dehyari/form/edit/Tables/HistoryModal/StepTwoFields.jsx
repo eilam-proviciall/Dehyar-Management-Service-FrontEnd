@@ -1,17 +1,21 @@
-import React from 'react';
-import {Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem} from '@mui/material';
-import {Controller, useFormContext} from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
+import textAlign from 'tailwindcss-logical/plugins/textAlign';
 
 const StepTwoFields = ({ validation }) => {
     const { control, formState: { errors }, setValue, getValues } = useFormContext();
+    console.log("Start Date => ", getValues('contractStart'));
+    console.log("End Date => ", getValues('contractEnd'));
+
 
     return (
-        <Grid container spacing={2}>
-            {/* فیلدهای موجود در stepContract */}
-            <Grid item xs={12} sm={6}>
+        <Grid className='p-5 border-2 rounded-xl' container spacing={2}>
+            <div className='grid grid-cols-1 w-full gap-5 my-5'>
+                {/* فیلدهای موجود در stepContract */}
                 <Controller
                     name="titleContract"
                     control={control}
@@ -32,11 +36,9 @@ const StepTwoFields = ({ validation }) => {
                         </FormControl>
                     )}
                 />
-            </Grid>
-
-
-            {/* فیلد تاریخ شروع قرارداد */}
-            <Grid item xs={12} sm={6}>
+            </div>
+            <div className='grid grid-cols-2 w-full gap-5'>
+                {/* فیلد تاریخ شروع قرارداد */}
                 <FormControl fullWidth>
                     <Controller
                         name="contractStart"
@@ -45,7 +47,7 @@ const StepTwoFields = ({ validation }) => {
                         rules={validation.contractStart}
                         render={({ field }) => (
                             <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
+                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
@@ -55,6 +57,11 @@ const StepTwoFields = ({ validation }) => {
                                         fullWidth
                                         label="تاریخ شروع قرارداد"
                                         size="small"
+                                        inputProps={
+                                            {
+                                                style: { textAlign: "center" }
+                                            }
+                                        }
                                         error={!!errors.contractStart}
                                         helperText={errors.contractStart?.message}
                                     />
@@ -63,8 +70,39 @@ const StepTwoFields = ({ validation }) => {
                         )}
                     />
                 </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+                {/* فیلد تاریخ پایان قرارداد */}
+                <FormControl fullWidth>
+                    <Controller
+                        name="contractEnd"
+                        control={control}
+                        defaultValue={null}
+                        rules={validation.contractEnd}
+                        render={({ field }) => (
+                            <DatePicker
+                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
+                                onChange={(date) => field.onChange(date ? date.toUnix() : null)}
+                                calendar={persian}
+                                locale={persian_fa}
+                                calendarPosition="bottom-right"
+                                render={
+                                    <TextField
+                                        fullWidth
+                                        label="تاریخ پایان قرارداد"
+                                        size="small"
+                                        inputProps={
+                                            {
+                                                style: { textAlign: "center" }
+                                            }
+                                        }
+                                        error={!!errors.contractEnd}
+                                        helperText={errors.contractEnd?.message}
+                                    />
+                                }
+                            />
+                        )}
+                    />
+                </FormControl>
+
                 <FormControl fullWidth>
                     <Controller
                         name="appointmentDate"
@@ -83,6 +121,11 @@ const StepTwoFields = ({ validation }) => {
                                         fullWidth
                                         label="تاریخ انتصاب"
                                         size="small"
+                                        inputProps={
+                                            {
+                                                style: { textAlign: "center" }
+                                            }
+                                        }
                                         error={!!errors.appointmentDate}
                                         helperText={errors.appointmentDate?.message}
                                     />
@@ -91,37 +134,6 @@ const StepTwoFields = ({ validation }) => {
                         )}
                     />
                 </FormControl>
-            </Grid>
-            {/* فیلد تاریخ پایان قرارداد */}
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                    <Controller
-                        name="contractEnd"
-                        control={control}
-                        defaultValue={null}
-                        rules={validation.contractEnd}
-                        render={({ field }) => (
-                            <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
-                                onChange={(date) => field.onChange(date ? date.toUnix() : null)}
-                                calendar={persian}
-                                locale={persian_fa}
-                                calendarPosition="bottom-right"
-                                render={
-                                    <TextField
-                                        fullWidth
-                                        label="تاریخ پایان قرارداد"
-                                        size="small"
-                                        error={!!errors.contractEnd}
-                                        helperText={errors.contractEnd?.message}
-                                    />
-                                }
-                            />
-                        )}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                     <Controller
                         name="contractExecute"
@@ -140,6 +152,11 @@ const StepTwoFields = ({ validation }) => {
                                         fullWidth
                                         label="تاریخ اجرای قرارداد"
                                         size="small"
+                                        inputProps={
+                                            {
+                                                style: { textAlign: "center" }
+                                            }
+                                        }
                                         error={!!errors.contractExecute}
                                         helperText={errors.contractExecute?.message}
                                     />
@@ -148,9 +165,9 @@ const StepTwoFields = ({ validation }) => {
                         )}
                     />
                 </FormControl>
-            </Grid>
-            {/* فیلد توضیحات (یک خط کامل) */}
-            <Grid item xs={12}>
+            </div>
+            <div className='grid grid-cols-1 w-full gap-5 my-5'>
+                {/* فیلد توضیحات (یک خط کامل) */}
                 <Controller
                     name="descriptionContract"
                     control={control}
@@ -169,7 +186,7 @@ const StepTwoFields = ({ validation }) => {
                         />
                     )}
                 />
-            </Grid>
+            </div>
         </Grid>
     );
 };
