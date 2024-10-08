@@ -154,8 +154,8 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                     return (
                         <div style={{ textAlign: 'right' }}>
 
-                            <Button variant='contained' className='relative rounded-full h-8'>
-                                <div className='absolute bottom-[50%] left-0 bg-textPrimary rounded-full h-6 w-6 flex justify-center items-center'></div>
+                            <Button variant='contained' className='flex gap-2 rounded-full h-8 bg-backgroundPaper text-textPrimary'>
+                                <div className='bg-backgroundDefault rounded-full h-6 w-6 flex justify-center items-center text-xs'>3</div>
                                 وضعیت
                             </Button>
                         </div>
