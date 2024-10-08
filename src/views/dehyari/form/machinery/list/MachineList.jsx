@@ -34,17 +34,17 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
     const fetchBasicInformationMachine = async () => {
         await api.get(getMachineBasicInformation(), { requiresAuth: true })
             .then((response) => {
-                setBasicInformations(response.data.data)
+                console.log("Response => ", response);
+                setBasicInformations(response.data.data);
             }).catch(error => error);
     }
 
     useEffect(() => {
         fetchMachine();
-    }, []);
-
-    useEffect(() => {
         fetchBasicInformationMachine();
     }, []);
+    // useEffect(() => {
+    // }, []);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -115,7 +115,7 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].category}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].category || <Loading />}
                         </div>
                     );
                 }
@@ -128,7 +128,7 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].title}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].title || <Loading />}
                         </div>
                     );
                 }
@@ -139,11 +139,9 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                 size: 150,
                 Cell: ({ cell }) => {
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.getValue());
-                    console.log("AAA => ", selectedBasicMachine);
-
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].type}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].type || <Loading />}
                         </div>
                     );
                 }
