@@ -105,13 +105,11 @@ const StepOneFields = ({ validation, mode }) => {
 
     const findOption = (value) => options.find(option => option.value === value) || null;
 
-    
-
     return (
-        <Grid container spacing={2}>
-            {/* پست سازمانی */}
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small">
+        <Grid className='p-5 border-2 rounded-xl' container spacing={2}>
+            <div className='grid grid-cols-2 gap-5 w-full my-5'>
+                {/* پست سازمانی */}
+                <FormControl fullWidth>
                     <Controller
                         name="jobTitle"
                         control={control}
@@ -132,10 +130,8 @@ const StepOneFields = ({ validation, mode }) => {
                     />
                     {errors.jobTitle && <Typography color="error">{errors.jobTitle.message}</Typography>}
                 </FormControl>
-            </Grid>
-            {/* شغل فعلی */}
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small" error={!!errors.currentJob}>
+                {/* شغل فعلی */}
+                <FormControl fullWidth error={!!errors.currentJob}>
                     <InputLabel>شغل فعلی</InputLabel>
                     <Controller
                         name="currentJob"
@@ -152,10 +148,10 @@ const StepOneFields = ({ validation, mode }) => {
                     />
                     {errors.currentJob && <Typography color="error">{errors.currentJob.message}</Typography>}
                 </FormControl>
-            </Grid>
-            {/* نوع قرارداد با Slider */}
-            <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
+            </div>
+            <div className='grid grid-cols-1 w-full gap-5'>
+                {/* نوع قرارداد با Slider */}
+                <FormControl fullWidth variant="outlined" className=''>
                     <InputLabel shrink>نوع قرارداد</InputLabel>
                     <OutlinedInput
                         notched
@@ -168,16 +164,7 @@ const StepOneFields = ({ validation, mode }) => {
                                 defaultValue={1} // مقدار پیش‌فرض
                                 render={({ field }) => (
                                     <Box
-                                        display="flex"
-                                        alignItems="center"
-                                        sx={{
-                                            mt: 2,
-                                            ml: 2,
-                                            px: 2,
-                                            py: 1,
-                                            width: '100%',
-                                            gap: 2,
-                                        }}
+                                        className={'grid grid-cols-4 text-center items-center mt-2 ml-2 px-2 py-2 w-full gap-2'}
                                     >
                                         <Slider
                                             {...field} // اتصال Slider به فرم
@@ -185,6 +172,7 @@ const StepOneFields = ({ validation, mode }) => {
                                             min={1}
                                             max={30}
                                             valueLabelDisplay="auto"
+                                            className='col-span-3'
                                             sx={{ width: '80%', color: 'primary.main' }}
                                         />
                                         <Typography sx={{ pl: "18px" }}>
@@ -197,9 +185,9 @@ const StepOneFields = ({ validation, mode }) => {
                     />
                     {errors.contractType && <Typography color="error">{errors.contractType.message}</Typography>}
                 </FormControl>
-            </Grid>
-            {/* دهیاری‌های تحت پوشش */}
-            <Grid item xs={12} sm={9}>
+            </div>
+            <div className='grid grid-cols-1 gap-5 w-full my-5'>
+                {/* دهیاری‌های تحت پوشش */}
                 <FormControl
                     fullWidth
                     // size="small"
@@ -260,8 +248,8 @@ const StepOneFields = ({ validation, mode }) => {
                     />
                     {errors.coveredVillages && <Typography color="error">{errors.coveredVillages.message}</Typography>}
                 </FormControl>
-            </Grid>
-        </Grid>
+            </div>
+        </Grid >
     );
 };
 
