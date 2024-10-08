@@ -25,19 +25,19 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
     const { control, handleSubmit, formState: { errors }, watch, setValue } = useFormContext();
 
     const organizations = [
-        { value: 1, label: "دهیاری" },
-        { value: 2, label: "شهرداری" }
+        { value: 1, label: "شهرداری" },
+        { value: 2, label: "دهیاری" },
     ]
     const [errorState, setErrorState] = useState(null);
 
-    const selectedOrganizationType = watch("organization_type"); // مشاهده نوع سازمان انتخاب‌شده
+    const selectedOrganizationType = watch("organization"); // مشاهده نوع سازمان انتخاب‌شده
     useEffect(() => {
         if (selectedOrganizationType === 'شهرداری') {
-            setValue("grade_state", "");
-            setValue("grade_city", "");
+            setValue("state_grade", "");
+            setValue("city_grade", "");
         } else {
-            setValue("grade_state", " ");
-            setValue("grade_city", " ");
+            setValue("state_grade", " ");
+            setValue("city_grade", " ");
         }
     }, [setValue, selectedOrganizationType]);
 
@@ -86,18 +86,18 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} mb={5}>
-                <DividerSimple title={data.organization_type ? data.organization_type : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
+                <DividerSimple title={data.organization ? data.organization : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
             </Grid>
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='grid md:grid-cols-3 w-full gap-5'>
                         <br />
-                        {renderSelect('organization_type', 'انتخاب سازمان', organizations, 'انتخاب سازمان الزامی است')}
+                        {renderSelect('organization', 'انتخاب سازمان', organizations, 'انتخاب سازمان الزامی است')}
                         <br />
-                        {console.log("Organization Type  => ", data.organization_type)}
+                        {console.log("Organization Type  => ", data.organization)}
                     </div>
-                    {data.organization_type !== '' && (
-                        <SectionLivingInformation fieldKey={data.organization_type == "شهرداری" ? 'municipality' : 'dehyari'} setData={setData} mode={mode} />
+                    {data.organization !== '' && (
+                        <SectionLivingInformation fieldKey={data.organization == "شهرداری" ? 'municipality' : 'dehyari'} setData={setData} mode={mode} />
                     )}
                 </Grid>
                 <Box display={'flex'} mt={2} gap={5} justifyContent={'end'} >
