@@ -14,7 +14,7 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const MachineInformation = ({ setData, setStep }) => {
+const MachineInformation = ({ data, setData, setStep }) => {
 
     const { control, handleSubmit, formState: { errors } } = useFormContext();
 
@@ -30,9 +30,12 @@ const MachineInformation = ({ setData, setStep }) => {
     ];
 
     const onSubmit = (data) => {
+        setData(data);
         console.log("Data=>", data);
         setStep(prevStep => prevStep + 1);
     }
+
+    console.log("Errors => ", errors)
 
     const renderTextField = (name, label) => (
         <Controller
@@ -64,36 +67,36 @@ const MachineInformation = ({ setData, setStep }) => {
         <Controller
             name={name}
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { value, onChange } }) => (
                 <DatePicker
-                    value={value ? new Date(value * 1000) : ""}
+                    value={value ? new Date(value * 1000) : null}
                     calendar={persian}
                     locale={persian_fa}
                     onChange={date => {
-                        // const newDate = `${date.year}/${date.month}/${date.day}`
                         setTimeout(() => {
-                            setData(prevValues => ({ ...prevValues, [name]: date.toUnix() }));
-                            onChange(date ? date.toUnix() : '');
+                            const unixDate = date ? date.toUnix() : null;
+                            setData(prevValues => ({ ...prevValues, [name]: unixDate }));
+                            onChange(unixDate);
                         }, 0);
-                    }
-                    }
+                    }}
                     render={(value, onChange) => (
                         <TextField
                             autoComplete="off"
                             label={label}
-                            value={value}
+                            value={value ? value : ''}
                             error={errors[name]}
-                            helperText={errors?.[name]?.message}
+                            helperText={errors?.[name]?.message || null}
                             onClick={e => {
                                 const newValue = persianToEnglishDigits(e.target.value);
                                 setTimeout(() => {
                                     setData(prevValues => ({ ...prevValues, [name]: newValue }));
-                                    onChange(newValue)
+                                    onChange(newValue);
                                 }, 0);
                             }}
-                            InputProps={
-                                { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
-                            }
+                            InputProps={{
+                                style: { height: 45 },
+                                inputProps: { style: { textAlign: 'center' } }
+                            }}
                             fullWidth
                         />
                     )}
@@ -140,7 +143,7 @@ const MachineInformation = ({ setData, setStep }) => {
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='grid md:grid-cols-3 w-full gap-5'>
-                        <MachineBasicInformation setData={setData} />
+                        <MachineBasicInformation data={data} setData={setData} />
                         {renderSelect('system', 'سیستم', systems)}
                         {renderTextField('engine_number', 'شماره موتور', 'شماره موتور الزامی است')}
                         {renderTextField('manufacturing_year', 'سال ساخت', 'سال ساخت الزامی است')}

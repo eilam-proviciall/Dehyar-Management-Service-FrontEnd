@@ -1,33 +1,50 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import api from '@/utils/axiosInstance';
-import { getMachineInformation } from '@/Services/Machine';
+import { getMachineBasicInformation, getMachineInformation } from '@/Services/Machine';
+import Loading from '@/@core/components/loading/Loading';
+import ViewMachineInformation from './ViewMachineInformation';
+
 
 const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setLoading }) => {
     const [machines, setMachines] = useState([]);
+    const [basicInformations, setBasicInformations] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
+    const [openViewMachine, setOpenViewMachine] = useState(false); // حالت برای کنترل نمایش ViewMachineInformation
+    const [selectedMachine, setSelectedMachine] = useState(null); // برای ذخیره اطلاعات ماشین انتخاب شده
+
 
     console.log("Loading => ", loading);
 
 
     const fetchMachine = async () => {
-        console.log("Start Fetch...");
         setLoading(true);
         await api.get(getMachineInformation(), { requiresAuth: true })
             .then((response) => {
                 setMachines(response.data.data)
                 console.log("Machines => ", response.data);
                 setLoading(false);
-            })
+            }).catch(error => error);
+    }
+
+    const fetchBasicInformationMachine = async () => {
+        await api.get(getMachineBasicInformation(), { requiresAuth: true })
+            .then((response) => {
+                console.log("Response => ", response);
+                setBasicInformations(response.data.data);
+            }).catch(error => error);
     }
 
     useEffect(() => {
-        loading ? fetchMachine() : null;
-    }, [loading]);
+        fetchMachine();
+        fetchBasicInformationMachine();
+    }, []);
+    // useEffect(() => {
+    // }, []);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -38,9 +55,27 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
         setAnchorEl(null);
     };
 
+    const handleCloseDialog = () => {
+        methods.reset();
+        setData({});
+        setOpenViewMachine(false);
+    }
+
     const handleAddMachine = () => {
         setMode('add');
-        handleOpenModal()
+        handleOpenModal();
+    }
+
+    const handleOpenInformation = (row) => {
+        Object.entries(row.original).forEach(([key, value]) => {
+            console.log("Key => ", key, "Value => ", value);
+
+            methods.setValue(key, value);
+        });
+        setData(row.original);
+        setSelectedMachine(row.original); // ذخیره اطلاعات ماشین انتخاب شده
+        setOpenViewMachine(true); // نمایش ViewMachineInformation
+        handleClose(); // بستن منوی انتخاب
     }
 
     const handleEditMachine = (row) => {
@@ -73,22 +108,59 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'category',
-                header: 'دسته بندی',
+                accessorKey: 'machine_category',
+                header: 'دسته',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].category || <Loading />}
+                        </div>
+                    );
+                }
             },
             {
-                accessorKey: 'machine_type',
+                accessorKey: 'machine_title',
+                header: 'عنوان',
+                size: 150,
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].title || <Loading />}
+                        </div>
+                    );
+                }
+            },
+            {
+                accessorKey: 'machine_basic_id',
                 header: 'نوع',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.getValue());
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].type || <Loading />}
+                        </div>
+                    );
+                }
             },
             {
                 accessorKey: 'machine_status',
                 header: 'وضعیت',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>
+                Cell: ({ cell }) => {
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+
+                            <Button variant='contained' className='relative rounded-full h-8'>
+                                <div className='absolute bottom-[50%] left-0 bg-textPrimary rounded-full h-6 w-6 flex justify-center items-center'></div>
+                                وضعیت
+                            </Button>
+                        </div>
+                    )
+                }
             },
             {
                 accessorKey: 'actions',
@@ -115,10 +187,15 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                         onClose={handleClose}
                     >
                         <MenuItem onClick={() => {
+                            handleOpenInformation(selectedRow)
+                        }}>
+                            نمایش اطلاعات
+                        </MenuItem>
+                        {/* <MenuItem onClick={() => {
                             handleEditMachine(selectedRow)
                         }}>
                             ویرایش اطلاعات
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem onClick={() => {
                             handleDeleteMachine(selectedRow);
                         }}>
@@ -189,7 +266,18 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <>
+            <MaterialReactTable table={table} />
+            <Dialog open={openViewMachine} onClose={handleCloseDialog} fullWidth maxWidth="md">
+                <DialogContent>
+                    <div className='flex justify-end w-full'>
+                        <Button onClick={handleCloseDialog}><i className='ri-close-fill' /></Button>
+                    </div>
+                    {selectedMachine && <ViewMachineInformation onClose={handleCloseDialog} data={selectedMachine} />}
+                </DialogContent>
+            </Dialog>
+        </>
+
     )
 }
 

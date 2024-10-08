@@ -42,7 +42,7 @@ const schemas = [
         ]),
         number_axles: string([
             minLength(1, 'این فیلد الزامی است'),
-            maxLength(2, 'تعداد محور ها نمیتواند بیش از 1 رقم داشته باشد'),
+            maxLength(1, 'تعداد محور ها نمیتواند بیش از 1 رقم داشته باشد'),
         ]),
         color: string([minLength(1, 'این فیلد الزامی است')]),
         fuel: number(minLength(1, 'این فیلد الزامی است')),
@@ -72,7 +72,6 @@ const Machinery = () => {
     const methods = useForm({
         resolver: valibotResolver(schemas[step]),
         defaultValues: {
-            id: Date.now(),
             machine_basic_id: '',
             system: '',
             engine_number: '',
@@ -83,7 +82,7 @@ const Machinery = () => {
             number_axles: '',
             color: '',
             fuel: '',
-            delivery_date: '',
+            delivery_date: Math.floor(Date.now() / 1000),
             plate_province_code: '',
             plate_category_letter: '',
             plate_uniqe_identifier: '',
