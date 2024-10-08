@@ -171,11 +171,11 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                         }}>
                             نمایش اطلاعات
                         </MenuItem>
-                        <MenuItem onClick={() => {
+                        {/* <MenuItem onClick={() => {
                             handleEditMachine(selectedRow)
                         }}>
                             ویرایش اطلاعات
-                        </MenuItem>
+                        </MenuItem> */}
                         <MenuItem onClick={() => {
                             handleDeleteMachine(selectedRow);
                         }}>
