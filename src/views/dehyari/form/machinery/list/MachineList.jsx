@@ -115,20 +115,7 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].category || <Loading />}
-                        </div>
-                    );
-                }
-            },
-            {
-                accessorKey: 'machine_title',
-                header: 'عنوان',
-                size: 150,
-                Cell: ({ cell }) => {
-                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
-                    return (
-                        <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].title || <Loading />}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].category}
                         </div>
                     );
                 }
@@ -141,7 +128,20 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.getValue());
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && selectedBasicMachine[0].type || <Loading />}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].type}
+                        </div>
+                    );
+                }
+            },
+            {
+                accessorKey: 'machine_title',
+                header: 'عنوان',
+                size: 150,
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].title}
                         </div>
                     );
                 }
