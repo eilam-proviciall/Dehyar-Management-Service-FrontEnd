@@ -1,38 +1,48 @@
-"use client";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary, Autocomplete,
+    AccordionSummary,
     Avatar,
     Box,
-    Button, Card, CardContent,
-    Chip, FormControl,
-    Grid, IconButton, InputLabel, MenuItem, Select, TextField,
-    Typography
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    FormControl,
+    Grid,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+    Autocomplete,
 } from '@mui/material';
-import {Controller, useFieldArray, useFormContext} from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DividerSimple from '@components/common/Divider/DividerSimple';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
-import {GetFieldStudy} from "@/Services/humanResources";
+import { GetFieldStudy } from "@/Services/humanResources";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import DeleteIcon from "@mui/icons-material/Delete"; // Import axios for fetching data
+import DeleteIcon from "@mui/icons-material/Delete";
 
-const EditStepEducation = ({validation}) => {
-    const {control,watch, formState: {errors}} = useFormContext();
-    const {fields, append, remove} = useFieldArray({
+const EditStepEducation = ({ validation }) => {
+    const { control, watch, formState: { errors } } = useFormContext();
+    const { fields, append, remove } = useFieldArray({
         control,
         name: 'educations',
     });
 
     const [expanded, setExpanded] = useState(false);
-    const [educationFields, setEducationFields] = useState([]); // State to store education fields
+    const [educationFields, setEducationFields] = useState([]);
+    const [openAutocomplete, setOpenAutocomplete] = useState(false); // State for controlling Autocomplete open state
+
     const handleFieldDisabling = (degree) => {
-        if (degree === 41 || degree === 42 || degree ===43) {
+        if (degree === 41 || degree === 42 || degree === 43) {
             return {
                 disableFieldOfStudy: true,
                 disableGraduationDate: true
@@ -51,16 +61,15 @@ const EditStepEducation = ({validation}) => {
     };
 
     const educationDegrees = [
-        {title: "بی سواد", value: 41},
-        {title: "سیکل", value: 42},
-        {title: "دیپلم", value: 43},
-        {title: "کاردانی", value: 44},
-        {title: "کارشناسی", value: 45},
-        {title: "کارشناسی ارشد", value: 46},
-        {title: "دکترا", value: 47},
+        { title: "بی سواد", value: 41 },
+        { title: "سیکل", value: 42 },
+        { title: "دیپلم", value: 43 },
+        { title: "کاردانی", value: 44 },
+        { title: "کارشناسی", value: 45 },
+        { title: "کارشناسی ارشد", value: 46 },
+        { title: "دکترا", value: 47 },
     ];
 
-    // Fetch education fields from API
     useEffect(() => {
         const fetchEducationFields = async () => {
             try {
@@ -94,11 +103,11 @@ const EditStepEducation = ({validation}) => {
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <DividerSimple title="سوابق تحصیلی"/>
+                <DividerSimple title="سوابق تحصیلی" />
             </Grid>
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                             <Typography>سوابق تحصیلی</Typography>
                             <Chip
@@ -116,7 +125,8 @@ const EditStepEducation = ({validation}) => {
                     <AccordionDetails>
                         {fields.map((item, index) => {
                             const degree = watch(`educations[${index}].degree`);
-                            const { disableFieldOfStudy, disableGraduationDate } = handleFieldDisabling(degree);                           return (
+                            const { disableFieldOfStudy, disableGraduationDate } = handleFieldDisabling(degree);
+                            return (
                                 <Card key={item.id} sx={{ mb: 2 }}>
                                     <CardContent>
                                         <Grid container spacing={2}>
@@ -144,7 +154,7 @@ const EditStepEducation = ({validation}) => {
                                             </Grid>
                                             <Grid item xs={12} sm={4}>
                                                 <Controller
-                                                    name={`educations[${index}].fieldOfStudy`} // اینجا می‌خواهیم code ذخیره کنیم
+                                                    name={`educations[${index}].fieldOfStudy`}
                                                     control={control}
                                                     defaultValue={item.fieldOfStudy}
                                                     render={({ field }) => (
@@ -152,10 +162,12 @@ const EditStepEducation = ({validation}) => {
                                                             {...field}
                                                             options={educationFields}
                                                             disableClearable={disableFieldOfStudy}
-                                                            open={!disableFieldOfStudy}
+                                                            open={openAutocomplete} // Manage open state here
+                                                            onOpen={() => setOpenAutocomplete(true)} // Open on focus
+                                                            onClose={() => setOpenAutocomplete(false)} // Close when mouse leaves
                                                             getOptionLabel={(option) => option.name || ""}
-                                                            value={educationFields.find((option) => option.code === field.value) || null} // استفاده از code برای مقدار value
-                                                            onChange={(_, value) => field.onChange(value ? value.code : "")} // ذخیره code در فرم
+                                                            value={educationFields.find((option) => option.code === field.value) || null}
+                                                            onChange={(_, value) => field.onChange(value ? value.code : "")}
                                                             renderInput={(params) => (
                                                                 <TextField
                                                                     {...params}
@@ -163,13 +175,14 @@ const EditStepEducation = ({validation}) => {
                                                                     fullWidth
                                                                     size="small"
                                                                     disabled={disableFieldOfStudy}
+                                                                    onFocus={() => setOpenAutocomplete(true)} // Open on focus
+                                                                    onBlur={() => setOpenAutocomplete(false)} // Close on blur
                                                                 />
                                                             )}
                                                         />
                                                     )}
                                                 />
                                             </Grid>
-
                                             <Grid item xs={12} sm={4}>
                                                 <FormControl fullWidth size="small">
                                                     <Controller
@@ -189,7 +202,7 @@ const EditStepEducation = ({validation}) => {
                                                                         size="small"
                                                                         label="تاریخ فارغ‌التحصیلی"
                                                                         inputProps={{
-                                                                            style: { textAlign: 'end', zIndex: 13000000 }  // افزایش z-index
+                                                                            style: { textAlign: 'end', zIndex: 13000000 }
                                                                         }}
                                                                         disabled={disableGraduationDate}
                                                                     />
@@ -212,9 +225,8 @@ const EditStepEducation = ({validation}) => {
                                     </CardContent>
                                 </Card>
                             )
-                            }
-                        )}
-                        <Grid item xs={12} sx={{px: 0}} pt={5}>
+                        })}
+                        <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button
                                 size="small"
                                 variant="contained"
@@ -228,7 +240,7 @@ const EditStepEducation = ({validation}) => {
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
-                                startIcon={<AddIcon sx={{marginRight: 1}}/>}
+                                startIcon={<AddIcon sx={{ marginRight: 1 }} />}
                                 onClick={() => append({
                                     degree: '',
                                     fieldOfStudy: '',
