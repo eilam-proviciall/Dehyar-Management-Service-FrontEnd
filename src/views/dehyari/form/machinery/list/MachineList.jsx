@@ -108,24 +108,46 @@ const MachineList = ({ handleOpenModal, setData, setMode, methods, loading, setL
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
+                accessorKey: 'machine_category',
+                header: 'دسته',
+                size: 150,
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].category}
+                        </div>
+                    );
+                }
+            },
+            {
+                accessorKey: 'machine_title',
+                header: 'عنوان',
+                size: 150,
+                Cell: ({ cell }) => {
+                    const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.row.original.machine_basic_id);
+                    return (
+                        <div style={{ textAlign: 'right' }}>
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].title}
+                        </div>
+                    );
+                }
+            },
+            {
                 accessorKey: 'machine_basic_id',
                 header: 'نوع',
                 size: 150,
                 Cell: ({ cell }) => {
                     const selectedBasicMachine = basicInformations.filter(basicInformation => basicInformation.id == cell.getValue());
+                    console.log("AAA => ", selectedBasicMachine);
+
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {selectedBasicMachine[0] && `${selectedBasicMachine[0].category} - ${selectedBasicMachine[0].type} - ${selectedBasicMachine[0].title}`}
+                            {selectedBasicMachine[0] && selectedBasicMachine[0].type}
                         </div>
-                    )
+                    );
                 }
             },
-            // {
-            //     accessorKey: 'machine_type',
-            //     header: 'نوع',
-            //     size: 150,
-            //     Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>
-            // },
             {
                 accessorKey: 'machine_status',
                 header: 'وضعیت',
