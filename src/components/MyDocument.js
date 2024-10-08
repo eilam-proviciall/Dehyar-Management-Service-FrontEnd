@@ -210,7 +210,7 @@ const renderSignatoriesByJobTitle = (data) => {
             <>
                 <View style={{ flexDirection: 'row', backgroundColor: '#ffffff', flexWrap: 'nowrap' }}>
                     <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
-                        <Text style={{ fontSize: 10, marginBottom: 5 }}>{`بخشدار ${data.section}`}</Text>
+                        <Text style={{ fontSize: 10, marginBottom: 5 }}>{`بخشداری ${data.section}`}</Text>
                         <Text style={{ fontSize: 8 }}>{data.signatureData.goverment.full_name}</Text>
                     </View>
                     <View style={{ flex: 1, padding: 10, border: '1px solid #dfdfdf', textAlign: 'center' }}>
