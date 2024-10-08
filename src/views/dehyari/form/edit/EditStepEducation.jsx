@@ -1,23 +1,15 @@
+"use client";
 import React, { useEffect, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
+    AccordionSummary, Autocomplete,
     Avatar,
     Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    FormControl,
-    Grid,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    Autocomplete,
+    Button, Card, CardContent,
+    Chip, FormControl,
+    Grid, IconButton, InputLabel, MenuItem, Select, TextField,
+    Typography
 } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -28,7 +20,7 @@ import { GetFieldStudy } from "@/Services/humanResources";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import axios for fetching data
 
 const EditStepEducation = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
@@ -38,9 +30,8 @@ const EditStepEducation = ({ validation }) => {
     });
 
     const [expanded, setExpanded] = useState(false);
-    const [educationFields, setEducationFields] = useState([]);
+    const [educationFields, setEducationFields] = useState([]); // State to store education fields
     const [openAutocomplete, setOpenAutocomplete] = useState(false); // State for controlling Autocomplete open state
-
     const handleFieldDisabling = (degree) => {
         if (degree === 41 || degree === 42 || degree === 43) {
             return {
@@ -70,6 +61,7 @@ const EditStepEducation = ({ validation }) => {
         { title: "دکترا", value: 47 },
     ];
 
+    // Fetch education fields from API
     useEffect(() => {
         const fetchEducationFields = async () => {
             try {
@@ -125,8 +117,7 @@ const EditStepEducation = ({ validation }) => {
                     <AccordionDetails>
                         {fields.map((item, index) => {
                             const degree = watch(`educations[${index}].degree`);
-                            const { disableFieldOfStudy, disableGraduationDate } = handleFieldDisabling(degree);
-                            return (
+                            const { disableFieldOfStudy, disableGraduationDate } = handleFieldDisabling(degree); return (
                                 <Card key={item.id} sx={{ mb: 2 }}>
                                     <CardContent>
                                         <Grid container spacing={2}>
@@ -154,7 +145,7 @@ const EditStepEducation = ({ validation }) => {
                                             </Grid>
                                             <Grid item xs={12} sm={4}>
                                                 <Controller
-                                                    name={`educations[${index}].fieldOfStudy`}
+                                                    name={`educations[${index}].fieldOfStudy`} // اینجا می‌خواهیم code ذخیره کنیم
                                                     control={control}
                                                     defaultValue={item.fieldOfStudy}
                                                     render={({ field }) => (
@@ -162,12 +153,12 @@ const EditStepEducation = ({ validation }) => {
                                                             {...field}
                                                             options={educationFields}
                                                             disableClearable={disableFieldOfStudy}
-                                                            open={openAutocomplete} // Manage open state here
+                                                            open={openAutocomplete}
                                                             onOpen={() => setOpenAutocomplete(true)} // Open on focus
                                                             onClose={() => setOpenAutocomplete(false)} // Close when mouse leaves
                                                             getOptionLabel={(option) => option.name || ""}
-                                                            value={educationFields.find((option) => option.code === field.value) || null}
-                                                            onChange={(_, value) => field.onChange(value ? value.code : "")}
+                                                            value={educationFields.find((option) => option.code === field.value) || null} // استفاده از code برای مقدار value
+                                                            onChange={(_, value) => field.onChange(value ? value.code : "")} // ذخیره code در فرم
                                                             renderInput={(params) => (
                                                                 <TextField
                                                                     {...params}
@@ -183,6 +174,7 @@ const EditStepEducation = ({ validation }) => {
                                                     )}
                                                 />
                                             </Grid>
+
                                             <Grid item xs={12} sm={4}>
                                                 <FormControl fullWidth size="small">
                                                     <Controller
@@ -202,7 +194,7 @@ const EditStepEducation = ({ validation }) => {
                                                                         size="small"
                                                                         label="تاریخ فارغ‌التحصیلی"
                                                                         inputProps={{
-                                                                            style: { textAlign: 'end', zIndex: 13000000 }
+                                                                            style: { textAlign: 'end', zIndex: 13000000 }  // افزایش z-index
                                                                         }}
                                                                         disabled={disableGraduationDate}
                                                                     />
@@ -225,7 +217,8 @@ const EditStepEducation = ({ validation }) => {
                                     </CardContent>
                                 </Card>
                             )
-                        })}
+                        }
+                        )}
                         <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button
                                 size="small"
