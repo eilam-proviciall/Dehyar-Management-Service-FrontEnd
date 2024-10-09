@@ -18,7 +18,7 @@ import StepCountryDivision from './StepsForm/StepCountryDivision';
 
 const schemas = [
     object({
-        organization_type: string([minLength(1, 'این فیلد الزامی است')]),
+        organization: number(minLength(1, 'این فیلد الزامی است')),
         // municipality: array(
         //     object({
         //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
@@ -29,19 +29,19 @@ const schemas = [
         // ),
     }),
     object({
-        hierarchical_code: string([minLength(1, 'این فیلد الزامی است')]),
+        hierarchy_code: string([minLength(1, 'این فیلد الزامی است')]),
         village_code: string([minLength(1, 'این فیلد الزامی است')]),
-        nid: string([minLength(1, 'این فیلد الزامی است')]),
-        wide: string([minLength(1, 'این فیلد الزامی است')]),
-        centrality_status: string([minLength(1, 'این فیلد الزامی است')]),
-        tourism_status: string([minLength(1, 'این فیلد الزامی است')]),
+        national_id: string([minLength(1, 'این فیلد الزامی است')]),
+        area_hectares: string([minLength(1, 'این فیلد الزامی است')]),
+        centralization: number(minLength(1, 'این فیلد الزامی است')),
+        tourism_goal: number(minLength(1, 'این فیلد الزامی است')),
         postal_code: string([minLength(1, 'این فیلد الزامی است')]),
-        fire_station: string([minLength(1, 'این فیلد الزامی است')]),
-        date_established: string([minLength(1, 'این فیلد الزامی است')]),
-        date_grading: string([minLength(1, 'این فیلد الزامی است')]),
+        fire_station: number(minLength(1, 'این فیلد الزامی است')),
+        foundation_date: number(minLength(1, 'این فیلد الزامی است')),
+        grade_date: number(minLength(1, 'این فیلد الزامی است')),
         grade: string([minLength(1, 'این فیلد الزامی است')]),
-        grade_state: string([minLength(1, 'این فیلد الزامی است')]),
-        grade_city: string([minLength(1, 'این فیلد الزامی است')]),
+        state_grade: string([minLength(1, 'این فیلد الزامی است')]),
+        city_grade: string([minLength(1, 'این فیلد الزامی است')]),
         // dehyari: array(
         //     object({
         //         states: object({ value: number(minLength(1, 'این فیلد الزامی است')), name: string([minLength(1, 'این فیلد الزامی است')]) }),
@@ -53,7 +53,7 @@ const schemas = [
         // ),
     }),
     object({
-        population_fields:
+        populations:
             array(
                 object({
                     year: string(
@@ -63,15 +63,15 @@ const schemas = [
                             maxLength(4, 'سال نمیتواند بیشتر از 4 رقم باشد')
                         ]
                     ),
+                    households: string([minLength(1, 'این فیلد الزامی است')]),
                     population: string([minLength(1, 'این فیلد الزامی است')]),
-                    family: string([minLength(1, 'این فیلد الزامی است')]),
-                    man_count: string([minLength(1, 'این فیلد الزامی است')]),
-                    woman_count: string([minLength(1, 'این فیلد الزامی است')]),
+                    male: string([minLength(1, 'این فیلد الزامی است')]),
+                    female: string([minLength(1, 'این فیلد الزامی است')]),
                 })
             ),
     }),
     object({
-        income_fields:
+        incomes:
             array(
                 object({
                     year: string(
@@ -81,7 +81,8 @@ const schemas = [
                             maxLength(4, 'سال نمیتواند بیشتر از 4 رقم باشد')
                         ]
                     ),
-                    per_income: string([minLength(1, 'این فیلد الزامی است')]),
+                    total_income: string([minLength(1, 'این فیلد الزامی است')]),
+                    income_per_capital: string([minLength(1, 'این فیلد الزامی است')]),
                 })
             ),
     }),
@@ -92,70 +93,63 @@ const GradingInformationRegistration = () => {
     const methods = useForm({
         resolver: valibotResolver(schemas[step]),
         defaultValues: {
-            id: Date.now(),
-            organization_type: '',
-            hierarchical_code: '',
+            organization: '',
+            hierarchy_code: '',
             village_code: '',
-            nid: '',
-            wide: '',
-            centrality_status: '',
-            tourism_status: '',
+            national_id: '',
+            area_hectares: '',
+            centralization: '',
+            tourism_goal: '',
             postal_code: '',
             fire_station: '',
-            date_established: '',
-            date_grading: '',
+            foundation_date: '',
+            grade_date: '',
             grade: '',
-            grade_state: '',
-            grade_city: '',
-            municipality: [{
-                states: { value: 0, name: '' },
-                cities: { value: 0, name: '' },
-                regions: { value: 0, name: '' },
-                departments: { value: 0, name: '' },
-            }],
-            dehyari: [{
-                states: { value: 0, name: '' },
-                cities: { value: 0, name: '' },
-                regions: { value: 0, name: '' },
-                dehestans: { value: 0, name: '' },
-                villages: { value: 0, name: '' },
-            }],
-            population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
-            income_fields: [{ year: '', per_income: '' }]
+            state_grade: '',
+            city_grade: '',
+            // municipality: [{
+            //     states: { value: 0, name: '' },
+            //     cities: { value: 0, name: '' },
+            //     regions: { value: 0, name: '' },
+            //     departments: { value: 0, name: '' },
+            // }],
+            // dehyari: [{
+            //     states: { value: 0, name: '' },
+            //     cities: { value: 0, name: '' },
+            //     regions: { value: 0, name: '' },
+            //     dehestans: { value: 0, name: '' },
+            //     villages: { value: 0, name: '' },
+            // }],
+            populations: [{ year: '', households: '', population: '', male: '', female: '' }],
+            incomes: [{ year: '', income_per_capital: '', total_income: '' }]
         }
     })
 
     // States
-    const [users, setUsers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [mode, setMode] = useState('add');
     const [data, setData] = useState(methods);
 
-
-
     console.log("Data => ", data);
-    console.log();
-
 
     const handleOpenForm = () => setOpenModal(true);
     const handleCloseForm = () => {
         methods.reset();
         setData({
-            id: Date.now(),
-            organization_type: '',
-            hierarchical_code: '',
+            organization: '',
+            hierarchy_code: '',
             village_code: '',
-            nid: '',
+            national_id: '',
             dehyari_status: '',
-            wide: '',
-            centrality_status: '',
-            tourism_status: '',
+            area_hectares: '',
+            centralization: '',
+            tourism_goal: '',
             postal_code: '',
             fire_station: '',
-            date_established: '',
-            date_grading: '',
+            foundation_date: '',
+            grade_date: '',
             grade: '',
             municipality: [{
                 states: { value: 0, name: '' },
@@ -170,8 +164,8 @@ const GradingInformationRegistration = () => {
                 dehestans: { value: 0, name: '' },
                 villages: { value: 0, name: '' },
             }],
-            population_fields: [{ year: '', population: '', family: '', man_count: '', woman_count: '' }],
-            income_fields: [{ year: '', per_income: '' }]
+            populations: [{ year: '', households: '', population: '', male: '', female: '' }],
+            incomes: [{ year: '', income_per_capital: '', total_income: '' }]
         });
         setStep(0);
         setOpenModal(false);
@@ -181,13 +175,13 @@ const GradingInformationRegistration = () => {
         { step: 1, name: "تقسیمات کشوری", content: (<StepCountryDivision data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
         { step: 2, name: "اطلاعات تکمیلی", content: (<StepBasicInformation data={data} setData={setData} step={step} setStep={setStep} mode={mode} />) },
         { step: 3, name: "جمعیت", content: (<StepPopulationNew data={data} setData={setData} step={step} setStep={setStep} />) },
-        { step: 4, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} users={users} setUsers={setUsers} mode={mode} methods={methods} />) }
+        { step: 4, name: "درآمد", content: (<StepIncomeNew data={data} setData={setData} step={step} setStep={setStep} onClose={handleCloseForm} mode={mode} methods={methods} />) }
     ];
 
 
     return (
         <>
-            <GradingTable users={users} setUsers={setUsers} handleOpenModal={handleOpenForm} setData={setData} setMode={setMode} methods={methods} />
+            <GradingTable handleToggle={handleOpenForm} setMode={setMode} setData={setData} methods={methods} />
             <Modal open={openModal} onClose={handleCloseForm} style={{ margin: '2%' }}>
                 <Paper style={{ maxHeight: '100%', overflowY: 'auto' }}>
                     <div className='bg-backgroundPaper h-full lg:h-auto rounded-2xl'>

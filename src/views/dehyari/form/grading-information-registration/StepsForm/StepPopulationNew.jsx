@@ -17,13 +17,13 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'population_fields'
+        name: 'populations'
     });
 
     const onSubmit = (newData) => {
         console.log("New Data => ", newData);
-        if (newData.population_fields.length) {
-            setData(prevValues => ({ ...prevValues, population_fields: newData.population_fields }));
+        if (newData.populations.length) {
+            setData(prevValues => ({ ...prevValues, populations: newData.populations }));
             setStep(step + 1)
         } else {
             toast.error("شما باید حداقل یک ردیف ایجاد کنید", {
@@ -55,9 +55,9 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
                                 setData(prevValues => ({ ...prevValues, [name]: value }));
                                 onChange(value);
                             }}
-                            {...((errors?.population_fields && errors?.population_fields[index] && errors?.population_fields[index]?.[endName]) && {
-                                error: errors?.population_fields[index]?.[endName],
-                                helperText: errors?.population_fields[index]?.[endName].message
+                            {...((errors?.populations && errors?.populations[index] && errors?.populations[index]?.[endName]) && {
+                                error: errors?.populations[index]?.[endName],
+                                helperText: errors?.populations[index]?.[endName].message
                             })}
                         />
                     )}
@@ -71,11 +71,11 @@ const StepPopulationNew = ({ data, setData, step, setStep }) => {
             {fields.map((field, index) => (
                 <>
                     <div key={field.id} className='md:flex grid mb-2 gap-2'>
-                        {renderTextField(index, 'year', `population_fields.${index}.year`, 'سال')}
-                        {renderTextField(index, 'population', `population_fields.${index}.population`, 'جمعیت')}
-                        {renderTextField(index, 'family', `population_fields.${index}.family`, 'خانوار')}
-                        {renderTextField(index, 'man_count', `population_fields.${index}.man_count`, 'زن')}
-                        {renderTextField(index, 'woman_count', `population_fields.${index}.woman_count`, 'مرد')}
+                        {renderTextField(index, 'year', `populations.${index}.year`, 'سال')}
+                        {renderTextField(index, 'households', `populations.${index}.households`, 'جمعیت')}
+                        {renderTextField(index, 'population', `populations.${index}.population`, 'خانوار')}
+                        {renderTextField(index, 'male', `populations.${index}.male`, 'زن')}
+                        {renderTextField(index, 'female', `populations.${index}.female`, 'مرد')}
                         <Button variant="contained" color="error" onClick={() => remove(index)} >
                             <i className='ri-delete-bin-line'></i>
                         </Button>

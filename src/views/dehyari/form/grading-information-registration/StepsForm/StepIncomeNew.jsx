@@ -3,6 +3,9 @@ import { Box, Button, Divider, FormControl, TextField } from '@mui/material';
 import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { GradingInformationDTO } from "@/utils/GradingInformationDTO";
+import api from '@/utils/axiosInstance';
+import { getDivisonInformation } from '@/Services/Grading';
+import { convertToNumbers } from '@/utils/convertToNumber';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -10,57 +13,67 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers, mode, methods }) => {
+const StepIncomeNew = ({ data, setData, step, setStep, onClose, mode, methods }) => {
     console.log("Data : ", data);
 
     const { control, handleSubmit, formState: { errors } } = useFormContext();
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'income_fields'
+        name: 'incomes'
     });
 
-    const onSubmit = (newData) => {
+    const onSubmit = async (newData) => {
 
-        if (newData.income_fields.length) {
-            setData(prevValues => ({ ...prevValues, income_fields: newData.income_fields }));
-            const gradingDTO = new GradingInformationDTO(data);
+        if (newData.incomes.length) {
+            const numericIncomes = newData.incomes.map(income => ({
+                year: parseInt(income.year, 10),
+                income_per_capital: parseFloat(income.income_per_capital.replace(/,/g, '')),
+                total_income: parseFloat(income.total_income.replace(/,/g, ''))
+            }));
+
             const finallyData = {
-                id: mode == 'add' ? Date.now() : gradingDTO.id,
-                organization_type: gradingDTO.organizationType,
-                hierarchical_code: gradingDTO.hierarchicalCode,
-                village_code: gradingDTO.villageCode,
-                nid: gradingDTO.nid,
-                dehyari_status: gradingDTO.dehyariStatus,
-                wide: gradingDTO.wide,
-                centrality_status: gradingDTO.centralityStatus,
-                tourism_status: gradingDTO.tourismStatus,
-                postal_code: gradingDTO.postalCode,
-                fire_station: gradingDTO.fireStation,
-                date_established: gradingDTO.dateEstablished,
-                date_grading: gradingDTO.dateGrading,
-                grade: gradingDTO.grade,
-                population_fields: gradingDTO.populationFields,
-                states: gradingDTO.states,
-                cities: gradingDTO.cities,
-                regions: gradingDTO.regions,
-                departments: gradingDTO.departments,
-                dehestans: gradingDTO.dehestans,
-                villages: gradingDTO.villages,
-                income_fields: newData.income_fields
-            }
+                ...data,
+                incomes: numericIncomes,
+            };
+
+            console.log("Finally Data => ", finallyData);
+
+            const gradingDTO = new GradingInformationDTO(data);
+            // const finallyData = {
+            //     organization: gradingDTO.organization,
+            //     hierarchical_code: gradingDTO.hierarchyCode,
+            //     village_code: gradingDTO.villageCode,
+            //     nid: gradingDTO.nid,
+            //     dehyari_status: gradingDTO.dehyariStatus,
+            //     area_hectares: gradingDTO.areaHectares,
+            //     centralization: gradingDTO.centralization,
+            //     tourism_goal: gradingDTO.tourismGoal,
+            //     postal_code: gradingDTO.postalCode,
+            //     fire_station: gradingDTO.fireStation,
+            //     foundation_date: gradingDTO.foundationDate,
+            //     grade_date: gradingDTO.gradeDate,
+            //     grade: gradingDTO.grade,
+            //     populations: gradingDTO.populations,
+            //     incomes: newData.incomes,
+            //     states: gradingDTO.states,
+            //     cities: gradingDTO.cities,
+            //     regions: gradingDTO.regions,
+            //     departments: gradingDTO.departments,
+            //     dehestans: gradingDTO.dehestans,
+            //     villages: gradingDTO.villages,
+            // }
             methods = finallyData;
             console.log("Methods =>", methods);
             if (mode == 'add') {
-                setUsers([...users, finallyData]);
+                await api.post(getDivisonInformation(), finallyData, { requiresAuth: true });
                 toast.success("اطلاعات با موفقیت ثبت شد", {
                     position: "top-center",
                     duration: 3000,
                 });
             } else {
+                await api.put(`${getDivisonInformation()}/${data.id}`, finallyData, { requiresAuth: true });
                 console.log("Finally Data => ", finallyData);
-                const newUsers = users.map(user => user.id == data.id ? { ...user, ...finallyData } : user);
-                setUsers(newUsers);
                 toast.success("اطلاعات با موفقیت ویرایش شد", {
                     position: "top-center",
                     duration: 3000,
@@ -97,9 +110,9 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
                                 setData(prevValues => ({ ...prevValues, [name]: value }));
                                 onChange(value);
                             }}
-                            {...((errors?.income_fields && errors?.income_fields[index] && errors?.income_fields[index]?.[endName]) && {
-                                error: errors?.income_fields[index]?.[endName],
-                                helperText: errors?.income_fields[index]?.[endName].message
+                            {...((errors?.incomes && errors?.incomes[index] && errors?.incomes[index]?.[endName]) && {
+                                error: errors?.incomes[index]?.[endName],
+                                helperText: errors?.incomes[index]?.[endName].message
                             })}
                         />
                     )}
@@ -113,8 +126,9 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, users, setUsers,
             {fields.map((field, index) => (
                 <>
                     <div key={field.id} className='md:flex grid mb-2 gap-2'>
-                        {renderTextField(index, 'year', `income_fields.${index}.year`, 'سال')}
-                        {renderTextField(index, 'per_income', `income_fields.${index}.per_income`, 'سرانه درآمد (ریال)')}
+                        {renderTextField(index, 'year', `incomes.${index}.year`, 'سال')}
+                        {renderTextField(index, 'income_per_capital', `incomes.${index}.income_per_capital`, 'سرانه درآمد (ریال)')}
+                        {renderTextField(index, 'total_income', `incomes.${index}.total_income`, 'درآمد (ریال)')}
                         <Button variant="contained" color="error" onClick={() => remove(index)} >
                             <i className='ri-delete-bin-line'></i>
                         </Button>

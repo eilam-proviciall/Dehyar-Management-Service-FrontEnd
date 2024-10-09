@@ -44,19 +44,22 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
 
     const [errorState, setErrorState] = useState(null);
 
-    const selectedOrganizationType = watch("organization_type");
+    const selectedOrganizationType = watch("organization");
     useEffect(() => {
-        if (selectedOrganizationType === 'شهرداری') {
-            setValue("grade_state", "");
-            setValue("grade_city", "");
+        if (selectedOrganizationType == 1) {
+            setValue("state_grade", "");
+            setValue("city_grade", "");
         } else {
-            setValue("grade_state", " ");
-            setValue("grade_city", " ");
+            setValue("state_grade", " ");
+            setValue("city_grade", " ");
         }
     }, [setValue, selectedOrganizationType]);
 
 
-    const renderTextField = (name, label, errorText) => (
+    console.log("Errors => ", errors);
+
+
+    const renderTextField = (name, label) => (
         <FormControl fullWidth >
             <Controller
                 name={name}
@@ -81,8 +84,8 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                             errorState !== null && setErrorState(null);
                         }}
                         fullWidth
-                        error={errors[name]}
-                        helperText={errors?.[name]?.message || errorState?.message[0]}
+                        error={!!errors[name]}
+                        helperText={String(errors?.[name]?.message?.message || errors?.[name]?.message || errorState?.message?.[0] || '')}
                     />
                 )}
             />
@@ -111,7 +114,7 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
                         sx={{ height: 45 }}
                     >
                         {Object.entries(option.map(({ value, label }) => (
-                            <MenuItem key={value} value={label}>{label}</MenuItem>
+                            <MenuItem key={value} value={value}>{label}</MenuItem>
                         )))}
                     </Select>
                 )}
@@ -119,48 +122,46 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
         </FormControl>
     )
 
-    const renderDatePicker = (name, label, errorText) => (
-        <FormControl fullWidth>
-            <Controller
-                name={name}
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                    <DatePicker
-                        value={value}
-                        calendar={persian}
-                        locale={persian_fa}
-                        onChange={date => {
-                            const newDate = `${date.year}/${date.month}/${date.day}`
-                            console.log("New Date => ", newDate);
-                            setTimeout(() => {
-                                setData(prevValues => ({ ...prevValues, [name]: newDate }));
-                                onChange(newDate)
-                            }, 0);
-                        }
-                        }
-                        render={(value, onChange) => (
-                            <TextField
-                                label={label}
-                                value={value}
-                                error={errors[name]}
-                                helperText={errors?.[name]?.message || errorState?.message[0]}
-                                onClick={e => {
-                                    const newValue = persianToEnglishDigits(e.target.value);
-                                    setTimeout(() => {
-                                        setData(prevValues => ({ ...prevValues, [name]: newValue }));
-                                        onChange(newValue)
-                                    }, 0);
-                                }}
-                                InputProps={
-                                    { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
-                                }
-                                fullWidth
-                            />
-                        )}
-                    />
-                )}
-            />
-        </FormControl>
+    const renderDatePicker = (name, label) => (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field: { value, onChange } }) => (
+                <DatePicker
+                    value={value ? new Date(value * 1000) : null}
+                    calendar={persian}
+                    locale={persian_fa}
+                    onChange={date => {
+                        setTimeout(() => {
+                            const unixDate = date ? date.toUnix() : null;
+                            setData(prevValues => ({ ...prevValues, [name]: unixDate }));
+                            onChange(unixDate);
+                        }, 0);
+                    }}
+                    render={(value, onChange) => (
+                        <TextField
+                            autoComplete="off"
+                            label={label}
+                            value={value ? value : ''}
+                            error={errors[name]}
+                            helperText={String(errors?.[name]?.message?.message || errors?.[name]?.message || errorState?.message?.[0] || '')}
+                            onClick={e => {
+                                const newValue = persianToEnglishDigits(e.target.value);
+                                setTimeout(() => {
+                                    setData(prevValues => ({ ...prevValues, [name]: newValue }));
+                                    onChange(newValue);
+                                }, 0);
+                            }}
+                            InputProps={{
+                                style: { height: 45 },
+                                inputProps: { style: { textAlign: 'center' } }
+                            }}
+                            fullWidth
+                        />
+                    )}
+                />
+            )}
+        />
     );
 
     // const checkValues = (currentData) => {
@@ -186,26 +187,26 @@ const StepBasicInformation = ({ data, setData, step, setStep, mode }) => {
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} mb={5}>
-                <DividerSimple title={data.organization_type ? data.organization_type : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
+                <DividerSimple title={'اطلاعات پایه را وارد نمایید'} />
             </Grid>
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='grid md:grid-cols-4 w-full gap-5'>
-                        {renderTextField('hierarchical_code', 'کد سلسله مراتبی', 'کد سلسله مراتبی الزامی است')}
+                        {renderTextField('hierarchy_code', 'کد سلسله مراتبی', 'کد سلسله مراتبی الزامی است')}
                         {renderTextField('village_code', 'کد آبادی', 'کد آبادی مراتبی الزامی است')}
-                        {renderTextField('nid', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
-                        {renderTextField('wide', 'وسعت (هکتار)', 'وسعت الزامی است')}
-                        {renderSelect('centrality_status', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
-                        {renderSelect('tourism_status', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
+                        {renderTextField('national_id', 'شناسه ملی', 'شناسه ملی مراتبی الزامی است')}
+                        {renderTextField('area_hectares', 'وسعت (هکتار)', 'وسعت الزامی است')}
+                        {renderSelect('centralization', 'مرکزیت', centralityStatus, 'انتخاب مرکزیت الزامی است')}
+                        {renderSelect('tourism_goal', 'هدف گردشگری', tourismStatus, 'انتخاب هدف گردشگری الزامی است')}
                         {renderTextField('postal_code', 'کد پستی', 'کد پستی الزامی است')}
                         {renderSelect('fire_station', 'پایگاه آتش نشانی', fireStation, 'انتخاب پایگاه آتش نشانی الزامی است')}
-                        {renderDatePicker('date_established', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
+                        {renderDatePicker('foundation_date', 'تاریخ تاسیس', 'وارد کردن تاریخ تاسیس الزامی است')}
                         {renderTextField('grade', 'درجه', 'وارد کردن درجه الزامی است')}
-                        {renderDatePicker('date_grading', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
-                        {data.organization_type == 'شهرداری' ? (
+                        {renderDatePicker('grade_date', 'تاریخ درجه بندی', 'وارد کردن تاریخ درجه بندی الزامی است')}
+                        {data.organization == 1 ? (
                             [
-                                renderTextField('grade_city', 'درجه شهرستان', 'وارد کردن درجه شهرستان الزامی است'),
-                                renderTextField('grade_state', 'درجه استان', 'وارد کردن درجه استان الزامی است')
+                                renderTextField('state_grade', 'درجه شهرستان', 'وارد کردن درجه شهرستان الزامی است'),
+                                renderTextField('city_grade', 'درجه استان', 'وارد کردن درجه استان الزامی است')
                             ]
                         ) : ''
                         }
