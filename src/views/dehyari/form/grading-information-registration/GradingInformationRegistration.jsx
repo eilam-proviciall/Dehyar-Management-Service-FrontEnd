@@ -1,10 +1,10 @@
 'use client'
 
 // React Imports
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 // MUI Imports
-import { Box, Button, Divider, Grid, Modal, Paper } from '@mui/material';
+import { Button, Grid, Modal, Paper } from '@mui/material';
 
 // Component Imports
 import StepBasicInformation from './StepsForm/StepBasicInformation';
