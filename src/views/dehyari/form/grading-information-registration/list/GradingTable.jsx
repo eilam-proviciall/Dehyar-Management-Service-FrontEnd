@@ -15,7 +15,7 @@ import { getDivisonInformation } from '@/Services/Grading';
 import { GradingInformationDTO } from '@/utils/GradingInformationDTO';
 
 
-const GradingTable = ({ handleToggle, setMode }) => {
+const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
     const [grading, setGrading] = useState([]);
     const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -39,6 +39,13 @@ const GradingTable = ({ handleToggle, setMode }) => {
         fetchGrading() || null;
     }, []);
 
+    // Fetch grading again when loading changes
+    useEffect(() => {
+        if (loading) {
+            fetchGrading();
+        }
+    }, [loading]);
+
     // Handlers
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -50,9 +57,17 @@ const GradingTable = ({ handleToggle, setMode }) => {
     };
 
     const handleEditGrading = (row) => {
-        console.log("User : ", row);
+        console.log("Row => ", row);
+
         setAnchorEl(null);
-        handleAddEventSidebarToggle();
+        const gradingDTO = new GradingInformationDTO(row.original);
+        Object.entries(gradingDTO).forEach(([key, value]) => {
+            console.log("Item => ", key, "Value => ", value)
+            methods.setValue(key, value);
+        });
+        setData(row.original)
+        setMode('edit');
+        handleToggle();
     }
 
     const handleDeleteGrading = (row) => {
@@ -78,71 +93,50 @@ const GradingTable = ({ handleToggle, setMode }) => {
                 header: 'سازمان',
                 size: 150,
                 Cell: ({ row }) => {
-                    const grading = row.original;
-                    const gradingDTO = new GradingInformationDTO(grading)
-                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO}`}</div>;
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization}`}</div>;
                 },
             },
             {
-                accessorKey: 'start_date',
-                header: 'کدملی',
+                accessorKey: 'centralization',
+                header: 'مرکزیت',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.centralization}`}</div>;
+                },
             },
             {
                 accessorKey: 'duration',
-                header: 'استان',
+                header: 'توریست',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.tourismGoal}`}</div>;
+                },
             },
             {
                 accessorKey: 'attachment_file',
-                header: 'شهرستان',
+                header: 'آتش نشانی',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
-            },
-            {
-                accessorKey: 'user_id',
-                header: 'بخش',
-                size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization == 2 && gradingDTO.fireStation || "-"}`}</div>;
+                },
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <IconButton
-                        aria-label="more"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={(event) => handleClick(event, row)}
-                        style={{ paddingLeft: 0 }}
-                    >
-                        <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                            'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => {
-                            handleEditGrading(selectedRow)
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
+                        <Button color='error' onClick={() => {
+                            handleDeleteGrading(row);
                         }}>
-                            ویرایش اطلاعات
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleDeleteGrading(selectedRow);
-                        }}>
-                            حذف
-                        </MenuItem>
-                    </Menu>
-                </div>
+                            <i className='ri-delete-bin-6-line' />
+                        </Button>
+                    </div>
+                ),
             },
         ],
         [anchorEl, selectedRow]

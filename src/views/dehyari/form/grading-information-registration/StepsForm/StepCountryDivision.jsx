@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 // Component Imports
 import DividerSimple from '@/components/common/Divider/DividerSimple'
 import SectionLivingInformation from './SectionLivingInformation';
+import { GradingInformationDTO } from '@/utils/GradingInformationDTO';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -29,6 +30,7 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
         { value: 2, label: "دهیاری" },
     ]
     const [errorState, setErrorState] = useState(null);
+    const gradingDTO = new GradingInformationDTO(data);
 
     const selectedOrganizationType = watch("organization"); // مشاهده نوع سازمان انتخاب‌شده
     useEffect(() => {
@@ -47,7 +49,7 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { value = '', onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                     <Select
                         value={value}
                         label={label}
@@ -63,7 +65,7 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
                         sx={{ height: 45 }}
                     >
                         {Object.entries(option.map(({ value, label }) => (
-                            <MenuItem key={value} value={label}>{label}</MenuItem>
+                            <MenuItem key={value} value={value}>{label}</MenuItem>
                         )))}
                     </Select>
                 )}
@@ -82,11 +84,10 @@ const StepCountryDivision = ({ data, setData, step, setStep, mode }) => {
 
     console.log("Errors => ", errors);
 
-
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} mb={5}>
-                <DividerSimple title={data.organization ? data.organization : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
+                <DividerSimple title={data.organization ? gradingDTO.organization : 'سازمان مورد نظر خودتان را انتخاب کنید'} />
             </Grid>
             <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
