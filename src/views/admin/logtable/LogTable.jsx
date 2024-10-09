@@ -6,6 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DownloadIcon from '@mui/icons-material/Download';
 import { getLogs } from "@/Services/Admin";
 import api from '@/utils/axiosInstance';
+import Loading from '@/@core/components/loading/Loading';
 
 // تابع برای تبدیل تاریخ میلادی به شمسی
 const toPersianDate = (dateString) => {
@@ -126,7 +127,7 @@ function LogTable() {
     );
 
     if (loading) {
-        return <div>در حال بارگذاری...</div>;
+        return <Loading />
     }
 
     return (

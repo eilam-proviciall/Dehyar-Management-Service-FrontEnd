@@ -13,8 +13,12 @@ const getGeoData = () => {
     return `${BaseUrl}/country-division/geo-data`
 }
 
+const getStateWithCitiesData = () => {
+    return `${BaseUrl}/country-division/states-cities`
+}
+
 const getState = () => {
     return `${BaseUrl}/country-division/state`
 }
 
-export { getCfoCoveredVillage, getVillageEmployerDetail, getGeoData, getState }
+export { getCfoCoveredVillage, getVillageEmployerDetail, getGeoData, getState, getStateWithCitiesData }

@@ -4,7 +4,7 @@ import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-f
 import { toast } from 'react-toastify';
 import { MachineInformationDTO } from '@/utils/MachineInformationDTO';
 import api from '@/utils/axiosInstance';
-import { getMachineInformation } from '@/Services/Machine';
+import { getMachineCost, getMachineInformation } from '@/Services/Machine';
 import typePlates from "@data/typePlates"
 
 const persianToEnglishDigits = (str) => {
@@ -28,8 +28,9 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
         { value: 1, label: 'کمک های دولتی' },
     ]
 
-    const onSubmit = (newData) => {
+    const onSubmit = async (newData) => {
         console.log("New Data => ", newData);
+
         if (newData.machine_cost_fields.length) {
             setData(prevValues => ({ ...prevValues, machine_cost_fields: newData.machine_cost_fields }));
             const machineDTO = new MachineInformationDTO(data);
@@ -40,15 +41,21 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
                 machine_cost_fields: newData.machine_cost_fields
             }
             console.log("Finally Data => ", finallyData);
-            setStep(prevValue => prevValue + 1);
-            api.post(getMachineInformation(), finallyData, { requiresAuth: true })
-                .then(() => {
-                    toast.success("ماشین با موفقیت افزوده شد", {
-                        position: "top-center"
-                    });
-                    handleSidebarClose();
-                    // setLoading(true);
-                }).catch((error) => error)
+
+            try {
+                // // ارسال اطلاعات ماشین
+                // await api.post(getMachineInformation(), finallyData, { requiresAuth: true });
+                // toast.success("ماشین با موفقیت افزوده شد", { position: "top-center" });
+
+                // // ارسال اطلاعات هزینه ماشین
+                // await api.post(getMachineCost(finallyData.machine), newData.machine_cost_fields, { requiresAuth: true }); // فرض کنید این endpoint را ایجاد کرده‌اید.
+                // toast.success("هزینه ماشین با موفقیت ثبت شد", { position: "top-center" });
+
+                // onClose(); // بستن پنجره
+            } catch (error) {
+                console.error("Error:", error);
+                toast.error("خطا در ثبت اطلاعات", { position: "top-center" });
+            }
         }
     }
 

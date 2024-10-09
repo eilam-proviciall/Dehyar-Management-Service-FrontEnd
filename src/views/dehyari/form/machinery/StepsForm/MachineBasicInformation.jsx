@@ -11,11 +11,14 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const MachineBasicInformation = ({ setData }) => {
+const MachineBasicInformation = ({ data, setData }) => {
 
     const { control, formState: { errors } } = useFormContext();
 
     const [basicInformation, setBasicInformation] = useState([]);
+
+    console.log("Data => ", data);
+    
 
     const fetchMachineBasicInformation = async () => {
         await api.get(getMachineBasicInformation(), { requiresAuth: true })
@@ -29,6 +32,7 @@ const MachineBasicInformation = ({ setData }) => {
     useEffect(() => {
         fetchMachineBasicInformation();
     }, []);
+
 
     return (
         <Controller

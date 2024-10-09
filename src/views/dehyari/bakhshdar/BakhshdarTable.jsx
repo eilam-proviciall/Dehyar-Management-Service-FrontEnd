@@ -10,6 +10,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
+import Loading from '@/@core/components/loading/Loading';
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -126,7 +127,7 @@ function BakhshdarTable(props) {
     );
 
     if (loading) {
-        return <div>در حال بارگذاری...</div>;
+        return <Loading />
     }
 
     return (

@@ -15,6 +15,7 @@ import { pdf } from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
 import { getJobTitleLabel } from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
+import Loading from '@/@core/components/loading/Loading';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -162,7 +163,7 @@ function CfoTable(props) {
     );
 
     if (loading) {
-        return <div>در حال بارگذاری...</div>;
+        return <Loading/>
     }
 
     return (

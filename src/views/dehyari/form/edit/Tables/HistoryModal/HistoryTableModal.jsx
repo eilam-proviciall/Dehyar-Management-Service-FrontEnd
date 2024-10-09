@@ -112,7 +112,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
     const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
         setLoading(true);
-        const dto = HumanContractDTO.fromForm(formData,param); // Convert data to DTO
+        const dto = HumanContractDTO.fromForm(formData, param); // Convert data to DTO
         try {
             let response;
             if (mode === 'edit') {
@@ -168,16 +168,16 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                     sx={{
                         position: 'absolute',
                         top: 8,
-                        right: 8,
+                        left: 8,
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
                     <CloseIcon />
                 </IconButton>
 
-                <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
+                {/* <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
                     {mode === 'edit' ? 'ویرایش قرارداد' : 'ثبت اطلاعات حکم کارگزینی'}
-                </Typography>
+                </Typography> */}
 
                 <Stepper activeStep={activeStep} sx={{ width: "50%", margin: '0 auto', paddingBottom: '16px' }}>
                     {steps.map((label, index) => (
@@ -189,8 +189,8 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
 
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(handleSubmit)}>
-                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode}/>}
-                        {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
+                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode} />}
+                        {activeStep === 1 && <StepTwoFields validation={validationSchemas} />}
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
                             <Button
