@@ -1,5 +1,5 @@
 import DividerSimple from '@/components/common/Divider/DividerSimple';
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
@@ -7,6 +7,7 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import api from '@/utils/axiosInstance';
 import { getState } from '@/Services/DataService';
+import validationMission from '../validationMission';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -40,7 +41,7 @@ const MissionForm = ({ setData }) => {
         { value: 4, label: 'ماشین شخصی' },
     ];
 
-    const mission_durations = [
+    const missionDurationTypes = [
         { value: 1, label: 'روز' },
         { value: 2, label: 'شب' },
         { value: 3, label: 'روز بدون توقف' },
@@ -62,74 +63,77 @@ const MissionForm = ({ setData }) => {
     }, []);
 
     const renderTextField = (name, label) => (
-        <Controller
-            name={name}
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-                <Box display="flex" alignItems="center" position="relative">
-                    <TextField
-                        autoComplete="off"
-                        InputProps={{
-                            style: { height: 45 },
-                            inputProps: { style: { textAlign: 'center' } }
-                        }}
-                        label={label}
-                        value={value}
-                        onChange={(e) => {
-                            const value = persianToEnglishDigits(e.target.value);
-                            setData(prevValues => ({ ...prevValues, [name]: value }));
-                            onChange(value);
-                        }}
-                        fullWidth
-                        error={!!errors[name]}
-                        helperText={errors?.[name]?.message || ''}
-                    />
-                </Box>
-            )}
-        />
-    );
-
-    const renderDatePicker = (name, label) => (
-        <Controller
-            name={name}
-            control={control}
-            render={({ field: { value, onChange } }) => (
-                <DatePicker
-                    value={value ? new Date(value * 1000) : null}
-                    calendar={persian}
-                    locale={persian_fa}
-                    onChange={date => {
-                        setTimeout(() => {
-                            const unixDate = date ? date.toUnix() : null;
-                            setData(prevValues => ({ ...prevValues, [name]: unixDate }));
-                            onChange(unixDate);
-                        }, 0);
-                    }}
-                    render={(value, onChange) => (
+        <FormControl fullWidth>
+            <Controller
+                name={name}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                    <Box display="flex" alignItems="center" position="relative">
                         <TextField
                             autoComplete="off"
-                            label={label}
-                            value={value ? value : ''}
-                            error={errors[name]}
-                            helperText={errors?.[name]?.message || null}
-                            onClick={e => {
-                                const newValue = persianToEnglishDigits(e.target.value);
-                                setTimeout(() => {
-                                    setData(prevValues => ({ ...prevValues, [name]: newValue }));
-                                    onChange(newValue);
-                                }, 0);
-                            }}
                             InputProps={{
                                 style: { height: 45 },
                                 inputProps: { style: { textAlign: 'center' } }
                             }}
+                            label={label}
+                            value={value}
+                            onChange={(e) => {
+                                const value = persianToEnglishDigits(e.target.value);
+                                setData(prevValues => ({ ...prevValues, [name]: value }));
+                                onChange(value);
+                            }}
                             fullWidth
+                            error={!!errors[name]}
+                            helperText={errors?.[name]?.message || ''}
                         />
-                    )}
-                />
-            )}
-        />
+                    </Box>
+                )}
+            />
+        </FormControl>
+    );
+
+    const renderDatePicker = (name, label) => (
+        <FormControl fullWidth>
+            <Controller
+                name={name}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                        value={value ? new Date(value * 1000) : null}
+                        calendar={persian}
+                        locale={persian_fa}
+                        onChange={date => {
+                            setTimeout(() => {
+                                const unixDate = date ? date.toUnix() : null;
+                                setData(prevValues => ({ ...prevValues, [name]: unixDate }));
+                                onChange(unixDate);
+                            }, 0);
+                        }}
+                        render={(value, onChange) => (
+                            <TextField
+                                autoComplete="off"
+                                label={label}
+                                value={value ? value : ''}
+                                error={errors[name]}
+                                helperText={errors?.[name]?.message || null}
+                                onClick={e => {
+                                    const newValue = persianToEnglishDigits(e.target.value);
+                                    setTimeout(() => {
+                                        setData(prevValues => ({ ...prevValues, [name]: newValue }));
+                                        onChange(newValue);
+                                    }, 0);
+                                }}
+                                InputProps={{
+                                    style: { height: 45 },
+                                    inputProps: { style: { textAlign: 'center' } }
+                                }}
+                                fullWidth
+                            />
+                        )}
+                    />
+                )}
+            />
+        </FormControl>
     );
 
     const renderSelect = (name, label, option) => (
@@ -147,7 +151,6 @@ const MissionForm = ({ setData }) => {
                             setTimeout(() => {
                                 setData(prevValues => ({ ...prevValues, [name]: newValue }));
                                 onChange(newValue);
-                                console.log("Data =>", newValue);
                                 console.log("Errors => ", errors[name]);
                             }, 0);
                         }}
@@ -176,7 +179,6 @@ const MissionForm = ({ setData }) => {
         console.log("Data=>", data);
     }
 
-
     return (
         <Grid container spacing={2} mt={1}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -190,7 +192,79 @@ const MissionForm = ({ setData }) => {
                         {renderTextField('subject', 'موضوع')}
                         {renderSelect('accommodation', 'محل اقامت', accommodations)}
                         {renderSelect('transportation', 'وسیله نقلیه', transportations)}
-                        {renderSelect('mission_duration', 'مدت ماموریت', mission_durations)}
+                        {/* <div className='grid w-full grid-cols-3 gap-5'>
+                            <div className='grid col-span-2'>{renderTextField('mission_duration', 'تعداد روز های ماموریت')}</div>
+                            {renderSelect('mission_duration_type', 'مدت ماموریت', mission_duration_types)}
+                        </div> */}
+                        <FormControl fullWidth>
+                            <Controller
+                                name="mission_duration"
+                                control={control}
+                                render={({ field: { value, onChange } }) => (
+                                    <TextField
+                                        autoComplete="off"
+                                        label={'تعداد روز های ماموریت'}
+                                        value={value}
+                                        onChange={(e) => {
+                                            const value = parseInt(persianToEnglishDigits(e.target.value));
+                                            setData(prevValues => ({ ...prevValues, mission_duration: value }));
+                                            onChange(value);
+                                        }}
+                                        fullWidth
+                                        InputProps={{
+                                            endAdornment: (
+                                                <FormControl fullWidth>
+                                                    <Controller
+                                                        name={'mission_duration_type'}
+                                                        control={control}
+                                                        render={({ field: { value, onChange } }) => (
+                                                            <Select
+                                                                className='bg-backgroundDefault'
+                                                                value={value || 1}
+                                                                label={'مدت ماموریت'}
+                                                                onChange={e => {
+                                                                    const newValue = e.target.value;
+                                                                    setTimeout(() => {
+                                                                        setData(prevValues => ({ ...prevValues, mission_duration_type: newValue }));
+                                                                        onChange(newValue);
+                                                                        console.log("Data =>", newValue);
+                                                                        console.log("Errors => ", errors.mission_duration_type);
+                                                                    }, 0);
+                                                                }}
+                                                                fullWidth
+                                                                error={Boolean(errors.mission_duration_type)}
+                                                                sx={{
+                                                                    height: 45,
+                                                                    border: 'none',
+                                                                    '& .MuiSelect-select': {
+                                                                        border: 'none',
+                                                                    },
+                                                                    '& fieldset': {
+                                                                        border: 'none',
+                                                                    },
+                                                                }}
+                                                            >
+                                                                {
+                                                                    missionDurationTypes.map(({ value, label }) => (
+                                                                        <MenuItem key={value} value={value}>
+                                                                            {label}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                            </Select>
+                                                        )}
+                                                    />
+                                                </FormControl>
+                                                // renderSelect('mission_duration_type', 'مدت ماموریت', mission_duration_types)
+                                            ),
+                                            style: { height: 45 },
+                                            inputProps: { style: { textAlign: 'center' } }
+                                        }}
+                                        error={!!errors.mission_duration}
+                                        helperText={errors?.mission_duration?.message?.message && errors?.mission_duration?.message.message || ''}
+                                    />
+                                )}
+                            />
+                        </FormControl>
                         {renderDatePicker('start_date', 'تاریخ شروع ماموریت')}
                         {renderTextField('description', 'شرح ماموریت')}
                         {renderSelect('destination', 'مقصد ماموریت', destination)}
