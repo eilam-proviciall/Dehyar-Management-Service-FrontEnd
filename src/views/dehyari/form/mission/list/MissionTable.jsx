@@ -9,6 +9,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import { getMissions } from '@/Services/Mission';
+import { MissionDTO } from '@/utils/MissionDTO';
 
 
 const MissionTable = ({ handleToggle, setMode }) => {
@@ -25,12 +26,13 @@ const MissionTable = ({ handleToggle, setMode }) => {
         setLoading(true);
         await api.get(`${getMissions()}`, { requiresAuth: true })
             .then((response) => {
-                setMission(response.data.data);
+                const updatedMissions = response.data.data.map(missionDTO => new MissionDTO(missionDTO));
+                setMission(updatedMissions);
+                console.log("Updated Mission => ", updatedMissions);
                 // console.log("Response => ", response.data);
                 setLoading(false);
             });
         console.log("Mission => ", mission);
-
     }
 
     useEffect(() => {
