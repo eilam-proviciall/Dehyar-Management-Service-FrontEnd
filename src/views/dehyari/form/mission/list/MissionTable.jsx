@@ -8,6 +8,7 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
+import { getMissions } from '@/Services/Mission';
 
 
 const MissionTable = ({ handleToggle, setMode }) => {
@@ -21,19 +22,20 @@ const MissionTable = ({ handleToggle, setMode }) => {
 
     const fetchMission = async () => {
         console.log("Refresh");
+        setLoading(true);
+        await api.get(`${getMissions()}`, { requiresAuth: true })
+            .then((response) => {
+                setMission(response.data.data);
+                // console.log("Response => ", response.data);
+                setLoading(false);
+            });
+        console.log("Mission => ", mission);
 
-        // setLoading(true);
-        // await api.get(`${user()}?page${page + 1}&per_page${perPage}`, { requiresAuth: true })
-        //     .then((response) => {
-        //         setMission(response.data.data)
-        //         console.log(response.data);
-        //         setLoading(false);
-        //     })
     }
 
     useEffect(() => {
-        loading ? fetchMission() : null;
-    }, [loading]);
+        fetchMission();
+    }, []);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -70,37 +72,28 @@ const MissionTable = ({ handleToggle, setMode }) => {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'type',
-                header: 'نام و نام خانوادگی',
-                size: 150,
-                Cell: ({ row }) => {
-                    const { first_name, last_name } = row.original;
-                    return <div style={{ textAlign: 'right' }}>{`${first_name} ${last_name}`}</div>;
-                },
-            },
-            {
-                accessorKey: 'start_date',
-                header: 'کدملی',
+                accessorKey: 'request_type',
+                header: 'نوع درخواست',
                 size: 150,
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'duration',
-                header: 'استان',
+                accessorKey: 'mission_type',
+                header: 'نوع ماموریت',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'attachment_file',
-                header: 'شهرستان',
+                accessorKey: 'accommodation',
+                header: 'محل اقامت',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'user_id',
-                header: 'بخش',
+                accessorKey: 'transportation',
+                header: 'وسیله نقلیه',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'actions',
