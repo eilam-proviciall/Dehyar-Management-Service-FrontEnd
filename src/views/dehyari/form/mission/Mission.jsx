@@ -1,15 +1,15 @@
 'use client'
 
 // React Imports
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 // MUI Imports
-import { Box, Button, Divider, Drawer, duration, Grid, Modal, Paper } from '@mui/material';
+import {Box, Button, Divider, Drawer, duration, Grid, Modal, Paper} from '@mui/material';
 
 // Component Imports
-import { FormProvider, useForm } from 'react-hook-form';
-import { valibotResolver } from '@hookform/resolvers/valibot';
-import { maxLength, minLength, object, string, array, number } from 'valibot';
+import {FormProvider, useForm} from 'react-hook-form';
+import {valibotResolver} from '@hookform/resolvers/valibot';
+import {maxLength, minLength, object, string, array, number} from 'valibot';
 import MissionTable from './list/MissionTable';
 import MissionForm from './list/MissionForm';
 
@@ -20,6 +20,7 @@ const schema = object({
     accommodation: number(minLength(1, 'این فیلد الزامی است')),
     transportation: number(minLength(1, 'این فیلد الزامی است')),
     mission_duration: number(minLength(1, 'این فیلد الزامی است')),
+    mission_shift: number(minLength(1, 'این فیلد الزامی است')),
     start_date: number(minLength(1, 'این فیلد الزامی است')),
     description: string([minLength(1, 'این فیلد الزامی است'),]),
     destination: number(minLength(1, 'این فیلد الزامی است')),
@@ -35,6 +36,7 @@ const Mission = () => {
             accommodation: '',
             transportation: '',
             mission_duration: '',
+            mission_shift: '',
             start_date: Math.floor(Date.now() / 1000),
             description: '',
             destination: ''
@@ -60,14 +62,16 @@ const Mission = () => {
 
     return (
         <>
-            <MissionTable handleToggle={handleToggle} setMode={setMode} />
-            <Drawer open={openModal} onClose={handleCloseForm} anchor='right' ModalProps={{ keepMounted: true }} sx={{ '& .MuiDrawer-paper': { width: ['100%', 400] } }}
+            <MissionTable handleToggle={handleToggle} setMode={setMode}/>
+            <Drawer open={openModal} onClose={handleCloseForm} anchor='right' ModalProps={{keepMounted: true}}
+                    sx={{'& .MuiDrawer-paper': {width: ['100%', 400]}}}
             >
                 <div className='bg-backgroundPaper h-full lg:h-auto rounded-2xl'>
-                    <Button className='absolute left-0' onClick={handleCloseForm}><i className='ri-close-fill' /></Button>
-                    <Grid container p={5} py={10} >
+                    <Button className='absolute left-0' onClick={handleCloseForm}><i
+                        className='ri-close-fill'/></Button>
+                    <Grid container p={5} py={10}>
                         <FormProvider {...methods}>
-                            <MissionForm data={data} setData={setData} />
+                            <MissionForm data={data} setData={setData}/>
                         </FormProvider>
                     </Grid>
                 </div>
