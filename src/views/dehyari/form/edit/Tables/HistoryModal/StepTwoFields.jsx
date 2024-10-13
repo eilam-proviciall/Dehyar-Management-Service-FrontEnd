@@ -5,6 +5,7 @@ import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import textAlign from 'tailwindcss-logical/plugins/textAlign';
+import {convertJalaliToUnix} from "@utils/dateConverter";
 
 const StepTwoFields = ({ validation }) => {
     const { control, formState: { errors }, setValue, getValues } = useFormContext();
@@ -79,7 +80,7 @@ const StepTwoFields = ({ validation }) => {
                         rules={validation.contractEnd}
                         render={({ field }) => (
                             <DatePicker
-                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
+                                value={typeof field.value == 'string' ? convertJalaliToUnix(field.value) : new Date(field.value * 1000)}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
