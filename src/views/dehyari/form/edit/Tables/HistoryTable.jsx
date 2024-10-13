@@ -1,13 +1,15 @@
 "use client";
-import React, { useMemo, useState, useEffect } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import React, {useMemo, useState, useEffect} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
+import {Box, Button, IconButton, Menu, MenuItem} from '@mui/material';
 import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
-import { HumanContract } from "@/Services/humanResources";
-import { getJobTitleLabel } from "@data/jobTitles";
-import { toast } from 'react-toastify';
+import {HumanContract} from "@/Services/humanResources";
+import {getJobTitleLabel} from "@data/jobTitles";
+import {toast} from 'react-toastify';
+import {convertUnixToJalali} from "@utils/dateConverter";
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -92,39 +94,41 @@ function HistoryTable() {
             accessorKey: 'contract_start',
             header: 'تاریخ شروع قرارداد',
             size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{convertUnixToJalali(cell.getValue())}</div>,
         },
         {
             accessorKey: 'title_contract',
             header: 'وضعیت',
             size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>پیش نویس</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>پیش نویس</div>,
         },
         {
             accessorKey: 'job_type_id',
             header: 'پست سازمانی',
             size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{getJobTitleLabel(cell.getValue())}</div>,
         },
         {
             accessorKey: 'contract_end',
             header: 'تاریخ پایان قرارداد',
             size: 150,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{convertUnixToJalali(cell.getValue())}</div>,
         },
         {
             accessorKey: 'actions',
             header: 'عملیات',
             size: 150,
-            Cell: ({ row }) => (
-                <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
+            Cell: ({row}) => (
+                <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
                     <Button color='error' onClick={() => {
                         toast.warning('این قابلیت هنوز افزوده نشده است')
                     }}>
-                        <i className='ri-delete-bin-6-line' />
+                        <i className='ri-delete-bin-6-line'/>
                     </Button>
-                    <Button color='primary' onClick={() => { handleEdit(row) }}>
-                        <i className='ri-edit-box-line' />
+                    <Button color='primary' onClick={() => {
+                        handleEdit(row)
+                    }}>
+                        <i className='ri-edit-box-line'/>
                     </Button>
                 </div>
             ),
@@ -135,13 +139,13 @@ function HistoryTable() {
         columns,
         data,
         renderTopToolbarCustomActions: () => (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
                     افزودن قرارداد
                 </Button>
             </Box>
         ),
-        initialState: { density: 'compact' },
+        initialState: {density: 'compact'},
         state: {
             isLoading: loading,
             showProgressBars: loading,
@@ -164,7 +168,7 @@ function HistoryTable() {
 
     return (
         <div>
-            <MaterialReactTable table={table} />
+            <MaterialReactTable table={table}/>
             <HistoryTableModal
                 open={openModal}
                 handleClose={() => setOpenModal(false)}
