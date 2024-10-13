@@ -18,7 +18,6 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import api from '@/utils/axiosInstance';
 import {getState, getStateWithCitiesData} from '@/Services/DataService';
-import validationMission from '../validationMission';
 import {getCity} from "@/Services/CountryDivision";
 import {toast} from "react-toastify";
 import StateCitySelect from "@components/StateCitySelect";
@@ -27,7 +26,7 @@ import {getMissions} from "@/Services/Mission";
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
     const englishDigits = "0123456789";
-    return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
+    return str.replace(/[۰-۹]/g, (char) => eلnglishDigits[persianDigits.indexOf(char)]);
 };
 
 const MissionForm = ({setData}) => {
