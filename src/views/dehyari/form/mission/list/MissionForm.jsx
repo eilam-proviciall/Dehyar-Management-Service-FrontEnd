@@ -1,13 +1,28 @@
 import DividerSimple from '@/components/common/Divider/DividerSimple';
-import { Box, Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
-import { Controller, useFormContext } from 'react-hook-form';
+import {
+    Box,
+    Button,
+    FormControl,
+    Grid,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography
+} from '@mui/material';
+import React, {useEffect, useState} from 'react'
+import {Controller, useFormContext} from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import api from '@/utils/axiosInstance';
-import { getState } from '@/Services/DataService';
+import {getState, getStateWithCitiesData} from '@/Services/DataService';
 import validationMission from '../validationMission';
+import {getCity} from "@/Services/CountryDivision";
+import {toast} from "react-toastify";
+import StateCitySelect from "@components/StateCitySelect";
+import {getMissions} from "@/Services/Mission";
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -15,45 +30,44 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const MissionForm = ({ setData }) => {
+const MissionForm = ({setData}) => {
 
-    const { control, handleSubmit, formState: { errors } } = useFormContext();
+    const {control, handleSubmit, formState: {errors}} = useFormContext();
 
     const requestTypes = [
-        { value: 1, label: 'صدور حکم ماموریت' },
-        { value: 2, label: 'تمدید ماموریت' },
+        {value: 1, label: 'صدور حکم ماموریت'},
+        {value: 2, label: 'تمدید ماموریت'},
     ];
 
     const missionTypes = [
-        { value: 1, label: 'انفرادی' },
-        { value: 2, label: 'گروهی' },
+        {value: 1, label: 'انفرادی'},
+        {value: 2, label: 'گروهی'},
     ];
 
     const accommodations = [
-        { value: 1, label: 'تامین شده' },
-        { value: 2, label: 'تامین نشده' },
+        {value: 1, label: 'تامین شده'},
+        {value: 2, label: 'تامین نشده'},
     ];
 
     const transportations = [
-        { value: 1, label: 'اتوبوس' },
-        { value: 2, label: 'هواپیما' },
-        { value: 3, label: 'ماشین دولتی' },
-        { value: 4, label: 'ماشین شخصی' },
+        {value: 1, label: 'اتوبوس'},
+        {value: 2, label: 'هواپیما'},
+        {value: 3, label: 'ماشین دولتی'},
+        {value: 4, label: 'ماشین شخصی'},
     ];
 
     const missionDurationTypes = [
-        { value: 1, label: 'روز' },
-        { value: 2, label: 'شب' },
-        { value: 3, label: 'روز بدون توقف' },
+        {value: 1, label: 'روز'},
+        {value: 2, label: 'شب'},
+        {value: 3, label: 'روز بدون توقف'},
     ];
 
-    const [destination, setDestination] = useState([]);
-    console.log("Destination => ", destination);
 
+    const [destination, setDestination] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const stateResponse = await api.get(`${getState()}`, { requiresAuth: true });
+                const stateResponse = await api.get(`${getCity()}`, {requiresAuth: true});
                 setDestination(stateResponse);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -67,19 +81,19 @@ const MissionForm = ({ setData }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({field: {value, onChange}}) => (
                     <Box display="flex" alignItems="center" position="relative">
                         <TextField
                             autoComplete="off"
                             InputProps={{
-                                style: { height: 45 },
-                                inputProps: { style: { textAlign: 'center' } }
+                                style: {height: 45},
+                                inputProps: {style: {textAlign: 'center'}}
                             }}
                             label={label}
                             value={value}
                             onChange={(e) => {
                                 const value = persianToEnglishDigits(e.target.value);
-                                setData(prevValues => ({ ...prevValues, [name]: value }));
+                                setData(prevValues => ({...prevValues, [name]: value}));
                                 onChange(value);
                             }}
                             fullWidth
@@ -97,7 +111,7 @@ const MissionForm = ({ setData }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({field: {value, onChange}}) => (
                     <DatePicker
                         value={value ? new Date(value * 1000) : null}
                         calendar={persian}
@@ -105,7 +119,7 @@ const MissionForm = ({ setData }) => {
                         onChange={date => {
                             setTimeout(() => {
                                 const unixDate = date ? date.toUnix() : null;
-                                setData(prevValues => ({ ...prevValues, [name]: unixDate }));
+                                setData(prevValues => ({...prevValues, [name]: unixDate}));
                                 onChange(unixDate);
                             }, 0);
                         }}
@@ -119,13 +133,13 @@ const MissionForm = ({ setData }) => {
                                 onClick={e => {
                                     const newValue = persianToEnglishDigits(e.target.value);
                                     setTimeout(() => {
-                                        setData(prevValues => ({ ...prevValues, [name]: newValue }));
+                                        setData(prevValues => ({...prevValues, [name]: newValue}));
                                         onChange(newValue);
                                     }, 0);
                                 }}
                                 InputProps={{
-                                    style: { height: 45 },
-                                    inputProps: { style: { textAlign: 'center' } }
+                                    style: {height: 45},
+                                    inputProps: {style: {textAlign: 'center'}}
                                 }}
                                 fullWidth
                             />
@@ -142,29 +156,51 @@ const MissionForm = ({ setData }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({field: {value, onChange}}) => (
                     <Select
                         value={value}
                         label={label}
                         onChange={e => {
                             const newValue = e.target.value;
-                            setTimeout(() => {
-                                setData(prevValues => ({ ...prevValues, [name]: newValue }));
-                                onChange(newValue);
-                                console.log("Errors => ", errors[name]);
-                            }, 0);
+                            if (name == 'destination') {
+                                const selectedOption = option.data.data.find(item => item.hierarchy_code === newValue);
+
+                                if (selectedOption) {
+                                    const stateHierarchyCode = selectedOption.state.hierarchy_code;
+                                    const cityHierarchyCode = selectedOption.hierarchy_code;
+
+                                    setTimeout(() => {
+                                        setData(prevValues => ({
+                                            ...prevValues,
+                                            state: stateHierarchyCode,
+                                            city: cityHierarchyCode,
+                                        }));
+                                        onChange(cityHierarchyCode);
+                                        console.log("Errors => ", errors[name]);
+                                    }, 0);
+                                }
+                            } else {
+                                setTimeout(() => {
+                                    setData(prevValues => ({
+                                        ...prevValues,
+                                        [name]: newValue
+                                    }));
+                                    onChange(newValue);
+                                    console.log("Errors => ", errors[name]);
+                                }, 0);
+                            }
                         }}
                         fullWidth
                         error={Boolean(errors[name])}
-                        sx={{ height: 45 }}
+                        sx={{height: 45}}
                     >
                         {name == "destination" ? (
-                            option.data && option.data.data.map(({ hierarchy_code, approved_name }) => (
+                            option.data && option.data.data.map(({hierarchy_code, approved_name, state}) => (
                                 <MenuItem key={hierarchy_code} value={hierarchy_code}>
-                                    {approved_name}
+                                    {state.approved_name} - {approved_name}
                                 </MenuItem>
                             ))
-                        ) : option.map(({ value, label }) => (
+                        ) : option.map(({value, label}) => (
                             <MenuItem key={value} value={value}>
                                 {label}
                             </MenuItem>
@@ -177,6 +213,8 @@ const MissionForm = ({ setData }) => {
 
     const onSubmit = (data) => {
         console.log("Data=>", data);
+        api.post(getMissions(), data, {requiresAuth: true});
+        toast.success("موفقیت آمیز بود")
     }
 
     return (
@@ -184,7 +222,7 @@ const MissionForm = ({ setData }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container gap={5}>
                     <div className='mt-5 w-full text-center'>
-                        <DividerSimple title={"ثبت درخواست ماموریت"} />
+                        <DividerSimple title={"ثبت درخواست ماموریت"}/>
                     </div>
                     <div className='grid w-full gap-5'>
                         {renderSelect('request_type', 'نوع درخواست', requestTypes)}
@@ -200,14 +238,14 @@ const MissionForm = ({ setData }) => {
                             <Controller
                                 name="mission_duration"
                                 control={control}
-                                render={({ field: { value, onChange } }) => (
+                                render={({field: {value, onChange}}) => (
                                     <TextField
                                         autoComplete="off"
                                         label={'تعداد روز های ماموریت'}
                                         value={value}
                                         onChange={(e) => {
                                             const value = parseInt(persianToEnglishDigits(e.target.value));
-                                            setData(prevValues => ({ ...prevValues, mission_duration: value }));
+                                            setData(prevValues => ({...prevValues, mission_duration: value}));
                                             onChange(value);
                                         }}
                                         fullWidth
@@ -215,9 +253,9 @@ const MissionForm = ({ setData }) => {
                                             endAdornment: (
                                                 <FormControl fullWidth>
                                                     <Controller
-                                                        name={'mission_duration_type'}
+                                                        name={'mission_shift'}
                                                         control={control}
-                                                        render={({ field: { value, onChange } }) => (
+                                                        render={({field: {value, onChange}}) => (
                                                             <Select
                                                                 className='bg-backgroundDefault'
                                                                 value={value || 1}
@@ -225,14 +263,17 @@ const MissionForm = ({ setData }) => {
                                                                 onChange={e => {
                                                                     const newValue = e.target.value;
                                                                     setTimeout(() => {
-                                                                        setData(prevValues => ({ ...prevValues, mission_duration_type: newValue }));
+                                                                        setData(prevValues => ({
+                                                                            ...prevValues,
+                                                                            mission_shift: newValue
+                                                                        }));
                                                                         onChange(newValue);
                                                                         console.log("Data =>", newValue);
-                                                                        console.log("Errors => ", errors.mission_duration_type);
+                                                                        console.log("Errors => ", errors.mission_shift);
                                                                     }, 0);
                                                                 }}
                                                                 fullWidth
-                                                                error={Boolean(errors.mission_duration_type)}
+                                                                error={Boolean(errors.mission_shift)}
                                                                 sx={{
                                                                     height: 45,
                                                                     border: 'none',
@@ -245,7 +286,7 @@ const MissionForm = ({ setData }) => {
                                                                 }}
                                                             >
                                                                 {
-                                                                    missionDurationTypes.map(({ value, label }) => (
+                                                                    missionDurationTypes.map(({value, label}) => (
                                                                         <MenuItem key={value} value={value}>
                                                                             {label}
                                                                         </MenuItem>
@@ -256,8 +297,8 @@ const MissionForm = ({ setData }) => {
                                                 </FormControl>
                                                 // renderSelect('mission_duration_type', 'مدت ماموریت', mission_duration_types)
                                             ),
-                                            style: { height: 45 },
-                                            inputProps: { style: { textAlign: 'center' } }
+                                            style: {height: 45},
+                                            inputProps: {style: {textAlign: 'center'}}
                                         }}
                                         error={!!errors.mission_duration}
                                         helperText={errors?.mission_duration?.message?.message && errors?.mission_duration?.message.message || ''}
@@ -270,7 +311,7 @@ const MissionForm = ({ setData }) => {
                         {renderSelect('destination', 'مقصد ماموریت', destination)}
                     </div>
                 </Grid>
-                <Button className='mt-5' variant='contained' fullWidth color='success' type='submit' >ثبت</Button>
+                <Button className='mt-5' variant='contained' fullWidth color='success' type='submit'>ثبت</Button>
             </form>
         </Grid>
     );
