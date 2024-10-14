@@ -80,7 +80,7 @@ const StepTwoFields = ({validation}) => {
                         rules={validation.contractEnd}
                         render={({field}) => (
                             <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
+                                value={field.value ? convertUnixToJalali(field.value) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
