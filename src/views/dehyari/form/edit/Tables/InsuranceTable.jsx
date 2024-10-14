@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import React, {useMemo, useState, useEffect} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
+import {Box, Button, IconButton, Menu, MenuItem} from '@mui/material';
 import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {InsuranceHistory} from "@/Services/humanResources";
@@ -34,7 +34,7 @@ function InsuranceTable() {
                     Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                 },
             });
-            console.log(response.data)
+            console.log("Datas => ", response.data)
             setData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -59,46 +59,47 @@ function InsuranceTable() {
             accessorKey: 'dehyari_title',
             header: 'عنوان محل کار',
             size: 50,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
         },
         {
             accessorKey: 'insurance_workshop',
             header: 'کارگاه بیمه',
             size: 50,
-            Cell: ({ cell }) => {
+            Cell: ({cell}) => {
                 const value = cell.getValue();
                 return (
-                    <div style={{ textAlign: 'right' }}>
+                    <div style={{textAlign: 'right'}}>
                         {value === 1 ? "دهیاری" : value === 2 ? "کارگاه" : ""}
                     </div>
                 );
-            },        },
+            },
+        },
         {
             accessorKey: 'start_date',
             header: 'تاریخ شروع',
             size: 50,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
         },
         {
             accessorKey: 'end_date',
             header: 'تاریخ پایان',
             size: 20,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
         },
         {
             accessorKey: 'days',
             header: 'سابقه به روز',
             size: 20,
-            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()} روز</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()} روز</div>,
         },
         {
             accessorKey: 'actions',
             header: 'عملیات',
             size: 20,
-            Cell: ({ row }) => (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+            Cell: ({row}) => (
+                <div style={{display: 'flex', justifyContent: 'center'}}>
                     <IconButton onClick={(event) => handleClick(event, row)}>
-                        <MoreVertIcon />
+                        <MoreVertIcon/>
                     </IconButton>
                     <Menu
                         anchorEl={anchorEl}
@@ -112,18 +113,21 @@ function InsuranceTable() {
                 </div>
             ),
         },
-    ], [anchorEl,selectedRow]);
+    ], [anchorEl, selectedRow]);
     const table = useMaterialReactTable({
         columns,
         data,
         renderTopToolbarCustomActions: () => (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Button variant="contained" color="primary" onClick={() => setOpenModal(true)}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+                <Button variant="contained" color="primary" onClick={() => {
+                    setMode('create');
+                    setOpenModal(true);
+                }}>
                     افزودن سابقه بیمه
                 </Button>
             </Box>
         ),
-        state: { isLoading: loading },
+        state: {isLoading: loading},
     });
 
     return (
@@ -133,7 +137,7 @@ function InsuranceTable() {
                     maxHeight: '400px', // تنظیم ارتفاع ثابت برای جدول
                     overflowY: 'hidden' // غیرفعال کردن اسکرول عمودی
                 }}
-                table={table} />
+                table={table}/>
             {/* مودال ایجاد یا ویرایش */}
             <InsuranceModal
                 open={openModal}
