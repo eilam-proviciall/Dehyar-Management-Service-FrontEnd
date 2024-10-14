@@ -1,16 +1,52 @@
-import axios from 'axios';
-import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+'use client';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import { selectedEvent } from "@/redux-store/slices/calendar";
+import Chip from "@mui/material/Chip";
+import { user } from "@/Services/Auth/AuthService";
+import roles from "@data/roles.json"
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { toast } from 'react-toastify';
+import api from '@/utils/axiosInstance';
+import { getDivisonInformation } from '@/Services/Grading';
+import { GradingInformationDTO } from '@/utils/GradingInformationDTO';
 
-const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, methods }) => {
+
+const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
+    const [grading, setGrading] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(10);
     const open = Boolean(anchorEl);
 
+    const fetchGrading = async () => {
+        console.log("Refresh");
+        setLoading(true);
+        await api.get(`${getDivisonInformation()}`, { requiresAuth: true })
+            .then((response) => {
+                setGrading(response.data.data)
+                console.log(response.data);
+                setLoading(false);
+            })
+    }
+
+    useEffect(() => {
+        fetchGrading() || null;
+    }, []);
+
+    // Fetch grading again when loading changes
+    useEffect(() => {
+        if (loading) {
+            fetchGrading();
+        }
+    }, [loading]);
+
+    // Handlers
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
@@ -20,88 +56,87 @@ const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, meth
         setAnchorEl(null);
     };
 
-    const handleAddGrading = () => {
-        setMode('add');
-        handleOpenModal()
-    }
-
     const handleEditGrading = (row) => {
-        setMode('edit');
-        // methods.setValue(row.original.nid);
-        Object.entries(row.original).forEach(([key, value]) => {
+        console.log("Row => ", row);
+
+        setAnchorEl(null);
+        const gradingDTO = new GradingInformationDTO(row.original);
+        Object.entries(gradingDTO).forEach(([key, value]) => {
+            console.log("Item => ", key, "Value => ", value)
             methods.setValue(key, value);
         });
-        console.log("Methods =>", methods);
-        setData(row.original);
-        handleOpenModal()
+        setData(row.original)
+        setMode('edit');
+        handleToggle();
     }
 
     const handleDeleteGrading = (row) => {
-        const newData = users.filter((user) => {
-            return user.id !== row.original.id
-        });
-        setUsers(newData);
-        setAnchorEl(null);
+        api.delete(`${getDivisonInformation()}/${row.original.id}`, { requiresAuth: true })
+            .then(() => {
+                toast.success("کاربر با موفقیت حذف شد", {
+                    position: "top-center"
+                });
+                setLoading(true);
+            }).catch((error) => error)
+        // toast.warning("این قابلیت به زودی افزوده میشود!",
+        //     {
+        //         position: "top-center",
+        //         duration: 3000
+        //     }
+        // );
     }
-
-    const tableData = useMemo(() => users, [users]);
 
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'id',
-                header: 'شناسه',
+                accessorKey: 'organization',
+                header: 'سازمان',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization}`}</div>;
+                },
             },
             {
-                accessorKey: 'hierarchical_code',
-                header: 'کد سلسله مراتبی',
+                accessorKey: 'centralization',
+                header: 'مرکزیت',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.centralization}`}</div>;
+                },
             },
             {
-                accessorKey: 'village_code',
-                header: 'کد روستا',
+                accessorKey: 'duration',
+                header: 'توریست',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.tourismGoal}`}</div>;
+                },
+            },
+            {
+                accessorKey: 'attachment_file',
+                header: 'آتش نشانی',
+                size: 150,
+                Cell: ({ row }) => {
+                    const gradingDTO = new GradingInformationDTO(row.original);
+                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization == 2 && gradingDTO.fireStation || "-"}`}</div>;
+                },
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <IconButton
-                        aria-label="more"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={(event) => handleClick(event, row)}
-                        style={{ paddingLeft: 0 }}
-                    >
-                        <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                            'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => {
-                            handleEditGrading(selectedRow)
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
+                        <Button color='error' onClick={() => {
+                            handleDeleteGrading(row);
                         }}>
-                            ویرایش اطلاعات
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleDeleteGrading(selectedRow);
-                        }}>
-                            حذف
-                        </MenuItem>
-                    </Menu>
-                </div>
+                            <i className='ri-delete-bin-6-line' />
+                        </Button>
+                    </div>
+                ),
             },
         ],
         [anchorEl, selectedRow]
@@ -109,12 +144,11 @@ const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, meth
 
     const table = useMaterialReactTable({
         columns,
-        data: tableData,
+        data: grading,
         renderTopToolbarCustomActions: ({ table }) => (
             <Box
                 sx={{
                     display: 'flex',
-                    gap: '16px',
                     padding: '8px',
                     flexWrap: 'wrap',
                 }}
@@ -122,8 +156,8 @@ const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, meth
                 <Button
                     fullWidth
                     variant='contained'
+                    onClick={handleToggle}
                     startIcon={<i className='ri-add-line' />}
-                    onClick={handleAddGrading}
                 >
                     افزودن درجه بندی
                 </Button>
@@ -136,6 +170,11 @@ const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, meth
                 pageSize: perPage,
             }
         },  // تنظیم تراکم به صورت پیش‌فرض روی compact
+        rowCount: grading.length,
+        state: {
+            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
+            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
+        },
         muiSkeletonProps: {
             animation: 'wave', // تنظیم انیمیشن Skeletons
             height: 28, // ارتفاع Skeletons
@@ -158,14 +197,11 @@ const GradingTable = ({ handleOpenModal, users, setUsers, setData, setMode, meth
             },
         },
         paginationDisplayMode: 'pages',
-        muiTableBodyRowProps: () => ({
-            style: { height: '10px' } // تنظیم ارتفاع هر سطر با استفاده از استایل‌های inline
-        }),
     });
 
     return (
         <MaterialReactTable table={table} />
-    )
+    );
 }
 
-export default GradingTable
+export default GradingTable;
