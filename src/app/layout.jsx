@@ -23,7 +23,6 @@ const RootLayout = ({ children, params }) => {
         <html id='__next' lang={params.lang} dir={direction}>
         <body className='flex is-full min-bs-full flex-auto flex-col'>
         {children}
-        <NumberConversionScript />
         </body>
         </html>
     );
