@@ -1,18 +1,18 @@
 // Next Imports
-import { useParams } from 'next/navigation'
+import {useParams} from 'next/navigation'
 
 // MUI Imports
-import { useTheme } from '@mui/material/styles'
+import {useTheme} from '@mui/material/styles'
 
 // Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // Component Imports
-import { Menu, MenuItem } from '@menu/vertical-menu'
+import {Menu, MenuItem} from '@menu/vertical-menu'
 
 // import { GenerateVerticalMenu } from '@components/GenerateMenu'
 // Hook Imports
-import { useSettings } from '@core/hooks/useSettings'
+import {useSettings} from '@core/hooks/useSettings'
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 
 // Styled Component Imports
@@ -21,31 +21,31 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import { useAuth } from "@/contexts/AuthContext";
+import {useAuth} from "@/contexts/AuthContext";
 import accessControl from "@components/layout/vertical/accessControl";
 import Loading from '@/@core/components/loading/Loading'
 
-const RenderExpandIcon = ({ open, transitionDuration }) => (
+const RenderExpandIcon = ({open, transitionDuration}) => (
     <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
-        <i className='ri-arrow-right-s-line' />
+        <i className='ri-arrow-right-s-line'/>
     </StyledVerticalNavExpandIcon>
 )
 
-const VerticalMenu = ({ scrollMenu }) => {
+const VerticalMenu = ({scrollMenu}) => {
     // Hooks
     const theme = useTheme()
     const verticalNavOptions = useVerticalNav()
-    const { settings } = useSettings()
+    const {settings} = useSettings()
     const params = useParams()
-    const { isBreakpointReached } = useVerticalNav()
-    const { user, loading } = useAuth();
+    const {isBreakpointReached} = useVerticalNav()
+    const {user, loading} = useAuth();
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
-    const { transitionDuration } = verticalNavOptions
-    const { lang: locale, id } = params
+    const {transitionDuration} = verticalNavOptions
+    const {lang: locale, id} = params
     const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
     const renderMenuItems = () => {
@@ -81,8 +81,15 @@ const VerticalMenu = ({ scrollMenu }) => {
         }
 
         return filteredItems.map(item => (
-            <MenuItem key={item.href} href={item.href}>
-                {item.label}
+            <MenuItem className={"flex"} key={item.href} href={item.href}>
+                <div className={"flex items-center gap-2"}>
+                    <span>
+                    {item.icon}
+                    </span>
+                    <span className={"hidden lg:block"}>
+                    {item.label}
+                    </span>
+                </div>
             </MenuItem>
         ));
     };
@@ -98,17 +105,17 @@ const VerticalMenu = ({ scrollMenu }) => {
                     onScroll: container => scrollMenu(container, false)
                 }
                 : {
-                    options: { wheelPropagation: false, suppressScrollX: true },
+                    options: {wheelPropagation: false, suppressScrollX: true},
                     onScrollY: container => scrollMenu(container, true)
                 })}
         >
             {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
             {/* Vertical Menu */}
             <Menu
-                popoutMenuOffset={{ mainAxis: 17 }}
+                popoutMenuOffset={{mainAxis: 17}}
                 menuItemStyles={menuItemStyles(verticalNavOptions, theme, settings)}
-                renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
-                renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-fill' /> }}
+                renderExpandIcon={({open}) => <RenderExpandIcon open={open} transitionDuration={transitionDuration}/>}
+                renderExpandedMenuItemIcon={{icon: <i className='ri-circle-fill'/>}}
                 menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
             >
                 {renderMenuItems()}

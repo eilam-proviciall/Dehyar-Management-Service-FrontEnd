@@ -4,49 +4,165 @@ import WORK_GROUPS from './workGroups';
 
 const accessControl = {
     [WORK_GROUPS.Dehyar]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-survey-line" />مرخصی</div>, href: '/dehyari/form/time-off' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-sticky-note-add-line" />ماموریت</div>, href: '/dehyari/form/mission' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-car-line" />ماشین آلات</div>, href: '/dehyari/form/machinery' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-arrow-up-wide-fill" />ارتقاء درجه بندی</div>, href: '/dehyari/form/upgrade-village-rank' },
+        {
+            label: "مرخصی",
+            icon: < i className="ri-survey-line"/>,
+            href: '/dehyari/form/time-off'
+        },
+        {
+            label: "ماموریت",
+            icon: < i className="ri-sticky-note-add-line"/>,
+            href: '/dehyari/form/mission'
+        },
+        {
+            label: "ماشین آلات",
+            icon: < i className="ri-car-line"/>,
+            href: '/dehyari/form/machinery'
+        },
+        {
+            label: "ارتقاء درجه بندی",
+            icon: < i className="ri-arrow-up-wide-fill"/>,
+            href: '/dehyari/form/upgrade-village-rank'
+        },
     ],
     [WORK_GROUPS.Dehyar]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-survey-line" />مرخصی</div>, href: '/dehyari/form/time-off' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-sticky-note-add-line" />ماموریت</div>, href: '/dehyari/form/mission' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-car-line" />ماشین آلات</div>, href: '/dehyari/form/machinery' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-arrow-up-wide-fill" />ارتقاء درجه بندی</div>, href: '/dehyari/form/upgrade-village-rank' },
+        {
+            label: "مرخصی",
+            icon: < i className="ri-survey-line"/>,
+            href: '/dehyari/form/time-off'
+        },
+        {
+            label: "ماموریت",
+            icon: < i className="ri-sticky-note-add-line"/>,
+            href: '/dehyari/form/mission'
+        },
+        {
+            label: "ماشین آلات",
+            icon: < i className="ri-car-line"/>,
+            href: '/dehyari/form/machinery'
+        },
+        {
+            label: "ارتقاء درجه بندی",
+            icon: < i className="ri-arrow-up-wide-fill"/>,
+            href: '/dehyari/form/upgrade-village-rank'
+        },
     ],
     [WORK_GROUPS.CFO]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل مسئول مالی</div>, href: '/dehyari/cfo/table' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-organization-chart" />تشکیلات دهیاری</div>, href: '/dehyari' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-upload-line" />ثبت اطلاعات پرسنلی</div>, href: '/dehyari/form' },
-        { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
+        {
+            label: "لیست پرسنل مسئول مالی",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/cfo/table'
+        },
+        {
+            label: "تشکیلات دهیاری",
+            icon: < i className="ri-organization-chart"/>,
+            href: '/dehyari'
+        },
+        {
+            label: "ثبت اطلاعات پرسنلی",
+            icon: < i className="ri-upload-line"/>,
+            href: '/dehyari/form'
+        },
+        {label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false},
     ],
     [WORK_GROUPS.Admin]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-survey-line" />مرخصی</div>, href: '/dehyari/form/time-off' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-sticky-note-add-line" />ماموریت</div>, href: '/dehyari/form/mission' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-car-line" />ماشین آلات</div>, href: '/dehyari/form/machinery' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-arrow-up-wide-fill" />ارتقاء درجه بندی</div>, href: '/dehyari/form/upgrade-village-rank' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل مسئول مالی</div>, href: '/dehyari/cfo/table' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-organization-chart" />تشکیلات دهیاری</div>, href: '/dehyari' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-upload-line" />ثبت اطلاعات پرسنلی</div>, href: '/dehyari/form' },
-        { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
-        { label: <div className='flex items-center gap-2'>< i class="ri-error-warning-line" />جدول خطا ها</div>, href: '/admin/logtable' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-admin-line" />لیست نقش ها</div>, href: '/admin/roles' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-bar-chart-line" />درجه بندی</div>, href: '/dehyari/form/grading-information-registration' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل استاندار</div>, href: '/dehyari/governor/table' },
-        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل بخشدار</div>, href: '/dehyari/bakhshdar/table' },
-        { label: <div className='flex items-center gap-2'>< i class="ri-account-box-line" />صفحه عمومی</div>, href: '/profile/complete' },
+        {
+            label: "مرخصی",
+            icon: < i className="ri-survey-line"/>,
+            href: '/dehyari/form/time-off'
+        },
+        {
+            label: "ماموریت",
+            icon: < i className="ri-sticky-note-add-line"/>,
+            href: '/dehyari/form/mission'
+        },
+        {
+            label: "ماشین آلات",
+            icon: < i className="ri-car-line"/>,
+            href: '/dehyari/form/machinery'
+        },
+        {
+            label: "ارتقاء درجه بندی",
+            icon: < i className="ri-arrow-up-wide-fill"/>,
+            href: '/dehyari/form/upgrade-village-rank'
+        },
+        {
+            label: "لیست پرسنل مسئول مالی",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/cfo/table'
+        },
+        {
+            label: "تشکیلات دهیاری",
+            icon: < i className="ri-organization-chart"/>,
+            href: '/dehyari'
+        },
+        {
+            label: "ثبت اطلاعات پرسنلی",
+            icon: < i className="ri-upload-line"/>,
+            href: '/dehyari/form'
+        },
+        {label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false},
+        {
+            label: "جدول خطا ها",
+            icon: < i className="ri-error-warning-line"/>,
+            href: '/admin/logtable'
+        },
+        {
+            label: "لیست نقش ها",
+            icon: < i className="ri-admin-line"/>,
+            href: '/admin/roles'
+        },
+        {
+            label: "درجه بندی",
+            icon: < i className="ri-bar-chart-line"/>,
+            href: '/dehyari/form/grading-information-registration'
+        },
+        {
+            label: "لیست پرسنل استاندار",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/governor/table'
+        },
+        {
+            label: "مدیریت کاربران",
+            icon: <i className="ri-team-line"/>,
+            href: '/municipality/list'
+        },
+        {
+            label: "لیست پرسنل بخشدار",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/bakhshdar/table'
+        },
+        {
+            label: "صفحه عمومی",
+            icon: < i className="ri-account-box-line"/>,
+            href: '/profile/complete'
+        },
     ],
     [WORK_GROUPS.GOVERNOR]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل استاندار</div>, href: '/dehyari/governor/table' },
-        { label: <div className='flex items-center gap-2'><i className="ri-team-line" />مدیریت کاربران</div>, href: '/municipality/list' },
+        {
+            label: "لیست پرسنل استاندار",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/governor/table'
+        },
+        {
+            label: "مدیریت کاربران",
+            icon: <i className="ri-team-line"/>,
+            href: '/municipality/list'
+        },
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-group-line" />لیست پرسنل بخشدار</div>, href: '/dehyari/bakhshdar/table' },
+        {
+            label: "لیست پرسنل بخشدار",
+            icon: < i className="ri-group-line"/>,
+            href: '/dehyari/bakhshdar/table'
+        },
     ],
     [WORK_GROUPS.PUBLIC]: [
-        { label: <div className='flex items-center gap-2'>< i class="ri-account-box-line" />صفحه عمومی</div>, href: '/profile/complete' },
+        {
+            label: "صفحه عمومی",
+            icon: < i className="ri-account-box-line"/>,
+            href: '/profile/complete'
+        },
     ]
 };
 

@@ -1,14 +1,12 @@
-import React, {useEffect} from 'react';
-import {Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem} from '@mui/material';
+import {React} from 'react';
+import {Grid, TextField, FormControl, InputLabel, Select, FormHelperText, MenuItem} from '@mui/material';
 import {Controller, useFormContext} from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import textAlign from 'tailwindcss-logical/plugins/textAlign';
-import {convertJalaliToUnix, convertUnixToJalali} from "@utils/dateConverter";
 
 const StepTwoFields = ({validation}) => {
-    const {control, formState: {errors}, setValue, getValues} = useFormContext();
+    const {control, formState: {errors}, getValues} = useFormContext();
     console.log("Start Date => ", getValues('contractStart'));
     console.log("End Date => ", getValues('contractEnd'));
 
@@ -80,7 +78,7 @@ const StepTwoFields = ({validation}) => {
                         rules={validation.contractEnd}
                         render={({field}) => (
                             <DatePicker
-                                value={field.value ? new Date(field.value * 1000) : null}
+                                value={field.value ? convertUnixToJalali(field.value) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
