@@ -20,7 +20,6 @@ import api from '@/utils/axiosInstance';
 import {getState, getStateWithCitiesData} from '@/Services/DataService';
 import {getCity} from "@/Services/CountryDivision";
 import {toast} from "react-toastify";
-import StateCitySelect from "@components/StateCitySelect";
 import {getMissions} from "@/Services/Mission";
 
 const persianToEnglishDigits = (str) => {
