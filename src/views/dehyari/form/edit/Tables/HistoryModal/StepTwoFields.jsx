@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+import React, {useEffect} from 'react';
+import {Grid, TextField, FormControl, Typography, InputLabel, Select, FormHelperText, MenuItem} from '@mui/material';
+import {Controller, useFormContext} from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
 import textAlign from 'tailwindcss-logical/plugins/textAlign';
-import {convertJalaliToUnix} from "@utils/dateConverter";
+import {convertJalaliToUnix, convertUnixToJalali} from "@utils/dateConverter";
 
-const StepTwoFields = ({ validation }) => {
-    const { control, formState: { errors }, setValue, getValues } = useFormContext();
+const StepTwoFields = ({validation}) => {
+    const {control, formState: {errors}, setValue, getValues} = useFormContext();
     console.log("Start Date => ", getValues('contractStart'));
     console.log("End Date => ", getValues('contractEnd'));
 
@@ -22,7 +22,7 @@ const StepTwoFields = ({ validation }) => {
                     control={control}
                     defaultValue=""
                     rules={validation.titleContract}
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormControl fullWidth size="small" error={!!errors.titleContract}>
                             <InputLabel id="titleContract-label">عنوان قرارداد</InputLabel>
                             <Select
@@ -46,9 +46,9 @@ const StepTwoFields = ({ validation }) => {
                         control={control}
                         defaultValue={null}
                         rules={validation.contractStart}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <DatePicker
-                                value={typeof field.value == 'string' ? field.value : new Date(field.value * 1000)}
+                                value={field.value ? convertUnixToJalali(field.value) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
@@ -60,7 +60,7 @@ const StepTwoFields = ({ validation }) => {
                                         size="small"
                                         inputProps={
                                             {
-                                                style: { textAlign: "center" }
+                                                style: {textAlign: "center"}
                                             }
                                         }
                                         error={!!errors.contractStart}
@@ -78,9 +78,9 @@ const StepTwoFields = ({ validation }) => {
                         control={control}
                         defaultValue={null}
                         rules={validation.contractEnd}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <DatePicker
-                                value={typeof field.value == 'string' ? convertJalaliToUnix(field.value) : new Date(field.value * 1000)}
+                                value={field.value ? new Date(field.value * 1000) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
                                 calendar={persian}
                                 locale={persian_fa}
@@ -92,7 +92,7 @@ const StepTwoFields = ({ validation }) => {
                                         size="small"
                                         inputProps={
                                             {
-                                                style: { textAlign: "center" }
+                                                style: {textAlign: "center"}
                                             }
                                         }
                                         error={!!errors.contractEnd}
@@ -110,7 +110,7 @@ const StepTwoFields = ({ validation }) => {
                         control={control}
                         defaultValue={null}
                         rules={validation.appointmentDate}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <DatePicker
                                 value={field.value ? new Date(field.value * 1000) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -124,7 +124,7 @@ const StepTwoFields = ({ validation }) => {
                                         size="small"
                                         inputProps={
                                             {
-                                                style: { textAlign: "center" }
+                                                style: {textAlign: "center"}
                                             }
                                         }
                                         error={!!errors.appointmentDate}
@@ -141,7 +141,7 @@ const StepTwoFields = ({ validation }) => {
                         control={control}
                         defaultValue={null}
                         rules={validation.contractEnd}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <DatePicker
                                 value={field.value ? new Date(field.value * 1000) : null}
                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -155,7 +155,7 @@ const StepTwoFields = ({ validation }) => {
                                         size="small"
                                         inputProps={
                                             {
-                                                style: { textAlign: "center" }
+                                                style: {textAlign: "center"}
                                             }
                                         }
                                         error={!!errors.contractExecute}
@@ -174,7 +174,7 @@ const StepTwoFields = ({ validation }) => {
                     control={control}
                     defaultValue=""
                     rules={validation.descriptionContract}
-                    render={({ field }) => (
+                    render={({field}) => (
                         <TextField
                             fullWidth
                             multiline
