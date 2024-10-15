@@ -1,21 +1,21 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import React, {useEffect, useMemo, useState} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { selectedEvent } from "@/redux-store/slices/calendar";
+import {selectedEvent} from "@/redux-store/slices/calendar";
 import Chip from "@mui/material/Chip";
-import { user } from "@/Services/Auth/AuthService";
+import {user} from "@/Services/Auth/AuthService";
 import roles from "@data/roles.json"
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import {IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
-import { getDivisonInformation } from '@/Services/Grading';
-import { GradingInformationDTO } from '@/utils/GradingInformationDTO';
+import {getDivisonInformation} from '@/Services/Grading';
+import {GradingInformationDTO} from '@/utils/GradingInformationDTO';
 
 
-const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
+const GradingTable = ({handleToggle, setMode, setData, methods}) => {
     const [grading, setGrading] = useState([]);
     const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -27,7 +27,7 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
     const fetchGrading = async () => {
         console.log("Refresh");
         setLoading(true);
-        await api.get(`${getDivisonInformation()}`, { requiresAuth: true })
+        await api.get(`${getDivisonInformation()}`, {requiresAuth: true})
             .then((response) => {
                 setGrading(response.data.data)
                 console.log(response.data);
@@ -71,7 +71,7 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
     }
 
     const handleDeleteGrading = (row) => {
-        api.delete(`${getDivisonInformation()}/${row.original.id}`, { requiresAuth: true })
+        api.delete(`${getDivisonInformation()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
                 toast.success("کاربر با موفقیت حذف شد", {
                     position: "top-center"
@@ -92,48 +92,49 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
                 accessorKey: 'organization',
                 header: 'سازمان',
                 size: 150,
-                Cell: ({ row }) => {
+                Cell: ({row}) => {
                     const gradingDTO = new GradingInformationDTO(row.original);
-                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization}`}</div>;
+                    return <div style={{textAlign: 'right'}}>{`${gradingDTO.organization}`}</div>;
                 },
             },
             {
                 accessorKey: 'centralization',
                 header: 'مرکزیت',
                 size: 150,
-                Cell: ({ row }) => {
+                Cell: ({row}) => {
                     const gradingDTO = new GradingInformationDTO(row.original);
-                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.centralization}`}</div>;
+                    return <div style={{textAlign: 'right'}}>{`${gradingDTO.centralization}`}</div>;
                 },
             },
             {
                 accessorKey: 'duration',
                 header: 'توریست',
                 size: 150,
-                Cell: ({ row }) => {
+                Cell: ({row}) => {
                     const gradingDTO = new GradingInformationDTO(row.original);
-                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.tourismGoal}`}</div>;
+                    return <div style={{textAlign: 'right'}}>{`${gradingDTO.tourismGoal}`}</div>;
                 },
             },
             {
                 accessorKey: 'attachment_file',
                 header: 'آتش نشانی',
                 size: 150,
-                Cell: ({ row }) => {
+                Cell: ({row}) => {
                     const gradingDTO = new GradingInformationDTO(row.original);
-                    return <div style={{ textAlign: 'right' }}>{`${gradingDTO.organization == 2 && gradingDTO.fireStation || "-"}`}</div>;
+                    return <div
+                        style={{textAlign: 'right'}}>{`${gradingDTO.organization == 2 && gradingDTO.fireStation || "-"}`}</div>;
                 },
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
+                Cell: ({row}) => (
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
                         <Button color='error' onClick={() => {
                             handleDeleteGrading(row);
                         }}>
-                            <i className='ri-delete-bin-6-line' />
+                            < i class="ri-delete-bin-7-line text-2xl"/>
                         </Button>
                     </div>
                 ),
@@ -145,7 +146,7 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
     const table = useMaterialReactTable({
         columns,
         data: grading,
-        renderTopToolbarCustomActions: ({ table }) => (
+        renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -157,7 +158,7 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
                     fullWidth
                     variant='contained'
                     onClick={handleToggle}
-                    startIcon={<i className='ri-add-line' />}
+                    startIcon={<i className='ri-add-line'/>}
                 >
                     افزودن درجه بندی
                 </Button>
@@ -200,7 +201,7 @@ const GradingTable = ({ handleToggle, setMode, setData, methods }) => {
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable table={table}/>
     );
 }
 

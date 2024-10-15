@@ -139,7 +139,7 @@ const Login = ({mode}) => {
                     <div>
                         <Box sx={{mb: 3, textAlign: 'center'}}>
                             {/* <Logo component /> */}
-                            <img className='w-[35%] mb-2' src="images/logos/logo.svg" alt="لوگو سایت"/>
+                            <img className='w-[40%] mb-2' src="images/logos/logo.svg" alt="لوگو سایت"/>
                             <Typography variant='h5'> <span>پنجره واحد خدمات الکترونیک</span></Typography>
                         </Box>
                     </div>

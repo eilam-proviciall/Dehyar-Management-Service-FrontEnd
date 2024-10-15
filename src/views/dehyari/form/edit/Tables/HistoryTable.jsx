@@ -122,12 +122,31 @@ function HistoryTable() {
                 <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
                     <Button color='error' onClick={() => {
                         toast.warning('این قابلیت هنوز افزوده نشده است')
-                    }}>
-                        <i className='ri-delete-bin-6-line'/>
+
+                    }}
+                            sx={{
+                                borderRadius: '50%',
+                                padding: '8px',
+                                minWidth: '0',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                                },
+                            }}
+                    >
+                        <i className='ri-delete-bin-7-line text-2xl'/>
                     </Button>
                     <Button color='primary' onClick={() => {
                         handleEdit(row)
-                    }}>
+                    }}
+                            sx={{
+                                borderRadius: '50%',
+                                padding: '8px',
+                                minWidth: '0',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                                },
+                            }}
+                    >
                         <i className='ri-edit-box-line'/>
                     </Button>
                 </div>

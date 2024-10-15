@@ -1,10 +1,10 @@
 import React from 'react'
-import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { MachineInformationDTO } from '@/utils/MachineInformationDTO';
+import {Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField} from '@mui/material';
+import {Controller, useFieldArray, useForm, useFormContext} from 'react-hook-form';
+import {toast} from 'react-toastify';
+import {MachineInformationDTO} from '@/utils/MachineInformationDTO';
 import api from '@/utils/axiosInstance';
-import { getMachineCost, getMachineInformation } from '@/Services/Machine';
+import {getMachineCost, getMachineInformation} from '@/Services/Machine';
 import typePlates from "@data/typePlates"
 
 const persianToEnglishDigits = (str) => {
@@ -13,26 +13,26 @@ const persianToEnglishDigits = (str) => {
     return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
 };
 
-const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
+const MachineCost = ({data, setData, setStep, onClose, mode, methods}) => {
 
-    const { control, handleSubmit, formState: { errors } } = useFormContext();
+    const {control, handleSubmit, formState: {errors}} = useFormContext();
 
-    const { fields, append, remove } = useFieldArray({
+    const {fields, append, remove} = useFieldArray({
         control,
         name: 'machine_cost_fields'
     });
 
 
     const fundingSources = [
-        { value: 0, label: 'منابع داخلی' },
-        { value: 1, label: 'کمک های دولتی' },
+        {value: 0, label: 'منابع داخلی'},
+        {value: 1, label: 'کمک های دولتی'},
     ]
 
     const onSubmit = async (newData) => {
         console.log("New Data => ", newData);
 
         if (newData.machine_cost_fields.length) {
-            setData(prevValues => ({ ...prevValues, machine_cost_fields: newData.machine_cost_fields }));
+            setData(prevValues => ({...prevValues, machine_cost_fields: newData.machine_cost_fields}));
             const machineDTO = new MachineInformationDTO(data);
             const finallyData = {
                 ...data,
@@ -54,7 +54,7 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
                 // onClose(); // بستن پنجره
             } catch (error) {
                 console.error("Error:", error);
-                toast.error("خطا در ثبت اطلاعات", { position: "top-center" });
+                toast.error("خطا در ثبت اطلاعات", {position: "top-center"});
             }
         }
     }
@@ -64,21 +64,21 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
 
     const renderTextField = (index, itemName, name, label, type = "textField") => {
         return (
-            <FormControl fullWidth >
+            <FormControl fullWidth>
                 <Controller
                     name={name}
                     control={control}
-                    rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    rules={{required: true}}
+                    render={({field: {value, onChange}}) => (
                         <TextField
                             InputProps={
-                                { style: { height: 45 }, inputProps: { style: { textAlign: 'center' } } }
+                                {style: {height: 45}, inputProps: {style: {textAlign: 'center'}}}
                             }
                             label={label}
                             value={type == "price" ? Number(value.replace(/,/g, "")).toLocaleString() : value}
                             onChange={(e) => {
                                 const value = persianToEnglishDigits(e.target.value).replace(/,/g, '');
-                                setData(prevValues => ({ ...prevValues, [name]: value }));
+                                setData(prevValues => ({...prevValues, [name]: value}));
                                 onChange(value);
                             }}
                             {...((errors?.machine_cost_fields && errors?.machine_cost_fields[index] && errors?.machine_cost_fields[index]?.[itemName]) && {
@@ -98,14 +98,14 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
             <Controller
                 name={name}
                 control={control}
-                render={({ field: { value, onChange } }) => (
+                render={({field: {value, onChange}}) => (
                     <Select
                         value={value}
                         label={label}
                         onChange={e => {
                             const newValue = e.target.value;
                             setTimeout(() => {
-                                setData(prevValues => ({ ...prevValues, [name]: newValue }));
+                                setData(prevValues => ({...prevValues, [name]: newValue}));
                                 onChange(newValue)
                                 console.log("Data =>", newValue);
                                 console.log("Errors => ", errors[name]);
@@ -116,9 +116,9 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
                         {...((errors?.machine_cost_fields && errors?.machine_cost_fields[index] && errors?.machine_cost_fields[index]?.[itemName]) && {
                             error: errors?.machine_cost_fields[index]?.[itemName],
                         })}
-                        sx={{ height: 45 }}
+                        sx={{height: 45}}
                     >
-                        {Object.entries(option.map(({ value, label }) => (
+                        {Object.entries(option.map(({value, label}) => (
                             <MenuItem key={value} value={value}>{label}</MenuItem>
                         )))}
                     </Select>
@@ -128,32 +128,34 @@ const MachineCost = ({ data, setData, setStep, onClose, mode, methods }) => {
     )
 
     return (
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{mt: 2}}>
             {fields.map((field, index) => (
                 <>
                     <div key={field.id} className='md:flex grid mb-2 gap-2'>
                         {renderSelect(index, 'funding_source', `machine_cost_fields.${index}.funding_source`, 'محل تامین مالی', fundingSources)}
                         {renderTextField(index, 'amount', `machine_cost_fields.${index}.amount`, 'هزینه (میلیون ریال)', 'price')}
                         {renderTextField(index, 'description', `machine_cost_fields.${index}.description`, 'توضیحات', 'textField')}
-                        <Button variant="contained" color="error" onClick={() => remove(index)} >
-                            <i className='ri-delete-bin-line'></i>
+                        <Button variant="contained" color="error" onClick={() => remove(index)}>
+                            <i className='ri-delete-bin-7-line text-2xl'/>
                         </Button>
                     </div>
-                    <Divider sx={{ my: 5 }} />
+                    <Divider sx={{my: 5}}/>
                 </>
             ))}
             <Button
                 variant="contained"
                 color="inherit"
-                onClick={() => append({ funding_source: '', amount: '', description: '' })}
+                onClick={() => append({funding_source: '', amount: '', description: ''})}
                 className='gap-2'
             >
                 <i className='ri-add-line'></i>
                 افزودن
             </Button>
             <Box display={'flex'} mt={10} gap={5} justifyContent={'space-between'}>
-                <Button variant='contained' color='secondary' onClick={() => { setStep(prevStep => prevStep - 1); }}>برگشت</Button>
-                <Button variant="contained" color="success" type="submit" >ثبت</Button>
+                <Button variant='contained' color='secondary' onClick={() => {
+                    setStep(prevStep => prevStep - 1);
+                }}>برگشت</Button>
+                <Button variant="contained" color="success" type="submit">ثبت</Button>
             </Box>
         </Box>
     );
