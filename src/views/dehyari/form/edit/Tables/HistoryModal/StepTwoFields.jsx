@@ -4,6 +4,7 @@ import {Controller, useFormContext} from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
+import {convertUnixToJalali} from "@utils/dateConverter";
 
 const StepTwoFields = ({validation}) => {
     const {control, formState: {errors}, getValues} = useFormContext();
