@@ -9,6 +9,7 @@ import {HumanContract} from "@/Services/humanResources";
 import {getJobTitleLabel} from "@data/jobTitles";
 import {toast} from 'react-toastify';
 import {convertUnixToJalali} from "@utils/dateConverter";
+import CustomIconButton from "@core/components/mui/IconButton";
 
 const style = {
     position: 'absolute',
@@ -120,35 +121,24 @@ function HistoryTable() {
             size: 150,
             Cell: ({row}) => (
                 <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
-                    <Button color='error' onClick={() => {
-                        toast.warning('این قابلیت هنوز افزوده نشده است')
-
-                    }}
-                            sx={{
-                                borderRadius: '50%',
-                                padding: '8px',
-                                minWidth: '0',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                                },
-                            }}
+                    <CustomIconButton
+                        color={"error"}
+                        onClick={() => {
+                            toast.warning('این قابلیت هنوز افزوده نشده است');
+                        }}
+                        className={"rounded-full"}
                     >
-                        <i className='ri-delete-bin-7-line text-2xl'/>
-                    </Button>
-                    <Button color='primary' onClick={() => {
-                        handleEdit(row)
-                    }}
-                            sx={{
-                                borderRadius: '50%',
-                                padding: '8px',
-                                minWidth: '0',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                                },
-                            }}
+                        <i className='ri-delete-bin-7-line'/>
+                    </CustomIconButton>
+                    <CustomIconButton
+                        color={"primary"}
+                        onClick={() => {
+                            handleEdit(row);
+                        }}
+                        className={"rounded-full"}
                     >
                         <i className='ri-edit-box-line'/>
-                    </Button>
+                    </CustomIconButton>
                 </div>
             ),
         },
@@ -183,6 +173,13 @@ function HistoryTable() {
             variant: 'outlined',
         },
         paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (

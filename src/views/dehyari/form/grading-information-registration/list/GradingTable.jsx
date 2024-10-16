@@ -198,6 +198,13 @@ const GradingTable = ({handleToggle, setMode, setData, methods}) => {
             },
         },
         paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (

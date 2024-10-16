@@ -1,18 +1,19 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import React, {useEffect, useMemo, useState} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { user } from "@/Services/Auth/AuthService";
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import {user} from "@/Services/Auth/AuthService";
+import {IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
-import { getMissions } from '@/Services/Mission';
-import { MissionDTO } from '@/utils/MissionDTO';
+import {getMissions} from '@/Services/Mission';
+import {MissionDTO} from '@/utils/MissionDTO';
+import CustomIconButton from "@core/components/mui/IconButton";
 
 
-const MissionTable = ({ handleToggle, setMode }) => {
+const MissionTable = ({handleToggle, setMode}) => {
     const [mission, setMission] = useState([]);
     const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -24,7 +25,7 @@ const MissionTable = ({ handleToggle, setMode }) => {
     const fetchMission = async () => {
         console.log("Refresh");
         setLoading(true);
-        await api.get(`${getMissions()}`, { requiresAuth: true })
+        await api.get(`${getMissions()}`, {requiresAuth: true})
             .then((response) => {
                 const updatedMissions = response.data.data.map(missionDTO => new MissionDTO(missionDTO));
                 setMission(updatedMissions);
@@ -56,7 +57,7 @@ const MissionTable = ({ handleToggle, setMode }) => {
     }
 
     const handleDeleteTimeOff = (row) => {
-        api.delete(`${user()}/${row.original.id}`, { requiresAuth: true })
+        api.delete(`${user()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
                 toast.success("کاربر با موفقیت حذف شد", {
                     position: "top-center"
@@ -77,62 +78,52 @@ const MissionTable = ({ handleToggle, setMode }) => {
                 accessorKey: 'request_type',
                 header: 'نوع درخواست',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'mission_type',
                 header: 'نوع ماموریت',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'accommodation',
                 header: 'محل اقامت',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'transportation',
                 header: 'وسیله نقلیه',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <IconButton
-                        aria-label="more"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={(event) => handleClick(event, row)}
-                        style={{ paddingLeft: 0 }}
-                    >
-                        <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                            'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => {
-                            handleEditTimeOff(selectedRow)
-                        }}>
-                            ویرایش اطلاعات
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleDeleteTimeOff(selectedRow);
-                        }}>
-                            حذف
-                        </MenuItem>
-                    </Menu>
-                </div>
+                Cell: ({row}) => (
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                        <CustomIconButton
+                            color={"error"}
+                            onClick={() => {
+                                handleDeleteTimeOff(row);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-delete-bin-7-line'/>
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"primary"}
+                            onClick={() => {
+                                handleEditTimeOff(row);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-edit-box-line'/>
+                        </CustomIconButton>
+                    </div>
+                ),
             },
         ],
         [anchorEl, selectedRow]
@@ -141,7 +132,7 @@ const MissionTable = ({ handleToggle, setMode }) => {
     const table = useMaterialReactTable({
         columns,
         data: mission,
-        renderTopToolbarCustomActions: ({ table }) => (
+        renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -153,7 +144,7 @@ const MissionTable = ({ handleToggle, setMode }) => {
                     fullWidth
                     variant='contained'
                     onClick={handleToggle}
-                    startIcon={<i className='ri-add-line' />}
+                    startIcon={<i className='ri-add-line'/>}
                 >
                     افزودن ماموریت
                 </Button>
@@ -193,10 +184,17 @@ const MissionTable = ({ handleToggle, setMode }) => {
             },
         },
         paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable table={table}/>
     );
 }
 

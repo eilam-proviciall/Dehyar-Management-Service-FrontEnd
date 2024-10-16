@@ -5,6 +5,8 @@ import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {InsuranceHistory} from "@/Services/humanResources";
 import InsuranceModal from "@views/dehyari/form/edit/Tables/InsuranceModal/InsuranceModal";
+import CustomIconButton from "@core/components/mui/IconButton";
+import {toast} from "react-toastify";
 
 function InsuranceTable() {
     const [data, setData] = useState([]);
@@ -97,19 +99,25 @@ function InsuranceTable() {
             header: 'عملیات',
             size: 20,
             Cell: ({row}) => (
-                <div style={{display: 'flex', justifyContent: 'center'}}>
-                    <IconButton onClick={(event) => handleClick(event, row)}>
-                        <MoreVertIcon/>
-                    </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleCloseMenu}
+                <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                    {/*<CustomIconButton*/}
+                    {/*    color={"error"}*/}
+                    {/*    onClick={() => {*/}
+                    {/*        toast.warning('این قابلیت هنوز افزوده نشده است');*/}
+                    {/*    }}*/}
+                    {/*    className={"rounded-full"}*/}
+                    {/*>*/}
+                    {/*    <i className='ri-delete-bin-7-line'/>*/}
+                    {/*</CustomIconButton>*/}
+                    <CustomIconButton
+                        color={"primary"}
+                        onClick={() => {
+                            handleEditClick(row);
+                        }}
+                        className={"rounded-full"}
                     >
-                        <MenuItem onClick={() => handleEditClick(selectedRow)}>
-                            ویرایش
-                        </MenuItem>
-                    </Menu>
+                        <i className='ri-edit-box-line'/>
+                    </CustomIconButton>
                 </div>
             ),
         },
@@ -128,6 +136,13 @@ function InsuranceTable() {
             </Box>
         ),
         state: {isLoading: loading},
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (

@@ -5,14 +5,12 @@ import createCache from "@emotion/cache";
 import {CacheProvider} from "@emotion/react";
 
 function Page(props) {
-    const cache = createCache({ key: 'css', prepend: true });
+    const cache = createCache({key: 'css', prepend: true});
 
     return (
-        <>
-            <CacheProvider value={cache}>
-            <EditFromComponent />
-            </CacheProvider>
-        </>
+        // <CacheProvider value={cache}>
+        <EditFromComponent/>
+        // </CacheProvider>
     );
 }
 

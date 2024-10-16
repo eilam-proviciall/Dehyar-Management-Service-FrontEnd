@@ -11,6 +11,7 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
+import CustomIconButton from "@core/components/mui/IconButton";
 
 
 const TimeOffTable = ({ handleToggle, setMode }) => {
@@ -109,38 +110,28 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <IconButton
-                        aria-label="more"
-                        aria-controls={open ? 'long-menu' : undefined}
-                        aria-expanded={open ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={(event) => handleClick(event, row)}
-                        style={{ paddingLeft: 0 }}
-                    >
-                        <MoreVertIcon style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                            'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => {
-                            handleEditTimeOff(selectedRow)
-                        }}>
-                            ویرایش اطلاعات
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleDeleteTimeOff(selectedRow);
-                        }}>
-                            حذف
-                        </MenuItem>
-                    </Menu>
-                </div>
+                Cell: ({row}) => (
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                        <CustomIconButton
+                            color={"error"}
+                            onClick={() => {
+                                handleDeleteTimeOff(row);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-delete-bin-7-line'/>
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"primary"}
+                            onClick={() => {
+                                handleEditTimeOff(row);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-edit-box-line'/>
+                        </CustomIconButton>
+                    </div>
+                ),
             },
         ],
         [anchorEl, selectedRow]
@@ -201,6 +192,13 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
             },
         },
         paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (
