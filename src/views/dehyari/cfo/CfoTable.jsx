@@ -174,7 +174,11 @@ function CfoTable(props) {
         //     className: 'bg-gray-200 py-2'
         // },
         muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper'
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '0px 8px',
+                lineHeight: '1',
+            },
         }
     })
 

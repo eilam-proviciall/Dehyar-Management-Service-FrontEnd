@@ -139,8 +139,8 @@ function InsuranceTable() {
         muiTableBodyCellProps: {
             className: 'bg-backgroundPaper',
             sx: {
-                padding: '0px 8px', // تنظیم padding برای کاهش ارتفاع ردیف
-                lineHeight: '1', // تنظیم line height برای کاهش ارتفاع
+                padding: '0px 8px',
+                lineHeight: '1',
             },
         }
     });

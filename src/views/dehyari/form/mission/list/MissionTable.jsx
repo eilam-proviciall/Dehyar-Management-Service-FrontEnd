@@ -193,6 +193,13 @@ const MissionTable = ({ handleToggle, setMode }) => {
             },
         },
         paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '0px 8px',
+                lineHeight: '1',
+            },
+        }
     });
 
     return (
