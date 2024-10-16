@@ -176,7 +176,7 @@ function HistoryTable() {
         muiTableBodyCellProps: {
             className: 'bg-backgroundPaper',
             sx: {
-                padding: '0px 8px',
+                padding: '2px 8px',
                 lineHeight: '1',
             },
         }

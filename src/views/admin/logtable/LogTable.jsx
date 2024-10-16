@@ -1,10 +1,10 @@
 "use client";
-import React, { useMemo, useState, useEffect } from 'react';
-import { MaterialReactTable } from 'material-react-table';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import React, {useMemo, useState, useEffect} from 'react';
+import {MaterialReactTable} from 'material-react-table';
+import {IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DownloadIcon from '@mui/icons-material/Download';
-import { getLogs } from "@/Services/Admin";
+import {getLogs} from "@/Services/Admin";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 
@@ -40,7 +40,7 @@ function LogTable() {
 
     useEffect(() => {
         setLoading(true);
-        api.get(getLogs(), { requiresAuth: true })
+        api.get(getLogs(), {requiresAuth: true})
             .then((response) => {
                 setData(response.data);
                 setLoading(false);
@@ -51,7 +51,7 @@ function LogTable() {
     }, []);
 
     const downloadJson = (properties) => {
-        const blob = new Blob([JSON.stringify(properties, null, 2)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(properties, null, 2)], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -67,59 +67,40 @@ function LogTable() {
                 accessorKey: 'created_at',
                 header: 'تاریخ',
                 size: 200,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{toPersianDate(cell.getValue())}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{toPersianDate(cell.getValue())}</div>,
             },
             {
                 accessorKey: 'properties.tracking_code',
                 header: 'کد پیگیری',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'properties.user_id',
                 header: 'شناسه کاربر',
                 size: 100,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'properties.exception_message',
                 header: 'پیام خطا',
                 size: 200,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'properties.request_url',
                 header: 'URL درخواست',
                 size: 300,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 100,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <IconButton
-                            aria-label="more"
-                            aria-controls={open ? 'long-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-haspopup="true"
-                            onClick={(event) => handleClick(event, row)}
-                            style={{ paddingLeft: 0 }}
-                        >
-                            <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                            id="long-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={() => downloadJson(row.original.properties)}>
-                                <DownloadIcon /> دانلود JSON
-                            </MenuItem>
-                        </Menu>
-                    </div>
+                Cell: ({row}) => (
+                    <MenuItem onClick={() => downloadJson(row.original.properties)}>
+                        <DownloadIcon/> دانلود JSON
+                    </MenuItem>
                 ),
             },
         ],
@@ -127,7 +108,7 @@ function LogTable() {
     );
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
     return (

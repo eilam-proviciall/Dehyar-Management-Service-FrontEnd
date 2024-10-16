@@ -16,6 +16,7 @@ import HumanResourceDTO from "@/utils/HumanResourceDTO";
 import {getJobTitleLabel} from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
+import CustomIconButton from "@core/components/mui/IconButton";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -123,40 +124,34 @@ function CfoTable(props) {
                 header: 'عملیات',
                 size: 150,
                 Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-                        <IconButton
-                            aria-label="more"
-                            aria-controls={open ? 'long-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-haspopup="true"
-                            onClick={(event) => handleClick(event, row)}
-                            style={{paddingLeft: 0}}
-                        >
-                            <MoreVertIcon
-                                style={{textAlign: "center", justifyContent: 'center', alignItems: 'center'}}/>
-                        </IconButton>
-                        <Menu
-                            id="long-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'long-button',
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                        {/*<CustomIconButton*/}
+                        {/*    color={"error"}*/}
+                        {/*    onClick={() => {*/}
+                        {/*        toast.warning('این قابلیت هنوز افزوده نشده است');*/}
+                        {/*    }}*/}
+                        {/*    className={"rounded-full"}*/}
+                        {/*>*/}
+                        {/*    <i className='ri-delete-bin-7-line'/>*/}
+                        {/*</CustomIconButton>*/}
+                        <CustomIconButton
+                            color={"primary"}
+                            onClick={() => {
+                                handleEdit(row);
                             }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
+                            className={"rounded-full"}
                         >
-                            <MenuItem onClick={handleClose}>
-                                {currentRow ? (
-                                    <Link href={`/dehyari/form/edit?param=${currentRow.nid}`}>
-                                        ویرایش
-                                    </Link>
-                                ) : (
-                                    <span>ویرایش</span>
-                                )}
-                            </MenuItem>
-                            <MenuItem onClick={() => handleDownloadPdf(currentRow)}>
-                                حکم کارگزینی
-                            </MenuItem>
-                        </Menu>
+                            <i className='ri-edit-box-line'/>
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"success"}
+                            onClick={() => {
+                                handleDownloadPdf(row)
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-download-line'/>
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -176,7 +171,7 @@ function CfoTable(props) {
         muiTableBodyCellProps: {
             className: 'bg-backgroundPaper',
             sx: {
-                padding: '0px 8px',
+                padding: '2px 8px',
                 lineHeight: '1',
             },
         }

@@ -100,15 +100,15 @@ function InsuranceTable() {
             size: 20,
             Cell: ({row}) => (
                 <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
-                    <CustomIconButton
-                        color={"error"}
-                        onClick={() => {
-                            toast.warning('این قابلیت هنوز افزوده نشده است');
-                        }}
-                        className={"rounded-full"}
-                    >
-                        <i className='ri-delete-bin-7-line'/>
-                    </CustomIconButton>
+                    {/*<CustomIconButton*/}
+                    {/*    color={"error"}*/}
+                    {/*    onClick={() => {*/}
+                    {/*        toast.warning('این قابلیت هنوز افزوده نشده است');*/}
+                    {/*    }}*/}
+                    {/*    className={"rounded-full"}*/}
+                    {/*>*/}
+                    {/*    <i className='ri-delete-bin-7-line'/>*/}
+                    {/*</CustomIconButton>*/}
                     <CustomIconButton
                         color={"primary"}
                         onClick={() => {
@@ -139,7 +139,7 @@ function InsuranceTable() {
         muiTableBodyCellProps: {
             className: 'bg-backgroundPaper',
             sx: {
-                padding: '0px 8px',
+                padding: '2px 8px',
                 lineHeight: '1',
             },
         }
