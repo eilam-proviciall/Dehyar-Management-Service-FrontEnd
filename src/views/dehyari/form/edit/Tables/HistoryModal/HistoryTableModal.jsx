@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton } from '@mui/material';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, {useState, useEffect} from 'react';
+import {Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton} from '@mui/material';
+import {FormProvider, useForm} from 'react-hook-form';
 import StepOneFields from './StepOneFields';
 import StepTwoFields from './StepTwoFields';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
-import { HumanContract } from "@/Services/humanResources";
-import { toast } from "react-toastify";
+import {HumanContract} from "@/Services/humanResources";
+import {toast} from "react-toastify";
 import HumanContractDTO from "@utils/HumanContractDTO";
 
 const modalStyle = {
@@ -53,7 +53,7 @@ const validationSchemas = {
 
 const steps = ['ساختار تشکیلاتی', 'اطلاعات قرارداد'];
 
-const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => {
+const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
     const methods = useForm(); // Initialize useForm
     const [activeStep, setActiveStep] = useState(0); // Initialize step state
     const [loading, setLoading] = useState(false);
@@ -75,6 +75,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                             Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                         },
                     });
+                    console.log("Contract Start => ", response.data.contract_start);
                     const mappedData = {
                         contractStart: response.data.contract_start,
                         contractType: response.data.contract_type,
@@ -112,7 +113,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
     const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
         setLoading(true);
-        const dto = HumanContractDTO.fromForm(formData,param); // Convert data to DTO
+        const dto = HumanContractDTO.fromForm(formData, param); // Convert data to DTO
         try {
             let response;
             if (mode === 'edit') {
@@ -138,10 +139,10 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
                 Object.keys(error.response.data.errors).forEach((key) => {
-                    toast.error(error.response.data.errors[key][0], { position: 'top-center' });
+                    toast.error(error.response.data.errors[key][0], {position: 'top-center'});
                 });
             } else {
-                toast.error("خطا در ثبت اطلاعات", { position: 'top-center' });
+                toast.error("خطا در ثبت اطلاعات", {position: 'top-center'});
             }
         } finally {
             setLoading(false);
@@ -158,7 +159,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
-                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+                sx: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
             }}
         >
             <Box sx={modalStyle}>
@@ -168,18 +169,18 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                     sx={{
                         position: 'absolute',
                         top: 8,
-                        right: 8,
+                        left: 8,
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
 
-                <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
+                {/* <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
                     {mode === 'edit' ? 'ویرایش قرارداد' : 'ثبت اطلاعات حکم کارگزینی'}
-                </Typography>
+                </Typography> */}
 
-                <Stepper activeStep={activeStep} sx={{ width: "50%", margin: '0 auto', paddingBottom: '16px' }}>
+                <Stepper activeStep={activeStep} sx={{width: "50%", margin: '0 auto', paddingBottom: '16px'}}>
                     {steps.map((label, index) => (
                         <Step key={index}>
                             <StepLabel>{label}</StepLabel>
@@ -192,7 +193,7 @@ const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => 
                         {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode}/>}
                         {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
 
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between', pt: 7}}>
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}

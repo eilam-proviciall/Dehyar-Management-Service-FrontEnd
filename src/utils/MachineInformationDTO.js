@@ -1,6 +1,5 @@
 export class MachineInformationDTO {
     constructor(machineInformationData) {
-        this.id = machineInformationData.id || Date.now();
         this.category = machineInformationData.category || '';
         this.machineType = machineInformationData.machine_type || '';
         this.machineTitle = machineInformationData.machine_title || '';

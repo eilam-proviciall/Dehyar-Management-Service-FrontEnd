@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import accessControl from "@components/layout/vertical/accessControl";
 import { useRouter } from "next/navigation";
+import Loading from '@/@core/components/loading/Loading';
 
 const AccessGuard = ({ children }) => {
     const { user, loading } = useAuth();
@@ -37,7 +38,7 @@ const AccessGuard = ({ children }) => {
     }, [user, loading, router]);
 
     if (loading || isAuthorized === null) {
-        return <div>Loading...</div>; // یا هر اسپینر لودینگ دیگر
+        return <Loading />
     }
 
     if (!isAuthorized) {

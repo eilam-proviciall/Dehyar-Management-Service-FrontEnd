@@ -62,7 +62,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             ? sidebarDetails.defaultValues.covered_villages.map(village => {
                 return village.village_code ? `${village.village_code}` : `${village}`;
             })
-            : data.covered_villages.map(village => {
+            : data.covered_villages && data.covered_villages.map(village => {
                 return `${village.hierarchy_code}`;
             });
         console.log("Finally villages => ", finallyVillages);

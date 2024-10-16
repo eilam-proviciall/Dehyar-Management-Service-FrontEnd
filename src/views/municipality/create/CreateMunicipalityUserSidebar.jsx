@@ -14,6 +14,7 @@ import RoleFields from './RoleFields';
 import roles from '@data/roles';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import { user } from "@/Services/Auth/AuthService";
+import CustomDrawer from '@/@core/components/mui/Drawer';
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
@@ -78,7 +79,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
     );
 
     return (
-        <Drawer
+        <CustomDrawer
             anchor='right'
             open={addEventSidebarOpen}
             onClose={handleSidebarClose}
@@ -147,7 +148,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                     />
                 </form>
             </Box>
-        </Drawer>
+        </CustomDrawer>
     );
 };
 
