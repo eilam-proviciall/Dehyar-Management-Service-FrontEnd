@@ -17,6 +17,7 @@ import {getJobTitleLabel} from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
+import Typography from "@mui/material/Typography";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -114,7 +115,7 @@ function CfoTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary"/>
+                            <Chip label={contractType[role]} color="primary" size={'5'}/>
                         </div>
                     );
                 },
@@ -135,22 +136,22 @@ function CfoTable(props) {
                         {/*    <i className='ri-delete-bin-7-line'/>*/}
                         {/*</CustomIconButton>*/}
                         <CustomIconButton
-                            color={"primary"}
+                            color={"secondary"}
                             onClick={() => {
-                                handleEdit(row);
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}`);
                             }}
                             className={"rounded-full"}
                         >
                             <i className='ri-edit-box-line'/>
                         </CustomIconButton>
                         <CustomIconButton
-                            color={"success"}
+                            color={"secondary"}
                             onClick={() => {
-                                handleDownloadPdf(row)
+                                handleDownloadPdf(row.original)
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-download-line'/>
+                            < i class="ri-printer-line"/>
                         </CustomIconButton>
                     </div>
                 ),
@@ -165,9 +166,6 @@ function CfoTable(props) {
         initialState: {
             density: 'compact'
         },
-        // muiTableHeadCellProps: {
-        //     className: 'bg-gray-200 py-2'
-        // },
         muiTableBodyCellProps: {
             className: 'bg-backgroundPaper',
             sx: {
@@ -182,8 +180,28 @@ function CfoTable(props) {
     }
 
     return (
-        <MaterialReactTable table={table}/>
-    );
+        <div>
+            <Typography variant={'h5'} mb={5}>فهرست <span className={'text-error font-bold relative inline-block'}>
+                    پرسنل
+                    <img
+                        src="/images/icons/Line-2.png"
+                        alt="زیرخط"
+                        style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            width: '100%',
+                            height: '4px',
+                            position: 'absolute',
+                            bottom: '-2px',
+                            objectFit: 'contain',
+                        }}
+                    />
+                </span>
+                طرف قرارداد</Typography>
+            <MaterialReactTable table={table}/>
+        </div>
+    )
+        ;
 }
 
 export default CfoTable;
