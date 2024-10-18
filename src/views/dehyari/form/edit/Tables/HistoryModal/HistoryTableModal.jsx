@@ -18,6 +18,9 @@ const modalStyle = {
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
+    paddingTop: 6,
+    paddingLeft: 6,
+    paddingRight: 6,
     borderRadius: 3,
 };
 
@@ -169,7 +172,7 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                     sx={{
                         position: 'absolute',
                         top: 8,
-                        left: 8,
+                        right: 8,
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
