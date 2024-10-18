@@ -8,7 +8,7 @@ import EditStepChildren from "@views/dehyari/form/edit/EditStepChildren";
 const EditFormContent = ({  validationSchemas }) => (
     <Card>
         <CardContent className='sm:!p-12'>
-            <Grid container spacing={6}>
+            <Grid container spacing={6} gap={2}>
                 <EditStepPersonalDetails  validation={validationSchemas}/>
                 <EditStepEducation validation={validationSchemas}/>
                 <PhoneNumberStepContact validation={validationSchemas}/>

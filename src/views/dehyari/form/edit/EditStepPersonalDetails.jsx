@@ -1,19 +1,19 @@
 import React from 'react';
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+import {Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material';
+import {Controller, useFormContext} from 'react-hook-form';
 import DividerSimple from '@components/common/Divider/DividerSimple';
 import Autocomplete from '@mui/material/Autocomplete';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import { useFetchCities } from '@hooks/useFetchCities';
+import {useFetchCities} from '@hooks/useFetchCities';
 import Chip from '@mui/material/Chip';
 import PersonalOptions from '@data/PersonalOption.json';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
-const EditStepPersonalDetails = ({ validation }) => {
-    const { control, register, getValues, setValue, formState: { errors } } = useFormContext();
-    const { cities, isLoading, error } = useFetchCities(true);
+const EditStepPersonalDetails = ({validation}) => {
+    const {control, register, getValues, setValue, formState: {errors}} = useFormContext();
+    const {cities, isLoading, error} = useFetchCities(true);
 
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
@@ -26,11 +26,18 @@ const EditStepPersonalDetails = ({ validation }) => {
         return true;
     };
 
+    const textFieldStyle = {
+        height: '45px',
+        '& .MuiInputBase-root': {
+            height: '100%',
+        },
+    };
+
     return (
         <>
-            <Grid container spacing={2} mt={1}>
+            <Grid container spacing={4} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات شخصی' />
+                    <DividerSimple title='اطلاعات شخصی'/>
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
@@ -39,10 +46,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.firstName}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="نام"
                                 placeholder="نام"
                                 {...field}
@@ -59,10 +66,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.lastName}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="نام خانوادگی"
                                 placeholder="نام خانوادگی"
                                 {...field}
@@ -79,10 +86,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.fatherName}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="نام پدر"
                                 placeholder="نام پدر"
                                 {...field}
@@ -100,10 +107,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.nationalCode}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="کد ملی"
                                 placeholder="کد ملی"
                                 {...field}
@@ -124,7 +131,7 @@ const EditStepPersonalDetails = ({ validation }) => {
                             control={control}
                             defaultValue=""
                             rules={validation.birthDate}
-                            render={({ field: { onChange, value } }) => (
+                            render={({field: {onChange, value}}) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}
                                     onChange={(date) => onChange(date ? date.toUnix() : "")}
@@ -134,12 +141,12 @@ const EditStepPersonalDetails = ({ validation }) => {
                                     render={
                                         <TextField
                                             fullWidth
-                                            size="small"
+                                            sx={textFieldStyle}
                                             label="تاریخ تولد"
                                             error={!!errors.birthDate}
                                             helperText={errors.birthDate && errors.birthDate.message}
                                             inputProps={{
-                                                style: { textAlign: 'end' }
+                                                style: {textAlign: 'end'}
                                             }}
                                         />
                                     }
@@ -156,10 +163,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.personalId}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="شماره شناسنامه"
                                 placeholder="شماره شناسنامه"
                                 {...field}
@@ -177,7 +184,7 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.birthPlace}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -190,7 +197,7 @@ const EditStepPersonalDetails = ({ validation }) => {
                                     <TextField
                                         {...params}
                                         {...field}
-                                        size="small"
+                                        sx={textFieldStyle}
                                         label='محل تولد'
                                         error={!!errors.birthPlace}
                                         helperText={errors.birthPlace && errors.birthPlace.message}
@@ -208,7 +215,7 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.issuancePlace}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -221,7 +228,7 @@ const EditStepPersonalDetails = ({ validation }) => {
                                     <TextField
                                         {...params}
                                         {...field}
-                                        size="small"
+                                        sx={textFieldStyle}
                                         label='محل صدور شناسنامه'
                                         error={!!errors.issuancePlace}
                                         helperText={errors.issuancePlace && errors.issuancePlace.message}
@@ -234,14 +241,14 @@ const EditStepPersonalDetails = ({ validation }) => {
 
                 {/* جنسیت */}
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.gender}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.gender}>
                         <InputLabel>جنسیت</InputLabel>
                         <Controller
                             name="gender"
                             control={control}
                             defaultValue=""
                             rules={validation.gender}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="جنسیت"
@@ -262,14 +269,14 @@ const EditStepPersonalDetails = ({ validation }) => {
 
                 {/* وضعیت تاهل */}
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.maritalStatus}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.maritalStatus}>
                         <InputLabel>وضعیت تاهل</InputLabel>
                         <Controller
                             name="maritalStatus"
                             control={control}
                             defaultValue=""
                             rules={validation.maritalStatus}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="وضعیت تاهل"
@@ -290,14 +297,14 @@ const EditStepPersonalDetails = ({ validation }) => {
 
                 {/* وضعیت ایثارگری */}
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.veteranStatus}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.veteranStatus}>
                         <InputLabel>وضعیت ایثارگری</InputLabel>
                         <Controller
                             name="veteranStatus"
                             control={control}
                             defaultValue=""
                             rules={validation.veteranStatus}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="وضعیت ایثارگری"
@@ -318,14 +325,14 @@ const EditStepPersonalDetails = ({ validation }) => {
 
                 {/* نظام وظیفه */}
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.militaryService}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.militaryService}>
                         <InputLabel>نظام وظیفه</InputLabel>
                         <Controller
                             name="militaryService"
                             control={control}
                             defaultValue=""
                             rules={validation.militaryService}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="نظام وظیفه"
@@ -350,10 +357,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.postalCode}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="کدپستی"
                                 placeholder="کدپستی"
                                 {...field}
@@ -370,10 +377,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.insuranceIdentifier}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="شناسه تامین اجتماعی"
                                 placeholder="شناسه تامین اجتماعی"
                                 {...field}
@@ -391,10 +398,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.landlineNumber}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="شماره تماس ثابت"
                                 placeholder="شماره تماس ثابت"
                                 {...field}
@@ -412,10 +419,10 @@ const EditStepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.residenceAddress}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="آدرس محل سکونت"
                                 placeholder="آدرس محل سکونت"
                                 {...field}
