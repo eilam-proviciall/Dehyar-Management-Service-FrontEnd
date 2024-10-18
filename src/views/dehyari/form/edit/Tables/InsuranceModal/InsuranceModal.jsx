@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Backdrop,
     Box,
@@ -12,9 +12,9 @@ import {
     InputLabel, Select, MenuItem
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useForm, Controller, FormProvider } from 'react-hook-form';
+import {useForm, Controller, FormProvider} from 'react-hook-form';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
@@ -41,14 +41,14 @@ const validationSchemas = {
     },
     day: {
         required: 'تعداد ماه الزامی است',
-        min: { value: 1, message: 'حداقل ۱ ماه' },
+        min: {value: 1, message: 'حداقل ۱ ماه'},
     },
     insuranceWorkshop: {
         required: 'انتخاب کارگاه الزامی است',
     },
 };
 
-const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editId = null }) => {
+const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId = null}) => {
     const methods = useForm();
     const [loading, setLoading] = useState(false);
 
@@ -76,6 +76,16 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                     toast.error('خطا در دریافت اطلاعات');
                     setLoading(false);
                 });
+        } else if (mode === 'create') {
+            console.log("AAAAAAAAAAAA")
+            methods.reset({
+                start_date: null,
+                end_date: null,
+                month: '',
+                days: '',
+                dehyari_title: '',
+                insurance_workshop: '',
+            });
         }
     }, [mode, editId, methods]);
 
@@ -119,10 +129,10 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
                 Object.keys(error.response.data.errors).forEach((key) => {
-                    toast.error(error.response.data.errors[key][0], { position: 'top-center' });
+                    toast.error(error.response.data.errors[key][0], {position: 'top-center'});
                 });
             } else {
-                toast.error('خطا در ثبت اطلاعات', { position: 'top-center' });
+                toast.error('خطا در ثبت اطلاعات', {position: 'top-center'});
             }
             console.error('Error submitting form:', error);
         } finally {
@@ -138,7 +148,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
-                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+                sx: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
             }}
         >
             <Box sx={modalStyle}>
@@ -152,10 +162,10 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon/>
                 </IconButton>
 
-                <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
+                <Typography variant="h5" sx={{textAlign: 'center', marginBottom: '20px'}}>
                     {mode === 'create' ? 'ثبت سابقه بیمه' : 'ویرایش سابقه بیمه'}
                 </Typography>
 
@@ -170,7 +180,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                         control={methods.control}
                                         defaultValue={null}
                                         rules={validationSchemas.start_date}
-                                        render={({ field }) => (
+                                        render={({field}) => (
                                             <DatePicker
                                                 value={field.value ? new Date(field.value * 1000) : null}
                                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -200,7 +210,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                         control={methods.control}
                                         defaultValue={null}
                                         rules={validationSchemas.end_date}
-                                        render={({ field }) => (
+                                        render={({field}) => (
                                             <DatePicker
                                                 value={field.value ? new Date(field.value * 1000) : null}
                                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -229,7 +239,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                     control={methods.control}
                                     defaultValue=""
                                     rules={validationSchemas.days}
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <TextField
                                             {...field}
                                             label="تعداد روز"
@@ -246,7 +256,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                     name="dehyari_title"
                                     control={methods.control}
                                     defaultValue=""
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <TextField
                                             {...field}
                                             label="عنوان محل کار"
@@ -266,7 +276,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                                     <Controller
                                         name="insurance_workshop"
                                         control={methods.control}
-                                        render={({ field }) => (
+                                        render={({field}) => (
                                             <Select {...field} label="کارگاه بیمه" size="small">
                                                 <MenuItem value="1">دهیاری</MenuItem>
                                                 <MenuItem value="2">سایر کارگاه‌ها</MenuItem>
@@ -277,7 +287,8 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                             </Grid>
                         </Grid>
 
-                        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading} sx={{ marginTop: 3 }}>
+                        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}
+                                sx={{marginTop: 3}}>
                             {loading ? 'در حال ارسال...' : 'ثبت'}
                         </Button>
                     </form>

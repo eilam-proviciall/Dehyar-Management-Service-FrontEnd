@@ -7,61 +7,6 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
     const { control, formState: { errors } } = useFormContext();
     console.log("Field Key =>", fieldKey);
 
-    const renderAutocomplete = (name, label, options) => (
-        <Controller
-            name={name}
-            control={control}
-            defaultValue={null}
-            render={({ field }) => {
-                const selectedOption = options.find(
-                    option => option.value === field.value?.value
-                );
-                return (
-                    <Autocomplete
-                        {...field}
-                        options={options}
-                        getOptionLabel={(option) => `${option.name}`}
-                        onChange={(event, newValue) => {
-                            field.onChange(newValue || null);
-                            setData(prevData => ({ ...prevData, [name]: newValue }));
-                            name == "states" && (setSelectedState(newValue && newValue.value - 1));
-                        }}
-                        isOptionEqualToValue={(option, value) => option.value === value?.value}
-                        value={selectedOption || null}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={label}
-                                size="small"
-                                fullWidth
-                                error={errors[name]}
-                                helperText={errors?.[name]?.message}
-                            />
-                        )}
-                    />
-                );
-            }}
-        />
-    );
-
-    // fieldKey == 'municipality' ? (
-    //     <Grid className='grid md:grid-cols-5 w-full gap-5'>
-    //         {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
-    //         {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         {renderAutocomplete(`${fieldKey}.departments`, "بخش", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //     </Grid>
-    // )
-    //     : fieldKey == 'dehyari' && (
-    //         <Grid className='grid md:grid-cols-5 w-full gap-5'>
-    //             {renderAutocomplete(`${fieldKey}.states`, "استان", states)}
-    //             {renderAutocomplete(`${fieldKey}.cities`, "شهرستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.regions`, "منطقه", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.dehestans`, "دهستان", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //             {renderAutocomplete(`${fieldKey}.villages`, "روستا", cities[selectedState] ? cities[selectedState].citiesList : [{}])}
-    //         </Grid>
-    //     )
-
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12} sm={4}>
@@ -89,7 +34,7 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="منطقه (استان - شهرستان)"
+                                        label="شهرستان"
                                         size="small"
                                         fullWidth
                                         error={!!field.error}
@@ -108,14 +53,16 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.regions.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        const selectedOption = state.regions[0] ? (
+                            state.regions[0].regions.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
 
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.regions}
+                                options={state.regions[0] ? state.regions[0].regions : state.regions}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);
@@ -145,14 +92,16 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.dehestans.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        const selectedOption = state.dehestans[0] ? (
+                            state.dehestans[0].dehestans.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
 
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.dehestans}
+                                options={state.dehestans[0] ? state.dehestans[0].dehestans : state.dehestans}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);
@@ -182,14 +131,17 @@ const LivingInformationInputs = ({ state, handleStateCityChange, handleRegionCha
                     control={control}
                     defaultValue={null}
                     render={({ field }) => {
-                        const selectedOption = state.villages.find(
-                            option => option.hierarchy_code === field.value?.hierarchy_code
-                        );
+                        console.log("State Regions => ", state.villages);
 
+                        const selectedOption = state.villages[0] ? (
+                            state.villages[0].villages.find(
+                                option => option.hierarchy_code === field.value?.hierarchy_code
+                            )
+                        ) : [];
                         return (
                             <Autocomplete
                                 {...field}
-                                options={state.villages}
+                                options={state.villages[0] ? state.villages[0].villages : state.villages}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue || null);

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
 // ایجاد یک نمونه از Axios
 const api = axios.create({
@@ -11,11 +11,10 @@ api.interceptors.request.use(
         // بررسی نیاز به احراز هویت
         if (config.requiresAuth) {
             const token = window.localStorage.getItem('token');
-            console.log("Token => ", token);
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             } else {
-                toast.error('احراز هویت موفقیت آمیز نبود', { position: "top-center" });
+                toast.error('احراز هویت موفقیت آمیز نبود', {position: "top-center"});
             }
         }
         return config;
@@ -49,9 +48,9 @@ api.interceptors.response.use(
             }
             // toast.error(`${error.response.data.message || "مشکلی به وجود آمده!"}`, { position: "top-center" });
         } else if (error.request) {
-            toast.error(`${error.request}`, { position: "top-center" });
+            toast.error(`${error.request}`, {position: "top-center"});
         } else {
-            toast.error(`${error.message}`, { position: "top-center" });
+            toast.error(`${error.message}`, {position: "top-center"});
         }
         return Promise.reject(error);
     }

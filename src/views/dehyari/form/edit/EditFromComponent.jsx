@@ -13,6 +13,7 @@ import { humanResources } from "@/Services/humanResources";
 import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
+import Loading from '@/@core/components/loading/Loading';
 
 function EditFromComponent() {
     const [defaultValue, setDefaultValue] = useState(null);
@@ -61,7 +62,7 @@ function EditFromComponent() {
 
     const handleSwitch = () => setShowTable(!showTable);
 
-    if (loading) return <div>در حال بارگذاری...</div>;
+    if (loading) return <Loading />
     if (error) return <div>خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.</div>;
 
     return (

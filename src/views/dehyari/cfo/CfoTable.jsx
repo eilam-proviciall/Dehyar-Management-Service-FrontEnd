@@ -1,20 +1,23 @@
 "use client"
-import React, { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { MaterialReactTable } from 'material-react-table';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
+import {IconButton, Menu, MenuItem} from '@mui/material';
+import {DownloadHumanResourcePdf, GetHumanResourcesForCfo} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
+import {pdf} from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
-import { getJobTitleLabel } from "@data/jobTitles";
+import {getJobTitleLabel} from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
+import Loading from '@/@core/components/loading/Loading';
+import CustomIconButton from "@core/components/mui/IconButton";
+import Typography from "@mui/material/Typography";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -33,20 +36,22 @@ function CfoTable(props) {
     // دانلود فایل PDF
     const handleDownloadPdf = async (row) => {
         try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, { requiresAuth: true });
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {requiresAuth: true});
 
             const humanResourceData = response.data;
             console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
+            const doc = <MyDocument data={data}/>;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
             const blob = await asPdf.toBlob();
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
 
-            toast.success('محاسبه موفق بود', { position: "top-center" });
-        } catch (error) { return error }
+            toast.success('محاسبه موفق بود', {position: "top-center"});
+        } catch (error) {
+            return error
+        }
     };
 
     // بستن منو
@@ -58,7 +63,7 @@ function CfoTable(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
+                const response = await api.get(`${GetHumanResourcesForCfo()}`, {requiresAuth: true});
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
@@ -76,41 +81,46 @@ function CfoTable(props) {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'village',
-                header: 'دهیاری',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
-            },
-            {
                 accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ row }) => {
-                    const { first_name, last_name } = row.original;
-                    return <div style={{ textAlign: 'right' }}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                Cell: ({row}) => {
+                    const {first_name, last_name} = row.original;
+                    return <div className={'flex items-center gap-2'}>
+                        <img className={'rounded-full h-5'} src="/images/avatars/1.png" alt="پروفایل"/>
+                        {`${first_name ?? " "} ${last_name ?? " "}`}
+                    </div>;
                 },
+            },
+            {
+                accessorKey: 'village',
+                header: 'دهیاری',
+                size: 150,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'job_type',
                 header: 'پست سازمانی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_type',
                 header: 'نوع قرار داد',
                 size: 150,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     const role = cell.getValue();
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip label={contractType[role]} color="primary" />
+                        <div style={{textAlign: 'right'}}>
+                            <Chip label={contractType[role]}
+                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                            />
                         </div>
                     );
                 },
@@ -119,41 +129,35 @@ function CfoTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                        <IconButton
-                            aria-label="more"
-                            aria-controls={open ? 'long-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-haspopup="true"
-                            onClick={(event) => handleClick(event, row)}
-                            style={{ paddingLeft: 0 }}
-                        >
-                            <MoreVertIcon
-                                style={{ textAlign: "center", justifyContent: 'center', alignItems: 'center' }} />
-                        </IconButton>
-                        <Menu
-                            id="long-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'long-button',
+                Cell: ({row}) => (
+                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                        {/*<CustomIconButton*/}
+                        {/*    color={"error"}*/}
+                        {/*    onClick={() => {*/}
+                        {/*        toast.warning('این قابلیت هنوز افزوده نشده است');*/}
+                        {/*    }}*/}
+                        {/*    className={"rounded-full"}*/}
+                        {/*>*/}
+                        {/*    <i className='ri-delete-bin-7-line'/>*/}
+                        {/*</CustomIconButton>*/}
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}`);
                             }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
+                            className={"rounded-full"}
                         >
-                            <MenuItem onClick={handleClose}>
-                                {currentRow ? (
-                                    <Link href={`/dehyari/form/edit?param=${currentRow.nid}`}>
-                                        ویرایش
-                                    </Link>
-                                ) : (
-                                    <span>ویرایش</span>
-                                )}
-                            </MenuItem>
-                            <MenuItem onClick={() => handleDownloadPdf(currentRow)}>
-                                حکم کارگزینی
-                            </MenuItem>
-                        </Menu>
+                            <i className='ri-edit-box-line'/>
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleDownloadPdf(row.original)
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-printer-line"/>
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -161,16 +165,48 @@ function CfoTable(props) {
         [anchorEl, currentRow]
     );
 
+    const table = useMaterialReactTable({
+        columns,
+        data: tableData,
+        initialState: {
+            density: 'compact'
+        },
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
+    })
+
     if (loading) {
-        return <div>در حال بارگذاری...</div>;
+        return <Loading/>
     }
 
     return (
-        <MaterialReactTable
-            columns={columns}
-            data={tableData}
-        />
-    );
+        <div>
+            <Typography variant={'h5'} mb={5}>فهرست <span className={'text-error font-bold relative inline-block'}>
+                    پرسنل
+                    <img
+                        src="/images/icons/Line-2.png"
+                        alt="زیرخط"
+                        style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            width: '100%',
+                            height: '4px',
+                            position: 'absolute',
+                            bottom: '-2px',
+                            objectFit: 'contain',
+                        }}
+                    />
+                </span>
+                طرف قرارداد</Typography>
+            <MaterialReactTable table={table}/>
+        </div>
+    )
+        ;
 }
 
 export default CfoTable;

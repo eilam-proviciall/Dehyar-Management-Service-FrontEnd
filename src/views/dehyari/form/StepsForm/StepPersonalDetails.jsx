@@ -1,8 +1,8 @@
 import React from 'react';
-import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+import {FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
+import {Controller, useFormContext} from 'react-hook-form';
 import DividerSimple from "@components/common/Divider/DividerSimple";
-import { useFetchCities } from "@hooks/useFetchCities";
+import {useFetchCities} from "@hooks/useFetchCities";
 import Autocomplete from "@mui/material/Autocomplete";
 import PersonalOptions from "@data/PersonalOption.json";
 import validationSchemas from "@views/dehyari/form/validationSchemas";
@@ -12,13 +12,13 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import Chip from "@mui/material/Chip";
 import {toast} from "react-toastify";
 
-const StepPersonalDetails = ({ validation }) => {
-    const { control, register, getValues, setValue, formState: { errors } } = useFormContext();
-    const { cities, isLoading, error } = useFetchCities(true);
+const StepPersonalDetails = ({validation}) => {
+    const {control, register, getValues, setValue, formState: {errors}} = useFormContext();
+    const {cities, isLoading, error} = useFetchCities(true);
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
         if (!phoneRegex.test(phoneNumber)) {
-            toast.error('شماره تلفن باید حداکثر ۱۱ رقم و فقط شامل اعداد انگلیسی باشد',{
+            toast.error('شماره تلفن باید حداکثر ۱۱ رقم و فقط شامل اعداد انگلیسی باشد', {
                 position: "top-center"
             });
             return false;
@@ -37,7 +37,7 @@ const StepPersonalDetails = ({ validation }) => {
                 const newValue = [...currentValues, phoneValue];
                 setValue('phoneNumbers', newValue);
                 field.onChange(newValue);
-                params.inputProps.onChange({ target: { value: '' } });
+                params.inputProps.onChange({target: {value: ''}});
             } else {
                 // اگر شماره تلفن معتبر نیست، آن را از state حذف کنید
                 const newValue = Array.isArray(field.value) ? field.value.filter(phone => phone !== phoneValue) : [];
@@ -47,17 +47,18 @@ const StepPersonalDetails = ({ validation }) => {
         }
     };
 
-
-
-
-
-
+    const textFieldStyle = {
+        height: '45px',
+        '& .MuiInputBase-root': {
+            height: '100%',
+        },
+    };
 
     return (
         <>
-            <Grid container spacing={2} mt={1}>
+            <Grid container spacing={4} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات شخصی' />
+                    <DividerSimple title='اطلاعات شخصی'/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
@@ -65,10 +66,10 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.fullName}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="نام و نام خانوادگی"
                                 placeholder="نام و نام خانوادگی"
                                 {...field}
@@ -84,10 +85,10 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.fatherName}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="نام پدر"
                                 placeholder="نام پدر"
                                 {...field}
@@ -103,10 +104,10 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validationSchemas.jobDetails.nationalCode}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="کد ملی"
                                 placeholder="کد ملی"
                                 {...field}
@@ -127,7 +128,7 @@ const StepPersonalDetails = ({ validation }) => {
                             control={control}
                             defaultValue=""
                             rules={validation.birthDate}
-                            render={({ field: { onChange, value } }) => (
+                            render={({field: {onChange, value}}) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}
                                     onChange={(date) => onChange(date ? date.toUnix() : "")}
@@ -137,12 +138,12 @@ const StepPersonalDetails = ({ validation }) => {
                                     render={
                                         <TextField
                                             fullWidth
-                                            size="small"
+                                            sx={textFieldStyle}
                                             label="تاریخ تولد"
                                             error={!!errors.birthDate}
                                             helperText={errors.birthDate && errors.birthDate.message}
                                             inputProps={{
-                                                style: { textAlign: 'end' }
+                                                style: {textAlign: 'end'}
                                             }}
                                         />
                                     }
@@ -158,10 +159,10 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue={[]}
                         rules={validation.phoneNumber}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <Autocomplete
                                 multiple
-                                size="small"
+                                sx={textFieldStyle}
                                 freeSolo
                                 options={[]}
                                 value={getValues("phoneNumbers")}
@@ -171,7 +172,7 @@ const StepPersonalDetails = ({ validation }) => {
                                         <Chip
                                             variant="outlined"
                                             label={option}
-                                            {...getTagProps({ index })}
+                                            {...getTagProps({index})}
                                             onDelete={() => {
                                                 const newValues = [...field.value];
                                                 newValues.splice(index, 1);
@@ -186,6 +187,7 @@ const StepPersonalDetails = ({ validation }) => {
                                         {...params}
                                         variant="outlined"
                                         label="شماره تلفن"
+                                        sx={textFieldStyle}
                                         placeholder="شماره تلفن را وارد کنید"
                                         onKeyDown={(event) => handlePhoneKeyDown(event, field, params)}
                                         error={!!errors.phoneNumbers}
@@ -202,10 +204,10 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.personalId}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <TextField
                                 fullWidth
-                                size="small"
+                                sx={textFieldStyle}
                                 label="شماره شناسنامه"
                                 placeholder="شماره شناسنامه"
                                 {...field}
@@ -224,7 +226,7 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.birthPlace}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <Autocomplete
                                 options={cities}
                                 getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
@@ -235,7 +237,7 @@ const StepPersonalDetails = ({ validation }) => {
                                     <TextField
                                         {...params}
                                         {...field}
-                                        size="small"
+                                        sx={textFieldStyle}
                                         label='محل تولد'
                                         error={!!errors.birthPlace}
                                         helperText={errors.birthPlace && errors.birthPlace.message}
@@ -251,7 +253,7 @@ const StepPersonalDetails = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.issuancePlace}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <Autocomplete
                                 options={cities}
                                 getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
@@ -262,7 +264,7 @@ const StepPersonalDetails = ({ validation }) => {
                                     <TextField
                                         {...params}
                                         {...field}
-                                        size="small"
+                                        sx={textFieldStyle}
                                         label='محل صدور شناسنامه'
                                         error={!!errors.issuancePlace}
                                         helperText={errors.issuancePlace && errors.issuancePlace.message}
@@ -280,7 +282,7 @@ const StepPersonalDetails = ({ validation }) => {
                             control={control}
                             defaultValue=""
                             rules={validation.gender}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="جنسیت"
@@ -302,14 +304,14 @@ const StepPersonalDetails = ({ validation }) => {
 
             <Grid container spacing={2} mt={1}>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.maritalStatus}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.maritalStatus}>
                         <InputLabel>وضعیت تاهل</InputLabel>
                         <Controller
                             name="maritalStatus"
                             control={control}
                             defaultValue=""
                             rules={validation.maritalStatus}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="وضعیت تاهل"
@@ -328,14 +330,14 @@ const StepPersonalDetails = ({ validation }) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.veteranStatus}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.veteranStatus}>
                         <InputLabel>وضعیت ایثارگری</InputLabel>
                         <Controller
                             name="veteranStatus"
                             control={control}
                             defaultValue=""
                             rules={validation.veteranStatus}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="وضعیت ایثارگری"
@@ -354,14 +356,14 @@ const StepPersonalDetails = ({ validation }) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.militaryService}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.militaryService}>
                         <InputLabel>نظام وظیفه</InputLabel>
                         <Controller
                             name="militaryService"
                             control={control}
                             defaultValue=""
                             rules={validation.militaryService}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Select
                                     {...field}
                                     label="نظام وظیفه"

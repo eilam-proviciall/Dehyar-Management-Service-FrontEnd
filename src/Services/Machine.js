@@ -9,4 +9,8 @@ const getMachineInformation = () => {
     return `${BaseUrl}/machine/machine-information`
 }
 
-export { getMachineBasicInformation, getMachineInformation }
+const getMachineCost = (machineId) => {
+    return `${BaseUrl}/machine/machine-information/${machineId}/machine-cost`
+}
+
+export { getMachineBasicInformation, getMachineInformation, getMachineCost }
