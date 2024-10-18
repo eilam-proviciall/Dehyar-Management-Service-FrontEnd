@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { useFormContext } from 'react-hook-form';
-import { FilePond, registerPlugin } from 'react-filepond';
+import {useFormContext} from 'react-hook-form';
+import {FilePond, registerPlugin} from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -9,19 +9,19 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { styled } from '@mui/material/styles';
-import { toast, ToastContainer } from 'react-toastify';
+import {styled} from '@mui/material/styles';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 registerPlugin(FilePondPluginImagePreview, FilePondPluginFileEncode);
 
-const CustomGrid = styled(Grid)(({ theme }) => ({
+const CustomGrid = styled(Grid)(({theme}) => ({
     maxWidth: '300px',
     minWidth: '350px',
     margin: '0 auto',
 }));
 
-const CenteredGrid = styled(Grid)(({ theme }) => ({
+const CenteredGrid = styled(Grid)(({theme}) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -30,9 +30,10 @@ const CenteredGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const EditProfilePictureUpload = ({defaultProfilePicture}) => {
-    const { setValue } = useFormContext();
+    const {setValue} = useFormContext();
     const [files, setFiles] = useState([]);
     const pondRef = useRef(null);
+
     useEffect(() => {
         if (defaultProfilePicture) {
             setFiles([
@@ -48,8 +49,10 @@ const EditProfilePictureUpload = ({defaultProfilePicture}) => {
                     },
                 },
             ]);
+            setValue('profilePicture', `data:image/jpeg;base64,${defaultProfilePicture}`); // ذخیره base64 در فرم
         }
-    }, [defaultProfilePicture]);
+    }, [defaultProfilePicture, setValue]);
+
     const handleFileChange = (fileItems) => {
         if (fileItems.length > 0) {
             const file = fileItems[0].file;
@@ -101,7 +104,7 @@ const EditProfilePictureUpload = ({defaultProfilePicture}) => {
                     />
                 </CardContent>
             </Card>
-            <ToastContainer />
+            <ToastContainer/>
         </>
     );
 };

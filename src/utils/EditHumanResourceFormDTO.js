@@ -1,6 +1,6 @@
 class HumanResourceDTO {
     constructor(apiData) {
-        console.log(apiData)
+        console.log("Edit Human Resource DTO => ", apiData);
         this.firstName = apiData.first_name; // افزودن فیلد نام
         this.lastName = apiData.last_name; // افزودن فیلد نام خانوادگی
         this.id = apiData.id;
@@ -25,7 +25,7 @@ class HumanResourceDTO {
             graduationDate: education.education_date,
         }));
         this.insurances = apiData.insurance_histories.map(insurance => ({
-            startDate: insurance.start_date ,
+            startDate: insurance.start_date,
             endDate: insurance.end_date,
             days: insurance.days,
             dehyariTitle: insurance.dehyari_title,
@@ -54,6 +54,8 @@ class HumanResourceDTO {
     }
 
     static fromForm(formData) {
+        console.log("AAAA");
+        console.log("Form Data => ", formData);
         return {
             first_name: formData.firstName, // افزودن فیلد نام
             last_name: formData.lastName, // افزودن فیلد نام خانوادگی

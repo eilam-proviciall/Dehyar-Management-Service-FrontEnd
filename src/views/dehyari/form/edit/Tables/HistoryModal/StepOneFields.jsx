@@ -21,6 +21,7 @@ import jobTitleOptions from "@data/jobTitles";
 import {GetHumanCoverdVillageForCfo} from "@/Services/humanResources";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import api from '@/utils/axiosInstance';
+import contractType from "@data/contractType.json";
 
 const StepOneFields = ({validation, mode}) => {
     const {control, formState: {errors}, setValue, getValues} = useFormContext();
@@ -124,7 +125,7 @@ const StepOneFields = ({validation, mode}) => {
     const findOption = (value) => options.find(option => option.value === value) || null;
 
     return (
-        <Grid className='p-5 border-2 rounded-xl' container spacing={2}>
+        <Grid className='p-5 border-2 rounded-xs' container spacing={2}>
             <div className='grid grid-cols-2 gap-5 w-full my-5'>
                 {/* پست سازمانی */}
                 <FormControl fullWidth>
@@ -193,9 +194,9 @@ const StepOneFields = ({validation, mode}) => {
                                             className='col-span-3'
                                             sx={{width: '80%', color: 'primary.main'}}
                                         />
-                                        <Typography sx={{pl: "18px"}}>
-                                            {field.value === 30 ? 'تمام وقت' : `${field.value} روز کارکرد`}
-                                        </Typography>
+                                        <Chip label={field.value === 30 ? "تمام وقت" : `${field.value} روز کارکرد `}
+                                              className={`h-7 rounded-full ${field.value === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                                        />
                                     </Box>
                                 )}
                             />

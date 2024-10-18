@@ -81,19 +81,22 @@ function CfoTable(props) {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'village',
-                header: 'دهیاری',
-                size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
-            },
-            {
                 accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
                 Cell: ({row}) => {
                     const {first_name, last_name} = row.original;
-                    return <div style={{textAlign: 'right'}}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                    return <div className={'flex items-center gap-2'}>
+                        <img className={'rounded-full h-5'} src="/images/avatars/1.png" alt="پروفایل"/>
+                        {`${first_name ?? " "} ${last_name ?? " "}`}
+                    </div>;
                 },
+            },
+            {
+                accessorKey: 'village',
+                header: 'دهیاری',
+                size: 150,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'job_type',
@@ -115,7 +118,9 @@ function CfoTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary" size={'5'}/>
+                            <Chip label={contractType[role]}
+                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                            />
                         </div>
                     );
                 },
