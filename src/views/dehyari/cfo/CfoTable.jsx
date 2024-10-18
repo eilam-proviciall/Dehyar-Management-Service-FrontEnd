@@ -92,7 +92,10 @@ function CfoTable(props) {
                 size: 150,
                 Cell: ({row}) => {
                     const {first_name, last_name} = row.original;
-                    return <div style={{textAlign: 'right'}}>{`${first_name ?? " "} ${last_name ?? " "}`}</div>;
+                    return <div className={'flex items-center gap-2'}>
+                        <img className={'rounded-full h-5'} src="/images/avatars/1.png" alt="پروفایل"/>
+                        {`${first_name ?? " "} ${last_name ?? " "}`}
+                    </div>;
                 },
             },
             {
@@ -115,7 +118,7 @@ function CfoTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary" size={'5'}/>
+                            <Chip label={contractType[role]} color="success" sx={{ height: '25px', fontSize: '14px', padding: '0 10px' }}/>
                         </div>
                     );
                 },
