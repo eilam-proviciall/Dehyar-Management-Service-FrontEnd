@@ -11,7 +11,6 @@ const StepTwoFields = ({validation}) => {
     console.log("Start Date => ", getValues('contractStart'));
     console.log("End Date => ", getValues('contractEnd'));
 
-
     return (
         <Grid className='p-5 border-2 rounded-xs' container spacing={2}>
             <div className='grid grid-cols-1 w-full gap-5 my-5'>
