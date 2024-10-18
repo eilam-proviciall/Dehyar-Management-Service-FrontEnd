@@ -81,12 +81,6 @@ function CfoTable(props) {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'village',
-                header: 'دهیاری',
-                size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
-            },
-            {
                 accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
@@ -97,6 +91,12 @@ function CfoTable(props) {
                         {`${first_name ?? " "} ${last_name ?? " "}`}
                     </div>;
                 },
+            },
+            {
+                accessorKey: 'village',
+                header: 'دهیاری',
+                size: 150,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'job_type',
@@ -118,7 +118,9 @@ function CfoTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="success" sx={{ height: '25px', fontSize: '14px', padding: '0 10px' }}/>
+                            <Chip label={contractType[role]}
+                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                            />
                         </div>
                     );
                 },
