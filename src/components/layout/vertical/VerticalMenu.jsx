@@ -81,15 +81,8 @@ const VerticalMenu = ({scrollMenu}) => {
         }
 
         return filteredItems.map(item => (
-            <MenuItem className={"flex"} key={item.href} href={item.href}>
-                <div className={"flex items-center gap-2"}>
-                    <span>
-                    {item.icon}
-                    </span>
-                    <span className={"hidden lg:block"}>
+            <MenuItem icon={item.icon} key={item.href} href={item.href} >
                     {item.label}
-                    </span>
-                </div>
             </MenuItem>
         ));
     };
