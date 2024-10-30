@@ -1,27 +1,23 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { selectedEvent } from "@/redux-store/slices/calendar";
-import Chip from "@mui/material/Chip";
-import { user } from "@/Services/Auth/AuthService";
-import roles from "@data/roles.json"
-import { IconButton, Menu, MenuItem } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
+import FilterButton from "@core/components/mui/FilterButton";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
 
-
-const TimeOffTable = ({ handleToggle, setMode }) => {
+const TimeOffTable = ({handleToggle, setMode}) => {
     const [timeOffs, setTimeOffs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [filterStatus, setFilterStatus] = useState('');
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(10);
-    const open = Boolean(anchorEl);
+    const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
+    const buttonRefs = useRef([]);
 
     const fetchTimeOffs = async () => {
         console.log("Refresh");
@@ -39,37 +35,22 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
         loading ? fetchTimeOffs() : null;
     }, [loading]);
 
-    // Handlers
-    const handleClick = (event, row) => {
-        setAnchorEl(event.currentTarget);
-        setSelectedRow(row);
+    const handleFilterChange = (status, index) => {
+        setFilterStatus(status);
+        const button = buttonRefs.current[index];
+        if (button) {
+            const { offsetWidth, offsetLeft } = button;
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleEditTimeOff = (row) => {
-        console.log("User : ", row);
-        setAnchorEl(null);
-        handleAddEventSidebarToggle();
-    }
-
-    const handleDeleteTimeOff = (row) => {
-        api.delete(`${user()}/${row.original.id}`, { requiresAuth: true })
-            .then(() => {
-                toast.success("کاربر با موفقیت حذف شد", {
-                    position: "top-center"
-                });
-                setLoading(true);
-            }).catch((error) => error)
-        // toast.warning("این قابلیت به زودی افزوده میشود!",
-        //     {
-        //         position: "top-center",
-        //         duration: 3000
-        //     }
-        // );
-    }
+    useEffect(() => {
+        // Set initial highlight on the "همه" button
+        if (buttonRefs.current[0]) {
+            const { offsetWidth, offsetLeft } = buttonRefs.current[0];
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    }, []);
 
     const columns = useMemo(
         () => [
@@ -77,34 +58,34 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
                 accessorKey: 'type',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({ row }) => {
-                    const { first_name, last_name } = row.original;
-                    return <div style={{ textAlign: 'right' }}>{`${first_name} ${last_name}`}</div>;
+                Cell: ({row}) => {
+                    const {first_name, last_name} = row.original;
+                    return <div style={{textAlign: 'right'}}>{`${first_name} ${last_name}`}</div>;
                 },
             },
             {
                 accessorKey: 'start_date',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'duration',
                 header: 'استان',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div></div>
             },
             {
                 accessorKey: 'attachment_file',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div></div>
             },
             {
                 accessorKey: 'user_id',
                 header: 'بخش',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div></div>
             },
             {
                 accessorKey: 'actions',
@@ -114,18 +95,14 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
                     <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
                         <CustomIconButton
                             color={"error"}
-                            onClick={() => {
-                                handleDeleteTimeOff(row);
-                            }}
+                            onClick={() => handleDeleteTimeOff(row)}
                             className={"rounded-full"}
                         >
                             <i className='ri-delete-bin-7-line'/>
                         </CustomIconButton>
                         <CustomIconButton
                             color={"primary"}
-                            onClick={() => {
-                                handleEditTimeOff(row);
-                            }}
+                            onClick={() => handleEditTimeOff(row)}
                             className={"rounded-full"}
                         >
                             <i className='ri-edit-box-line'/>
@@ -134,28 +111,75 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
                 ),
             },
         ],
-        [anchorEl, selectedRow]
+        []
     );
 
     const table = useMaterialReactTable({
         columns,
         data: timeOffs,
+        state: {
+            isLoading: loading,
+            columnFilters: filterStatus ? [{ id: 'status', value: filterStatus }] : [],
+        },
         renderTopToolbarCustomActions: ({ table }) => (
-            <Box
-                sx={{
-                    display: 'flex',
-                    padding: '8px',
-                    flexWrap: 'wrap',
-                }}
-            >
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={handleToggle}
-                    startIcon={<i className='ri-add-line' />}
-                >
-                    افزودن مرخصی
+            <Box sx={{ position: 'relative', display: 'flex', alignItems:'center', gap:1 }}>
+                <Box
+                    className={'bg-primary rounded-full'}
+                    sx={{
+                        position: 'absolute',
+                        height: '90%',
+                        transition: 'width 0.3s, right 0.3s',
+                        ...highlightStyle,
+                    }}
+                />
+                <Button variant='contained' onClick={handleToggle}>
+                    <i className='ri-add-line' />
                 </Button>
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
+                    ref={(el) => (buttonRefs.current[0] = el)}
+                    label="همه"
+                    onClick={() => handleFilterChange('', 0)}
+                    clickable
+                    variant={filterStatus === '' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === '' ? 'white' : 'black' }}
+                />
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
+                    ref={(el) => (buttonRefs.current[1] = el)}
+                    label="پیش‌نویس"
+                    onClick={() => handleFilterChange('draft', 1)}
+                    clickable
+                    variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
+                />
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
+                    ref={(el) => (buttonRefs.current[2] = el)}
+                    label="در حال بررسی"
+                    onClick={() => handleFilterChange('reviewing', 2)}
+                    clickable
+                    variant={filterStatus === 'reviewing' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'reviewing' ? 'white' : 'black' }}
+                />
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
+                    ref={(el) => (buttonRefs.current[3] = el)}
+                    label="تایید شده"
+                    onClick={() => handleFilterChange('approved', 3)}
+                    clickable
+                    variant={filterStatus === 'approved' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'approved' ? 'white' : 'black' }}
+                />
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
+                    ref={(el) => (buttonRefs.current[4] = el)}
+                    label="رد شده"
+                    onClick={() => handleFilterChange('rejected', 4)}
+                    clickable
+                    variant={filterStatus === 'rejected' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'rejected' ? 'white' : 'black' }}
+                />
             </Box>
         ),
         initialState: {
@@ -164,21 +188,13 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
                 pageIndex: page,
                 pageSize: perPage,
             }
-        },  // تنظیم تراکم به صورت پیش‌فرض روی compact
-        rowCount: timeOffs.length,
-        state: {
-            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
-            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
         },
         muiSkeletonProps: {
-            animation: 'wave', // تنظیم انیمیشن Skeletons
-            height: 28, // ارتفاع Skeletons
+            animation: 'wave',
+            height: 28,
         },
         muiLinearProgressProps: {
-            color: 'primary', // رنگ Progress Bars
-        },
-        muiCircularProgressProps: {
-            color: 'secondary', // رنگ Circular Progress (در صورت استفاده)
+            color: 'primary',
         },
         muiPaginationProps: {
             color: 'primary',
@@ -187,7 +203,7 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
             variant: 'outlined',
             sx: {
                 button: {
-                    borderRadius: '50%', // تبدیل دکمه‌ها به دایره‌ای
+                    borderRadius: '50%',
                 },
             },
         },
@@ -202,7 +218,9 @@ const TimeOffTable = ({ handleToggle, setMode }) => {
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <Box>
+            <MaterialReactTable table={table}/>
+        </Box>
     );
 }
 

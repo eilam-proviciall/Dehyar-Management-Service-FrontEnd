@@ -18,14 +18,13 @@ class HumanResourceDTO {
         this.postalCode = apiData.postal_code; // کدپستی
         this.residenceAddress = apiData.residence_address; // آدرس محل سکونت
         this.landlineNumber = apiData.landline_number; // شماره تماس ثابت
-
         this.educations = apiData.education_histories.map(education => ({
             degree: education.education_degree,
             fieldOfStudy: education.education_field,
             graduationDate: education.education_date,
         }));
         this.insurances = apiData.insurance_histories.map(insurance => ({
-            startDate: insurance.start_date,
+            startDate: insurance.start_date ,
             endDate: insurance.end_date,
             days: insurance.days,
             dehyariTitle: insurance.dehyari_title,
@@ -54,7 +53,6 @@ class HumanResourceDTO {
     }
 
     static fromForm(formData) {
-        console.log("AAAA");
         console.log("Form Data => ", formData);
         return {
             first_name: formData.firstName, // افزودن فیلد نام

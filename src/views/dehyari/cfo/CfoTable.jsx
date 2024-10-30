@@ -87,7 +87,7 @@ function CfoTable(props) {
                 Cell: ({row}) => {
                     const {first_name, last_name} = row.original;
                     return <div className={'flex items-center gap-2'}>
-                        <img className={'rounded-full h-5'} src="/images/avatars/1.png" alt="پروفایل"/>
+                        <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل"/>
                         {`${first_name ?? " "} ${last_name ?? " "}`}
                     </div>;
                 },
@@ -119,7 +119,7 @@ function CfoTable(props) {
                     return (
                         <div style={{textAlign: 'right'}}>
                             <Chip label={contractType[role]}
-                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
                             />
                         </div>
                     );
