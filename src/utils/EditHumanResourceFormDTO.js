@@ -24,7 +24,7 @@ class HumanResourceDTO {
             graduationDate: education.education_date,
         }));
         this.insurances = apiData.insurance_histories.map(insurance => ({
-            startDate: insurance.start_date,
+            startDate: insurance.start_date ,
             endDate: insurance.end_date,
             days: insurance.days,
             dehyariTitle: insurance.dehyari_title,
