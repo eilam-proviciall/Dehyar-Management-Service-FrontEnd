@@ -31,7 +31,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
     }),
     '& .Toastify__toast': {
       minBlockSize: 46,
-      borderRadius: 'var(--mui-shape-customBorderRadius-lg)',
+      borderRadius: '12px',
       padding: theme.spacing(1.5, 2.5),
       backgroundColor: 'var(--mui-palette-background-paper)',
       boxShadow: settings.skin === 'bordered' ? 'none' : 'var(--mui-customShadows-md)',
@@ -49,8 +49,9 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
           }
         },
         '&.Toastify__toast--error': {
+          backgroundColor: '#ff4452',
           '& .Toastify__toast-icon svg': {
-            fill: 'var(--mui-palette-error-main)'
+            fill: '#fff'
           }
         },
         '&.Toastify__toast--warning': {
@@ -101,9 +102,9 @@ const AppReactToastify = props => {
   const position = direction === 'rtl' ? positionMap[themeConfig.toastPosition] : themeConfig.toastPosition
 
   return (
-    <ToastifyWrapper {...boxProps}>
-      <ToastContainer rtl={direction === 'rtl'} position={position} {...rest} />
-    </ToastifyWrapper>
+      <ToastifyWrapper {...boxProps}>
+        <ToastContainer rtl={true} position={position} {...rest} stacked />
+      </ToastifyWrapper>
   )
 }
 
