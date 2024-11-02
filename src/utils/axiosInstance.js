@@ -14,7 +14,7 @@ api.interceptors.request.use(
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             } else {
-                toast.error('احراز هویت موفقیت آمیز نبود', {position: "top-center"});
+                toast.error('احراز هویت موفقیت آمیز نبود');
             }
         }
         return config;
@@ -38,19 +38,15 @@ api.interceptors.response.use(
                     });
                 });
             } else if (error.response.data.message) {
-                toast.error(error.response.data.message, {
-                    position: "top-center"
-                });
+                toast.error(error.response.data.message);
             } else {
-                toast.error("خطای ناشناخته", {
-                    position: "top-center"
-                });
+                toast.error("خطای ناشناخته");
             }
             // toast.error(`${error.response.data.message || "مشکلی به وجود آمده!"}`, { position: "top-center" });
         } else if (error.request) {
-            toast.error(`${error.request}`, {position: "top-center"});
+            toast.error(`${error.request}`);
         } else {
-            toast.error(`${error.message}`, {position: "top-center"});
+            toast.error(`${error.message}`);
         }
         return Promise.reject(error);
     }

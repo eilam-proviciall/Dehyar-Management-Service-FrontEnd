@@ -90,18 +90,14 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
-                    toast.success("کاربر با موفقیت ویرایش شد", {
-                        position: "top-center"
-                    });
+                    toast.success("کاربر با موفقیت ویرایش شد");
                     handleSidebarClose();
                     setLoading(true);
                 }).catch((error) => error)
         ) : (
             api.post(user(), processedData, { requiresAuth: true })
                 .then(() => {
-                    toast.success("کاربر با موفقیت ایجاد شد", {
-                        position: "top-center"
-                    });
+                    toast.success("کاربر با موفقیت ایجاد شد");
                     handleSidebarClose();
                     setLoading(true);
                 }).catch((error) => error)
