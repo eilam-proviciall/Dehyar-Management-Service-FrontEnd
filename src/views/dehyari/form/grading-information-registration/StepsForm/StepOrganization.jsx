@@ -17,10 +17,7 @@ const StepOrganization = ({ data, setData, step, setStep }) => {
     ]
 
     const handleNextStep = () => {
-        data.organization_type === '' ? toast.error("شما باید یک سازمان را برای رفتن به مرحله بعد انتخاب نمایید", {
-            position: "top-center",
-            duration: 3000,
-        }) : setStep(1);
+        data.organization_type === '' ? toast.error("شما باید یک سازمان را برای رفتن به مرحله بعد انتخاب نمایید") : setStep(1);
     }
 
     return (

@@ -18,9 +18,7 @@ const EditStepPersonalDetails = ({validation}) => {
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
         if (!phoneRegex.test(phoneNumber)) {
-            toast.error('شماره تلفن باید حداکثر ۱۱ رقم و فقط شامل اعداد انگلیسی باشد', {
-                position: "top-center"
-            });
+            toast.error('شماره تلفن باید حداکثر ۱۱ رقم و فقط شامل اعداد انگلیسی باشد');
             return false;
         }
         return true;

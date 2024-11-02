@@ -26,10 +26,7 @@ const StepPopulationNew = ({data, setData, step, setStep}) => {
             setData(prevValues => ({...prevValues, populations: newData.populations}));
             setStep(step + 1)
         } else {
-            toast.error("شما باید حداقل یک ردیف ایجاد کنید", {
-                position: "top-center",
-                duration: 3000,
-            })
+            toast.error("شما باید حداقل یک ردیف ایجاد کنید")
         }
     }
 

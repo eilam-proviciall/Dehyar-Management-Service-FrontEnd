@@ -73,9 +73,7 @@ const GradingTable = ({handleToggle, setMode, setData, methods}) => {
     const handleDeleteGrading = (row) => {
         api.delete(`${getDivisonInformation()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
-                toast.success("کاربر با موفقیت حذف شد", {
-                    position: "top-center"
-                });
+                toast.success("کاربر با موفقیت حذف شد");
                 setLoading(true);
             }).catch((error) => error)
         // toast.warning("این قابلیت به زودی افزوده میشود!",

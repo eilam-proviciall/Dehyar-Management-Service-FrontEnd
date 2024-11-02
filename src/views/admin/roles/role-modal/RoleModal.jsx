@@ -61,10 +61,7 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
         if (status == "add") {
             const exists = allData.some(item => item.name == data.name);
             if (exists) {
-                return toast.error("نام لاتین انتخابی شما تکراری است!", {
-                    position: "top-center",
-                    duration: 3000
-                });
+                return toast.error("نام لاتین انتخابی شما تکراری است!");
             } else {
                 try {
                     await api.post(
@@ -75,18 +72,12 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
                         },
                         { requiresAuth: true }
                     );
-                    toast.success('نقش جدید با موفقیت افزوده شد', {
-                        position: "top-center",
-                        duration: 3000
-                    });
+                    toast.success('نقش جدید با موفقیت افزوده شد');
                     onClose();
                     return onRefresh();
                 }
                 catch {
-                    return toast.error('خطایی رخ داده', {
-                        position: "top-center",
-                        duration: 3000
-                    });
+                    return toast.error('خطایی رخ داده');
                 }
             }
         }
@@ -104,18 +95,12 @@ const RoleModal = ({ data, allData, onRefresh, onClose }) => {
                     requiresAuth: true,
                 },
             );
-            toast.success('نقش مورد نظر شما ویرایش شد', {
-                position: "top-center",
-                duration: 3000
-            });
+            toast.success('نقش مورد نظر شما ویرایش شد');
             onClose();
             return onRefresh();
         }
         catch {
-            toast.error('خطایی رخ داده', {
-                position: "top-center",
-                duration: 3000
-            });
+            toast.error('خطایی رخ داده');
         }
     }
 

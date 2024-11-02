@@ -62,10 +62,7 @@ const UpgradeVillageTable = ({ loading, setLoading, handleAddEventSidebarToggle,
     const handleSaveVillageInformation = () => {
         setIsUpdatingVillageRate(true);
         console.log("Saving changes: ", upgradeVillageRanks);
-        toast.success("تغییرات با موفقیت ذخیره شد", {
-            position: "top-center",
-            duration: 3000
-        });
+        toast.success("تغییرات با موفقیت ذخیره شد");
         setIsUpdatingVillageRate(false);
     };
 

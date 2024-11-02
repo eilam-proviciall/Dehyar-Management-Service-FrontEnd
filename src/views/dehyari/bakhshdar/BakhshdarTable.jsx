@@ -40,9 +40,7 @@ function BakhshdarTable(props) {
             } catch (error) {
                 console.log("Error => ", error);
                 if (error.response && error.response.status === 403) {
-                    toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!', {
-                        position: "top-center"
-                    });
+                    toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!');
                 } else {
                     toast.error('خطا در دریافت اطلاعات');
                 }

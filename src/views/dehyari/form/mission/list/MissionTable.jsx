@@ -59,9 +59,7 @@ const MissionTable = ({handleToggle, setMode}) => {
     const handleDeleteTimeOff = (row) => {
         api.delete(`${user()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
-                toast.success("کاربر با موفقیت حذف شد", {
-                    position: "top-center"
-                });
+                toast.success("کاربر با موفقیت حذف شد");
                 setLoading(true);
             }).catch((error) => error)
         // toast.warning("این قابلیت به زودی افزوده میشود!",
