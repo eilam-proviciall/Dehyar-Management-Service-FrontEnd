@@ -41,7 +41,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
       }),
       '&:not(.custom-toast)': {
         '& .Toastify__toast-body': {
-          color: 'var(--mui-palette-text-primary)',
+          color: '#fff',
         },
         '&.Toastify__toast--success': {
           backgroundColor: '#28a745',
@@ -105,7 +105,7 @@ const AppReactToastify = props => {
 
   return (
       <ToastifyWrapper {...boxProps}>
-        <ToastContainer rtl={true} position={"bottom-right"} stacked progressStyle={{ backgroundColor: '#ffffff' }} />
+        <ToastContainer rtl={true} position={"bottom-right"} stacked progressStyle={{backgroundColor: '#fff'}} />
       </ToastifyWrapper>
   )
 }
