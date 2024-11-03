@@ -63,7 +63,6 @@ const ButtonGroup = ({ onSubmit }) => {
             "centralGovernor": "صفیه علی اولاد",
             "sivanGovernor": "آزاد شریفی نژاد"
         }
-
         // try {
         // const response = await axios.get(getSalary(id), {
         //     headers: { Authorization: `Bearer ${window.localStorage.getItem('token')}` },
@@ -119,12 +118,6 @@ const ButtonGroup = ({ onSubmit }) => {
                 // onClick={handleDownload}
                 >
                     حکم کارگزینی
-                </Button>
-                <Button fullWidth color='secondary' variant='outlined' className='capitalize'>
-                    اطلاعات پرسنلی
-                </Button>
-                <Button fullWidth color='secondary' variant='outlined' className='capitalize'>
-                    پروفایل
                 </Button>
             </CardContent>
         </Card>
