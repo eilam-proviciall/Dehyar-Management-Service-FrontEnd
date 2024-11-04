@@ -124,7 +124,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ position: 'relative', display: 'flex', alignItems:'center', gap:1 }}>
                 <Box
-                    className={'bg-primary rounded-full'}
+                    className={'bg-backgroundPaper rounded-full'}
                     sx={{
                         position: 'absolute',
                         height: '90%',
@@ -141,8 +141,8 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
                     clickable
-                    variant={filterStatus === '' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === '' ? 'white' : 'black' }}
+                    variant={ 'outlined'}
+                    className={`text-textPrimary`}
                 />
                 <Chip
                     avatar={<Avatar>0</Avatar>}
@@ -150,17 +150,17 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
                     clickable
-                    variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
+                    variant={ 'outlined'}
+                    className={`text-textPrimary`}
                 />
                 <Chip
-                    avatar={<Avatar>0</Avatar>}
+                    avatar={<Avatar>0 </Avatar>}
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
                     clickable
-                    variant={filterStatus === 'reviewing' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'reviewing' ? 'white' : 'black' }}
+                    variant={ 'outlined'}
+                    className={`text-textPrimary`}
                 />
                 <Chip
                     avatar={<Avatar>0</Avatar>}
@@ -168,8 +168,8 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
                     clickable
-                    variant={filterStatus === 'approved' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'approved' ? 'white' : 'black' }}
+                    variant={ 'outlined'}
+                    className={`text-textPrimary`}
                 />
                 <Chip
                     avatar={<Avatar>0</Avatar>}
@@ -177,8 +177,8 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
                     clickable
-                    variant={filterStatus === 'rejected' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'rejected' ? 'white' : 'black' }}
+                    variant={ 'outlined'}
+                    className={`text-textPrimary`}
                 />
             </Box>
         ),

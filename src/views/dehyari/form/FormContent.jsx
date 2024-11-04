@@ -7,6 +7,7 @@ import StepInsurance from "@views/dehyari/form/StepsForm/StepInsurance";
 import StepChildren from "@views/dehyari/form/StepsForm/StepChildren";
 import StepContract from "@views/dehyari/form/StepsForm/StepContract";
 import StepJobDetails from "@views/dehyari/form/StepsForm/JobDetails/StepJobDetails";
+import StepPhoneNumberContact from "@views/dehyari/form/StepsForm/StepPhoneNumberContact";
 
 const FormContent = ({invoiceData}) => (
     <Card>
@@ -15,6 +16,7 @@ const FormContent = ({invoiceData}) => (
                 {/*<StepJobDetails invoiceData={invoiceData} validation={validationSchemas.jobDetails} />*/}
                 <StepPersonalDetails validation={validationSchemas.personalDetails}/>
                 <StepEducation validation={validationSchemas.education}/>
+                <StepPhoneNumberContact validation={validationSchemas}/>
                 {/*<StepInsurance validation={validationSchemas.insurance} />*/}
                 <StepChildren validation={validationSchemas.children}/>
                 {/*<StepContract validation={validationSchemas.contract} />*/}

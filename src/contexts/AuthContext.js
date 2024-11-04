@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
                         )
                         .catch(
                             error => {
-                                toast.error(error, { position: "top-center" })
+                                toast.error(error)
                                 router.push('/login');
                                 setUser(null);
                                 if (router.pathname !== '/login') {
@@ -57,10 +57,7 @@ const AuthProvider = ({ children }) => {
             if (typeof window !== 'undefined') {
                 window.localStorage.setItem('token', access_token);
             }
-            toast.success('ورود با موفقیت انجام شد', {
-                position: "top-center",
-                duration: 3000
-            });
+            toast.success('ورود با موفقیت انجام شد');
             const userResponse = await api.get(me(), { requiresAuth: true });
             const userData = userResponse.data.data.user.original;
             setUser(userData);
@@ -77,10 +74,7 @@ const AuthProvider = ({ children }) => {
                 router.push('/login');
             }
         } catch (error) {
-            toast.error('اطلاعات وارد شده صحیح نمیباشد', {
-                position: "top-center",
-                duration: 3000
-            });
+            toast.error('اطلاعات وارد شده صحیح نمیباشد');
         } finally {
             setLoading(false);
         }

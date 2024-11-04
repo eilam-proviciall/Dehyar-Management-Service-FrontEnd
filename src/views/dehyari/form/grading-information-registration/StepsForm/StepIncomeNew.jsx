@@ -66,25 +66,16 @@ const StepIncomeNew = ({ data, setData, step, setStep, onClose, mode, methods })
             console.log("Methods =>", methods);
             if (mode == 'add') {
                 await api.post(getDivisonInformation(), finallyData, { requiresAuth: true });
-                toast.success("اطلاعات با موفقیت ثبت شد", {
-                    position: "top-center",
-                    duration: 3000,
-                });
+                toast.success("اطلاعات با موفقیت ثبت شد");
             } else {
                 await api.put(`${getDivisonInformation()}/${data.id}`, finallyData, { requiresAuth: true });
                 console.log("Finally Data => ", finallyData);
-                toast.success("اطلاعات با موفقیت ویرایش شد", {
-                    position: "top-center",
-                    duration: 3000,
-                });
+                toast.success("اطلاعات با موفقیت ویرایش شد");
             }
             onClose();
             setStep(0);
         } else {
-            toast.error("شما باید حداقل یک ردیف ایجاد کنید", {
-                position: "top-center",
-                duration: 3000,
-            })
+            toast.error("شما باید حداقل یک ردیف ایجاد کنید")
         }
         console.log("Mode => ", mode);
         console.log("New Data => ", newData);

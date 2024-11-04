@@ -57,12 +57,7 @@ const UserListTable = ({
     };
 
     const handleUserLogin = (row) => {
-        toast.warning("این قابلیت به زودی افزوده میشود!",
-            {
-                position: "top-center",
-                duration: 3000
-            }
-        );
+        toast.warning("این قابلیت به زودی افزوده میشود!");
     }
 
     const handleEditUser = (row) => {
@@ -74,20 +69,13 @@ const UserListTable = ({
 
     const handleChangePassword = (row) => {
         console.log(row);
-        toast.warning("این قابلیت به زودی افزوده میشود!",
-            {
-                position: "top-center",
-                duration: 3000
-            }
-        );
+        toast.warning("این قابلیت به زودی افزوده میشود!");
     }
 
     const handleDeleteUser = (row) => {
         api.delete(`${user()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
-                toast.success("کاربر با موفقیت حذف شد", {
-                    position: "top-center"
-                });
+                toast.success("کاربر با موفقیت حذف شد");
                 setLoading(true);
             }).catch((error) => error)
         // toast.warning("این قابلیت به زودی افزوده میشود!",

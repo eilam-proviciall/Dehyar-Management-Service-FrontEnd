@@ -52,12 +52,7 @@ function Roles() {
     const handleDeleteRole = async (row) => {
         await api.delete(`${getRoles()}/${row.original.id}`, { requiresAuth: true })
             .then(() => {
-                toast.success("نقش مورد نظر شما با موفقیت حذف شد",
-                    {
-                        position: "top-center",
-                        duration: 3000
-                    }
-                );
+                toast.success("نقش مورد نظر شما با موفقیت حذف شد");
                 return fetchRoles();
             })
             .catch((error) => {

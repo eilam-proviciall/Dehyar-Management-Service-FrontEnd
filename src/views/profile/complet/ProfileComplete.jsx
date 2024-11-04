@@ -64,9 +64,7 @@ const ProfileComplete = () => {
                 requiresAuth: true
             });
 
-            toast.success("بروزرسانی اطلاعات با موفقیت انجام شد", {
-                position: "top-center"
-            });
+            toast.success("بروزرسانی اطلاعات با موفقیت انجام شد");
             logout();
         } catch (error) {
             if (error.response && error.response.data.errors) {
@@ -77,13 +75,9 @@ const ProfileComplete = () => {
                     });
                 });
             } else if (error.response && error.response.data.message) {
-                toast.error(error.response.data.message, {
-                    position: "top-center"
-                });
+                toast.error(error.response.data.message);
             } else {
-                toast.error("خطای ناشناخته", {
-                    position: "top-center"
-                });
+                toast.error("خطای ناشناخته");
             }
         }
     };

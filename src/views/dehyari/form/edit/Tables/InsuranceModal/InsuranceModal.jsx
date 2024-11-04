@@ -129,10 +129,10 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
         } catch (error) {
             if (error.response && error.response.data && error.response.data.errors) {
                 Object.keys(error.response.data.errors).forEach((key) => {
-                    toast.error(error.response.data.errors[key][0], {position: 'top-center'});
+                    toast.error(error.response.data.errors[key][0]);
                 });
             } else {
-                toast.error('خطا در ثبت اطلاعات', {position: 'top-center'});
+                toast.error('خطا در ثبت اطلاعات');
             }
             console.error('Error submitting form:', error);
         } finally {

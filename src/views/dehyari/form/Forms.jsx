@@ -57,7 +57,7 @@ const Forms = ({ invoiceData }) => {
             setLoading(true);
             api.get(GetHumanResource(id), { requiresAuth: true })
                 .then(response => {
-                    methods.reset(dtoToEmployee(response.data));
+                    // methods.reset(dtoToEmployee(response.data));
                     console.log(dtoToEmployee(response.data))
                     setLoading(false);
                 })
@@ -83,33 +83,35 @@ const Forms = ({ invoiceData }) => {
     const handleResponse = (data) => {
         const { human_resource, children, educations, insurances } = data;
         if (human_resource) {
-            toast.success("Human resource با موفقیت به‌روزرسانی شد", { position: "top-center" });
+            console.log("Human Resource => ", human_resource)
+            toast.success("Human resource با موفقیت به‌روزرسانی شد");
+            router.push(`/dehyari/edit?param=${human_resource.personal_id}`);
             window.location.href = '/dehyari';
         } else {
-            toast.error("خطا در به‌روزرسانی Human resource", { position: "top-center" });
+            toast.error("خطا در به‌روزرسانی Human resource");
         }
 
         children.forEach((status, index) => {
             if (status) {
-                toast.success(`Child ${index + 1} با موفقیت به‌روزرسانی شد`, { position: "top-center" });
+                toast.success(`Child ${index + 1} با موفقیت به‌روزرسانی شد`);
             } else {
-                toast.error(`خطا در به‌روزرسانی Child ${index + 1}`, { position: "top-center" });
+                toast.error(`خطا در به‌روزرسانی Child ${index + 1}`);
             }
         });
 
         educations.forEach((status, index) => {
             if (status) {
-                toast.success(`Education ${index + 1} با موفقیت به‌روزرسانی شد`, { position: "top-center" });
+                toast.success(`Education ${index + 1} با موفقیت به‌روزرسانی شد`);
             } else {
-                toast.error(`خطا در به‌روزرسانی Education ${index + 1}`, { position: "top-center" });
+                toast.error(`خطا در به‌روزرسانی Education ${index + 1}`);
             }
         });
 
         insurances.forEach((status, index) => {
             if (status) {
-                toast.success(`Insurance ${index + 1} با موفقیت به‌روزرسانی شد`, { position: "top-center" });
+                toast.success(`Insurance ${index + 1} با موفقیت به‌روزرسانی شد`);
             } else {
-                toast.error(`خطا در به‌روزرسانی Insurance ${index + 1}`, { position: "top-center" });
+                toast.error(`خطا در به‌روزرسانی Insurance ${index + 1}`);
             }
         });
     };

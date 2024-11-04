@@ -14,9 +14,7 @@ const NavbarContent = () => {
     const logout = () => {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('token');
-            toast.success("با موفقیت از سامانه خارج شدید", {
-                position: "top-center",
-            });
+            toast.success("با موفقیت از سامانه خارج شدید");
             setTimeout(() => {
                 window.location.href = '/login';
             }, 500);

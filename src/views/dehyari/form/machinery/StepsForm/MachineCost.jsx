@@ -54,7 +54,7 @@ const MachineCost = ({data, setData, setStep, onClose, mode, methods}) => {
                 // onClose(); // بستن پنجره
             } catch (error) {
                 console.error("Error:", error);
-                toast.error("خطا در ثبت اطلاعات", {position: "top-center"});
+                toast.error("خطا در ثبت اطلاعات");
             }
         }
     }

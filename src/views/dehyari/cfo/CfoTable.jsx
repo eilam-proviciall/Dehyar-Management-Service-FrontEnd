@@ -48,7 +48,7 @@ function CfoTable(props) {
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
 
-            toast.success('محاسبه موفق بود', {position: "top-center"});
+            toast.success('محاسبه موفق بود');
         } catch (error) {
             return error
         }
