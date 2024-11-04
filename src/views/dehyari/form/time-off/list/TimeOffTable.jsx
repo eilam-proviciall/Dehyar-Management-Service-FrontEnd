@@ -9,6 +9,7 @@ import CustomIconButton from "@core/components/mui/IconButton";
 import FilterButton from "@core/components/mui/FilterButton";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
+import FilterChip from "@core/components/mui/FilterButton";
 
 const TimeOffTable = ({handleToggle, setMode}) => {
     const [timeOffs, setTimeOffs] = useState([]);
@@ -132,53 +133,38 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                         ...highlightStyle,
                     }}
                 />
-                <Button variant='contained' onClick={handleToggle}>
+                <Button variant='contained' onClick={handleToggle} className={"rounded-full h-8"}>
                     <i className='ri-add-line' />
                 </Button>
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
-                    clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
-                    clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
                 />
-                <Chip
-                    avatar={<Avatar>0 </Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
-                    clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[3] = el)}
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
-                    clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[4] = el)}
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
-                    clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
                 />
             </Box>
         ),
