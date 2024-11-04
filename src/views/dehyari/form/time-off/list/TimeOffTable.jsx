@@ -154,7 +154,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     className={`text-textPrimary`}
                 />
                 <Chip
-                    avatar={<Avatar>0</Avatar>}
+                    avatar={<Avatar>0 </Avatar>}
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
