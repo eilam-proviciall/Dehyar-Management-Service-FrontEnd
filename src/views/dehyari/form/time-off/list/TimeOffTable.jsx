@@ -1,4 +1,3 @@
-'use client';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
@@ -6,10 +5,10 @@ import Box from "@mui/material/Box";
 import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
-import FilterButton from "@core/components/mui/FilterButton";
+import FilterChip from "@core/components/mui/FilterButton";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import FilterChip from "@core/components/mui/FilterButton";
+import NoDataIcon from '@mui/icons-material/Inbox'; // مثال: استفاده از آیکون پیش‌فرض
 
 const TimeOffTable = ({handleToggle, setMode}) => {
     const [timeOffs, setTimeOffs] = useState([]);
@@ -115,6 +114,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         []
     );
 
+
     const table = useMaterialReactTable({
         columns,
         data: timeOffs,
@@ -141,31 +141,42 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
+                     selected={filterStatus === ''}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
+                     selected={filterStatus === 'draft'}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
+                     selected={filterStatus === 'reviewing'}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[3] = el)}
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
+                     selected={filterStatus === 'approved'}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[4] = el)}
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
+                     selected={filterStatus === 'rejected'}
                 />
+            </Box>
+        ),
+        renderEmptyRowsFallback: () => (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'text.secondary', padding: "25px" }}>
+                <NoDataIcon sx={{ fontSize: 60, mb: 1 }} />
+                <div>هیچ داده‌ای وجود ندارد</div>
             </Box>
         ),
         initialState: {
