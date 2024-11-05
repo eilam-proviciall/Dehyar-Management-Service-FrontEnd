@@ -140,35 +140,45 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
-                     selected={filterStatus === ''}
+                    clickable
+                    variant={filterStatus === '' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === '' ? 'white' : 'black' }}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
-                     selected={filterStatus === 'draft'}
+                    clickable
+                    variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
                 />
-                <FilterChip
-                    avatarValue="0"
+                <Chip
+                    avatar={<Avatar>0</Avatar>}
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
-                     selected={filterStatus === 'reviewing'}
+                    clickable
+                    variant={filterStatus === 'reviewing' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'reviewing' ? 'white' : 'black' }}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[3] = el)}
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
-                     selected={filterStatus === 'approved'}
+                    clickable
+                    variant={filterStatus === 'approved' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'approved' ? 'white' : 'black' }}
                 />
                 <FilterChip
                     avatarValue="0"
                     ref={(el) => (buttonRefs.current[4] = el)}
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
-                     selected={filterStatus === 'rejected'}
+                    clickable
+                    variant={filterStatus === 'rejected' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'rejected' ? 'white' : 'black' }}
                 />
             </Box>
         ),
