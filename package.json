@@ -67,7 +67,7 @@
     "react-draft-wysiwyg": "1.15.0",
     "react-dropzone": "14.2.3",
     "react-filepond": "^7.1.2",
-    "react-hook-form": "^7.51.3",
+    "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
     "react-multi-date-picker": "^4.5.2",
     "react-perfect-scrollbar": "1.5.8",
@@ -79,7 +79,7 @@
     "recharts": "2.12.6",
     "server-only": "0.0.1",
     "styled-components": "^6.1.11",
-    "valibot": "^0.30.0"
+    "valibot": "^0.42.1"
   },
   "devDependencies": {
     "@iconify/json": "2.2.206",
