@@ -1,7 +1,7 @@
 "use client"
 import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter} from 'next/navigation';
-import {MaterialReactTable} from 'material-react-table';
+import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import {IconButton, Menu, MenuItem} from '@mui/material';
 import {GetHumanResourcesForGovernor} from "@/Services/humanResources";
@@ -12,6 +12,7 @@ import {toast} from "react-toastify";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
+import Box from "@mui/material/Box";
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -117,14 +118,64 @@ function BakhshdarTable(props) {
         [anchorEl, selectedRow]
     );
 
+    const table = useMaterialReactTable({
+        columns,
+        data:data,
+        renderEmptyRowsFallback: () => (
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: 'text.secondary',
+                padding: "25px"
+            }}>
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
+                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
+            </Box>
+        ),
+        localization: {
+            filterByColumn: 'اعمال فیلتر',
+        },
+        initialState: {
+            density: 'compact',
+        },
+        muiSkeletonProps: {
+            animation: 'wave',
+            height: 28,
+        },
+        muiLinearProgressProps: {
+            color: 'primary',
+        },
+        muiPaginationProps: {
+            color: 'primary',
+            shape: 'rounded',
+            showRowsPerPage: false,
+            variant: 'outlined',
+            sx: {
+                button: {
+                    borderRadius: '50%',
+                },
+            },
+        },
+        paginationDisplayMode: 'pages',
+        muiTableBodyCellProps: {
+            className: 'bg-backgroundPaper',
+            sx: {
+                padding: '2px 8px',
+                lineHeight: '1',
+            },
+        }
+    });
+
     if (loading) {
         return <Loading/>
     }
 
     return (
         <MaterialReactTable
-            columns={columns}
-            data={tableData}
+            table={table}
         />
     );
 }

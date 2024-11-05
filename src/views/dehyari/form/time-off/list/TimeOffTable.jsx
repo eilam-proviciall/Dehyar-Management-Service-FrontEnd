@@ -184,7 +184,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         renderEmptyRowsFallback: () => (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'text.secondary', padding: "25px" }}>
                 <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
-                <div>هیچ داده‌ای وجود ندارد</div>
+                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
             </Box>
         ),
         localization: {
