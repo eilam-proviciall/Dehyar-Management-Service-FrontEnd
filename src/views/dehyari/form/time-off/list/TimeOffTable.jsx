@@ -8,7 +8,6 @@ import CustomIconButton from "@core/components/mui/IconButton";
 import FilterChip from "@core/components/mui/FilterButton";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import NoDataIcon from '@mui/icons-material/Inbox'; // مثال: استفاده از آیکون پیش‌فرض
 
 const TimeOffTable = ({handleToggle, setMode}) => {
     const [timeOffs, setTimeOffs] = useState([]);
@@ -175,10 +174,13 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         ),
         renderEmptyRowsFallback: () => (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'text.secondary', padding: "25px" }}>
-                <NoDataIcon sx={{ fontSize: 60, mb: 1 }} />
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
                 <div>هیچ داده‌ای وجود ندارد</div>
             </Box>
         ),
+        localization: {
+            filterByColumn: 'اعمال فیلتر',
+        },
         initialState: {
             density: 'compact',
             pagination: {

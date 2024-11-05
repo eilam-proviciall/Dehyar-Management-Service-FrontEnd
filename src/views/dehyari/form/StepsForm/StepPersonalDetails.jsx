@@ -60,19 +60,39 @@ const StepPersonalDetails = ({validation}) => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <Controller
-                        name="fullName"
+                        name="firstName"
                         control={control}
                         defaultValue=""
-                        rules={validation.fullName}
+                        rules={validation.firstName}
                         render={({field}) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
-                                label="نام و نام خانوادگی"
-                                placeholder="نام و نام خانوادگی"
+                                label="نام"
+                                placeholder="نام"
                                 {...field}
-                                error={!!errors.fullName}
-                                helperText={errors.fullName && errors.fullName.message}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName && errors.firstName.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                {/* نام خانوادگی */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="lastName"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.lastName}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="نام خانوادگی"
+                                placeholder="نام خانوادگی"
+                                {...field}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName && errors.lastName.message}
                             />
                         )}
                     />
