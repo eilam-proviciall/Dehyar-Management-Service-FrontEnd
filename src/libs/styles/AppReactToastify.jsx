@@ -18,8 +18,9 @@ import { useSettings } from '@core/hooks/useSettings'
 // Styled Components
 const ToastifyWrapper = styled(Box)(({ theme }) => {
   // Hooks
-  const { settings } = useSettings()
-  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down(480))
+  const { settings } = useSettings();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down(480));
+  const isDarkMode = theme.palette.mode === 'dark';
 
   return {
     ...(isSmallScreen && {
@@ -33,7 +34,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
       minBlockSize: 46,
       borderRadius: '12px',
       padding: theme.spacing(1.5, 2.5),
-      backgroundColor: 'var(--mui-palette-background-paper)',
+      backgroundColor: isDarkMode ? '#fff' : 'var(--mui-palette-background-paper)',
       boxShadow: settings.skin === 'bordered' ? 'none' : 'var(--mui-customShadows-md)',
       border: settings.skin === 'bordered' && `1px solid ${theme.palette.divider}`,
       ...(isSmallScreen && {
@@ -41,18 +42,18 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
       }),
       '&:not(.custom-toast)': {
         '& .Toastify__toast-body': {
-          color: '#fff',
+          color: isDarkMode ? '#000' : '#fff',
         },
         '&.Toastify__toast--success': {
-          backgroundColor: '#28a745',
+          backgroundColor: isDarkMode ? '#fff' : '#28a745',
           '& .Toastify__toast-icon svg': {
-            fill: '#fff'
+            fill: isDarkMode ? '#28a745' : '#fff'
           }
         },
         '&.Toastify__toast--error': {
-          backgroundColor: '#ff4452',
+          backgroundColor: isDarkMode ? '#fff' : '#ff4452',
           '& .Toastify__toast-icon svg': {
-            fill: '#fff'
+            fill: isDarkMode ? '#ff4452' : '#fff'
           }
         },
         '&.Toastify__toast--warning': {
@@ -83,11 +84,11 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
       }
     },
     '& .Toastify__close-button': {
-      color: 'var(--mui-palette-text-primary)',
+      color: isDarkMode ? '#000' : 'var(--mui-palette-text-primary)',
       alignSelf: 'center'
     }
   }
-})
+});
 
 const AppReactToastify = props => {
   const { boxProps, direction = 'ltr', ...rest } = props

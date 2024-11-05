@@ -5,8 +5,6 @@ import Box from "@mui/material/Box";
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import FilterChip from "@core/components/mui/FilterButton";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
 
 const TimeOffTable = ({handleToggle, setMode}) => {
     const [timeOffs, setTimeOffs] = useState([]);
@@ -152,8 +150,8 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
                     sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
