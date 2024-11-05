@@ -21,7 +21,8 @@ const Forms = ({ invoiceData }) => {
         defaultValues: {
             jobTitle: '',
             coveredVillages: {},
-            fullName: '',
+            firstName: '',
+            lastName: '',
             villageEmployer: '',
             fatherName: '',
             nationalCode: '',
@@ -73,6 +74,7 @@ const Forms = ({ invoiceData }) => {
         const queryParams = new URLSearchParams(window.location.search);
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
+        console.log("data => ", data);
         const request = mode === 'create'
             ? api.post(humanResources(), formattedData, { requiresAuth: true })
             : api.put(`${humanResources()}/human-resources/${id}`, formattedData, { requiresAuth: true });

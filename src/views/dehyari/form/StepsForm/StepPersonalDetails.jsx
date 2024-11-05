@@ -1,20 +1,20 @@
 import React from 'react';
-import {FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography} from '@mui/material';
+import {Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material';
 import {Controller, useFormContext} from 'react-hook-form';
-import DividerSimple from "@components/common/Divider/DividerSimple";
-import {useFetchCities} from "@hooks/useFetchCities";
-import Autocomplete from "@mui/material/Autocomplete";
-import PersonalOptions from "@data/PersonalOption.json";
-import validationSchemas from "@views/dehyari/form/validationSchemas";
-import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import Chip from "@mui/material/Chip";
-import {toast} from "react-toastify";
+import DividerSimple from '@components/common/Divider/DividerSimple';
+import Autocomplete from '@mui/material/Autocomplete';
+import DatePicker from 'react-multi-date-picker';
+import persian from 'react-date-object/calendars/persian';
+import persian_fa from 'react-date-object/locales/persian_fa';
+import {useFetchCities} from '@hooks/useFetchCities';
+import Chip from '@mui/material/Chip';
+import PersonalOptions from '@data/PersonalOption.json';
+import {toast} from 'react-toastify';
 
 const StepPersonalDetails = ({validation}) => {
     const {control, register, getValues, setValue, formState: {errors}} = useFormContext();
     const {cities, isLoading, error} = useFetchCities(true);
+
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
         if (!phoneRegex.test(phoneNumber)) {
@@ -22,27 +22,6 @@ const StepPersonalDetails = ({validation}) => {
             return false;
         }
         return true;
-    };
-
-
-    const handlePhoneKeyDown = (event, field, params) => {
-        const phoneValue = params.inputProps.value;
-
-        if ((event.key === 'Tab' || event.key === 'Enter') || phoneValue.length === 10) {
-            event.preventDefault();
-            if (validatePhoneNumber(phoneValue)) {
-                const currentValues = Array.isArray(field.value) ? field.value : [];
-                const newValue = [...currentValues, phoneValue];
-                setValue('phoneNumbers', newValue);
-                field.onChange(newValue);
-                params.inputProps.onChange({target: {value: ''}});
-            } else {
-                // اگر شماره تلفن معتبر نیست، آن را از state حذف کنید
-                const newValue = Array.isArray(field.value) ? field.value.filter(phone => phone !== phoneValue) : [];
-                setValue('phoneNumbers', newValue);
-                field.onChange(newValue);
-            }
-        }
     };
 
     const textFieldStyle = {
@@ -58,25 +37,47 @@ const StepPersonalDetails = ({validation}) => {
                 <Grid item xs={12}>
                     <DividerSimple title='اطلاعات شخصی'/>
                 </Grid>
+
                 <Grid item xs={12} sm={4}>
                     <Controller
-                        name="fullName"
+                        name="firstName"
                         control={control}
                         defaultValue=""
-                        rules={validation.fullName}
+                        rules={validation.firstName}
                         render={({field}) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
-                                label="نام و نام خانوادگی"
-                                placeholder="نام و نام خانوادگی"
+                                label="نام"
+                                placeholder="نام"
                                 {...field}
-                                error={!!errors.fullName}
-                                helperText={errors.fullName && errors.fullName.message}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName && errors.firstName.message}
                             />
                         )}
                     />
                 </Grid>
+                {/* نام خانوادگی */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="lastName"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.lastName}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="نام خانوادگی"
+                                placeholder="نام خانوادگی"
+                                {...field}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName && errors.lastName.message}
+                            />
+                        )}
+                    />
+                </Grid>
+                {/* نام پدر */}
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name="fatherName"
@@ -96,12 +97,14 @@ const StepPersonalDetails = ({validation}) => {
                         )}
                     />
                 </Grid>
+
+                {/* کد ملی */}
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name='nationalCode'
                         control={control}
                         defaultValue=""
-                        rules={validationSchemas.jobDetails.nationalCode}
+                        rules={validation.nationalCode}
                         render={({field}) => (
                             <TextField
                                 fullWidth
@@ -109,9 +112,7 @@ const StepPersonalDetails = ({validation}) => {
                                 label="کد ملی"
                                 placeholder="کد ملی"
                                 {...field}
-                                onChange={(e) => {
-                                    field.onChange(e.target.value);
-                                }}
+                                onChange={(e) => field.onChange(e.target.value)}
                                 value={field.value || ''}
                                 error={!!errors.nationalCode}
                                 helperText={errors.nationalCode && errors.nationalCode.message}
@@ -119,6 +120,8 @@ const StepPersonalDetails = ({validation}) => {
                         )}
                     />
                 </Grid>
+
+                {/* تاریخ تولد */}
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
                         <Controller
@@ -151,51 +154,7 @@ const StepPersonalDetails = ({validation}) => {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
-                    <Controller
-                        name="phoneNumbers"
-                        control={control}
-                        defaultValue={[]}
-                        rules={validation.phoneNumber}
-                        render={({field}) => (
-                            <Autocomplete
-                                multiple
-                                sx={textFieldStyle}
-                                freeSolo
-                                options={[]}
-                                value={getValues("phoneNumbers")}
-                                onChange={(event, newValue) => setValue("phoneNumbers", newValue)}
-                                renderTags={(value, getTagProps) =>
-                                    value.map((option, index) => (
-                                        <Chip
-                                            variant="outlined"
-                                            label={option}
-                                            {...getTagProps({index})}
-                                            onDelete={() => {
-                                                const newValues = [...field.value];
-                                                newValues.splice(index, 1);
-                                                field.onChange(newValues);
-                                                setValue("phoneNumbers", newValues);
-                                            }}
-                                        />
-                                    ))
-                                }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        variant="outlined"
-                                        label="شماره تلفن"
-                                        sx={textFieldStyle}
-                                        placeholder="شماره تلفن را وارد کنید"
-                                        onKeyDown={(event) => handlePhoneKeyDown(event, field, params)}
-                                        error={!!errors.phoneNumbers}
-                                        helperText={errors.phoneNumbers && errors.phoneNumbers.message}
-                                    />
-                                )}
-                            />
-                        )}
-                    />
-                </Grid>
+                {/* شماره شناسنامه */}
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name="personalId"
@@ -215,9 +174,8 @@ const StepPersonalDetails = ({validation}) => {
                         )}
                     />
                 </Grid>
-            </Grid>
 
-            <Grid container spacing={2} mt={1}>
+                {/* محل تولد */}
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name="birthPlace"
@@ -227,7 +185,9 @@ const StepPersonalDetails = ({validation}) => {
                         render={({field}) => (
                             <Autocomplete
                                 options={cities}
+                                value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
                                 getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
+                                isOptionEqualToValue={(option, value) => option.hierarchy_code === value} // مقایسه درست آیتم
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue ? newValue.hierarchy_code : '');
                                 }}
@@ -245,6 +205,8 @@ const StepPersonalDetails = ({validation}) => {
                         )}
                     />
                 </Grid>
+
+                {/* محل صدور */}
                 <Grid item xs={12} sm={4}>
                     <Controller
                         name="issuancePlace"
@@ -254,7 +216,9 @@ const StepPersonalDetails = ({validation}) => {
                         render={({field}) => (
                             <Autocomplete
                                 options={cities}
+                                value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
                                 getOptionLabel={(option) => `${option.state.approved_name}-${option.approved_name}`}
+                                isOptionEqualToValue={(option, value) => option.hierarchy_code === value} // مقایسه درست آیتم
                                 onChange={(event, newValue) => {
                                     field.onChange(newValue ? newValue.hierarchy_code : '');
                                 }}
@@ -272,8 +236,10 @@ const StepPersonalDetails = ({validation}) => {
                         )}
                     />
                 </Grid>
+
+                {/* جنسیت */}
                 <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" error={!!errors.gender}>
+                    <FormControl fullWidth sx={textFieldStyle} error={!!errors.gender}>
                         <InputLabel>جنسیت</InputLabel>
                         <Controller
                             name="gender"
@@ -298,9 +264,8 @@ const StepPersonalDetails = ({validation}) => {
                         {errors.gender && <FormHelperText>{errors.gender.message}</FormHelperText>}
                     </FormControl>
                 </Grid>
-            </Grid>
 
-            <Grid container spacing={2} mt={1}>
+                {/* وضعیت تاهل */}
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth sx={textFieldStyle} error={!!errors.maritalStatus}>
                         <InputLabel>وضعیت تاهل</InputLabel>
@@ -327,6 +292,8 @@ const StepPersonalDetails = ({validation}) => {
                         {errors.maritalStatus && <FormHelperText>{errors.maritalStatus.message}</FormHelperText>}
                     </FormControl>
                 </Grid>
+
+                {/* وضعیت ایثارگری */}
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth sx={textFieldStyle} error={!!errors.veteranStatus}>
                         <InputLabel>وضعیت ایثارگری</InputLabel>
@@ -353,6 +320,8 @@ const StepPersonalDetails = ({validation}) => {
                         {errors.veteranStatus && <FormHelperText>{errors.veteranStatus.message}</FormHelperText>}
                     </FormControl>
                 </Grid>
+
+                {/* نظام وظیفه */}
                 <Grid item xs={12} sm={4}>
                     <FormControl fullWidth sx={textFieldStyle} error={!!errors.militaryService}>
                         <InputLabel>نظام وظیفه</InputLabel>
@@ -379,9 +348,91 @@ const StepPersonalDetails = ({validation}) => {
                         {errors.militaryService && <FormHelperText>{errors.militaryService.message}</FormHelperText>}
                     </FormControl>
                 </Grid>
+                {/* کدپستی */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="postalCode"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.postalCode}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="کدپستی"
+                                placeholder="کدپستی"
+                                {...field}
+                                error={!!errors.postalCode}
+                                helperText={errors.postalCode && errors.postalCode.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="insuranceIdentifier"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.insuranceIdentifier}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="شناسه تامین اجتماعی"
+                                placeholder="شناسه تامین اجتماعی"
+                                {...field}
+                                error={!!errors.insuranceIdentifier}
+                                helperText={errors.insurance_identifier && errors.insuranceIdentifier.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                {/* شماره تماس ثابت */}
+                <Grid item xs={12} sm={4}>
+                    <Controller
+                        name="landlineNumber"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.landlineNumber}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="شماره تماس ثابت"
+                                placeholder="شماره تماس ثابت"
+                                {...field}
+                                error={!!errors.landlineNumber}
+                                helperText={errors.landlineNumber && errors.landlineNumber.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                {/* آدرس محل سکونت */}
+                <Grid item xs={12} sm={12}>
+                    <Controller
+                        name="residenceAddress"
+                        control={control}
+                        defaultValue=""
+                        rules={validation.residenceAddress}
+                        render={({field}) => (
+                            <TextField
+                                fullWidth
+                                sx={textFieldStyle}
+                                label="آدرس محل سکونت"
+                                placeholder="آدرس محل سکونت"
+                                {...field}
+                                error={!!errors.residenceAddress}
+                                helperText={errors.residenceAddress && errors.residenceAddress.message}
+                            />
+                        )}
+                    />
+                </Grid>
             </Grid>
         </>
-    )
-}
+    );
+};
 
 export default StepPersonalDetails;

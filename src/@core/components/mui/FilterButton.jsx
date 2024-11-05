@@ -1,26 +1,28 @@
-import React from 'react';
-import Button from '@mui/material/Button';
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
+import React, {forwardRef} from 'react';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 
-const FilterButton = ({ title, color, onClick }) => {
+const FilterChip = forwardRef(({ avatarValue, label, onClick,selected }, ref) => {
     return (
-        // <button className={`flex gap-3 items-center justify-center text-center border-b-2 border-${color} p-2  cursor-pointer bg-transparent`} onClick={onClick}>
-        //     <div className={`flex items-center justify-center h-5 w-5 rounded bg-${color} text-white`}>0</div>
-        //     {title}
-        // </button>
-    <Chip
-        avatar={<Avatar>0</Avatar>}
-        label={title}
-        variant="outlined"
-        style={{
-            textAlign: 'center',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            cursor: 'pointer',
-        }}
-    />
+        <Chip
+            avatar={<Avatar>{avatarValue}</Avatar>}
+            label={label}
+            onClick={onClick}
+            clickable
+            variant='outlined'
+            className='text-textPrimary'
+            ref={ref}
+            sx={{
+                boxShadow: selected ? 2 : 0,
+                borderWidth: 1,
+                '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                },
+            }}
+        />
     );
-};
+});
 
-export default FilterButton;
+
+export default FilterChip;

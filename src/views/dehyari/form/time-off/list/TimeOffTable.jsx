@@ -1,4 +1,3 @@
-'use client';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
@@ -6,7 +5,7 @@ import Box from "@mui/material/Box";
 import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
-import FilterButton from "@core/components/mui/FilterButton";
+import FilterChip from "@core/components/mui/FilterButton";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 
@@ -114,6 +113,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         []
     );
 
+
     const table = useMaterialReactTable({
         columns,
         data: timeOffs,
@@ -132,56 +132,65 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                         ...highlightStyle,
                     }}
                 />
-                <Button variant='contained' onClick={handleToggle}>
+                <Button variant='contained' onClick={handleToggle} className={"rounded-full h-8"}>
                     <i className='ri-add-line' />
                 </Button>
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
                     clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
+                    variant={filterStatus === '' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === '' ? 'white' : 'black' }}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
                     clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
+                    variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
                 />
                 <Chip
-                    avatar={<Avatar>0 </Avatar>}
+                    avatar={<Avatar>0</Avatar>}
                     ref={(el) => (buttonRefs.current[2] = el)}
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
                     clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
+                    variant={filterStatus === 'reviewing' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'reviewing' ? 'white' : 'black' }}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[3] = el)}
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
                     clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
+                    variant={filterStatus === 'approved' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'approved' ? 'white' : 'black' }}
                 />
-                <Chip
-                    avatar={<Avatar>0</Avatar>}
+                <FilterChip
+                    avatarValue="0"
                     ref={(el) => (buttonRefs.current[4] = el)}
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
                     clickable
-                    variant={ 'outlined'}
-                    className={`text-textPrimary`}
+                    variant={filterStatus === 'rejected' ? 'filled' : 'outlined'}
+                    sx={{ color: filterStatus === 'rejected' ? 'white' : 'black' }}
                 />
             </Box>
         ),
+        renderEmptyRowsFallback: () => (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'text.secondary', padding: "25px" }}>
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
+                <div>هیچ داده‌ای وجود ندارد</div>
+            </Box>
+        ),
+        localization: {
+            filterByColumn: 'اعمال فیلتر',
+        },
         initialState: {
             density: 'compact',
             pagination: {
