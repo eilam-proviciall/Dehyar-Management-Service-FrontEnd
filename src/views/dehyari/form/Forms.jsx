@@ -21,7 +21,8 @@ const Forms = ({ invoiceData }) => {
         defaultValues: {
             jobTitle: '',
             coveredVillages: {},
-            fullName: '',
+            firstName: '',
+            lastName: '',
             villageEmployer: '',
             fatherName: '',
             nationalCode: '',
