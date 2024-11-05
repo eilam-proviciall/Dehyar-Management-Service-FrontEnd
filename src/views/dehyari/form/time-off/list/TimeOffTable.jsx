@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import FilterChip from "@core/components/mui/FilterButton";
