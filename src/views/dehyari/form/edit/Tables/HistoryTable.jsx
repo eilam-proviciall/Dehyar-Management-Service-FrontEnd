@@ -5,11 +5,16 @@ import {Box, Button, IconButton, Menu, MenuItem} from '@mui/material';
 import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
-import {HumanContract} from "@/Services/humanResources";
+import {DownloadHumanResourcePdf, HumanContract} from "@/Services/humanResources";
 import {getJobTitleLabel} from "@data/jobTitles";
 import {toast} from 'react-toastify';
 import {convertUnixToJalali} from "@utils/dateConverter";
 import CustomIconButton from "@core/components/mui/IconButton";
+import Chip from "@mui/material/Chip";
+import api from "@utils/axiosInstance";
+import HumanResourceDTO from "@utils/HumanResourceDTO";
+import MyDocument from "@components/MyDocument";
+import {pdf} from "@react-pdf/renderer";
 
 const style = {
     position: 'absolute',
@@ -54,6 +59,26 @@ function HistoryTable() {
         setEditId(row.original.id); // دریافت ID برای ویرایش
         setOpenModal(true); // باز کردن مودال
         handleCloseMenu();
+    };
+
+    const handleDownloadPdf = async (row) => {
+        try {
+            console.log("Row => ", row);
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.id}`, {requiresAuth: true});
+            const humanResourceData = response.data;
+            console.log(humanResourceData)
+            const data = new HumanResourceDTO(humanResourceData);
+            const doc = <MyDocument data={data}/>;
+            const asPdf = pdf([]);
+            asPdf.updateContainer(doc);
+            const blob = await asPdf.toBlob();
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+
+            toast.success('محاسبه موفق بود');
+        } catch (error) {
+            return error
+        }
     };
 
     const queryParams = new URLSearchParams(window.location.search);
@@ -101,7 +126,7 @@ function HistoryTable() {
             accessorKey: 'title_contract',
             header: 'وضعیت',
             size: 150,
-            Cell: ({cell}) => <div style={{textAlign: 'right'}}>پیش نویس</div>,
+            Cell: ({cell}) => <div style={{textAlign: 'right'}}><Chip label={'پیش نویس'}/></div>,
         },
         {
             accessorKey: 'job_type_id',
@@ -138,6 +163,15 @@ function HistoryTable() {
                         className={"rounded-full"}
                     >
                         <i className='ri-edit-box-line'/>
+                    </CustomIconButton>
+                    <CustomIconButton
+                        color={"secondary"}
+                        onClick={() => {
+                            handleDownloadPdf(row.original)
+                        }}
+                        className={"rounded-full"}
+                    >
+                        < i class="ri-printer-line"/>
                     </CustomIconButton>
                 </div>
             ),
