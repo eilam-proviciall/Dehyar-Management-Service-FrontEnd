@@ -2,48 +2,100 @@ import React, { useEffect, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
-    Button,
-    Card,
-    CardContent,
-    FormControl,
-    FormHelperText,
-    Grid,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    Box
+    AccordionSummary, Autocomplete,
+    Avatar,
+    Box,
+    Button, Card, CardContent,
+    Chip, FormControl,
+    Grid, IconButton, InputLabel, MenuItem, Select, TextField,
+    Typography
 } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DatePicker from 'react-multi-date-picker';
-import persian from 'react-date-object/calendars/persian';
-import persian_fa from 'react-date-object/locales/persian_fa';
-import DividerSimple from "@components/common/Divider/DividerSimple";
-import Badge from "@mui/material/Badge";
+import DividerSimple from '@components/common/Divider/DividerSimple';
+import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
 import { GetFieldStudy } from "@/Services/humanResources";
-import AddIcon from "@mui/icons-material/Add";
-import api from '@/utils/axiosInstance';
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const EditStepEducation = ({ validation }) => {
-    const { control, watch, getValues, formState: { errors }, trigger } = useFormContext();
+    const { control, watch, formState: { errors } } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'educations'
+        name: 'educations',
     });
 
     const [expanded, setExpanded] = useState(false);
-    const [fieldsOfStudy, setFieldsOfStudy] = useState({});
+    const [educationFields, setEducationFields] = useState([]);
+    const [autocompleteOpenStates, setAutocompleteOpenStates] = useState([]);
+
+    useEffect(() => {
+        const fetchEducationFields = async () => {
+            try {
+                const response = await axios.get(GetFieldStudy());
+                setEducationFields(response.data);
+            } catch (error) {
+                console.error("Error fetching education fields:", error);
+            }
+        };
+
+        fetchEducationFields();
+    }, []);
 
     useEffect(() => {
         if (Object.keys(errors.educations || {}).length > 0) {
             setExpanded(true);
         }
     }, [errors.educations]);
+
+    const handleAutocompleteOpen = (index) => {
+        setAutocompleteOpenStates((prev) => {
+            const newState = [...prev];
+            newState[index] = true;
+            return newState;
+        });
+    };
+
+    const handleAutocompleteClose = (index) => {
+        setAutocompleteOpenStates((prev) => {
+            const newState = [...prev];
+            newState[index] = false;
+            return newState;
+        });
+    };
+
+    const getLatestDegreeTitle = () => {
+        if (!fields.length) return "بدون مدرک";
+
+        const highestDegree = fields.reduce((prev, current) => {
+            return prev.degree > current.degree ? prev : current;
+        });
+
+        const foundDegree = educationDegrees.find(degree => degree.value === highestDegree.degree);
+        return foundDegree ? foundDegree.title : "بدون مدرک";
+    };
+
+    const handleFieldDisabling = (degree) => {
+        if (degree === 41 || degree === 42 || degree === 43) {
+            return {
+                disableFieldOfStudy: true,
+                disableGraduationDate: true
+            };
+        } else if (degree === 42 || degree === 43) {
+            return {
+                disableFieldOfStudy: true,
+                disableGraduationDate: false
+            };
+        } else {
+            return {
+                disableFieldOfStudy: false,
+                disableGraduationDate: false
+            };
+        }
+    };
 
     const educationDegrees = [
         { title: "بی سواد", value: 41 },
@@ -52,197 +104,134 @@ const EditStepEducation = ({ validation }) => {
         { title: "کاردانی", value: 44 },
         { title: "کارشناسی", value: 45 },
         { title: "کارشناسی ارشد", value: 46 },
-        { title: "دکترا", value: 47 }
+        { title: "دکترا", value: 47 },
     ];
-
-    const getHighestDegree = (educations) => {
-        if (!educations || educations.length === 0) {
-            return { title: 'بدون مدرک', color: 'gray' };
-        }
-
-        const highestDegree = educations.reduce((prev, current) => (prev.degree > current.degree ? prev : current));
-        const degree = educationDegrees.find(degree => degree.value === highestDegree.degree);
-
-        switch (highestDegree.degree) {
-            case 47:
-                return { ...degree, color: 'red' };
-            case 46:
-                return { ...degree, color: 'orange' };
-            case 45:
-                return { ...degree, color: 'green' };
-            case 44:
-                return { ...degree, color: 'blue' };
-            default:
-                return { ...degree, color: 'gray' };
-        }
-    };
-
-    const highestDegree = getHighestDegree(watch('educations'));
-
-    const fetchFieldsOfStudy = async (grade) => {
-        grade = grade[0];
-        try {
-            const response = await api.get(GetFieldStudy(), {
-                requiresAuth: false,
-                params: { grade }
-            });
-            setFieldsOfStudy(prev => ({ ...prev, [grade]: response.data }));
-        } catch (error) {
-            console.error('Error fetching fields of study:', error);
-        }
-    };
-
-    const handleDegreeChange = (e, field, index) => {
-        field.onChange(e.target.value);
-        if (e.target.value >= 44) {
-            fetchFieldsOfStudy([e.target.value]);
-        }
-    };
-
-    const educations = watch('educations') || [];
-
-    useEffect(() => {
-        educations.forEach((education, index) => {
-            const { degree, fieldOfStudy, graduationDate } = education;
-            const anyFieldFilled = degree || fieldOfStudy || graduationDate;
-
-            if (anyFieldFilled) {
-                Object.keys(education).forEach(field => {
-                    trigger(`educations.${index}.${field}`);
-                });
-            }
-        });
-    }, [educations, trigger]);
 
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
-                <DividerSimple title='سوابق تحصیلی' />
+                <DividerSimple title="سوابق تحصیلی" />
             </Grid>
             <Grid item xs={12}>
                 <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                            <Typography sx={{ fontWeight: 'bold', marginRight: '-10px' }}>آخرین مدرک تحصیلی:</Typography>
-                            <Badge
-                                badgeContent={highestDegree.title}
-                                color="primary"
-                                sx={{
-                                    color: 'white',
-                                    padding: '0 10px',
-                                    borderRadius: '10px',
+                            <Typography>سوابق تحصیلی</Typography>
+                            <Chip
+                                avatar={<Avatar>{/* محاسبه بالاترین مدرک */}</Avatar>}
+                                label={getLatestDegreeTitle()}
+                                variant="outlined"
+                                style={{
+                                    textAlign: 'center',
                                     whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis',
-                                    marginRight: 10
                                 }}
                             />
                         </Box>
                     </AccordionSummary>
-
                     <AccordionDetails>
-                        {fields.map((item, index) => (
-                            <Card key={item.id} sx={{ mb: 2 }}>
-                                <CardContent>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={3}>
-                                            <FormControl fullWidth size="small"
-                                                         error={!!errors?.educations?.[index]?.degree}>
-                                                <InputLabel>مدرک تحصیلی</InputLabel>
-                                                <Controller
-                                                    name={`educations.${index}.degree`}
-                                                    control={control}
-                                                    defaultValue=""
-                                                    rules={validation.degree}
-                                                    render={({ field }) => (
-                                                        <Select
-                                                            {...field}
-                                                            label="مدرک تحصیلی"
-                                                            onChange={(e) => handleDegreeChange(e, field, index)}
-                                                            value={field.value || ""}
-                                                        >
-                                                            {educationDegrees.map(degree => (
-                                                                <MenuItem key={degree.value} value={degree.value}>
-                                                                    {degree.title}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    )}
-                                                />
-                                                {errors?.educations?.[index]?.degree &&
-                                                    <FormHelperText>{errors.educations[index].degree.message}</FormHelperText>}
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={3}>
-                                            <FormControl fullWidth size="small"
-                                                         error={!!errors?.educations?.[index]?.fieldOfStudy}>
-                                                <InputLabel>رشته تحصیلی</InputLabel>
-                                                <Controller
-                                                    name={`educations.${index}.fieldOfStudy`}
-                                                    control={control}
-                                                    defaultValue=""
-                                                    rules={validation.fieldOfStudy}
-                                                    render={({ field }) => (
-                                                        <Select
-                                                            {...field}
-                                                            label="رشته تحصیلی"
-                                                            disabled={!watch(`educations.${index}.degree`) || watch(`educations.${index}.degree`) < 44}
-                                                            value={field.value || ""}
-                                                        >
-                                                            {(fieldsOfStudy[watch(`educations.${index}.degree`)] || []).map(field => (
-                                                                <MenuItem key={field.code} value={field.code}>
-                                                                    {field.name}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    )}
-                                                />
-                                                {errors?.educations?.[index]?.fieldOfStudy &&
-                                                    <FormHelperText>{errors.educations[index].fieldOfStudy.message}</FormHelperText>}
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid item xs={12} sm={3}>
-                                            <Controller
-                                                name={`educations.${index}.graduationDate`}
-                                                control={control}
-                                                defaultValue=""
-                                                rules={validation.graduationDate}
-                                                render={({ field }) => (
-                                                    <DatePicker
-                                                        scrollSensitive={true}
-                                                        calendar={persian}
-                                                        locale={persian_fa}
-                                                        calendarPosition="bottom-right"
-                                                        onChange={(date) => {
-                                                            field.onChange(date ? date.toUnix() : '');
-                                                        }}
-                                                        value={field.value || ""}
-                                                        render={
-                                                            <TextField
-                                                                sx={{ textAlign: "center" }}
-                                                                fullWidth
-                                                                size="small"
-                                                                label="تاریخ اخذ مدرک تحصیلی"
-                                                                error={!!errors?.educations?.[index]?.graduationDate}
-                                                                helperText={errors?.educations?.[index]?.graduationDate && errors.educations[index].graduationDate.message}
-                                                                inputProps={{
-                                                                    style: { textAlign: 'end' }
-                                                                }}
-                                                            />
-                                                        }
+                        {fields.map((item, index) => {
+                                const degree = watch(`educations[${index}].degree`);
+                                const { disableFieldOfStudy, disableGraduationDate } = handleFieldDisabling(degree); return (
+                                    <Card key={item.id} sx={{ mb: 2 }}>
+                                        <CardContent>
+                                            <Grid container spacing={6}>
+                                                <Grid item xs={12} sm={4}>
+                                                    <Controller
+                                                        name={`educations[${index}].degree`}
+                                                        control={control}
+                                                        defaultValue={item.degree}
+                                                        render={({ field }) => (
+                                                            <FormControl fullWidth size="small">
+                                                                <InputLabel>مدرک تحصیلی</InputLabel>
+                                                                <Select
+                                                                    {...field}
+                                                                    label="مدرک تحصیلی"
+                                                                >
+                                                                    {educationDegrees.map((option) => (
+                                                                        <MenuItem key={option.value} value={option.value}>
+                                                                            {option.title}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        )}
                                                     />
-                                                )}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={3}>
-                                            <IconButton color="error" aria-label="delete" size="large"
-                                                        onClick={() => remove(index)}>
-                                                <DeleteIcon fontSize="inherit" />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                </CardContent>
-                            </Card>
-                        ))}
+                                                </Grid>
+                                                <Grid item xs={12} sm={8}>
+                                                    <Controller
+                                                        name={`educations[${index}].fieldOfStudy`}
+                                                        control={control}
+                                                        defaultValue={item.fieldOfStudy}
+                                                        render={({ field }) => (
+                                                            <Autocomplete
+                                                                {...field}
+                                                                options={educationFields}
+                                                                disableClearable={disableFieldOfStudy}
+                                                                open={autocompleteOpenStates[index] || false}
+                                                                onOpen={() => handleAutocompleteOpen(index)}
+                                                                onClose={() => handleAutocompleteClose(index)}
+                                                                getOptionLabel={(option) => option.name || ""}
+                                                                value={educationFields.find((option) => option.code === field.value) || null}
+                                                                onChange={(_, value) => field.onChange(value ? value.code : "")}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        label="رشته تحصیلی"
+                                                                        fullWidth
+                                                                        size="small"
+                                                                        disabled={disableFieldOfStudy}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        )}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={4}>
+                                                    <FormControl fullWidth size="small">
+                                                        <Controller
+                                                            name={`educations[${index}].graduationDate`}
+                                                            control={control}
+                                                            defaultValue={item.graduationDate}
+                                                            render={({ field }) => (
+                                                                <DatePicker
+                                                                    value={field.value ? new Date(field.value * 1000) : ""}
+                                                                    onChange={(date) => field.onChange(date ? date.toUnix() : "")}
+                                                                    calendar={persian}
+                                                                    locale={persian_fa}
+                                                                    calendarPosition="bottom-right"
+                                                                    render={
+                                                                        <TextField
+                                                                            fullWidth
+                                                                            size="small"
+                                                                            label="تاریخ فارغ‌التحصیلی"
+                                                                            inputProps={{
+                                                                                style: { textAlign: 'end', zIndex: 13000000 }
+                                                                            }}
+                                                                            disabled={disableGraduationDate}
+                                                                        />
+                                                                    }
+                                                                />
+                                                            )}
+                                                        />
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12} sm={2}>
+                                                    <IconButton
+                                                        aria-label="حذف"
+                                                        onClick={() => remove(index)}
+                                                        sx={{ mt: 2 }}
+                                                    >
+                                                        <DeleteIcon color="error" />
+                                                    </IconButton>
+                                                </Grid>
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+                                )
+                            }
+                        )}
                         <Grid item xs={12} sx={{ px: 0 }} pt={5}>
                             <Button
                                 size="small"
@@ -258,11 +247,14 @@ const EditStepEducation = ({ validation }) => {
                                     alignItems: 'center',
                                 }}
                                 startIcon={<AddIcon sx={{ marginRight: 1 }} />}
-                                onClick={() => append({
-                                    degree: '',
-                                    fieldOfStudy: '',
-                                    graduationDate: ''
-                                })}
+                                onClick={() => {
+                                    append({
+                                        degree: '',
+                                        fieldOfStudy: '',
+                                        graduationDate: '',
+                                    });
+                                    setAutocompleteOpenStates((prev) => [...prev, false]); // Add new state for new row
+                                }}
                             >
                                 افزودن
                             </Button>
@@ -271,7 +263,7 @@ const EditStepEducation = ({ validation }) => {
                 </Accordion>
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
 export default EditStepEducation;
