@@ -15,6 +15,7 @@ import api from "@utils/axiosInstance";
 import HumanResourceDTO from "@utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import {pdf} from "@react-pdf/renderer";
+import Tooltip from "@mui/material/Tooltip";
 
 const style = {
     position: 'absolute',
@@ -144,35 +145,52 @@ function HistoryTable() {
             accessorKey: 'actions',
             header: 'عملیات',
             size: 150,
-            Cell: ({row}) => (
-                <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
-                    <CustomIconButton
-                        color={"error"}
-                        onClick={() => {
-                            toast.warning('این قابلیت هنوز افزوده نشده است');
-                        }}
-                        className={"rounded-full"}
-                    >
-                        <i className='ri-delete-bin-7-line'/>
-                    </CustomIconButton>
-                    <CustomIconButton
-                        color={"primary"}
-                        onClick={() => {
-                            handleEdit(row);
-                        }}
-                        className={"rounded-full"}
-                    >
-                        <i className='ri-edit-box-line'/>
-                    </CustomIconButton>
-                    <CustomIconButton
-                        color={"secondary"}
-                        onClick={() => {
-                            handleDownloadPdf(row.original)
-                        }}
-                        className={"rounded-full"}
-                    >
-                        < i class="ri-printer-line"/>
-                    </CustomIconButton>
+            Cell: ({ row }) => (
+                <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
+                    <Tooltip title="حذف" placement={'top'}>
+                        <CustomIconButton
+                            color={"error"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-delete-bin-7-line' />
+                        </CustomIconButton>
+                    </Tooltip>
+                    <Tooltip title="ویرایش" placement={'top'}>
+                        <CustomIconButton
+                            color={"primary"}
+                            onClick={() => {
+                                handleEdit(row);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className='ri-edit-box-line' />
+                        </CustomIconButton>
+                    </Tooltip>
+                    <Tooltip title="دانلود PDF" placement={'top'}>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleDownloadPdf(row.original)
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i className="ri-printer-line" />
+                        </CustomIconButton>
+                    </Tooltip>
+                    <Tooltip title="پایان کار" placement={'top'}>
+                        <CustomIconButton
+                            color={"warning"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            <i class="ri-indeterminate-circle-line"/>
+                        </CustomIconButton>
+                    </Tooltip>
                 </div>
             ),
         },
