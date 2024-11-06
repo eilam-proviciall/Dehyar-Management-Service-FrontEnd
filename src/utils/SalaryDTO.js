@@ -3,6 +3,7 @@
             job_type_id: data.jobTitle,
             nid: data.nationalCode,
             covered_villages: data.coveredVillages,
+            fullName: data.full_name,
             first_name: data.firstName,
             last_name: data.lastName,
             father_name: data.fatherName,
@@ -54,6 +55,7 @@
             jobTitle: data.job_type_id,
             nationalCode: data.nid,
             coveredVillages: data.covered_villages.village_code, // تبدیل به آرایه
+            fullName: data.full_name,
             firstName: data.first_name,
             lastName: data.last_name,
             fatherName: data.father_name,

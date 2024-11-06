@@ -85,6 +85,7 @@ function CfoTable(props) {
                 header: 'نام و نام خانوادگی',
                 size: 150,
                 Cell: ({row}) => {
+                    console.log("Row => ", row.original);
                     const {first_name, last_name} = row.original;
                     return <div className={'flex items-center gap-2'}>
                         <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل"/>
@@ -119,11 +120,17 @@ function CfoTable(props) {
                     return (
                         <div style={{textAlign: 'right'}}>
                             <Chip label={contractType[role]}
-                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
+                                  className={`h-7 w-[55%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
                             />
                         </div>
                     );
                 },
+            },
+            {
+                accessorKey: 'status',
+                header: 'وضعیت قرارداد',
+                size: 150,
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'actions',
@@ -186,7 +193,9 @@ function CfoTable(props) {
 
     return (
         <div>
-            <Typography variant={'h5'} mb={5}>فهرست <span className={'text-error font-bold relative inline-block'}>
+            <Typography display={'flex'} variant={'h5'} mb={5} gap={1}>
+                <span>فهرست</span>
+                <span className={'text-error font-bold relative inline-block'}>
                     پرسنل
                     <img
                         src="/images/icons/Line-2.png"
@@ -202,7 +211,7 @@ function CfoTable(props) {
                         }}
                     />
                 </span>
-                طرف قرارداد</Typography>
+                <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
         </div>
     )
