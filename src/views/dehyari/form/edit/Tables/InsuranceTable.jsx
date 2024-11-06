@@ -7,6 +7,7 @@ import {InsuranceHistory} from "@/Services/humanResources";
 import InsuranceModal from "@views/dehyari/form/edit/Tables/InsuranceModal/InsuranceModal";
 import CustomIconButton from "@core/components/mui/IconButton";
 import {toast} from "react-toastify";
+import Chip from "@mui/material/Chip";
 
 function InsuranceTable() {
     const [data, setData] = useState([]);
@@ -71,7 +72,7 @@ function InsuranceTable() {
                 const value = cell.getValue();
                 return (
                     <div style={{textAlign: 'right'}}>
-                        {value === 1 ? "دهیاری" : value === 2 ? "کارگاه" : ""}
+                        <Chip label={value === 1 ? "دهیاری" : value === 2 ? "کارگاه" : ""}/>
                     </div>
                 );
             },

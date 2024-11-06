@@ -110,15 +110,15 @@ const ButtonGroup = ({ onSubmit }) => {
                 >
                     ذخیره
                 </Button>
-                <Button
-                    fullWidth
-                    variant="contained"
-                    color="error"
-                    startIcon={<PictureAsPdfIcon />}
-                // onClick={handleDownload}
-                >
-                    حکم کارگزینی
-                </Button>
+                {/*<Button*/}
+                {/*    fullWidth*/}
+                {/*    variant="contained"*/}
+                {/*    color="error"*/}
+                {/*    startIcon={<PictureAsPdfIcon />}*/}
+                {/*// onClick={handleDownload}*/}
+                {/*>*/}
+                {/*    حکم کارگزینی*/}
+                {/*</Button>*/}
             </CardContent>
         </Card>
     )
