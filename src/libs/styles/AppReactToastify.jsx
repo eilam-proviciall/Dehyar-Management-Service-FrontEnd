@@ -20,7 +20,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
   // Hooks
   const { settings } = useSettings();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(480));
-  const isDarkMode = theme.palette.mode === 'dark';
+  const isDarkMode = theme.palette.mode === 'light';
 
   return {
     ...(isSmallScreen && {
@@ -84,7 +84,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
       }
     },
     '& .Toastify__close-button': {
-      color: isDarkMode ? '#000' : 'var(--mui-palette-text-primary)',
+      color: isDarkMode ? '#000' : '#fff',
       alignSelf: 'center'
     }
   }
