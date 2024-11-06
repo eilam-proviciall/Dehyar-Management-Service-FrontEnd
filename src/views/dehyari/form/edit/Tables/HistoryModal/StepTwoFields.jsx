@@ -7,9 +7,18 @@ import persian_fa from 'react-date-object/locales/persian_fa';
 import {convertUnixToJalali} from "@utils/dateConverter";
 
 const StepTwoFields = ({validation}) => {
-    const {control, formState: {errors}, getValues} = useFormContext();
+    const {control,watch, formState: {errors}, getValues} = useFormContext();
     console.log("Start Date => ", getValues('contractStart'));
     console.log("End Date => ", getValues('contractEnd'));
+    const jobTitle = watch('jobTitle');
+    console.log("Job title => ", jobTitle)
+
+    const contractTitles = {
+        1: 'انجام وظایف تعیین شده برای دهیار در چارچوب قوانین و مقررات موضوعه',
+        3: 'انجام وظایف تعیین شده برای مسئول امور مالی در چارچوب قوانین و مقررات موضوعه',
+        4: 'انجام وظایف تعیین شده برای مسئول فنی، عمرانی و خدمات روستا در چارچوب قوانین و مقررات موضوعه',
+    };
+
 
     return (
         <Grid className='p-5 border-2 rounded-xs' container spacing={2}>
@@ -28,8 +37,9 @@ const StepTwoFields = ({validation}) => {
                                 label="عنوان قرارداد"
                                 {...field}
                             >
-                                <MenuItem value="0">آیتم اول</MenuItem>
-                                <MenuItem value="1">آیتم دوم</MenuItem>
+                                <MenuItem value={contractTitles[jobTitle]}>
+                                    {contractTitles[jobTitle]}
+                                </MenuItem>
                             </Select>
                             <FormHelperText>{errors.titleContract?.message}</FormHelperText>
                         </FormControl>

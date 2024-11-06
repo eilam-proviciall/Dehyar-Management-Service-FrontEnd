@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, FormControl, Typography } from '@mui/material';
+import {Grid, TextField, FormControl, Typography, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
@@ -8,6 +8,14 @@ import DividerSimple from '@components/common/Divider/DividerSimple';
 
 const StepContract = ({ validation }) => {
     const { control, formState: { errors } } = useFormContext();
+    const jobTitle = watch('jobTitle');
+    console.log("Job title => ", jobTitle)
+
+    const contractTitles = {
+        1: 'انجام وظایف تعیین شده برای دهیار در چارچوب قوانین و مقررات موضوعه',
+        3: 'انجام وظایف تعیین شده برای مسئول امور مالی در چارچوب قوانین و مقررات موضوعه',
+        4: 'انجام وظایف تعیین شده برای مسئول فنی، عمرانی و خدمات روستا در چارچوب قوانین و مقررات موضوعه',
+    };
 
     return (
         <>
@@ -21,16 +29,20 @@ const StepContract = ({ validation }) => {
                         control={control}
                         defaultValue=""
                         rules={validation.titleContract}
-                        render={({ field }) => (
-                            <TextField
-                                fullWidth
-                                size="small"
-                                label="عنوان قرارداد"
-                                placeholder="عنوان قرارداد"
-                                {...field}
-                                error={!!errors.titleContract}
-                                helperText={errors.titleContract && errors.titleContract.message}
-                            />
+                        render={({field}) => (
+                            <FormControl fullWidth size="small" error={!!errors.titleContract}>
+                                <InputLabel id="titleContract-label">عنوان قرارداد</InputLabel>
+                                <Select
+                                    labelId="titleContract-label"
+                                    label="عنوان قرارداد"
+                                    {...field}
+                                >
+                                    <MenuItem value={contractTitles[jobTitle]}>
+                                        {contractTitles[jobTitle]}
+                                    </MenuItem>
+                                </Select>
+                                <FormHelperText>{errors.titleContract?.message}</FormHelperText>
+                            </FormControl>
                         )}
                     />
                 </Grid>
