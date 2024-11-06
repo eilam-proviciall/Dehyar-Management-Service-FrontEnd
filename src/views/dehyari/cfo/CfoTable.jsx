@@ -37,7 +37,6 @@ function CfoTable(props) {
     const handleDownloadPdf = async (row) => {
         try {
             const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {requiresAuth: true});
-
             const humanResourceData = response.data;
             console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
@@ -64,6 +63,7 @@ function CfoTable(props) {
         const fetchData = async () => {
             try {
                 const response = await api.get(`${GetHumanResourcesForCfo()}`, {requiresAuth: true});
+                console.log("response => ", response);
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
@@ -85,7 +85,6 @@ function CfoTable(props) {
                 header: 'نام و نام خانوادگی',
                 size: 150,
                 Cell: ({row}) => {
-                    console.log("Row => ", row.original);
                     const {first_name, last_name} = row.original;
                     return <div className={'flex items-center gap-2'}>
                         <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل"/>
@@ -120,7 +119,7 @@ function CfoTable(props) {
                     return (
                         <div style={{textAlign: 'right'}}>
                             <Chip label={contractType[role]}
-                                  className={`h-7 w-[55%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
+                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
                             />
                         </div>
                     );
