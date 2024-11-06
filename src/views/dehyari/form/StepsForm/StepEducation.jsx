@@ -146,7 +146,7 @@ const StepEducation = ({ validation }) => {
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} sm={3}>
                                             <FormControl fullWidth size="small"
-                                                error={!!errors?.educations?.[index]?.degree}>
+                                                         error={!!errors?.educations?.[index]?.degree}>
                                                 <InputLabel>مدرک تحصیلی</InputLabel>
                                                 <Controller
                                                     name={`educations.${index}.degree`}
@@ -158,7 +158,7 @@ const StepEducation = ({ validation }) => {
                                                             {...field}
                                                             label="مدرک تحصیلی"
                                                             onChange={(e) => handleDegreeChange(e, field, index)}
-                                                            value={field.value}
+                                                            value={field.value || ""}
                                                         >
                                                             {educationDegrees.map(degree => (
                                                                 <MenuItem key={degree.value} value={degree.value}>
@@ -174,7 +174,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
                                             <FormControl fullWidth size="small"
-                                                error={!!errors?.educations?.[index]?.fieldOfStudy}>
+                                                         error={!!errors?.educations?.[index]?.fieldOfStudy}>
                                                 <InputLabel>رشته تحصیلی</InputLabel>
                                                 <Controller
                                                     name={`educations.${index}.fieldOfStudy`}
@@ -186,6 +186,7 @@ const StepEducation = ({ validation }) => {
                                                             {...field}
                                                             label="رشته تحصیلی"
                                                             disabled={!watch(`educations.${index}.degree`) || watch(`educations.${index}.degree`) < 44}
+                                                            value={field.value || ""}
                                                         >
                                                             {(fieldsOfStudy[watch(`educations.${index}.degree`)] || []).map(field => (
                                                                 <MenuItem key={field.code} value={field.code}>
@@ -214,7 +215,7 @@ const StepEducation = ({ validation }) => {
                                                         onChange={(date) => {
                                                             field.onChange(date ? date.toUnix() : '');
                                                         }}
-                                                        value={getValues("graduationDate")}
+                                                        value={field.value || ""}
                                                         render={
                                                             <TextField
                                                                 sx={{ textAlign: "center" }}
@@ -234,7 +235,7 @@ const StepEducation = ({ validation }) => {
                                         </Grid>
                                         <Grid item xs={12} sm={3}>
                                             <IconButton color="error" aria-label="delete" size="large"
-                                                onClick={() => remove(index)}>
+                                                        onClick={() => remove(index)}>
                                                 <DeleteIcon fontSize="inherit" />
                                             </IconButton>
                                         </Grid>
