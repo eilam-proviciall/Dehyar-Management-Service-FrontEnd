@@ -15,6 +15,7 @@ import HumanResourceDTO from "@utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
+import WorkFlowDialog from "@views/dehyari/form/edit/Tables/WorkFlowDialog";
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -236,18 +237,7 @@ const HistoryTable = () => {
                 mode={editMode ? 'edit' : 'create'}
                 editId={editId}
             />
-            
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>عنوان دیالوگ</DialogTitle>
-                <DialogContent>
-                    محتوای دیالوگ اینجا قرار می‌گیرد.
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDialogOpen(false)} color="primary">
-                        بستن
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <WorkFlowDialog open={dialogOpen} setDialogOpen={setDialogOpen}/>
         </div>
     );
 }
