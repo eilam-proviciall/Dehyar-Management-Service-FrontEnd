@@ -1,38 +1,85 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { Button, Drawer, DialogActions, DialogContent } from "@mui/material";
 import React from "react";
 import CustomIconButton from "@core/components/mui/IconButton";
-import {toast} from "react-toastify";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import DividerSimple from "@components/common/Divider/DividerSimple";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
+import UserInfoItem from './UserInfoItem'; // فرض کنید مسیر فایل UserInfoItem.js است
 
-const WorkFlowDialog = ({open, setDialogOpen}) => {
-    return <Dialog open={open} onClose={() => setDialogOpen(false)}>
-        <Grid className={'p-5'}>
-                <Tooltip title="بستن" placement={'top'}>
-                    <CustomIconButton
-                        onClick={() => setDialogOpen(false)}
-                        className={"rounded-full"}
-                    >
-                        <i className="ri-close-line"/>
-                    </CustomIconButton>
-                </Tooltip>
-                {/*<DialogTitle>بررسی حکم کارگزینی</DialogTitle>*/}
-            <DividerSimple title={'بررسی حکم کارگزینی'}/>
-            <DialogContent>
-                <Typography mb={5}>
-                    تایید حکم کارگزینی علی نوریان زاده دهیار چم جنگل با قرارداد <span className={"text-red-700"}>17 روز کار کرد</span>
-                </Typography>
-                <TextField
-                    label="توضیحات"
-                    fullWidth
-                />
-            </DialogContent>
-
-        </Grid>
-            <DialogActions>
+const WorkFlowDrawer = ({ open, setDialogOpen }) => {
+    return (
+        <Drawer
+            anchor="right"
+            open={open}
+            onClose={() => setDialogOpen(false)}
+            PaperProps={{
+                sx: { width: 350 }
+            }}
+        >
+            <Grid className={'p-5'}>
+                <div className={'flex w-full justify-end'}>
+                    <Tooltip title="بستن" placement={'top'}>
+                        <CustomIconButton
+                            onClick={() => setDialogOpen(false)}
+                            className={"rounded-full"}
+                        >
+                            <i className="ri-close-line" />
+                        </CustomIconButton>
+                    </Tooltip>
+                </div>
+                <DividerSimple title={'بررسی حکم کارگزینی'} />
+                <div className={'flex justify-center gap-5 mt-5'}>
+                    <Chip
+                        label={"بررسی حکم"}
+                        onClick={() => { }}
+                        clickable
+                        variant='outlined'
+                        className='text-textPrimary'
+                        sx={{
+                            boxShadow: 2,
+                            borderWidth: 1,
+                            '&:hover': {
+                                backgroundColor: 'primary.main',
+                                color: 'white',
+                            },
+                        }}
+                    />
+                    <Chip
+                        label={"سوابق درخواست"}
+                        onClick={() => { }}
+                        clickable
+                        variant='outlined'
+                        className='text-textPrimary'
+                        sx={{
+                            boxShadow: 0,
+                            borderWidth: 1,
+                            '&:hover': {
+                                backgroundColor: 'primary.main',
+                                color: 'white',
+                            },
+                        }}
+                    />
+                </div>
+                <DialogContent>
+                    <Box className={'flex flex-col gap-3'}>
+                        <UserInfoItem icon="ri-user-line" label="نام کاربر" value="علی نوریان زاده" />
+                        <UserInfoItem icon="ri-government-line" label="پست سازمانی" value="دهیار" />
+                        <UserInfoItem icon="ri-community-line" label="اسم روستا" value="چم جنگل" />
+                        <UserInfoItem icon="ri-file-line" label="نوع قرارداد" value="19 روز" />
+                        <UserInfoItem icon="ri-calendar-line" label="تاریخ شروع قرارداد" value="-" />
+                        <UserInfoItem icon="ri-wallet-2-line" label="جمع حقوق و دستمزد" value="-" />
+                    </Box>
+                    <TextField
+                        label="توضیحات"
+                        fullWidth
+                        sx={{ mt: 3 }}
+                    />
+                </DialogContent>
+            </Grid>
+            <DialogActions className={'justify-center'}>
                 <Button onClick={() => {
                 }} color="error" variant={'contained'}>
                     عدم تایید حکم
@@ -42,7 +89,8 @@ const WorkFlowDialog = ({open, setDialogOpen}) => {
                     تایید حکم
                 </Button>
             </DialogActions>
-    </Dialog>
+        </Drawer>
+    );
 }
 
-export default WorkFlowDialog;
+export default WorkFlowDrawer;
