@@ -106,7 +106,7 @@ const AppReactToastify = props => {
 
   return (
       <ToastifyWrapper {...boxProps}>
-        <ToastContainer rtl={true} position={position} stacked progressStyle={{backgroundColor: '#fff'}} />
+        <ToastContainer rtl={true} position={position} stacked  />
       </ToastifyWrapper>
   )
 }
