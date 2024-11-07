@@ -1,42 +1,30 @@
-"use client";
-import React, {useMemo, useState, useEffect} from 'react';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
-import {Box, Button, IconButton, Menu, MenuItem} from '@mui/material';
+import React, { useMemo, useState, useEffect } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Box, Button, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import axios from "axios";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
-import {DownloadHumanResourcePdf, HumanContract} from "@/Services/humanResources";
-import {getJobTitleLabel} from "@data/jobTitles";
-import {toast} from 'react-toastify';
-import {convertUnixToJalali} from "@utils/dateConverter";
+import { DownloadHumanResourcePdf, HumanContract } from "@/Services/humanResources";
+import { getJobTitleLabel } from "@data/jobTitles";
+import { toast } from 'react-toastify';
+import { convertUnixToJalali } from "@utils/dateConverter";
 import CustomIconButton from "@core/components/mui/IconButton";
 import Chip from "@mui/material/Chip";
 import api from "@utils/axiosInstance";
 import HumanResourceDTO from "@utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
-import {pdf} from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 40,
-    p: 4,
-};
-
-function HistoryTable() {
+const HistoryTable = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [openModal, setOpenModal] = useState(false); // مدیریت باز و بسته شدن مودال
-    const [editMode, setEditMode] = useState(false); // تعیین حالت ویرایش یا ایجاد
-    const [editId, setEditId] = useState(null); // نگه‌داری ID رکوردی که ویرایش می‌شود
+    const [openModal, setOpenModal] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false); // مدیریت باز و بسته شدن دیالوگ
 
     const open = Boolean(anchorEl);
 
@@ -50,26 +38,26 @@ function HistoryTable() {
     };
 
     const handleOpenModal = () => {
-        setEditMode(false); // حالت ایجاد
+        setEditMode(false);
         setEditId(null);
-        setOpenModal(true); // باز کردن مودال
+        setOpenModal(true);
     };
 
     const handleEdit = (row) => {
-        setEditMode(true); // حالت ویرایش
-        setEditId(row.original.id); // دریافت ID برای ویرایش
-        setOpenModal(true); // باز کردن مودال
+        setEditMode(true);
+        setEditId(row.original.id);
+        setOpenModal(true);
         handleCloseMenu();
     };
 
     const handleDownloadPdf = async (row) => {
         try {
             console.log("Row => ", row);
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.id}`, {requiresAuth: true});
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.id}`, { requiresAuth: true });
             const humanResourceData = response.data;
             console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data}/>;
+            const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
             const blob = await asPdf.toBlob();
@@ -121,25 +109,29 @@ function HistoryTable() {
             accessorKey: 'contract_start',
             header: 'تاریخ شروع قرارداد',
             size: 150,
-            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{convertUnixToJalali(cell.getValue())}</div>,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{convertUnixToJalali(cell.getValue())}</div>,
         },
         {
             accessorKey: 'title_contract',
             header: 'وضعیت',
             size: 150,
-            Cell: ({cell}) => <div style={{textAlign: 'right'}}><Chip label={'پیش نویس'}/></div>,
+            Cell: ({ cell }) => (
+                <div style={{ textAlign: 'right' }}>
+                    <Chip label={'پیش نویس'} onClick={() => setDialogOpen(true)} />
+                </div>
+            ),
         },
         {
             accessorKey: 'job_type_id',
             header: 'پست سازمانی',
             size: 150,
-            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{getJobTitleLabel(cell.getValue())}</div>,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{getJobTitleLabel(cell.getValue())}</div>,
         },
         {
             accessorKey: 'contract_end',
             header: 'تاریخ پایان قرارداد',
             size: 150,
-            Cell: ({cell}) => <div style={{textAlign: 'right'}}>{convertUnixToJalali(cell.getValue())}</div>,
+            Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{convertUnixToJalali(cell.getValue())}</div>,
         },
         {
             accessorKey: 'actions',
@@ -188,7 +180,7 @@ function HistoryTable() {
                             }}
                             className={"rounded-full"}
                         >
-                            <i class="ri-indeterminate-circle-line"/>
+                            <i className="ri-indeterminate-circle-line" />
                         </CustomIconButton>
                     </Tooltip>
                 </div>
@@ -200,13 +192,13 @@ function HistoryTable() {
         columns,
         data,
         renderTopToolbarCustomActions: () => (
-            <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Button variant="contained" color="primary" onClick={handleOpenModal}>
                     افزودن قرارداد
                 </Button>
             </Box>
         ),
-        initialState: {density: 'compact'},
+        initialState: { density: 'compact' },
         state: {
             isLoading: loading,
             showProgressBars: loading,
@@ -236,7 +228,7 @@ function HistoryTable() {
 
     return (
         <div>
-            <MaterialReactTable table={table}/>
+            <MaterialReactTable table={table} />
             <HistoryTableModal
                 open={openModal}
                 handleClose={() => setOpenModal(false)}
@@ -244,6 +236,18 @@ function HistoryTable() {
                 mode={editMode ? 'edit' : 'create'}
                 editId={editId}
             />
+            
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                <DialogTitle>عنوان دیالوگ</DialogTitle>
+                <DialogContent>
+                    محتوای دیالوگ اینجا قرار می‌گیرد.
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDialogOpen(false)} color="primary">
+                        بستن
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
