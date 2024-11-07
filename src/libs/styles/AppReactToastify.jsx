@@ -91,7 +91,7 @@ const ToastifyWrapper = styled(Box)(({ theme }) => {
 });
 
 const AppReactToastify = props => {
-  const { boxProps, direction = 'ltr', ...rest } = props
+  const { boxProps, direction = 'ltr', position = 'bottom-right' } = props
 
   const positionMap = {
     'top-right': 'top-left',
@@ -102,11 +102,11 @@ const AppReactToastify = props => {
     'bottom-center': 'bottom-center'
   }
 
-  const position = direction === 'rtl' ? positionMap[themeConfig.toastPosition] : themeConfig.toastPosition
+  // const position = direction === 'rtl' ? positionMap[themeConfig.toastPosition] : themeConfig.toastPosition
 
   return (
       <ToastifyWrapper {...boxProps}>
-        <ToastContainer rtl={true} position={"bottom-right"} stacked progressStyle={{backgroundColor: '#fff'}} />
+        <ToastContainer rtl={true} position={position} stacked progressStyle={{backgroundColor: '#fff'}} />
       </ToastifyWrapper>
   )
 }
