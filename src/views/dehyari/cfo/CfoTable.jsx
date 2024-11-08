@@ -100,7 +100,6 @@ function CfoTable(props) {
                 header: 'دهیاری',
                 size: 150,
                 Cell: ({cell}) => {
-                    console.log("Cell =>", cell.getValue());
                     return <div style={{textAlign: 'right'}}>{cell.getValue() && cell.getValue().approved_name || ''}</div>
                 },
             },

@@ -76,6 +76,12 @@ const Forms = ({ invoiceData }) => {
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
         console.log("data => ", data);
+
+        if (!data.profilePicture) {
+            toast.error('تصویر پروفایل باید بارگذاری شود');
+            return;
+        }
+
         const request = mode === 'create'
             ? api.post(humanResources(), formattedData, { requiresAuth: true })
             : api.put(`${humanResources()}/human-resources/${id}`, formattedData, { requiresAuth: true });

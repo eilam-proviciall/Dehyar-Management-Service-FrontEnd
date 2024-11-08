@@ -66,6 +66,9 @@ function EditFromComponent() {
         }
     };
 
+    useEffect(() => {
+        console.log("Updated defaultValue:", defaultValue);
+    }, [defaultValue]);
 
     const handleSwitch = () => setShowTable(!showTable);
 

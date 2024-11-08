@@ -1,6 +1,6 @@
 class HumanResourceDTO {
     constructor(apiData) {
-        console.log("Edit Human Resource DTO => ", apiData);
+        // console.log("Edit Human Resource DTO => ", apiData);
         this.firstName = apiData.first_name; // افزودن فیلد نام
         this.lastName = apiData.last_name; // افزودن فیلد نام خانوادگی
         this.id = apiData.id;
