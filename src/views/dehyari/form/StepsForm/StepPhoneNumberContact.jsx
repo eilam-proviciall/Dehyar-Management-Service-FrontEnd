@@ -1,19 +1,15 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Grid, Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, TextField, IconButton, FormControl, InputLabel, Select, MenuItem, Typography, Box, Chip, Avatar } from '@mui/material';
+import { Grid, Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, TextField, IconButton, Typography, Box, Chip, Autocomplete, InputAdornment } from '@mui/material';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import PhoneIcon from '@mui/icons-material/Phone';
-import EitaaIcon from '@mui/icons-material/Message'; // می‌توانید بعدا آیکون‌های شبکه‌های اجتماعی را اضافه کنید
-import BaleIcon from '@mui/icons-material/Chat';
-import ShadIcon from '@mui/icons-material/School';
-import DividerSimple from "@components/common/Divider/DividerSimple";
-import InputAdornment from "@mui/material/InputAdornment";
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
-import Autocomplete from "@mui/material/Autocomplete";
-import socialNetworks from "@data/socialNetworks.json"
+import socialNetworks from "@data/socialNetworks.json";
+import DividerSimple from "@components/common/Divider/DividerSimple";
+
 const StepPhoneNumberContact = ({ validation }) => {
     const { control, watch, formState: { errors } } = useFormContext();
     const { fields, append, remove } = useFieldArray({
@@ -23,7 +19,7 @@ const StepPhoneNumberContact = ({ validation }) => {
     const [expanded, setExpanded] = useState(false);
 
     useEffect(() => {
-        if (Object.keys(errors.contacts || {})) {
+        if (Object.keys(errors.contacts || {}).length) {
             setExpanded(true);
         }
     }, [errors.contacts]);
@@ -40,18 +36,19 @@ const StepPhoneNumberContact = ({ validation }) => {
 
     const getIconByName = (iconName) => {
         const icons = {
-            EitaaIcon: <EitaaIcon />,
-            BaleIcon: <BaleIcon />,
-            ShadIcon: <ShadIcon />,
-            RubikaIcon: <ShadIcon />,
-            IGapIcon: <ShadIcon />,
-            TelegramIcon: <ShadIcon />,
-            WhatsappIcon: <ShadIcon />,
+            EitaaIcon: <ContactPhoneIcon />,
+            BaleIcon: <ContactPhoneIcon />,
+            ShadIcon: <ContactPhoneIcon />,
+            RubikaIcon: <ContactPhoneIcon />,
+            IGapIcon: <ContactPhoneIcon />,
+            TelegramIcon: <ContactPhoneIcon />,
+            WhatsappIcon: <ContactPhoneIcon />,
             ContactPhoneIcon: <ContactPhoneIcon />
         };
 
-        return icons[iconName] || null; // برگرداندن آیکون بر اساس نام
+        return icons[iconName] || null;
     };
+
     return (
         <Grid container spacing={2} mt={1}>
             <Grid item xs={12}>
@@ -72,12 +69,21 @@ const StepPhoneNumberContact = ({ validation }) => {
                                                 name={`contacts[${index}].phoneNumber`}
                                                 control={control}
                                                 defaultValue={item.phoneNumber}
+                                                rules={{
+                                                    required: "وارد کردن حداقل یک شماره تلفن اجباری است",
+                                                    pattern: {
+                                                        value: /^[0-9]{10,}$/,
+                                                        message: "شماره تلفن نامعتبر است"
+                                                    }
+                                                }}
                                                 render={({ field }) => (
                                                     <TextField
                                                         fullWidth
                                                         size="small"
                                                         label="شماره تلفن"
                                                         placeholder="شماره تلفن"
+                                                        error={!!errors.contacts?.[index]?.phoneNumber}
+                                                        helperText={errors.contacts?.[index]?.phoneNumber?.message}
                                                         InputProps={{
                                                             endAdornment: (
                                                                 <InputAdornment position="end">
@@ -108,16 +114,14 @@ const StepPhoneNumberContact = ({ validation }) => {
                                                         }}
                                                         renderOption={(props, option) => (
                                                             <li {...props}>
-                                                                <IconButton edge="end" disabled
-                                                                            style={{marginLeft: 1}}> {/* اضافه کردن فاصله */}
+                                                                <IconButton edge="end" disabled style={{ marginLeft: 1 }}>
                                                                     {getIconByName(option.icon)}
                                                                 </IconButton>
-                                                                <Typography
-                                                                    sx={{flexGrow: 1}}>{option.label}</Typography>
+                                                                <Typography sx={{ flexGrow: 1 }}>{option.label}</Typography>
                                                             </li>
                                                         )}
                                                         renderTags={(selected, getTagProps) => (
-                                                            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                                                 {selected.map((option, index) => (
                                                                     <Chip
                                                                         key={option.value}
@@ -148,12 +152,11 @@ const StepPhoneNumberContact = ({ validation }) => {
                                                     }
                                                 }}
                                                 sx={{ mt: 2 }}
-                                                disabled={fields.length === 1} // دکمه حذف را در صورتی که فقط یک آیتم باشد غیرفعال می‌کند
+                                                disabled={fields.length === 1}
                                             >
                                                 <DeleteIcon color={fields.length === 1 ? "disabled" : "error"} />
                                             </IconButton>
                                         </Grid>
-
                                     </Grid>
                                 </CardContent>
                             </Card>
