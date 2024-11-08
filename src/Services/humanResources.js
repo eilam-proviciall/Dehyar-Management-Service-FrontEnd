@@ -37,6 +37,11 @@ const HumanContract = () => {
 const InsuranceHistory = () => {
     return `${BaseUrl}/insurance-history`
 }
+
+const ChangeStateSalaries = (id) => {
+    return `${BaseUrl}/salaries/${id}/change-state`
+}
+
 export {
     humanResources,
     GetHumanResource,
@@ -48,5 +53,6 @@ export {
     GetFieldStudy,
     DownloadHumanResourcePdf,
     HumanContract,
-    InsuranceHistory
+    InsuranceHistory,
+    ChangeStateSalaries
 }

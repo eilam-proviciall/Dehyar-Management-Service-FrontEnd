@@ -99,7 +99,9 @@ function CfoTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
+                Cell: ({cell}) => {
+                    return <div style={{textAlign: 'right'}}>{cell.getValue()}</div>
+                },
             },
             {
                 accessorKey: 'job_type',
@@ -139,7 +141,9 @@ function CfoTable(props) {
                         case 'reviewing' : setContractStateValue('در حال بررسی'); break;
                     }
                     return <div style={{textAlign: 'right'}}>
-                        <Chip label={contractStateValue} onClick={()=>{setPopupOpen(true)}}/>
+                        <Chip label={contractStateValue} onClick={()=>{
+                            setPopupOpen(true);
+                        }}/>
                     </div>
                 },
             },

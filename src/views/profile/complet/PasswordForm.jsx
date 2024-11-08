@@ -44,6 +44,7 @@ const PasswordForm = ({ onBack, onNext }) => {
     };
 
     const onSubmit = data => {
+        console.log("Data => ", data)
         updateFormData(data);
         onNext();
     };

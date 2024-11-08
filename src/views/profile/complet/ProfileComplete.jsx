@@ -60,6 +60,7 @@ const ProfileComplete = () => {
                 toast.error('No token found');
                 return;
             }
+            console.log("Form Data => ", formData);
             await api.put(`${user()}/${authUser.id}`, formData, {
                 requiresAuth: true
             });
@@ -67,18 +68,7 @@ const ProfileComplete = () => {
             toast.success("بروزرسانی اطلاعات با موفقیت انجام شد");
             logout();
         } catch (error) {
-            if (error.response && error.response.data.errors) {
-                const errors = error.response.data.errors;
-                Object.keys(errors).forEach((key) => {
-                    errors[key].forEach((message) => {
-                        toast.error(message);
-                    });
-                });
-            } else if (error.response && error.response.data.message) {
-                toast.error(error.response.data.message);
-            } else {
-                toast.error("خطای ناشناخته");
-            }
+            return error;
         }
     };
 

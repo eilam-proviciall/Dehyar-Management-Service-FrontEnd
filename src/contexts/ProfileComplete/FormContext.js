@@ -27,8 +27,10 @@ export const FormProvider = ({ children }) => {
     const updateFormData = (data) => {
         setFormData(prev => ({
             ...prev,
-            ...data
+            ...data,
+            password_confirmation : data.confirmPassword,
         }));
+        console.log("Update Form Data => ", formData);
     };
 
 

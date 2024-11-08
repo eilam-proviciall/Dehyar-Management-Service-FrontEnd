@@ -1,6 +1,9 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Typography from "@mui/material/Typography";
+import api from "@utils/axiosInstance";
+import {ChangeStateSalaries} from "@/Services/humanResources";
 
 const WorkFlowPopup = ({ open, setOpen }) => {
     const handleClose = () => {
@@ -24,13 +27,14 @@ const WorkFlowPopup = ({ open, setOpen }) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <p>متن شما اینجا قرار می‌گیرد.</p>
+                <Typography variant={'h6'} className={'p-5'}>آیا از ارسال حکم به بخشداری جهت بررسی اطمینان دارید؟</Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
                     انصراف
                 </Button>
                 <Button onClick={() => {
+                    api.post(`${ChangeStateSalaries()}/}`,{requiresAuth: true })
                     handleClose();
                 }} color="primary">
                     تایید
