@@ -25,6 +25,8 @@
             description_contract: data.descriptionContract,
             title_contract: data.titleContract,
             profile_picture : data.profilePicture,
+            residence_address:data.residenceAddress,
+            postal_code: data.postalCode,
             educations: data.educations.map(education => ({
                 education_degree: education.degree,
                 education_field: education.fieldOfStudy,
