@@ -15,7 +15,7 @@ import HumanResourceDTO from "@utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
-import WorkFlowDialog from "@views/dehyari/form/edit/Tables/WorkFlowDialog";
+import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -25,7 +25,7 @@ const HistoryTable = () => {
     const [openModal, setOpenModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
-    const [dialogOpen, setDialogOpen] = useState(false); // مدیریت باز و بسته شدن دیالوگ
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const open = Boolean(anchorEl);
 

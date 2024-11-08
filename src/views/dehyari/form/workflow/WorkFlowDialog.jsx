@@ -7,7 +7,7 @@ import DividerSimple from "@components/common/Divider/DividerSimple";
 import Grid from "@mui/material/Grid";
 import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
-import UserInfoItem from './UserInfoItem'; // فرض کنید مسیر فایل UserInfoItem.js است
+import UserInfoItem from '../edit/Tables/UserInfoItem'; // فرض کنید مسیر فایل UserInfoItem.js است
 
 const WorkFlowDrawer = ({ open, setDialogOpen }) => {
     return (

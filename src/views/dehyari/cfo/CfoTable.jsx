@@ -18,6 +18,7 @@ import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Typography from "@mui/material/Typography";
+import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -26,6 +27,8 @@ function CfoTable(props) {
     const [currentRow, setCurrentRow] = useState(null); // ردیف جاری
     const open = Boolean(anchorEl);
     const router = useRouter();
+    const [popupOpen,setPopupOpen] = useState(false);
+    const [contractStateValue,setContractStateValue] = useState('');
 
     // کنترل کلیک روی دکمه عملیات
     const handleClick = (event, row) => {
@@ -126,10 +129,19 @@ function CfoTable(props) {
                 },
             },
             {
-                accessorKey: 'status',
+                accessorKey: 'contract_state',
                 header: 'وضعیت قرارداد',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({cell}) => {
+                    console.log("Contract State => ", contractStateValue);
+                    switch (cell.getValue()){
+                        case 'draft' : setContractStateValue('پیش نویس'); break;
+                        case 'reviewing' : setContractStateValue('در حال بررسی'); break;
+                    }
+                    return <div style={{textAlign: 'right'}}>
+                        <Chip label={contractStateValue} onClick={()=>{setPopupOpen(true)}}/>
+                    </div>
+                },
             },
             {
                 accessorKey: 'actions',
@@ -212,9 +224,9 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen}/>
         </div>
-    )
-        ;
+    );
 }
 
 export default CfoTable;

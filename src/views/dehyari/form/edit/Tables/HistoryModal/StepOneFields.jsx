@@ -39,23 +39,21 @@ const StepOneFields = ({validation, mode}) => {
         setContractTypeValue(newValue);
     };
 
-    // هندل تغییرات پست سازمانی
     const handleJobTitleChange = (event, value) => {
-        setSelectedJobTitle(value?.value || '');
-        setValue('jobTitle', value?.value || '');
+        const jobTitle = value?.value || '';
+        setSelectedJobTitle(jobTitle);
+        setValue('jobTitle', jobTitle);
     };
 
     // فانکشن Fetch کردن دهیاری‌های تحت پوشش
     const fetchVillages = useCallback(async (jobTitle) => {
-        console.log("Fetched");
         if (jobTitle) {
             try {
                 const response = await api.get(GetHumanCoverdVillageForCfo(), {
-                    params: {job_title: jobTitle},
+                    params: { job_title: jobTitle },
                     requiresAuth: true
                 });
                 setVillages(response.data);
-                console.log("Fetched villages:", response.data);
             } catch (error) {
                 console.error('Error fetching villages:', error);
             }
@@ -86,8 +84,10 @@ const StepOneFields = ({validation, mode}) => {
         setChipsKey(prevKey => prevKey + 1);
     }, [employerVillage, getValues, setValue]);
     useEffect(() => {
-        fetchVillages(selectedJobTitle);
-    }, [setSelectedJobTitle]);
+        if (selectedJobTitle) {
+            fetchVillages(selectedJobTitle);
+        }
+    }, [selectedJobTitle, fetchVillages]);
     const handleChange = (selectedVillages) => {
         if (!Array.isArray(selectedVillages)) return;
 
@@ -102,17 +102,13 @@ const StepOneFields = ({validation, mode}) => {
 
     useEffect(() => {
         if (mode === 'edit') {
-            // در حالت ویرایش، jobTitle را از مقدار فعلی فرم بخوانید
             const currentJobTitle = getValues('jobTitle');
-
-            // اگر jobTitle موجود بود، دهیاری‌ها را فچ کنید
             if (currentJobTitle) {
                 fetchVillages(currentJobTitle);
-                setSelectedJobTitle(currentJobTitle);  // مقداردهی selectedJobTitle برای ویرایش
+                setSelectedJobTitle(currentJobTitle);
             }
         }
     }, [mode, getValues, fetchVillages]);
-
 
     const options = jobTitleOptions.flatMap(group =>
         group.titles.map(title => ({
@@ -209,7 +205,6 @@ const StepOneFields = ({validation, mode}) => {
                 {/* دهیاری‌های تحت پوشش */}
                 <FormControl
                     fullWidth
-                    // size="small"
                     error={!!errors.coveredVillages}
                     disabled={mode === 'create' && !selectedJobTitle}
                 >
@@ -217,9 +212,8 @@ const StepOneFields = ({validation, mode}) => {
                     <Controller
                         name="coveredVillages"
                         control={control}
-                        defaultValue={[]}
                         rules={validation.coveredVillages}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <Select
                                 {...field}
                                 label="دهیاری‌های تحت پوشش"
@@ -230,7 +224,7 @@ const StepOneFields = ({validation, mode}) => {
                                 }}
                                 value={Array.isArray(field.value) ? field.value : []}
                                 renderValue={(selected) => (
-                                    <div key={chipsKey} style={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                    <div key={chipsKey} style={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                         {selected.map(value => (
                                             <Chip
                                                 key={value}
@@ -244,7 +238,7 @@ const StepOneFields = ({validation, mode}) => {
                                     </div>
                                 )}
                                 MenuProps={{
-                                    PaperProps: {style: {maxHeight: 224}}
+                                    PaperProps: { style: { maxHeight: 224 } }
                                 }}
                             >
                                 {villages.map((village) => (
@@ -257,8 +251,8 @@ const StepOneFields = ({validation, mode}) => {
                                             onClick={(e) => handleEmployerVillageSelect(village.hierarchy_code, e)}
                                             edge="end"
                                         >
-                                            {employerVillage === village.hierarchy_code ? <StarIcon/> :
-                                                <StarBorderIcon/>}
+                                            {employerVillage === village.hierarchy_code ? <StarIcon /> :
+                                                <StarBorderIcon />}
                                         </IconButton>
                                         {village.village_name}
                                     </MenuItem>
