@@ -11,6 +11,7 @@ import { GetHumanResource, humanResources } from '@/Services/humanResources';
 import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 import api from '@/utils/axiosInstance';
+import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();
@@ -18,36 +19,7 @@ const Forms = ({ invoiceData }) => {
     const [error, setError] = useState(null);
 
     const methods = useForm({
-        defaultValues: {
-            jobTitle: '',
-            coveredVillages: {},
-            fullName: '',
-            firstName: '',
-            lastName: '',
-            villageEmployer: '',
-            fatherName: '',
-            nationalCode: '',
-            birthDate: '',
-            phoneNumbers: {},
-            personalId: '',
-            gender: '',
-            maritalStatus: '',
-            birthPlace: '',
-            issuancePlace: '',
-            veteranStatus: '',
-            militaryService: '',
-            educations: [{ degree: '', fieldOfStudy: '', graduationDate: '' }],
-            insurances: [{ workplace: '', insurancePeriod: '', insuranceType: '', employmentStartDate: '', employmentEndDate: '' }],
-            children: [{ nationalCode: '', fullName: '', gender: '', birthDate: '', marriageDate: '', endOfStudyExemption: '', death_date: '' }],
-            contractType: '',
-            employmentStatus: '',
-            contractStart: '',
-            contractEnd: '',
-            execute_start: '',
-            descriptionContract: '',
-            titleContract: '',
-            profilePicture: ''
-        }
+        defaultValues: {}
     });
 
     useEffect(() => {
@@ -71,11 +43,12 @@ const Forms = ({ invoiceData }) => {
     }, [methods]);
 
     const onSubmit = data => {
+        console.log("Data => ", data)
         const formattedData = salaryToDTO(data);
         const queryParams = new URLSearchParams(window.location.search);
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
-        console.log("data => ", data);
+        console.log("formattedData => ", formattedData);
 
         if (!data.profilePicture) {
             toast.error('تصویر پروفایل باید بارگذاری شود');
@@ -94,8 +67,8 @@ const Forms = ({ invoiceData }) => {
         if (human_resource) {
             console.log("Human Resource => ", human_resource)
             toast.success("Human resource با موفقیت به‌روزرسانی شد");
-            router.push(`/dehyari/edit?param=${human_resource.personal_id}`);
-            window.location.href = '/dehyari';
+            // router.push(`/dehyari/edit?param=${human_resource.personal_id}`);
+            // window.location.href = '/dehyari';
         } else {
             toast.error("خطا در به‌روزرسانی Human resource");
         }

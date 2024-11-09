@@ -100,7 +100,7 @@ function CfoTable(props) {
                 header: 'دهیاری',
                 size: 150,
                 Cell: ({cell}) => {
-                    return <div style={{textAlign: 'right'}}>{cell.getValue() && cell.getValue().approved_name || ''}</div>
+                    return <div style={{textAlign: 'right'}}>{cell.getValue() && cell.getValue().approved_name || '-'}</div>
                 },
             },
             {
@@ -134,14 +134,15 @@ function CfoTable(props) {
                 accessorKey: 'contract_state',
                 header: 'وضعیت قرارداد',
                 size: 150,
-                Cell: ({cell}) => {
+                Cell: ({cell,row}) => {
                     console.log("Contract State => ", contractStateValue);
                     switch (cell.getValue()){
                         case 'draft' : setContractStateValue('پیش نویس'); break;
                         case 'reviewing' : setContractStateValue('در حال بررسی'); break;
                     }
                     return <div style={{textAlign: 'right'}}>
-                        <Chip label={contractStateValue} onClick={()=>{
+                        <Chip label={contractStateValue || 'پیش نویس'} onClick={()=>{
+                            setCurrentRow(row.original);
                             setPopupOpen(true);
                         }}/>
                     </div>
@@ -228,7 +229,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} information={currentRow}/>
         </div>
     );
 }

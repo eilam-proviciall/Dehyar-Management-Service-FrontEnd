@@ -1,54 +1,52 @@
-    export const salaryToDTO = (data) => {
+    export const salaryToDTO = (formData) => {
         return {
-            job_type_id: data.jobTitle,
-            nid: data.nationalCode,
-            covered_villages: data.coveredVillages,
-            fullName: data.full_name,
-            first_name: data.firstName,
-            last_name: data.lastName,
-            father_name: data.fatherName,
-            personal_id: data.personalId,
-            gender: data.gender,
-            married_status: data.maritalStatus,
-            village_employer: data.villageEmployer,
-            birth_place: data.birthPlace,
-            issue_place: data.issuancePlace,
-            eisargari_status: data.veteranStatus,
-            nezam_vazife: data.militaryService,
-            birth_date: data.birthDate,
-            phone_numbers: data.phoneNumbers,
-            contract_type: data.contractType,
-            employment_status: data.employmentStatus,
-            contract_start: data.contractStart,
-            contract_end: data.contractEnd,
-            execute_start: data.execute_start,
-            description_contract: data.descriptionContract,
-            title_contract: data.titleContract,
-            profile_picture : data.profilePicture,
-            residence_address:data.residenceAddress,
-            postal_code: data.postalCode,
-            educations: data.educations.map(education => ({
-                education_degree: education.degree,
-                education_field: education.fieldOfStudy,
-                education_date: education.graduationDate
+            first_name: formData.firstName, // افزودن فیلد نام
+            last_name: formData.lastName, // افزودن فیلد نام خانوادگی
+            father_name: formData.fatherName,
+            nid: formData.nationalCode,
+            birth_date: formData.birthDate,
+            personal_id: formData.personalId,
+            gender: formData.gender,
+            married_status: formData.maritalStatus,
+            phone_numbers: formData.phoneNumbers,
+            birth_place: formData.birthPlace,
+            issue_place: formData.issuancePlace,
+            eisargari_status: formData.veteranStatus,
+            nezam_vazife: formData.militaryService,
+            contract_type: formData.contractType,
+            employment_status: formData.employmentStatus,
+            description_contract: formData.descriptionContract,
+            title_contract: formData.titleContract,
+            insurance_identifier: formData.insuranceIdentifier,
+
+            // افزودن فیلدهای جدید
+            postal_code: formData.postalCode, // کدپستی
+            residence_address: formData.residenceAddress, // آدرس محل سکونت
+            landline_number: formData.landlineNumber, // شماره تماس ثابت
+
+            educations: formData.educations.map(education => ({
+                education_degree: education.degree, // ذخیره مدرک تحصیلی
+                education_field: education.fieldOfStudy, // ذخیره کد رشته تحصیلی
+                education_date: education.graduationDate, // تاریخ فارغ‌التحصیلی
             })),
-            insurances: data.insurances.map(insurance => ({
-                dehyari_title: insurance.workplace,
-                contract_type: insurance.insurancesContractType,
-                month: insurance.insurancePeriod,
-                insurance_type: insurance.insuranceType,
-                start_date: insurance.employmentStartDate,
-                end_date: insurance.employmentEndDate
+            // insurances: formData.insurances,
+            covered_villages: formData.coveredVillages,
+            contacts: formData.contacts.map(contact => ({
+                phone_number: contact.phoneNumber,
+                social_network: contact.socialNetwork,
+                description: contact.description,
             })),
-            children: data.children.map(child => ({
-                nid: child.nationalCode,
+            children: formData.children.map(child => ({
+                nid: child.nid,
                 full_name: child.fullName,
                 birth_date: child.birthDate,
-                death_date: child.deathDate,
                 gender: child.gender,
                 married_date: child.marriageDate,
-                end_academic_deferment: child.endOfStudyExemption
-            }))
+                end_academic_deferment: child.endOfStudyExemption,
+                death_date: child.deathDate,
+            })),
+            profile_picture : formData.profilePicture,
+            profile_picture_base64: formData.profilePicture,
         };
     };
 
