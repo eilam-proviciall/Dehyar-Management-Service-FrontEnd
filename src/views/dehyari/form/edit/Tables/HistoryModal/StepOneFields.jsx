@@ -70,13 +70,15 @@ const StepOneFields = ({ validation, mode }) => {
             const currentVillageEmployer = getValues('villageEmployer');
             if (currentVillageEmployer) {
                 setEmployerVillage(currentVillageEmployer);
+                handleEmployerVillageSelect(currentVillageEmployer); // فراخوانی تابع
             }
         }
     }, [mode, getValues, fetchVillages]);
 
     const handleEmployerVillageSelect = useCallback((villageCode, event) => {
-        console.log("AAAAAAAAAAAAAAAAA")
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         let currentSelection = getValues('coveredVillages');
         if (!Array.isArray(currentSelection)) {
             currentSelection = [];
