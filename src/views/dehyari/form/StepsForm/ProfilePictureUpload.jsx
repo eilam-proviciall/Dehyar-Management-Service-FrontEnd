@@ -34,6 +34,8 @@ const ProfilePictureUpload = ({ onNext, onBack }) => {
     const [files, setFiles] = useState([]);
     const pondRef = useRef(null);
 
+    console.log("profile Picture => ", getValues('profilePicture'));
+
     const handleFileChange = (fileItems) => {
         if (fileItems.length > 0) {
             const file = fileItems[0].file;

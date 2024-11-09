@@ -18,11 +18,11 @@
             description_contract: formData.descriptionContract,
             title_contract: formData.titleContract,
             insurance_identifier: formData.insuranceIdentifier,
-
-            // افزودن فیلدهای جدید
             postal_code: formData.postalCode, // کدپستی
             residence_address: formData.residenceAddress, // آدرس محل سکونت
             landline_number: formData.landlineNumber, // شماره تماس ثابت
+            profile_picture : formData.profilePicture,
+            // profile_picture_base64: formData.profilePicture,
 
             educations: formData.educations.map(education => ({
                 education_degree: education.degree, // ذخیره مدرک تحصیلی
@@ -45,8 +45,6 @@
                 end_academic_deferment: child.endOfStudyExemption,
                 death_date: child.deathDate,
             })),
-            profile_picture : formData.profilePicture,
-            profile_picture_base64: formData.profilePicture,
         };
     };
 

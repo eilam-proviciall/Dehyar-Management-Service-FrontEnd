@@ -36,7 +36,7 @@ function EditFromComponent() {
                 setError(false);
                 try {
                     const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, {requiresAuth: true});
-                    console.log("Response => ", new EditHumanResourceFormDTO(response.data))
+                    console.log("Response => ", response.data);
                     const dto = new EditHumanResourceFormDTO(response.data);
                     console.log("DTO =>", dto);
                     setDefaultValue(dto);
