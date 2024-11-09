@@ -8,6 +8,7 @@ class HumanContractDTO {
         this.description_contract = formData.descriptionContract;
         this.title_contract = formData.titleContract;
         this.job_type_id = formData.jobTypeId;
+        this.village_employer = formData.villageEmployer;
         this.main_work = formData.mainWork;
         this.human_resource_nid = formData.humanResourceNid;
         this.cover_village = formData.coveredVillages;
@@ -24,8 +25,8 @@ class HumanContractDTO {
             jobTypeId: formData.jobTitle,
             mainWork: formData.currentJob,
             humanResourceNid: nid,
-            coveredVillages : formData.coveredVillages
-
+            coveredVillages : formData.coveredVillages,
+            villageEmployer : formData.villageEmployer,
         });
     }
 }

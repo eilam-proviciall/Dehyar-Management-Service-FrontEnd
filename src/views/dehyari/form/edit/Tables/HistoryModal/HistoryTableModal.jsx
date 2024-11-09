@@ -78,7 +78,7 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                             Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                         },
                     });
-                    console.log("Contract Start => ", response.data.contract_start);
+                    console.log("Contract => ", response.data);
                     const mappedData = {
                         contractStart: response.data.contract_start,
                         contractType: response.data.contract_type,
@@ -90,8 +90,8 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                         jobTitle: response.data.job_type_id,
                         currentJob: response.data.main_work,
                         coveredVillages: response.data.cover_villages.map(village => village.village_code),
+                        villageEmployer : response.data.village_employer,
                     };
-
                     methods.reset(mappedData); // Populate the form with fetched data
                 } catch (error) {
                     toast.error('خطا در دریافت اطلاعات');
@@ -116,7 +116,8 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
     const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
         setLoading(true);
-        const dto = HumanContractDTO.fromForm(formData, param); // Convert data to DTO
+        const dto = HumanContractDTO.fromForm(formData, param);
+        console.log("DTO => ", dto);
         try {
             let response;
             if (mode === 'edit') {
