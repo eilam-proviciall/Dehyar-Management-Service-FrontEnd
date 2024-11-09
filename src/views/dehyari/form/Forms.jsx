@@ -63,39 +63,11 @@ const Forms = ({ invoiceData }) => {
     };
 
     const handleResponse = (data) => {
-        const { human_resource, children, educations, insurances } = data;
-        if (human_resource) {
-            console.log("Human Resource => ", human_resource)
-            toast.success("Human resource با موفقیت به‌روزرسانی شد");
-            // router.push(`/dehyari/edit?param=${human_resource.personal_id}`);
-            // window.location.href = '/dehyari';
+        if(data){
+            toast.success('با موفقیت ثبت شد');
         } else {
-            toast.error("خطا در به‌روزرسانی Human resource");
+            toast.error('خطا هنگام ثبت اطلاعات');
         }
-
-        children.forEach((status, index) => {
-            if (status) {
-                toast.success(`Child ${index + 1} با موفقیت به‌روزرسانی شد`);
-            } else {
-                toast.error(`خطا در به‌روزرسانی Child ${index + 1}`);
-            }
-        });
-
-        educations.forEach((status, index) => {
-            if (status) {
-                toast.success(`Education ${index + 1} با موفقیت به‌روزرسانی شد`);
-            } else {
-                toast.error(`خطا در به‌روزرسانی Education ${index + 1}`);
-            }
-        });
-
-        insurances.forEach((status, index) => {
-            if (status) {
-                toast.success(`Insurance ${index + 1} با موفقیت به‌روزرسانی شد`);
-            } else {
-                toast.error(`خطا در به‌روزرسانی Insurance ${index + 1}`);
-            }
-        });
     };
 
     const handleError = (error) => error;
