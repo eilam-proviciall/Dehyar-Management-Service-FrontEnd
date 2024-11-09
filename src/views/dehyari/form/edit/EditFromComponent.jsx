@@ -32,7 +32,6 @@ function EditFromComponent() {
             const token = window.localStorage.getItem('token');
 
             if (param) {
-                console.log("AAAAAAAAAAAAAAAAAAAAA")
                 setLoading(true);
                 setError(false);
                 try {
