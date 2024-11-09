@@ -64,7 +64,6 @@ const ProfileComplete = () => {
             await api.put(`${user()}/${authUser.id}`, formData, {
                 requiresAuth: true
             });
-
             toast.success("بروزرسانی اطلاعات با موفقیت انجام شد");
             logout();
         } catch (error) {
