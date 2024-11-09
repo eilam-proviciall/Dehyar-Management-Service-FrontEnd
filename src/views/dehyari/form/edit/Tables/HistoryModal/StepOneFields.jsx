@@ -28,7 +28,6 @@ const StepOneFields = ({ validation, mode }) => {
     const [villages, setVillages] = useState([]);
     const [employerVillage, setEmployerVillage] = useState('');
     const [chipsKey, setChipsKey] = useState(0);
-
     console.log("Value => ", getValues());
 
     const handleJobTitleChange = (event, value) => {
