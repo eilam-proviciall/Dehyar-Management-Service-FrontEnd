@@ -21,6 +21,7 @@ function EditFromComponent() {
     const [error, setError] = useState(false);
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
+    console.log("Param => ", param);
 
     const methods = useForm({
         defaultValues: {},
@@ -31,16 +32,18 @@ function EditFromComponent() {
             const token = window.localStorage.getItem('token');
 
             if (param) {
+                console.log("AAAAAAAAAAAAAAAAAAAAA")
                 setLoading(true);
                 setError(false);
                 try {
                     const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, {requiresAuth: true});
-                    console.log("Response => ", response)
+                    console.log("Response => ", new EditHumanResourceFormDTO(response.data))
                     const dto = new EditHumanResourceFormDTO(response.data);
                     console.log("DTO =>", dto);
                     setDefaultValue(dto);
                     methods.reset(dto);
                 } catch (error) {
+                    console.log("Error => ", error);
                     return error
                 } finally {
                     setLoading(false)
@@ -65,10 +68,6 @@ function EditFromComponent() {
             return error
         }
     };
-
-    useEffect(() => {
-        console.log("Updated defaultValue:", defaultValue);
-    }, [defaultValue]);
 
     const handleSwitch = () => setShowTable(!showTable);
 

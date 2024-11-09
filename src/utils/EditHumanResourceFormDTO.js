@@ -48,7 +48,7 @@ class HumanResourceDTO {
             socialNetwork: JSON.parse(contact.social_network),
             description: contact.description,
         }));
-        this.profilePicture = apiData.profile_picture.image_hash;
+        this.profilePicture = apiData.profile_picture && apiData.profile_picture.image_hash || '' ;
         this.insuranceIdentifier = apiData.insurance_identifier;
     }
 
