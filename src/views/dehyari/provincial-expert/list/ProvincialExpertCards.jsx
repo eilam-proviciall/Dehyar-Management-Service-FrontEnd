@@ -49,6 +49,16 @@ const ProvincialExpertCards = ({ loading, setLoading }) => {
             subtitle: '',
             loading: loading,
         },
+        {
+            title: 'دهیار',
+            value: '0',
+            avatarIcon: 'ri-user-search-line',
+            avatarColor: 'warning',
+            trend: 'negative',
+            trendNumber: '0%',
+            subtitle: '',
+            loading: loading,
+        },
     ];
 
     // const fetchData = () => {
