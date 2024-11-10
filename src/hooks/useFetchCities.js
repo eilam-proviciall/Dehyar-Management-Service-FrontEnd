@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getCity } from "@/Services/CountryDivision";
 import api from '@/utils/axiosInstance';
+import {getState} from "@/Services/DataService";
 
 export const useFetchCities = (shouldFetchCities) => {
     const [cities, setCities] = useState([]);
@@ -10,7 +10,7 @@ export const useFetchCities = (shouldFetchCities) => {
     useEffect(() => {
         const fetchCities = async () => {
             setIsLoading(true);
-            await api.get(getCity(), { requiresAuth: true })
+            await api.get(getState(), { requiresAuth: true })
                 .then(response => setCities(response.data.data))
                 .catch(err => setError(err))
                 .finally(setIsLoading(false));

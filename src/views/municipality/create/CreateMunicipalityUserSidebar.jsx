@@ -15,6 +15,7 @@ import roles from '@data/roles';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import { user } from "@/Services/Auth/AuthService";
 import CustomDrawer from '@/@core/components/mui/Drawer';
+import {useFetchCities} from "@hooks/useFetchCities";
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
@@ -36,11 +37,13 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
 
     const [fetchState, setFetchState] = useState({
         shouldFetchRegion: false,
-        shouldFetchVillages: false
+        shouldFetchVillages: false,
+        shouldFetchCities: false,
     });
 
     const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion);
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages);
+    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities);
 
     useEffect(() => {
         setValue('nid', sidebarDetails.defaultValues.nid);
@@ -55,7 +58,8 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         setFetchState(prevState => ({
             ...prevState,
             shouldFetchRegion: values.role == "14",
-            shouldFetchVillages: values.role == "13"
+            shouldFetchVillages: values.role == "13",
+            shouldFetchCities:  values.role == "16",
         }));
     }, [values.role]);
 
@@ -129,14 +133,14 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                             )}
                         />
                     </FormControl>
-
+                    {console.log("Defaul Values => ", sidebarDetails)}
                     <RoleFields
                         role={values.role}
                         control={control}
                         errors={errors}
-                        isLoading={values.role == "14" ? isRegionsLoading : isVillagesLoading}
-                        options={values.role == "14" ? regions : villages}
-                        selectedOptions={values.role == '14' ? sidebarDetails.defaultValues.geo_region : sidebarDetails.defaultValues.covered_villages}
+                        isLoading={values.role == "14" && isRegionsLoading || values.role == "13" && isVillagesLoading || isCitiesLoading}
+                        options={values.role == "14" && regions || values.role == "13" && villages || cities}
+                        selectedOptions={values.role == '14' && sidebarDetails.defaultValues.geo_region || values.role == "13" && sidebarDetails.defaultValues.covered_villages || sidebarDetails.defaultValues.geo_state}
                         sidebarDetails={sidebarDetails}
                         setSidebarDetails={setSidebarDetails}
                     />

@@ -6,6 +6,9 @@ import TextField from "@mui/material/TextField";
 
 const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, sidebarDetails, setSidebarDetails }) => {
 
+    console.log("Selected Options => ", selectedOptions);
+    console.log("Options => ", options);
+
     if (role && (!options || options.length === 0)) {
         return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     }
@@ -96,7 +99,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                             value={value}
                                             onChange={onChange}
                                             error={!!errors.personalField1}
-                                            helperText={errors.personalField1 ? 'انتخاب روستا های تحت پوشش الزامی سات' : ''}
+                                            helperText={errors.personalField1 ? 'انتخاب روستا های تحت پوشش الزامی است' : ''}
                                         />
                                     )}
                                 />
@@ -105,6 +108,50 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                     />
                 </FormControl>
             );
+        case "16" : return (
+            <FormControl fullWidth className='mbe-5'>
+                <Controller
+                    name='geo_state'
+                    control={control}
+                    rules={{ required: true }}
+                    defaultValue={selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null}
+                    render={({ field: { value, onChange } }) => (
+                        isLoading ? (
+                            <Typography variant='body1'>در حال بارگذاری...</Typography>
+                        ) : (
+                            <Autocomplete
+                                disableCloseOnSelect
+                                options={options}
+                                getOptionLabel={(option) => `${option.approved_name}`}
+                                onChange={(event, newValue) => {
+                                    sidebarDetails.status == 'edit' && (setSidebarDetails(prevState => ({
+                                        ...prevState,
+                                        defaultValues: {
+                                            ...prevState.defaultValues,
+                                            geo_state: newValue ? newValue.hierarchy_code : null,
+                                        }
+                                    })));
+                                    onChange(newValue ? newValue.hierarchy_code : null);
+                                }}
+                                defaultValue={
+                                    selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label='استان مربوطه'
+                                        value={value}
+                                        onChange={onChange}
+                                        error={!!errors.personalField1}
+                                        helperText={errors.personalField1 ? 'انتخاب استان مربوطه الزامی است' : ''}
+                                    />
+                                )}
+                            />
+                        )
+                    )}
+                />
+            </FormControl>
+        );
         // Add other cases for different roles
         default:
             return null;
