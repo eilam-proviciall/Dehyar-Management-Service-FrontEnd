@@ -67,6 +67,7 @@ const ProfileComplete = () => {
             toast.success("بروزرسانی اطلاعات با موفقیت انجام شد");
             logout();
         } catch (error) {
+            console.log("Error => ", error);
             return error;
         }
     };
