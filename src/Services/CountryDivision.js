@@ -15,5 +15,9 @@ const getRegion = () => {
     return `${BaseUrl}/country-division/region`
 }
 
+const getGeoDetails = () => {
+    return `${BaseUrl}/country-division/geo-details`
+}
 
-export {getCity,getVillageInformationList,getRegion}
+
+export {getCity,getVillageInformationList,getRegion,getGeoDetails}
