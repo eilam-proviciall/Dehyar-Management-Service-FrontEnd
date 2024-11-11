@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { getVillageInformationList } from "@/Services/CountryDivision";
+import {useState, useEffect} from 'react';
+import {getVillageInformationList} from "@/Services/CountryDivision";
 import api from '@/utils/axiosInstance';
 
 export const useFetchVillageInformationList = (shouldFetchCities) => {
@@ -10,8 +10,12 @@ export const useFetchVillageInformationList = (shouldFetchCities) => {
     useEffect(() => {
         const fetchVillages = async () => {
             setIsLoading(true);
-            await api.get(getVillageInformationList(), { requiresAuth: true })
-                .then(response => setVillages(response.data))
+            await api.get(getVillageInformationList(), {requiresAuth: true})
+                .then(response => {
+//                     setVillages(response.data.data.filter(village=> village.city.geo_state === userData));
+//                     console.log("Response Villages => ",response);
+                    setVillages(response.data)
+                })
                 .catch(err => setError(err))
                 .finally(setIsLoading(false));
         };
@@ -21,5 +25,5 @@ export const useFetchVillageInformationList = (shouldFetchCities) => {
         }
 
     }, [shouldFetchCities]);
-    return { villages, isLoading, error };
+    return {villages, isLoading, error};
 };
