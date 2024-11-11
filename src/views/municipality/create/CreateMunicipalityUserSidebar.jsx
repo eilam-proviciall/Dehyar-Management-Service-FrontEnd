@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
-import roles from '@data/roles';
+// import roles from '@data/roles';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import { user } from "@/Services/Auth/AuthService";
 import CustomDrawer from '@/@core/components/mui/Drawer';
@@ -40,6 +40,11 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         shouldFetchVillages: false,
         shouldFetchCities: false,
     });
+
+    const roles = {
+        "13": "مسئول امور مالی",
+        "14": "بخشدار",
+    }
 
     const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion);
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages);

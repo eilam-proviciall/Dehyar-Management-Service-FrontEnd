@@ -7,8 +7,8 @@ import NumberedText from './NumberedText'; // فرض کنیم این فایل ر
 Font.register({
     family: 'iranSans',
     fonts: [
-        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf`, fontWeight: 'normal' },
-        { src: `${process.env.NEXT_PUBLIC_APP_URL}/fonts/IRANSans/ttf/IRANSans-Bold.ttf`, fontWeight: '500' },
+        { src: '/fonts/IRANSans/ttf/IRANSansXFaNum-Regular.ttf', fontWeight: 'normal' },
+        { src: '/fonts/IRANSans/ttf/IRANSans-Bold.ttf', fontWeight: '500' },
     ]
 });
 moment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
