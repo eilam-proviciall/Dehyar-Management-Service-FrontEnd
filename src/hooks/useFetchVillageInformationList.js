@@ -12,9 +12,8 @@ export const useFetchVillageInformationList = (shouldFetchCities) => {
             setIsLoading(true);
             await api.get(getVillageInformationList(), {requiresAuth: true})
                 .then(response => {
-//                     setVillages(response.data.data.filter(village=> village.city.geo_state === userData));
-//                     console.log("Response Villages => ",response);
-                    setVillages(response.data)
+                    console.log("Response Villages => ",response.data);
+                    setVillages(response.data.filter(village=> village.geo_state === userData));
                 })
                 .catch(err => setError(err))
                 .finally(setIsLoading(false));
