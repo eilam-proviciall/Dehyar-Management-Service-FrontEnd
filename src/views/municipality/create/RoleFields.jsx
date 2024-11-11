@@ -6,9 +6,9 @@ import TextField from "@mui/material/TextField";
 
 const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, sidebarDetails, setSidebarDetails }) => {
 
-    if (role && (!options || options.length === 0)) {
-        return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
-    }
+    // if (role && (!options || options.length === 0)) {
+    //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
+    // }
 
     switch (role) {
         case "14":
