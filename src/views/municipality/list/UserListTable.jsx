@@ -43,9 +43,6 @@ const UserListTable = ({
                     console.log("new Details => ", response);
                 }
             )
-
-
-
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
         } finally {

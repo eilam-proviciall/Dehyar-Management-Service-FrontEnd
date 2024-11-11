@@ -27,6 +27,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
             );
             setUsers(filteredUsers);
             console.log("Users => ", response.data.data);
+            setLoading(false);
         } catch (error) {
             console.error("Error fetching users:", error);
         } finally {
@@ -35,10 +36,10 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     };
 
     useEffect(() => {
-        if (userGeoState) {
+        if (loading && userGeoState) {
             fetchUsers();
         }
-    }, [userGeoState, page, perPage]);
+    }, [loading, page, perPage]);
 
     // Handlers
     const handleClick = (event, row) => {
