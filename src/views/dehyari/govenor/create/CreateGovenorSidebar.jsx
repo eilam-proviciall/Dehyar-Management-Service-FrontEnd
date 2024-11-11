@@ -9,7 +9,7 @@ import {
     TextField, InputLabel, Select, MenuItem
 } from '@mui/material';
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
-import RoleFields from './RoleFields';
+import RoleFields from '@views/municipality/create/RoleFields';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import CustomDrawer from '@/@core/components/mui/Drawer';
 import {useFetchStates} from "@hooks/useFetchStates";
