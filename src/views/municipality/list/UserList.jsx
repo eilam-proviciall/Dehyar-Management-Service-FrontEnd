@@ -6,8 +6,10 @@ import Grid from '@mui/material/Grid'
 import UserListTable from './UserListTable'
 import UserListCards from './UserListCards'
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import CreateMunicipalityUserSidebar from "../create/CreateMunicipalityUserSidebar"
+import api from "@utils/axiosInstance";
+import {me} from "@/Services/Auth/AuthService";
 
 const UserList = ({ userData }) => {
     const [calendarApi, setCalendarApi] = useState(null)
@@ -18,6 +20,16 @@ const UserList = ({ userData }) => {
     const [loading, setLoading] = useState(false);
     const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
     const calendarStore = useSelector(state => state.calendarReducer)
+    const [userGeoState, setUserGeoState] = useState(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await api.get(`${me()}`, { requiresAuth: true });
+            console.log("response => ", response.data.data.user.original);
+            setUserGeoState(response.data.data.user.original.geo_state);
+        };
+        fetchUserData();
+    }, []);
 
     const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
     const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
@@ -39,6 +51,7 @@ const UserList = ({ userData }) => {
                     setSidebarDetails={setSidebarDetails}
                     loading={loading}
                     setLoading={setLoading}
+                    userGeoState={userGeoState}
                 />
                 <CreateMunicipalityUserSidebar
                     dispatch={dispatch}
@@ -49,6 +62,7 @@ const UserList = ({ userData }) => {
                     sidebarDetails={sidebarDetails}
                     setSidebarDetails={setSidebarDetails}
                     setLoading={setLoading}
+                    userGeoState={userGeoState}
                 />
             </Grid>
         </Grid>

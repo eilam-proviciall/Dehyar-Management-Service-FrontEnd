@@ -6,9 +6,6 @@ import TextField from "@mui/material/TextField";
 
 const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, sidebarDetails, setSidebarDetails }) => {
 
-    console.log("Selected Options => ", selectedOptions);
-    console.log("Options => ", options);
-
     if (role && (!options || options.length === 0)) {
         return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     }

@@ -16,7 +16,8 @@ import CustomDrawer from '@/@core/components/mui/Drawer';
 import { useFetchCities } from "@hooks/useFetchCities";
 import api from "@utils/axiosInstance";
 
-const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading }) => {
+const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading,userGeoState }) => {
+    console.log("User Geo State => ", userGeoState);
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             title: '',
@@ -41,26 +42,14 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         shouldFetchCities: false,
     });
 
-    const [userData, setUserData] = useState(null); // State برای ذخیره داده‌های کاربر
-
     const roles = {
         "13": "مسئول امور مالی",
         "14": "بخشدار",
     };
 
-    const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion, userData);
-    const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages, userData);
-    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities, userData);
-
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const response = await api.get(`${me()}`, { requiresAuth: true });
-            console.log("response => ", response.data.data.user.original);
-            setUserData(response.data.data.user.original.geo_state);
-        };
-        fetchUserData();
-    }, []);
+    const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion, userGeoState);
+    const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages, userGeoState);
+    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities, userGeoState);
 
     useEffect(() => {
         setValue('nid', sidebarDetails.defaultValues.nid);
@@ -150,7 +139,6 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                             )}
                         />
                     </FormControl>
-                    {console.log("Defaul Values => ", sidebarDetails)}
                     <RoleFields
                         role={values.role}
                         control={control}
