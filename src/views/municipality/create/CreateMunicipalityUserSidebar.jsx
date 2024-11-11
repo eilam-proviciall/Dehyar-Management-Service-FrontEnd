@@ -1,5 +1,4 @@
-// در ابتدای فایل CreateMunicipalityUserSidebar.js
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import useMunicipalityUserForm from '@hooks/useMunicipalityUserForm';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -11,11 +10,11 @@ import {
 } from '@mui/material';
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
-// import roles from '@data/roles';
 import { useFetchRegions } from "@hooks/useFetchRegions";
-import { user } from "@/Services/Auth/AuthService";
+import { me } from "@/Services/Auth/AuthService";
 import CustomDrawer from '@/@core/components/mui/Drawer';
-import {useFetchCities} from "@hooks/useFetchCities";
+import { useFetchCities } from "@hooks/useFetchCities";
+import api from "@utils/axiosInstance";
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
@@ -28,6 +27,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             covered_villages: [],
         },
     });
+
     const {
         values, setValues, handleSidebarClose, handleDeleteButtonClick,
         onSubmit, resetToStoredValues
@@ -41,30 +41,42 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         shouldFetchCities: false,
     });
 
+    const [userData, setUserData] = useState(null); // State برای ذخیره داده‌های کاربر
+
     const roles = {
         "13": "مسئول امور مالی",
         "14": "بخشدار",
-    }
+    };
 
-    const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion);
-    const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages);
-    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities);
+    const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion, userData);
+    const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages, userData);
+    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities, userData);
+
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await api.get(`${me()}`, { requiresAuth: true });
+            console.log("response => ", response.data.data.user.original);
+            setUserData(response.data.data.user.original.geo_state);
+        };
+        fetchUserData();
+    }, []);
 
     useEffect(() => {
         setValue('nid', sidebarDetails.defaultValues.nid);
         setValue('first_name', sidebarDetails.defaultValues.first_name);
         setValue('last_name', sidebarDetails.defaultValues.last_name);
         setValue('role', sidebarDetails.defaultValues.work_group);
-        setValue('covered_villages', sidebarDetails.defaultValues.covered_villages)
+        setValue('covered_villages', sidebarDetails.defaultValues.covered_villages);
         setValues(prevValues => ({ ...prevValues, role: `${sidebarDetails.defaultValues.work_group}` }));
-    }, [sidebarDetails])
+    }, [sidebarDetails]);
 
     useEffect(() => {
         setFetchState(prevState => ({
             ...prevState,
             shouldFetchRegion: values.role == "14",
             shouldFetchVillages: values.role == "13",
-            shouldFetchCities:  values.role == "16",
+            shouldFetchCities: values.role == "16",
         }));
     }, [values.role]);
 

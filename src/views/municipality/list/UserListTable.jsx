@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import {selectedEvent} from "@/redux-store/slices/calendar";
 import Chip from "@mui/material/Chip";
-import {user} from "@/Services/Auth/AuthService";
+import {me, user} from "@/Services/Auth/AuthService";
 import roles from "@data/roles.json"
 import {IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -39,7 +39,7 @@ const UserListTable = ({
                 setUsers(response.data.data)
                 console.log(response.data);
                 setLoading(false);
-            })
+            });
     }
 
     useEffect(() => {
