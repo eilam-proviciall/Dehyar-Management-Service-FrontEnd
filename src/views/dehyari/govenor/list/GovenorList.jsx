@@ -3,13 +3,13 @@
 import Grid from '@mui/material/Grid'
 
 // Component Imports
-import UserListTable from './UserListTable'
-import UserListCards from './UserListCards'
 import { useDispatch, useSelector } from "react-redux";
 import {useEffect, useState} from "react";
-import CreateMunicipalityUserSidebar from "../create/CreateMunicipalityUserSidebar"
 import api from "@utils/axiosInstance";
 import {me} from "@/Services/Auth/AuthService";
+import GovenorCards from "@views/dehyari/govenor/list/GovenorCards";
+import GovenorListTable from "@views/dehyari/govenor/list/GovenorListTable";
+import CreateGovenorSidebar from "@views/dehyari/govenor/create/CreateGovenorSidebar";
 
 const GovenorList = ({ userData }) => {
     const [calendarApi, setCalendarApi] = useState(null)
@@ -37,13 +37,13 @@ const GovenorList = ({ userData }) => {
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
-                <UserListCards
+                <GovenorCards
                     loading={loading}
                     setLoading={setLoading}
                 />
             </Grid>
             <Grid item xs={12}>
-                <UserListTable
+                <GovenorListTable
                     tableData={userData}
                     dispatch={dispatch}
                     handleAddEventSidebarToggle={handleAddEventSidebarToggle}
@@ -53,7 +53,7 @@ const GovenorList = ({ userData }) => {
                     setLoading={setLoading}
                     userGeoState={userGeoState}
                 />
-                <CreateMunicipalityUserSidebar
+                <CreateGovenorSidebar
                     dispatch={dispatch}
                     calendarApi={calendarApi}
                     calendarStore={calendarStore}
