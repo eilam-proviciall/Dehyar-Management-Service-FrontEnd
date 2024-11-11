@@ -1,21 +1,30 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
+'use client';
+import React, {useEffect, useMemo, useState} from 'react';
+import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { selectedEvent } from "@/redux-store/slices/calendar";
+import {selectedEvent} from "@/redux-store/slices/calendar";
 import Chip from "@mui/material/Chip";
-import { me, user } from "@/Services/Auth/AuthService";
-import roles from "@data/roles.json";
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import {user} from "@/Services/Auth/AuthService";
+import roles from "@data/roles.json"
+import {IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import StateCell from './cells/StateCell';
 import CityCell from './cells/CityCell';
 import RegionCell from './cells/RegionCell';
 import CustomIconButton from "@core/components/mui/IconButton";
 
-const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading, userGeoState }) => {
+
+const UserListTable = ({
+                           dispatch,
+                           handleAddEventSidebarToggle,
+                           addEventSidebarOpen,
+                           setSidebarDetails,
+                           loading,
+                           setLoading
+                       }) => {
     const [users, setUsers] = useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedRow, setSelectedRow] = useState(null);
@@ -25,25 +34,17 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
 
     const fetchUsers = async () => {
         setLoading(true);
-        try {
-            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
-            const filteredUsers = response.data.data.filter(user =>
-                user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
-            );
-            setUsers(filteredUsers);
-            console.log("Users => ", response.data.data);
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        await api.get(`${user()}?page${page + 1}&per_page${perPage}`, {requiresAuth: true})
+            .then((response) => {
+                setUsers(response.data.data)
+                console.log(response.data);
+                setLoading(false);
+            })
+    }
 
     useEffect(() => {
-        if (userGeoState) {
-            fetchUsers();
-        }
-    }, [userGeoState, page, perPage]);
+        loading ? fetchUsers() : null;
+    }, [loading]);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -57,35 +58,39 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
 
     const handleUserLogin = (row) => {
         toast.warning("این قابلیت به زودی افزوده میشود!");
-    };
+    }
 
     const handleEditUser = (row) => {
         console.log("User : ", row);
-        setSidebarDetails({ status: 'edit', defaultValues: row.original });
+        setSidebarDetails({status: 'edit', defaultValues: row.original});
         setAnchorEl(null);
         handleAddEventSidebarToggle();
-    };
+    }
 
     const handleChangePassword = (row) => {
         console.log(row);
         toast.warning("این قابلیت به زودی افزوده میشود!");
-    };
+    }
 
     const handleDeleteUser = (row) => {
-        api.delete(`${user()}/${row.original.id}`, { requiresAuth: true })
+        api.delete(`${user()}/${row.original.id}`, {requiresAuth: true})
             .then(() => {
                 toast.success("کاربر با موفقیت حذف شد");
                 setLoading(true);
-            }).catch((error) => {
-            console.error("Error deleting user:", error);
-        });
-    };
+            }).catch((error) => error)
+        // toast.warning("این قابلیت به زودی افزوده میشود!",
+        //     {
+        //         position: "top-center",
+        //         duration: 3000
+        //     }
+        // );
+    }
 
     const handleSidebarToggleSidebar = () => {
         dispatch(selectedEvent(null));
-        setSidebarDetails({ status: 'add', defaultValues: {} });
+        setSidebarDetails({status: 'add', defaultValues: {}})
         handleAddEventSidebarToggle();
-    };
+    }
 
     const [expandedRows, setExpandedRows] = useState({});
 
@@ -95,7 +100,6 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
             [rowId]: !prevState[rowId]
         }));
     };
-
     const getChipColor = (role) => {
         switch (role) {
             case 'مسئول امور مالی':
@@ -109,105 +113,106 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
         }
     };
 
-    const tableData = useMemo(() => users, [users]);
+    const tableData = useMemo(() => users, [users]); // فقط زمانی که users تغییر کند
 
     const columns = useMemo(
-        () => [
-            {
-                accessorKey: 'first_name',
-                header: 'نام و نام خانوادگی',
-                size: 150,
-                Cell: ({ row }) => {
-                    const { first_name, last_name } = row.original;
-                    return <div style={{ textAlign: 'right' }}>{`${first_name} ${last_name}`}</div>;
+            () => [
+                {
+                    accessorKey: 'first_name',
+                    header: 'نام و نام خانوادگی',
+                    size: 150,
+                    Cell: ({row}) => {
+                        const {first_name, last_name} = row.original;
+                        return <div style={{textAlign: 'right'}}>{`${first_name} ${last_name}`}</div>;
+                    },
                 },
-            },
-            {
-                accessorKey: 'nid',
-                header: 'کدملی',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
-            },
-            {
-                accessorKey: 'geo_state',
-                header: 'استان',
-                size: 150,
-                Cell: ({ cell }) => <div></div>
-            },
-            {
-                accessorKey: 'geo_city',
-                header: 'شهرستان',
-                size: 150,
-                Cell: ({ cell }) => <div></div>
-            },
-            {
-                accessorKey: 'geo_region',
-                header: 'بخش',
-                size: 150,
-                Cell: ({ cell }) => <div></div>
-            },
-            {
-                accessorKey: 'work_group',
-                header: 'نقش',
-                size: 150,
-                Cell: ({ cell }) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{ textAlign: 'right' }}>
-                            <Chip sx={{ height: 27.5 }} label={roles[role]} color={getChipColor(roles[role])} />
-                        </div>
-                    );
+                {
+                    accessorKey: 'nid',
+                    header: 'کدملی',
+                    size: 150,
+                    Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
                 },
-            },
-            {
-                accessorKey: 'covered_villages',
-                header: 'تعداد دهیاری‌ها',
-                size: 150,
-                Cell: ({ cell, row }) => {
-                    const dehyaries = cell.getValue();
-                    const rowId = row.id;
-                    return (
-                        <div style={{ textAlign: 'right' }}>
-                            {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
+                {
+                    accessorKey: 'geo_state',
+                    header: 'استان',
+                    size: 150,
+                    Cell: ({cell}) => <div></div>
+                },
+                {
+                    accessorKey: 'geo_city',
+                    header: 'شهرستان',
+                    size: 150,
+                    Cell: ({cell}) => <div></div>
+                },
+                {
+                    accessorKey: 'geo_region',
+                    header: 'بخش',
+                    size: 150,
+                    Cell: ({cell}) => <div></div>
+                },
+                {
+                    accessorKey: 'work_group',
+                    header: 'نقش',
+                    size: 150,
+                    Cell: ({cell}) => {
+                        const role = cell.getValue();
+                        return (
+                            <div style={{textAlign: 'right'}}>
+                                <Chip sx={{height: 27.5}} label={roles[role]} color={getChipColor(roles[role])}/>
+                            </div>
+                        );
+                    },
+                },
+                {
+                    accessorKey: 'covered_villages',
+                    header: 'تعداد دهیاری‌ها',
+                    size: 150,
+                    Cell: ({cell, row}) => {
+                        const dehyaries = cell.getValue();
+                        const rowId = row.id;
+                        return (
+                            <div style={{textAlign: 'right'}}>
+                                {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
+                            </div>
+                        );
+                    }
+                },
+                {
+                    accessorKey: 'actions',
+                    header: 'عملیات',
+                    size: 150,
+                    Cell: ({row}) => (
+                        <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                            <CustomIconButton
+                                color={"error"}
+                                onClick={() => {
+                                    handleDeleteUser(row);
+                                }}
+                                className={"rounded-full"}
+                            >
+                                <i className='ri-delete-bin-7-line'/>
+                            </CustomIconButton>
+                            <CustomIconButton
+                                color={"primary"}
+                                onClick={() => {
+                                    handleEditUser(row);
+                                }}
+                                className={"rounded-full"}
+                            >
+                                <i className='ri-edit-box-line'/>
+                            </CustomIconButton>
                         </div>
-                    );
-                }
-            },
-            {
-                accessorKey: 'actions',
-                header: 'عملیات',
-                size: 150,
-                Cell: ({ row }) => (
-                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
-                        <CustomIconButton
-                            color={"error"}
-                            onClick={() => {
-                                handleDeleteUser(row);
-                            }}
-                            className={"rounded-full"}
-                        >
-                            <i className='ri-delete-bin-7-line' />
-                        </CustomIconButton>
-                        <CustomIconButton
-                            color={"primary"}
-                            onClick={() => {
-                                handleEditUser(row);
-                            }}
-                            className={"rounded-full"}
-                        >
-                            <i className='ri-edit-box-line' />
-                        </CustomIconButton>
-                    </div>
-                )
-            },
-        ],
-        [anchorEl, selectedRow]
-    );
+                    )
+                },
+            ],
+            [anchorEl, selectedRow]
+        )
+    ;
 
     const table = useMaterialReactTable({
         columns,
         data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
+        renderTopToolbarCustomActions: ({table}) => (
             <Box
                 sx={{
                     display: 'flex',
@@ -219,7 +224,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                     fullWidth
                     variant='contained'
                     onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
+                    startIcon={<i className='ri-add-line'/>}
                 >
                     افزودن کاربر
                 </Button>
@@ -231,21 +236,21 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
                 pageIndex: page,
                 pageSize: perPage,
             }
-        },
+        },  // تنظیم تراکم به صورت پیش‌فرض روی compact
         rowCount: users.length,
         state: {
-            isLoading: loading,
-            showProgressBars: loading,
+            isLoading: loading, // نشان دادن لودینگ پیش‌فرض
+            showProgressBars: loading, // نمایش Progress Bars در هنگام بارگذاری
         },
         muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
+            animation: 'wave', // تنظیم انیمیشن Skeletons
+            height: 28, // ارتفاع Skeletons
         },
         muiLinearProgressProps: {
-            color: 'primary',
+            color: 'primary', // رنگ Progress Bars
         },
         muiCircularProgressProps: {
-            color: 'secondary',
+            color: 'secondary', // رنگ Circular Progress (در صورت استفاده)
         },
         muiPaginationProps: {
             color: 'primary',
@@ -254,7 +259,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
             variant: 'outlined',
             sx: {
                 button: {
-                    borderRadius: '50%',
+                    borderRadius: '50%', // تبدیل دکمه‌ها به دایره‌ای
                 },
             },
         },
@@ -269,7 +274,7 @@ const UserListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarO
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable table={table}/>
     );
 }
 

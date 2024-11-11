@@ -13,6 +13,8 @@ import RoleFields from './RoleFields';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import CustomDrawer from '@/@core/components/mui/Drawer';
 import {useFetchStates} from "@hooks/useFetchStates";
+import roles from '@data/roles';
+
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading,userGeoState }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
@@ -38,11 +40,6 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         shouldFetchVillages: false,
         shouldFetchCities: false,
     });
-
-    const roles = {
-        "13": "مسئول امور مالی",
-        "14": "بخشدار",
-    };
 
     const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion, userGeoState);
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages, userGeoState);

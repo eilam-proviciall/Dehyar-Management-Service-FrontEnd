@@ -51,7 +51,7 @@ const UserListCards = ({ loading, setLoading }) => {
       loading: loading,
     },
     {
-      title: 'دهیار',
+      title: 'شهردار',
       value: '0',
       avatarIcon: 'ri-user-search-line',
       avatarColor: 'warning',
