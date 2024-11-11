@@ -1,38 +1,33 @@
-// MUI Imports
-import Grid from '@mui/material/Grid'
+import React, { useEffect, useState } from 'react';
+import Grid from '@mui/material/Grid';
+import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle';
+import { user } from '@/Services/Auth/AuthService';
+import api from '@/utils/axiosInstance';
 
-// Component Imports
-import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle'
-import { useEffect, useState } from 'react'
-import { user } from '@/Services/Auth/AuthService'
-import api from '@/utils/axiosInstance'
-
-
-const GovenorCards = ({ loading, setLoading }) => {
+const GovenorCards = ({ loading, setLoading, userGeoState }) => {
 
     // States
     const [userList, setUserList] = useState([]);
     const [CFODetails, setCFODetails] = useState([]);
-    const [monisipalityDetails, setMonisipalityDetails] = useState([]);
     const [bakhshdarDetails, setBakhshdarDetails] = useState([]);
 
     // Vars
     const data = [
         {
-            title: 'کل کاربران',
-            value: userList.length,
-            avatarIcon: 'ri-group-line',
-            avatarColor: 'primary',
+            title: 'مسئول امور مالی',
+            value: CFODetails.length,
+            avatarIcon: 'ri-user-add-line',
+            avatarColor: 'error',
             trend: 'positive',
             trendNumber: '0%',
             subtitle: '',
             loading: loading,
         },
         {
-            title: ' مسئول امور مالی',
-            value: CFODetails.length,
-            avatarIcon: 'ri-user-add-line',
-            avatarColor: 'error',
+            title: 'مسئول امور فنی',
+            value: 0,
+            avatarIcon: 'ri-group-line',
+            avatarColor: 'primary',
             trend: 'positive',
             trendNumber: '0%',
             subtitle: '',
@@ -64,33 +59,32 @@ const GovenorCards = ({ loading, setLoading }) => {
         setLoading(true);
         api.get(user(), { requiresAuth: true })
             .then((response) => {
-                setUserList(response.data.data);
+                const filteredUsers = response.data.data.filter(item => item.geo_state === userGeoState);
+                setUserList(filteredUsers);
+                setCFODetails(filteredUsers.filter(item => item.work_group === 13));
+                setBakhshdarDetails(filteredUsers.filter(item => item.work_group === 14));
                 setLoading(false);
-                response.data.data.map(item => {
-                    item.work_group == 13 ? setCFODetails(prevItems => [...prevItems, item])
-                        : item.work_group == 14 ? setBakhshdarDetails(prevItems => [...prevItems, item])
-                            : null
-                })
             })
-            .catch(
-                () => { setLoading(false) }
-            );
+            .catch(() => {
+                setLoading(false);
+            });
     }
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
+        if (userGeoState) {
+            fetchData();
+        }
+    }, [userGeoState]);
 
     return (
         <Grid container spacing={6}>
             {data.map((item, i) => (
-                <Grid key={i} item xs={12} sm={6} md={3} >
+                <Grid key={i} item xs={12} sm={6} md={3}>
                     <HorizontalWithSubtitle {...item} />
                 </Grid>
             ))}
         </Grid>
-    )
+    );
 }
 
-export default GovenorCards
+export default GovenorCards;

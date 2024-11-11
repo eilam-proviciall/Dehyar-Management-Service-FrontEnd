@@ -40,6 +40,7 @@ const GovenorList = ({ userData }) => {
                 <GovenorCards
                     loading={loading}
                     setLoading={setLoading}
+                    userGeoState={userGeoState}
                 />
             </Grid>
             <Grid item xs={12}>
