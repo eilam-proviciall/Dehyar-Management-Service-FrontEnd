@@ -11,13 +11,10 @@ import {
 import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
 import { useFetchRegions } from "@hooks/useFetchRegions";
-import { me } from "@/Services/Auth/AuthService";
 import CustomDrawer from '@/@core/components/mui/Drawer';
-import { useFetchCities } from "@hooks/useFetchCities";
-import api from "@utils/axiosInstance";
+import {useFetchStates} from "@hooks/useFetchStates";
 
 const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading,userGeoState }) => {
-    console.log("User Geo State => ", userGeoState);
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             title: '',
@@ -49,7 +46,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
 
     const { regions, isLoading: isRegionsLoading } = useFetchRegions(fetchState.shouldFetchRegion, userGeoState);
     const { villages, isLoading: isVillagesLoading } = useFetchVillageInformationList(fetchState.shouldFetchVillages, userGeoState);
-    const { cities, isLoading: isCitiesLoading } = useFetchCities(fetchState.shouldFetchCities, userGeoState);
+    const { cities, isLoading: isCitiesLoading } = useFetchStates(fetchState.shouldFetchCities, userGeoState);
 
     useEffect(() => {
         setValue('nid', sidebarDetails.defaultValues.nid);
