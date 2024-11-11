@@ -147,7 +147,7 @@ const accessControl = {
         {
             label: "مدیریت کاربران",
             icon: <i className="ri-team-line"/>,
-            href: '/municipality/list'
+            href: '/dehyari/governor/list'
         },
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
