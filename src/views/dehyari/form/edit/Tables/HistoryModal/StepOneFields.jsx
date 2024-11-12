@@ -188,7 +188,7 @@ const StepOneFields = ({ validation, mode }) => {
                                             sx={{ width: '80%', color: 'primary.main' }}
                                         />
                                         <Chip label={field.value === 30 ? "تمام وقت" : `${field.value} روز کارکرد `}
-                                              className={`h-7 rounded-full ${field.value === 30 && "bg-green-700 text-backgroundDefault" || "bg-gray-200 text-textPrimary"}`}
+                                              className={`h-7 rounded-full ${field.value === 30 && "bg-backgroundDefault text-textPrimary" || "bg-gray-200 text-gray-200"}`}
                                         />
                                     </Box>
                                 )}
