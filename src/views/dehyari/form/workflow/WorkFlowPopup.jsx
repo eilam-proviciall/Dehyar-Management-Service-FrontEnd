@@ -4,13 +4,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from "@mui/material/Typography";
 import { approveWorkflow, rejectWorkflow } from "@/utils/workflowService";
 
-const WorkFlowPopup = ({ open, setOpen, information }) => {
+const WorkFlowPopup = ({ open, setOpen, id }) => {
     const handleClose = () => {
         setOpen(false);
     };
 
     const handleApprove = () => {
-        approveWorkflow(information.human_resource_id,'pending_supervisor','')
+        approveWorkflow(id,'pending_supervisor','')
             .then(response => {
                 console.log("Response => ", response);
             })

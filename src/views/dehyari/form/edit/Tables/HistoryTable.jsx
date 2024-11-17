@@ -16,6 +16,7 @@ import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
 import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
+import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -114,7 +115,7 @@ const HistoryTable = () => {
         },
         {
             accessorKey: 'title_contract',
-            header: 'وضعیت',
+            header: 'وضعیت قراداد',
             size: 150,
             Cell: ({ cell }) => (
                 <div style={{ textAlign: 'right' }}>
@@ -237,7 +238,8 @@ const HistoryTable = () => {
                 mode={editMode ? 'edit' : 'create'}
                 editId={editId}
             />
-            <WorkFlowDialog open={dialogOpen} setDialogOpen={setDialogOpen}/>
+            <WorkFlowPopup open={dialogOpen} setOpen={setDialogOpen} id={data.id}/>
+
         </div>
     );
 }
