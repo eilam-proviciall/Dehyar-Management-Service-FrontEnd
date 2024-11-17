@@ -179,3 +179,26 @@ code {
     background-color: rgb(var(--mui-palette-info-mainChannel) / 0.08);
     border: 0;
 }
+
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+    transition: background 0.3s, width 0.3s, height 0.3s;
+}
+
+::-webkit-scrollbar:hover {
+    background: #999;
+    width: 12px;
+    height: 12px;
+}
+
