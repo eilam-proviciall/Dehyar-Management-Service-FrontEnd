@@ -123,8 +123,8 @@ function CfoTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]}
-                                  className={`h-7 w-[65%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
+                            <Chip label={contractType[role] || "بدون قرارداد"}
+                                  className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || !role && "bg-error text-white" || "bg-backgroundDefault text-textPrimary"}`}
                             />
                         </div>
                     );

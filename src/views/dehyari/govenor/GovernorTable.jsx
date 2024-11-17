@@ -77,7 +77,9 @@ function GovernorTable(props) {
                     const role = cell.getValue();
                     return (
                         <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary"/>
+                            <Chip label={contractType[role] || "بدون قرارداد"}
+                                  className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-white" || !role && "bg-error text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
+                            />
                         </div>
                     );
                 },
