@@ -19,6 +19,7 @@ import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Typography from "@mui/material/Typography";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
+import {translateContractState} from "@utils/contractStateTranslator";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -28,7 +29,6 @@ function CfoTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen,setPopupOpen] = useState(false);
-    const [contractStateValue,setContractStateValue] = useState('');
 
     // کنترل کلیک روی دکمه عملیات
     const handleClick = (event, row) => {
@@ -134,17 +134,13 @@ function CfoTable(props) {
                 accessorKey: 'contract_state',
                 header: 'وضعیت قرارداد',
                 size: 150,
-                Cell: ({cell,row}) => {
-                    console.log("Contract State => ", contractStateValue);
-                    switch (cell.getValue()){
-                        case 'draft' : setContractStateValue('پیش نویس'); break;
-                        case 'reviewing' : setContractStateValue('در حال بررسی'); break;
-                    }
-                    return <div style={{textAlign: 'right'}}>
-                        <Chip label={contractStateValue || 'پیش نویس'} onClick={()=>{
+                Cell: ({ cell, row }) => {
+                    const contractStateValue = translateContractState(cell.getValue());
+                    return <div style={{ textAlign: 'right' }}>
+                        <Chip label={contractStateValue} onClick={() => {
                             setCurrentRow(row.original);
                             setPopupOpen(true);
-                        }}/>
+                        }} />
                     </div>
                 },
             },

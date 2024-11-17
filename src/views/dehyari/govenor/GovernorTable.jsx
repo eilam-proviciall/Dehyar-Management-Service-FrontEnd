@@ -13,6 +13,7 @@ import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
+import {translateContractState} from "@utils/contractStateTranslator";
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -79,6 +80,20 @@ function GovernorTable(props) {
                             <Chip label={contractType[role]} color="primary"/>
                         </div>
                     );
+                },
+            },
+            {
+                accessorKey: 'contract_state',
+                header: 'وضعیت قرارداد',
+                size: 150,
+                Cell: ({ cell, row }) => {
+                    const contractStateValue = translateContractState(cell.getValue());
+                    return <div style={{ textAlign: 'right' }}>
+                        <Chip label={contractStateValue} onClick={() => {
+                            setCurrentRow(row.original);
+                            setPopupOpen(true);
+                        }} />
+                    </div>
                 },
             },
             {
@@ -170,7 +185,7 @@ function GovernorTable(props) {
     return (
         <MaterialReactTable
             columns={columns}
-            data={tableData}
+            data={data}
 
         />
     );
