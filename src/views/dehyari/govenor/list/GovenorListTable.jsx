@@ -9,6 +9,7 @@ import roles from "@data/roles.json";
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
+import {getGeoDetails} from "@/Services/CountryDivision";
 
 const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading, userGeoState }) => {
     const [users, setUsers] = useState([]);
@@ -21,15 +22,52 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
-            const filteredUsers = response.data.data.filter(user =>
-                user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
-            );
-            setUsers(filteredUsers);
-            console.log("Users => ", response.data.data);
-            setLoading(false);
+            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
+            const usersData = response.data.data;
+
+            const geoStates = [];
+            const geoCities = [];
+            const geoRegions = [];
+
+            usersData.forEach(user => {
+                geoStates.push({
+                    geo_type: 'state',
+                    geo_code: `${user.geo_state}`,
+                });
+                geoCities.push({
+                    geo_type: 'city',
+                    geo_code: `${user.geo_city}`,
+                });
+                geoRegions.push({
+                    geo_type: 'region',
+                    geo_code: `${user.geo_region}`,
+                });
+            });
+
+            const geoDetails = [
+                ...geoStates,
+                ...geoCities,
+                ...geoRegions,
+            ];
+
+            const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
+            const geoData = geoResponse.data;
+
+            const usersWithGeo = usersData.map(user => {
+                const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
+                const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
+                const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_region);
+                return {
+                    ...user,
+                    geo_state: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
+                    geo_city: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
+                    geo_region: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
+                };
+            });
+
+            setUsers(usersWithGeo);
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error fetching users or geo details:", error);
         } finally {
             setLoading(false);
         }
@@ -128,19 +166,19 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 accessorKey: 'geo_state',
                 header: 'استان',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'geo_city',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'geo_region',
                 header: 'بخش',
                 size: 150,
-                Cell: ({ cell }) => <div></div>
+                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'work_group',
