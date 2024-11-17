@@ -225,7 +225,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} information={currentRow?.human_resource_id}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.human_resource_id}/>
         </div>
     );
 }

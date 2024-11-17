@@ -2,6 +2,7 @@ import api from "@utils/axiosInstance";
 import { ChangeStateSalaries } from "@/Services/humanResources";
 
 export const approveWorkflow = (humanResourceId, state,message) => {
+    console.log("ApproveWorkflow => ", humanResourceId);
     const data = {
         state: state,
         message: message,
@@ -11,6 +12,7 @@ export const approveWorkflow = (humanResourceId, state,message) => {
 };
 
 export const rejectWorkflow = (humanResourceId,state, message) => {
+    console.log("Human Resource Id => ", humanResourceId);
     const data = {
         state: state,
         message: message,
