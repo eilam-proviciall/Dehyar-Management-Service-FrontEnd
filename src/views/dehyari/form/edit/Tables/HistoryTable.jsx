@@ -17,6 +17,7 @@ import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
 import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
+import {translateContractState} from "@utils/contractStateTranslator";
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -114,14 +115,19 @@ const HistoryTable = () => {
             Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{convertUnixToJalali(cell.getValue())}</div>,
         },
         {
-            accessorKey: 'title_contract',
-            header: 'وضعیت قراداد',
+            accessorKey: 'contract_state',
+            header: 'وضعیت قرارداد',
             size: 150,
-            Cell: ({ cell }) => (
-                <div style={{ textAlign: 'right' }}>
-                    <Chip label={'پیش نویس'} onClick={() => setDialogOpen(true)} />
+            Cell: ({ cell, row }) => {
+                const contractStateValue = translateContractState(cell.getValue());
+                return <div style={{ textAlign: 'right' }}>
+                    <Chip label={contractStateValue} onClick={() => {
+                        console.log("Data => ", data);
+                        setData(row.original);
+                        setDialogOpen(true);
+                    }} />
                 </div>
-            ),
+            },
         },
         {
             accessorKey: 'job_type_id',
