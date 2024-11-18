@@ -59,24 +59,20 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
                 return `${village.hierarchy_code}`;
             });
         console.log("Finally villages => ", finallyVillages);
+
         let processedData = {
             nid: data.nid,
             work_group: data.role,
-            geo_state: data.covered_villages[0].geo_state,
+            geo_state: data.covered_villages && data.covered_villages.length && data.covered_villages[0].geo_state || data.geo_state || null,
+            geo_city: data.geo_city || null,
+            geo_region: data.geo_region || null,
             ...data
         };
 
-        if (values.role === "14") {
-            processedData.geo_state = data.geo_region.city.geo_state;
-            processedData.geo_city = data.geo_region.geo_cities;
-            processedData.geo_region = data.geo_region.hierarchy_code;
-            processedData.covered_villages = undefined;
-            processedData.villages = undefined;
-            // processedData.city = data.city; // or appropriate key
-        } else if (values.role === "13") {
-            processedData.geo_region = undefined;
+        if (values.role === "13") {
             processedData.villages = finallyVillages;
         }
+
         console.log(processedData);
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
