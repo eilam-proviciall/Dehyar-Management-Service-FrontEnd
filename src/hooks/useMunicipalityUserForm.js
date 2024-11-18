@@ -12,7 +12,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         role: '',
         villages: [],
     });
-
     const resetToStoredValues = useCallback(() => {
         if (calendarStore.selectedEvent !== null) {
             const event = calendarStore.selectedEvent;
@@ -56,21 +55,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
 
     const onSubmit = data => {
         console.log("Data => ", data);
-        console.log("Sidebar Details => ", sidebarDetails);
-        console.log("Data Covered Villages => ", sidebarDetails.defaultValues.covered_villages);
-        const finallyVillages = sidebarDetails.defaultValues.covered_villages
-            ? sidebarDetails.defaultValues.covered_villages.map(village => {
-                return village.village_code ? `${village.village_code}` : `${village}`;
-            })
-            : data.covered_villages && data.covered_villages.map(village => {
+        const finallyVillages = data.covered_villages && data.covered_villages.map(village => {
                 return `${village.hierarchy_code}`;
             });
         console.log("Finally villages => ", finallyVillages);
-
         let processedData = {
             nid: data.nid,
             work_group: data.role,
-            ...data // include other necessary data
+            geo_state: data.covered_villages[0].geo_state,
+            ...data
         };
 
         if (values.role === "14") {

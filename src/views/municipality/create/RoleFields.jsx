@@ -10,6 +10,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
 
+
     switch (role) {
         case "14":
             return (
@@ -81,7 +82,8 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                             ...prevState,
                                             defaultValues: {
                                                 ...prevState.defaultValues,
-                                                covered_villages: newValue.map(item => item.hierarchy_code || [])
+                                                geo_state: newValue && newValue[0].geo_state,
+                                                covered_villages: newValue.map(item => item.hierarchy_code || []),
                                             }
                                         })));
                                         onChange(newValue.map(item => item || []));
