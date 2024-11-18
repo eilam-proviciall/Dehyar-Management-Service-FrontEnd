@@ -55,10 +55,13 @@ const HistoryTable = () => {
         handleCloseMenu();
     };
 
-    const handleDownloadPdf = async (row) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
+    const userId = queryParams.get('id');
+    const salaryId = queryParams.get('salary_id');
+    const handleDownloadPdf = async () => {
         try {
-            console.log("Row => ", row);
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.id}`, { requiresAuth: true });
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}`, { requiresAuth: true });
             const humanResourceData = response.data;
             console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
@@ -74,11 +77,6 @@ const HistoryTable = () => {
             return error
         }
     };
-
-    const queryParams = new URLSearchParams(window.location.search);
-    const param = queryParams.get('param');
-    const userId = queryParams.get('id');
-    const salaryId = queryParams.get('salary_id');
 
     useEffect(() => {
         setLoading(true);
@@ -181,8 +179,7 @@ const HistoryTable = () => {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                console.log("User Id => ", userId)
-                                handleDownloadPdf(userId);
+                                handleDownloadPdf();
                             }}
                             className={"rounded-full"}
                         >
