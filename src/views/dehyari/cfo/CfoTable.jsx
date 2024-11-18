@@ -20,6 +20,7 @@ import CustomIconButton from "@core/components/mui/IconButton";
 import Typography from "@mui/material/Typography";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import {translateContractState} from "@utils/contractStateTranslator";
+import ContractStateChip from "@components/badges/ContractStateChip";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -115,32 +116,37 @@ function CfoTable(props) {
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
-            {
-                accessorKey: 'contract_type',
-                header: 'نوع قرار داد',
-                size: 150,
-                Cell: ({cell}) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role] || "بدون قرارداد"}
-                                  className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || !role && "bg-error text-white" || "bg-backgroundDefault text-textPrimary"}`}
-                            />
-                        </div>
-                    );
-                },
-            },
+            // {
+            //     accessorKey: 'contract_type',
+            //     header: 'نوع قرار داد',
+            //     size: 150,
+            //     Cell: ({cell}) => {
+            //         const role = cell.getValue();
+            //         return (
+            //             <div style={{textAlign: 'right'}}>
+            //                 <Chip label={contractType[role] || "بدون قرارداد"}
+            //                       className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || !role && "bg-error text-white" || "bg-backgroundDefault text-textPrimary"}`}
+            //                 />
+            //             </div>
+            //         );
+            //     },
+            // },
             {
                 accessorKey: 'contract_state',
                 header: 'وضعیت قرارداد',
                 size: 150,
                 Cell: ({ cell, row }) => {
                     const contractStateValue = translateContractState(cell.getValue());
+                    const role = row.original.contract_type;
                     return <div style={{ textAlign: 'right' }}>
-                        <Chip label={contractStateValue} onClick={() => {
-                            setCurrentRow(row.original);
-                            setPopupOpen(true);
-                        }} />
+                        <ContractStateChip
+                            label={contractStateValue}
+                            onClick={() => {
+                                setCurrentRow(row.original);
+                                setPopupOpen(true);
+                            }}
+                            avatar={role}
+                        />
                     </div>
                 },
             },
@@ -162,7 +168,7 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                router.push(`/dehyari/form/edit?param=${row.original.nid}`);
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
                             className={"rounded-full"}
                         >
@@ -225,7 +231,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.human_resource_id}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id}/>
         </div>
     );
 }
