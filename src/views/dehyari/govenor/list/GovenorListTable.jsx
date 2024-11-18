@@ -9,7 +9,6 @@ import roles from "@data/roles.json";
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
-import {getGeoDetails} from "@/Services/CountryDivision";
 
 const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading, userGeoState }) => {
     const [users, setUsers] = useState([]);
@@ -22,55 +21,15 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
+            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
             const filteredUsers = response.data.data.filter(user =>
                 user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
             );
-            const usersData = filteredUsers;
-
-            const geoStates = [];
-            const geoCities = [];
-            const geoRegions = [];
-
-            usersData.forEach(user => {
-                geoStates.push({
-                    geo_type: 'state',
-                    geo_code: `${user.geo_state}`,
-                });
-                geoCities.push({
-                    geo_type: 'city',
-                    geo_code: `${user.geo_city}`,
-                });
-                geoRegions.push({
-                    geo_type: 'region',
-                    geo_code: `${user.geo_region}`,
-                });
-            });
-
-            const geoDetails = [
-                ...geoStates,
-                ...geoCities,
-                ...geoRegions,
-            ];
-
-            const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
-            const geoData = geoResponse.data;
-
-            const usersWithGeo = usersData.map(user => {
-                const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
-                const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-                const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_region);
-                return {
-                    ...user,
-                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region_name: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
-                };
-            });
-
-            setUsers(usersWithGeo);
+            setUsers(filteredUsers);
+            console.log("Users => ", response.data.data);
+            setLoading(false);
         } catch (error) {
-            console.error("Error fetching users or geo details:", error);
+            console.error("Error fetching users:", error);
         } finally {
             setLoading(false);
         }
@@ -166,22 +125,22 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'geo_state_name',
+                accessorKey: 'geo_state',
                 header: 'استان',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div></div>
             },
             {
-                accessorKey: 'geo_city_name',
+                accessorKey: 'geo_city',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div></div>
             },
             {
-                accessorKey: 'geo_region_name',
+                accessorKey: 'geo_region',
                 header: 'بخش',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'work_group',
@@ -262,23 +221,6 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 </Button>
             </Box>
         ),
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
-            </Box>
-        ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
         initialState: {
             density: 'compact',
             pagination: {
