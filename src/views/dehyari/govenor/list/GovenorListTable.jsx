@@ -23,7 +23,10 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
-            const usersData = response.data.data;
+            const filteredUsers = response.data.data.filter(user =>
+                user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
+            );
+            const usersData = filteredUsers;
 
             const geoStates = [];
             const geoCities = [];
@@ -59,9 +62,9 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_region);
                 return {
                     ...user,
-                    geo_state: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
+                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
+                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
+                    geo_region_name: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
                 };
             });
 
@@ -163,19 +166,19 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'geo_state',
+                accessorKey: 'geo_state_name',
                 header: 'استان',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
-                accessorKey: 'geo_city',
+                accessorKey: 'geo_city_name',
                 header: 'شهرستان',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
-                accessorKey: 'geo_region',
+                accessorKey: 'geo_region_name',
                 header: 'بخش',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
