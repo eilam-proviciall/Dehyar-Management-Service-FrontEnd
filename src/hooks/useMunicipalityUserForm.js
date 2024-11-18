@@ -69,9 +69,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         if (values.role === "14") {
             processedData.geo_state = data.geo_region.city.geo_state;
             processedData.geo_city = data.geo_region.geo_cities;
-            processedData.geo_region = sidebarDetails.defaultValues.geo_region
-                ? sidebarDetails.defaultValues.geo_region
-                : data.geo_region.hierarchy_code;
+            processedData.geo_region = data.geo_region.hierarchy_code;
             processedData.covered_villages = undefined;
             processedData.villages = undefined;
             // processedData.city = data.city; // or appropriate key
