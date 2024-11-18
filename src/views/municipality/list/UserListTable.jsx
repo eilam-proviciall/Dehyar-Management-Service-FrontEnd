@@ -66,9 +66,9 @@ const UserListTable = ({
                 const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_region);
                 return {
                     ...user,
-                    geo_state: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
+                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
+                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
+                    geo_region_name: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
                 };
             });
 
@@ -170,19 +170,19 @@ const UserListTable = ({
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'geo_state',
+                accessorKey: 'geo_state_name',
                 header: 'استان',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
-                accessorKey: 'geo_city',
+                accessorKey: 'geo_city_name',
                 header: 'شهرستان',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
             },
             {
-                accessorKey: 'geo_region',
+                accessorKey: 'geo_region_name',
                 header: 'بخش',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
