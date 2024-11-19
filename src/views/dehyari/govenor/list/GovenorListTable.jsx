@@ -23,7 +23,6 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
-            console.log("Response => ", response.data);
             const filteredUsers = response.data.data.filter(user =>
                 user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
             );
@@ -98,14 +97,12 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     };
 
     const handleEditUser = (row) => {
-        console.log("User : ", row);
         setSidebarDetails({ status: 'edit', defaultValues: row.original });
         setAnchorEl(null);
         handleAddEventSidebarToggle();
     };
 
     const handleChangePassword = (row) => {
-        console.log(row);
         toast.warning("این قابلیت به زودی افزوده میشود!");
     };
 

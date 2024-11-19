@@ -101,14 +101,12 @@ const UserListTable = ({
     };
 
     const handleEditUser = (row) => {
-        console.log("User : ", row);
         setSidebarDetails({status: 'edit', defaultValues: row.original});
         setAnchorEl(null);
         handleAddEventSidebarToggle();
     };
 
     const handleChangePassword = (row) => {
-        console.log(row);
         toast.warning("این قابلیت به زودی افزوده میشود!");
     };
 

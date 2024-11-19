@@ -4,7 +4,7 @@ import {useRouter} from 'next/navigation';
 import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import {IconButton, Menu, MenuItem} from '@mui/material';
-import {GetHumanResourcesForGovernor} from "@/Services/humanResources";
+import {GetHumanResourcesForBakhshdar, GetHumanResourcesForGovernor} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
@@ -34,7 +34,7 @@ function BakhshdarTable(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get(GetHumanResourcesForGovernor(), {requiresAuth: true});
+                const response = await api.get(GetHumanResourcesForBakhshdar(), {requiresAuth: true});
                 console.log("Response => ", response);
                 setData(response.data);
                 setLoading(false);
