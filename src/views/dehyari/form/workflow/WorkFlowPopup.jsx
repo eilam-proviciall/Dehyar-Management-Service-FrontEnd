@@ -17,9 +17,11 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
 
         switch (contractState) {
             case 'draft':
+            case 'rejected_to_financial_officer':
                 nextContractState = 'pending_supervisor';
                 break;
             case 'pending_supervisor':
+            case 'rejected_to_supervisor':
                 nextContractState = 'pending_governor';
                 break;
             case 'pending_governor':
