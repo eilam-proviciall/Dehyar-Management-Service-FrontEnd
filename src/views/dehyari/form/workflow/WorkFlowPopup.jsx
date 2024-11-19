@@ -4,8 +4,10 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, IconButton, 
 import CloseIcon from '@mui/icons-material/Close';
 import { approveWorkflow, rejectWorkflow } from "@/utils/workflowService";
 
-const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
+const WorkFlowPopup = ({ open, setOpen, id, contractState,setLoading }) => {
     const { control, handleSubmit, reset, formState: { errors } } = useForm();
+
+    console.log("Contract State =>", contractState);
 
     const handleClose = () => {
         setOpen(false);
@@ -33,7 +35,11 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
 
         if (nextContractState) {
             approveWorkflow(id, nextContractState, '')
-                .then(() => console.log(`Workflow approved to: ${nextContractState}`))
+                .then(() => {
+                    setLoading(true);
+                    toast.success("عملیات موفقیت آمیز بود.");
+                    console.log(`Workflow approved to: ${nextContractState}`)
+                })
                 .catch(error => console.error(error))
                 .finally(handleClose);
         }
@@ -44,6 +50,7 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
 
         switch (contractState) {
             case 'pending_supervisor':
+            case 'rejected_to_supervisor' :
                 nextContractState = 'rejected_to_financial_officer';
                 break;
             case 'pending_governor':
@@ -55,7 +62,11 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
 
         if (nextContractState) {
             rejectWorkflow(id, nextContractState, data.reason)
-                .then(() => console.log(`Workflow rejected to: ${nextContractState}`))
+                .then(() => {
+                    setLoading(true);
+                    toast.success("عملیات موفقیت آمیز بود.");
+                    console.log(`Workflow rejected to: ${nextContractState}`)
+                })
                 .catch(error => console.error(error))
                 .finally(handleClose);
         }
@@ -65,7 +76,11 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
         const nextContractState = 'rejected_to_financial_officer';
 
         rejectWorkflow(id, nextContractState, data.reason)
-            .then(() => console.log(`Workflow rejected to CFO: ${nextContractState}`))
+            .then(() => {
+                setLoading(true);
+                toast.success("عملیات موفقیت آمیز بود.");
+                console.log(`Workflow rejected to CFO: ${nextContractState}`)
+            })
             .catch(error => console.error(error))
             .finally(handleClose);
     };
@@ -88,7 +103,7 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
             </DialogTitle>
             <DialogContent>
                 <Typography variant={'h6'} className={'pt-5 text-center'}>
-                    آیا از ارسال حکم به بخشداری جهت بررسی اطمینان دارید؟
+                    آیا از ارسال حکم جهت بررسی اطمینان دارید؟
                 </Typography>
                 {(contractState === 'approved' || contractState === 'pending_governor' || contractState === 'pending_supervisor') && (
                     <Controller
@@ -113,13 +128,13 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState }) => {
                 <Button onClick={handleClose} color="primary">
                     انصراف
                 </Button>
-                {(contractState === "approved" || contractState === "pending_supervisor") && (
+                {(contractState !== "draft" && contractState !== "rejected_to_financial_officer") && (
                     <Button onClick={handleSubmit(handleReject)} color="error">رد قرارداد به مرحله قبل</Button>
                 )}
                 {(contractState === 'approved' || contractState === "pending_governor") && (
                     <Button onClick={handleSubmit(handleRejectToCfo)} color="error" variant={'contained'}>رد قرارداد به مسئول امور مالی</Button>
                 )}
-                {contractState !== 'approved' && (
+                {(contractState !== 'approved' && contractState !== "pending_governor") && (
                     <Button onClick={handleApprove} color="primary">تایید</Button>
                 )}
             </DialogActions>
