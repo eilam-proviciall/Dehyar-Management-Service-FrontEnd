@@ -10,6 +10,7 @@ const ContractStateChip = ({ avatar,label, onClick, customStyles }) => {
             avatar={<Avatar className={`${avatar == "30" && "bg-success text-white" || avatar && "bg-backgroundPaper" || "bg-error text-white"}`}>{avatar == '30' && < i class="ri-check-line"/> || avatar || <i className={'ri-close-fill'}/>}</Avatar>}
             label={label}
             onClick={onClick}
+            className={'shadow-xs'}
             style={{ textAlign: 'right', ...customStyles }}
         />
     );
