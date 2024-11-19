@@ -68,12 +68,10 @@ const UserListCards = ({loading, setLoading}) => {
         setLoading(true);
         api.get(user(), {requiresAuth: true})
             .then((response) => {
-                setUserList(response.data.data);
-                response.data.data.map(item => {
-                    item.work_group == 13 ? setCFODetails(prevItems => [...prevItems, item])
-                        : item.work_group == 14 ? setBakhshdarDetails(prevItems => [...prevItems, item])
-                            : null
-                });
+                const ResponseData = response.data.data;
+                setUserList(ResponseData);
+                setCFODetails(ResponseData.filter(item => item.work_group === 13));
+                setBakhshdarDetails(ResponseData.filter(item => item.work_group === 14));
             })
             .catch(
                 () => {
