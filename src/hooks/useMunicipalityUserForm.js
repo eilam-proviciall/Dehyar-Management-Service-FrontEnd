@@ -56,7 +56,7 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     const onSubmit = data => {
         console.log("Data => ", data);
         const finallyVillages = data.covered_villages && data.covered_villages.map(village => {
-                return `${village.hierarchy_code}`;
+                return `${village.hierarchy_code && village.hierarchy_code || village.village_code }`;
             });
         console.log("Finally villages => ", finallyVillages);
 
@@ -66,12 +66,9 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             geo_state: data.covered_villages && data.covered_villages.length && data.covered_villages[0].geo_state || data.geo_state || null,
             geo_city: data.geo_city || null,
             geo_region: data.geo_region || null,
+            villages: finallyVillages,
             ...data
         };
-
-        if (values.role === "13") {
-            processedData.villages = finallyVillages;
-        }
 
         console.log(processedData);
         sidebarDetails.status == 'edit' ? (
