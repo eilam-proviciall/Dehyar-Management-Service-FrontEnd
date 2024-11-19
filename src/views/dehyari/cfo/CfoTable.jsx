@@ -181,10 +181,6 @@ function CfoTable(props) {
         }
     });
 
-    if (loading) {
-        return <Loading />
-    }
-
     return (
         <div>
             <Typography display={'flex'} variant={'h5'} mb={5} gap={1}>
