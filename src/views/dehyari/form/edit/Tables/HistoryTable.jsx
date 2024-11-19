@@ -127,7 +127,6 @@ const HistoryTable = () => {
                     <ContractStateChip
                         label={contractStateValue}
                         onClick={() => {
-                            // setData(row.original);
                             setDialogOpen(true);
                         }}
                         avatar={role}

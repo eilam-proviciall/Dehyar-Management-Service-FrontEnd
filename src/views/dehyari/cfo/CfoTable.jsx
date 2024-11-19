@@ -42,7 +42,6 @@ function CfoTable(props) {
         try {
             const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {requiresAuth: true});
             const humanResourceData = response.data;
-            console.log(humanResourceData);
             const data = new HumanResourceDTO(humanResourceData);
             const doc = <MyDocument data={data}/>;
             const asPdf = pdf([]);
@@ -67,11 +66,10 @@ function CfoTable(props) {
         const fetchData = async () => {
             try {
                 const response = await api.get(`${GetHumanResourcesForCfo()}`, {requiresAuth: true});
-                console.log("response => ", response);
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
-                console.log("Error", error);
+                console.error(error);
                 setLoading(false);
                 return error;
             }
@@ -142,8 +140,12 @@ function CfoTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                setCurrentRow(row.original);
-                                setPopupOpen(true);
+                                if(contractStateValue !== "نامشخص"){
+                                    setCurrentRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning("امکان تغییر وضعیت قرارداد وجود ندارد!!!");
+                                }
                             }}
                             avatar={role}
                         />
@@ -231,7 +233,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id} contractState={currentRow?.contract_state} />
         </div>
     );
 }
