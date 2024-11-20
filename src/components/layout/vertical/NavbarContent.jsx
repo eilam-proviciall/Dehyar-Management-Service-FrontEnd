@@ -11,16 +11,6 @@ import UserDropdown from "@components/layout/shared/UserDropdown";
 
 const NavbarContent = () => {
 
-    const logout = () => {
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('token');
-            toast.success("با موفقیت از سامانه خارج شدید");
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 500);
-        }
-    };
-
     return (
         <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
             <div className='flex items-center gap-[7px]'>
@@ -28,9 +18,6 @@ const NavbarContent = () => {
             </div>
             <div className='flex items-center'>
                 <ModeDropdown />
-                <IconButton onClick={logout} title="خروج">
-                    <LogoutIcon />
-                </IconButton>
                 <UserDropdown />
             </div>
         </div>
