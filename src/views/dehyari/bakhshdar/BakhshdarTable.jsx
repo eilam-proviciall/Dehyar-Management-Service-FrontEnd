@@ -2,19 +2,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
-import Chip from "@mui/material/Chip";
-import {IconButton, Menu, MenuItem} from '@mui/material';
-import {
-    GetHumanResourcesForBakhshdar,
-    GetHumanResourcesForCfo,
-    GetHumanResourcesForGovernor
-} from "@/Services/humanResources";
-import contractType from "@data/contractType.json";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Link from 'next/link';
+import {GetHumanResourcesForBakhshdar} from "@/Services/humanResources";
 import {toast} from "react-toastify";
 import api from '@/utils/axiosInstance';
-import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
 import {translateContractState} from "@utils/contractStateTranslator";
