@@ -190,10 +190,6 @@ function BakhshdarTable(props) {
         }
     });
 
-    if (loading) {
-        return <Loading/>
-    }
-
     return (
         <div>
             <MaterialReactTable table={table}/>
