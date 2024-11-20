@@ -38,7 +38,7 @@ function CfoTable(props) {
 
     const handleDownloadPdf = async (row) => {
         try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, { requiresAuth: true });
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}&human_contract_id=${row.human_contract_id}`, { requiresAuth: true });
             const humanResourceData = response.data;
             const data = new HumanResourceDTO(humanResourceData);
             const doc = <MyDocument data={data} />;
