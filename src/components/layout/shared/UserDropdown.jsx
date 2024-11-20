@@ -40,7 +40,7 @@ const BadgeContentSpan = styled('span')({
     boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
 })
 
-const UserDropdown = () => {
+const UserDropdown = ({userDetails}) => {
     // States
     const [open, setOpen] = useState(false)
 
@@ -130,13 +130,13 @@ const UserDropdown = () => {
                             {...(settings.skin === 'bordered' && {className: 'border'})}
                         >
                             <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                                {/*<Avatar alt={'تصویر پروفایل'} src={''}/>*/}
-                                {/*<div className='flex items-start flex-col'>*/}
-                                {/*    <Typography variant='body2' className='font-medium' color='text.primary'>*/}
-                                {/*        {''}*/}
-                                {/*    </Typography>*/}
-                                {/*    <Typography variant='caption'>{''}</Typography>*/}
-                                {/*</div>*/}
+                                <Avatar alt={'تصویر پروفایل'} src={''}/>
+                                <div className='flex items-start flex-col'>
+                                    <Typography variant='body2' className='font-medium' color='text.primary'>
+                                        {`${userDetails.first_name} ${userDetails.last_name}`}
+                                    </Typography>
+                                    <Typography variant='caption'>{userDetails.nid}</Typography>
+                                </div>
                             </div>
                             <Divider className='mb-2'/>
                             <div className={'grid gap-2'}>
