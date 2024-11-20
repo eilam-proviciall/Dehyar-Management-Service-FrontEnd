@@ -124,13 +124,13 @@ function BakhshdarTable(props) {
                         {/*    <i className='ri-delete-bin-7-line'/>*/}
                         {/*</CustomIconButton>*/}
                         <CustomIconButton
-                            color={"primary"}
+                            color={"secondary"}
                             onClick={() => {
                                 router.push(`/dehyari/form?mode=edit&id=${row.original.uuid}`);
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-edit-box-line'/>
+                            <i className='ri-eye-line'/>
                         </CustomIconButton>
                     </div>
                 ),
