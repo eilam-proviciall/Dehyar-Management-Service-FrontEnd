@@ -4,7 +4,11 @@ import {useRouter} from 'next/navigation';
 import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import {IconButton, Menu, MenuItem} from '@mui/material';
-import {GetHumanResourcesForBakhshdar, GetHumanResourcesForGovernor} from "@/Services/humanResources";
+import {
+    GetHumanResourcesForBakhshdar,
+    GetHumanResourcesForCfo,
+    GetHumanResourcesForGovernor
+} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
@@ -13,6 +17,9 @@ import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
+import {translateContractState} from "@utils/contractStateTranslator";
+import ContractStateChip from "@components/badges/ContractStateChip";
+import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -21,6 +28,8 @@ function BakhshdarTable(props) {
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
+    const [popupOpen, setPopupOpen] = useState(false);
+
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -31,42 +40,44 @@ function BakhshdarTable(props) {
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await api.get(GetHumanResourcesForBakhshdar(), {requiresAuth: true});
-                console.log("Response => ", response);
-                setData(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.log("Error => ", error);
-                if (error.response && error.response.status === 403) {
-                    toast.error(error.response.data.message || 'شما به محتوای این بخش دسترسی ندارید!!');
-                } else {
-                    toast.error('خطا در دریافت اطلاعات');
-                }
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await api.get(`${GetHumanResourcesForBakhshdar()}`, { requiresAuth: true });
+            setData(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
 
-        fetchData();
-    }, []);
+    useEffect(() => {
+        if (loading) {
+            fetchData();
+        }
+    }, [loading]);
 
     const tableData = useMemo(() => data, [data]);
 
     const columns = useMemo(
         () => [
             {
+                accessorKey: 'full_name',
+                header: 'نام و نام خانوادگی',
+                size: 150,
+                Cell: ({ row }) => {
+                    const { first_name, last_name } = row.original;
+                    return <div className={'flex items-center gap-2'}>
+                        <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل" />
+                        {`${first_name ?? " "} ${last_name ?? " "}`}
+                    </div>;
+                },
+            },
+            {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
-            },
-            {
-                accessorKey: 'full_name',
-                header: 'نام و نام خانوادگی',
-                size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
@@ -75,16 +86,26 @@ function BakhshdarTable(props) {
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'contract_type',
-                header: 'نوع قرار داد',
+                accessorKey: 'contract_state',
+                header: 'وضعیت قرارداد',
                 size: 150,
-                Cell: ({cell}) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role]} color="primary"/>
-                        </div>
-                    );
+                Cell: ({ cell, row }) => {
+                    const contractStateValue = translateContractState(cell.getValue());
+                    const role = row.original.contract_type;
+                    return <div style={{ textAlign: 'right' }}>
+                        <ContractStateChip
+                            label={contractStateValue}
+                            onClick={() => {
+                                if (cell.getValue() =='pending_supervisor' || cell.getValue() =='rejected_to_supervisor' ) {
+                                    setSelectedRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                }
+                            }}
+                            avatar={role}
+                        />
+                    </div>
                 },
             },
             {
@@ -105,7 +126,7 @@ function BakhshdarTable(props) {
                         <CustomIconButton
                             color={"primary"}
                             onClick={() => {
-                                router.push(`/dehyari/form?mode=edit&id=${row.original.id}`);
+                                router.push(`/dehyari/form?mode=edit&id=${row.original.uuid}`);
                             }}
                             className={"rounded-full"}
                         >
@@ -174,9 +195,10 @@ function BakhshdarTable(props) {
     }
 
     return (
-        <MaterialReactTable
-            table={table}
-        />
+        <div>
+            <MaterialReactTable table={table}/>
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={selectedRow?.salary_id} contractState={selectedRow?.contract_state} setLoading={setLoading} />
+        </div>
     );
 }
 
