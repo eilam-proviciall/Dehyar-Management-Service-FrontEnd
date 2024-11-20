@@ -63,10 +63,10 @@ function CfoTable(props) {
         try {
             const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
             setData(response.data);
-            setLoading(false); // پایان بارگذاری
+            setLoading(false);
         } catch (error) {
             console.error(error);
-            setLoading(false); // پایان بارگذاری در صورت خطا
+            setLoading(false);
         }
     };
 
@@ -74,7 +74,7 @@ function CfoTable(props) {
         if (loading) {
             fetchData();
         }
-    }, [loading]); // بارگذاری مجدد زمانی که loading تغییر می‌کند
+    }, [loading]);
 
     const tableData = useMemo(() => data, [data]);
 
