@@ -79,7 +79,7 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState,setLoading }) => {
             .then(() => {
                 setLoading(true);
                 toast.success("عملیات موفقیت آمیز بود.");
-                console.log(`Workflow rejected to CFO: ${nextContractState}`)
+                console.log(`Workflow rejected to CFO: ${nextContractState}`);
             })
             .catch(error => console.error(error))
             .finally(handleClose);
@@ -105,7 +105,7 @@ const WorkFlowPopup = ({ open, setOpen, id, contractState,setLoading }) => {
                 <Typography variant={'h6'} className={'pt-5 text-center'}>
                     آیا از ارسال حکم جهت بررسی اطمینان دارید؟
                 </Typography>
-                {(contractState === 'approved' || contractState === 'pending_governor' || contractState === 'pending_supervisor') && (
+                {(contractState !== "draft" && contractState !== "rejected_to_financial_officer") && (
                     <Controller
                         name="reason"
                         control={control}

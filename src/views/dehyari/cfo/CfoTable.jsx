@@ -123,11 +123,11 @@ function CfoTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                if (contractStateValue !== "نامشخص") {
+                                if (cell.getValue() =='draft' || cell.getValue() =='rejected_to_financial_officer' ) {
                                     setCurrentRow(row.original);
                                     setPopupOpen(true);
                                 } else {
-                                    toast.warning("امکان تغییر وضعیت قرارداد وجود ندارد!!!");
+                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
                                 }
                             }}
                             avatar={role}
