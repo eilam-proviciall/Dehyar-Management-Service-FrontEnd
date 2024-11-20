@@ -16,6 +16,7 @@ import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Box from '@mui/material/Box'
+import {useTheme} from "@mui/material/styles";
 
 // Third-party Imports
 import {Controller, useForm} from 'react-hook-form'
@@ -31,7 +32,6 @@ import themeConfig from '@configs/themeConfig'
 
 // Util Imports
 import {useImageVariant} from '@core/hooks/useImageVariant'
-import {useSettings} from '@core/hooks/useSettings'
 import accessControl from "@components/layout/vertical/accessControl";
 import {LoadingButton} from '@mui/lab'
 
@@ -64,7 +64,7 @@ const Login = ({mode}) => {
     const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
 
     // Hooks
-    const {settings} = useSettings()
+    const theme = useTheme();
     const auth = useContext(AuthContext)
     const router = useRouter()
 
@@ -139,7 +139,7 @@ const Login = ({mode}) => {
                     <div>
                         <Box sx={{mb: 3, textAlign: 'center'}}>
                             {/* <Logo component /> */}
-                            <img className='w-[40%] mb-2' src={settings.mode === 'light' ? "images/logos/logo.svg" : "images/logos/logo_white.svg"}
+                            <img className='w-[40%] mb-2' src={theme.palette.mode === 'light' ? "images/logos/logo.svg" : "images/logos/logo_white.svg"}
                                  alt="لوگو سایت"/>
                             <Typography variant='h5'> <span>پنجره واحد خدمات الکترونیک</span></Typography>
                         </Box>

@@ -59,7 +59,7 @@ const HistoryTable = () => {
     const param = queryParams.get('param');
     const userId = queryParams.get('id');
     const salaryId = queryParams.get('salary_id');
-    const handleDownloadPdf = async () => {
+    const handleDownloadPdf = async (row) => {
         try {
             const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}`, { requiresAuth: true });
             const humanResourceData = response.data;
@@ -178,7 +178,7 @@ const HistoryTable = () => {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                handleDownloadPdf();
+                                handleDownloadPdf(row);
                             }}
                             className={"rounded-full"}
                         >
