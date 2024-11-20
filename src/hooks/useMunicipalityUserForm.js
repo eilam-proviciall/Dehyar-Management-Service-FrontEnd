@@ -54,11 +54,9 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     };
 
     const onSubmit = data => {
-        console.log("Data => ", data);
         const finallyVillages = data.covered_villages && data.covered_villages.map(village => {
                 return `${village.hierarchy_code && village.hierarchy_code || village.village_code }`;
             });
-        console.log("Finally villages => ", finallyVillages);
 
         let processedData = {
             nid: data.nid,
@@ -70,7 +68,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             ...data
         };
 
-        console.log(processedData);
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
