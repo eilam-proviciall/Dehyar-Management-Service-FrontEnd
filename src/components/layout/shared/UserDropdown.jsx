@@ -130,13 +130,13 @@ const UserDropdown = () => {
                             {...(settings.skin === 'bordered' && {className: 'border'})}
                         >
                             <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                                <Avatar alt={'تصویر پروفایل'} src={''}/>
-                                <div className='flex items-start flex-col'>
-                                    <Typography variant='body2' className='font-medium' color='text.primary'>
-                                        {''}
-                                    </Typography>
-                                    <Typography variant='caption'>{''}</Typography>
-                                </div>
+                                {/*<Avatar alt={'تصویر پروفایل'} src={''}/>*/}
+                                {/*<div className='flex items-start flex-col'>*/}
+                                {/*    <Typography variant='body2' className='font-medium' color='text.primary'>*/}
+                                {/*        {''}*/}
+                                {/*    </Typography>*/}
+                                {/*    <Typography variant='caption'>{''}</Typography>*/}
+                                {/*</div>*/}
                             </div>
                             <Divider className='mb-2'/>
                             <div className={'grid gap-2'}>
