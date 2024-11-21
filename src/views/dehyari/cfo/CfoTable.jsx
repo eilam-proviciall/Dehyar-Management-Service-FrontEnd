@@ -1,49 +1,47 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import {IconButton, Menu, MenuItem} from '@mui/material';
-import {DownloadHumanResourcePdf, GetHumanResourcesForCfo} from "@/Services/humanResources";
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import MyDocument from "@components/MyDocument";
-import {pdf} from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
 import HumanResourceDTO from "@/utils/HumanResourceDTO";
-import {getJobTitleLabel} from "@data/jobTitles";
+import { getJobTitleLabel } from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Typography from "@mui/material/Typography";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
-import {translateContractState} from "@utils/contractStateTranslator";
+import { translateContractState } from "@utils/contractStateTranslator";
+import ContractStateChip from "@components/badges/ContractStateChip";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [anchorEl, setAnchorEl] = useState(null);  // مدیریت نمایش منو
-    const [currentRow, setCurrentRow] = useState(null); // ردیف جاری
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [currentRow, setCurrentRow] = useState(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const [popupOpen,setPopupOpen] = useState(false);
+    const [popupOpen, setPopupOpen] = useState(false);
 
-    // کنترل کلیک روی دکمه عملیات
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
-        setCurrentRow(row.original);  // ردیف انتخاب شده
+        setCurrentRow(row.original);
     };
 
-    // دانلود فایل PDF
     const handleDownloadPdf = async (row) => {
         try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}`, {requiresAuth: true});
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}&human_contract_id=${row.human_contract_id}`, { requiresAuth: true });
             const humanResourceData = response.data;
-            console.log(humanResourceData);
             const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data}/>;
+            const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
             asPdf.updateContainer(doc);
             const blob = await asPdf.toBlob();
@@ -52,32 +50,31 @@ function CfoTable(props) {
 
             toast.success('محاسبه موفق بود');
         } catch (error) {
-            return error
+            console.error(error);
         }
     };
 
-    // بستن منو
     const handleClose = () => {
         setAnchorEl(null);
-        setCurrentRow(null);  // پاک کردن ردیف جاری
+        setCurrentRow(null);
+    };
+
+    const fetchData = async () => {
+        try {
+            const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
+            setData(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await api.get(`${GetHumanResourcesForCfo()}`, {requiresAuth: true});
-                console.log("response => ", response);
-                setData(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.log("Error", error);
-                setLoading(false);
-                return error;
-            }
-        };
-
-        fetchData();
-    }, []);
+        if (loading) {
+            fetchData();
+        }
+    }, [loading]);
 
     const tableData = useMemo(() => data, [data]);
 
@@ -87,10 +84,10 @@ function CfoTable(props) {
                 accessorKey: 'first_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({row}) => {
-                    const {first_name, last_name} = row.original;
+                Cell: ({ row }) => {
+                    const { first_name, last_name } = row.original;
                     return <div className={'flex items-center gap-2'}>
-                        <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل"/>
+                        <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل" />
                         {`${first_name ?? " "} ${last_name ?? " "}`}
                     </div>;
                 },
@@ -99,36 +96,21 @@ function CfoTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => {
-                    return <div style={{textAlign: 'right'}}>{cell.getValue() && cell.getValue().approved_name || '-'}</div>
+                Cell: ({ cell }) => {
+                    return <div style={{ textAlign: 'right' }}>{cell.getValue() && cell.getValue().approved_name || '-'}</div>
                 },
             },
             {
                 accessorKey: 'job_type',
                 header: 'پست سازمانی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
-            },
-            {
-                accessorKey: 'contract_type',
-                header: 'نوع قرار داد',
-                size: 150,
-                Cell: ({cell}) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role] || "بدون قرارداد"}
-                                  className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-gray-200" || !role && "bg-error text-white" || "bg-backgroundDefault text-textPrimary"}`}
-                            />
-                        </div>
-                    );
-                },
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_state',
@@ -136,11 +118,20 @@ function CfoTable(props) {
                 size: 150,
                 Cell: ({ cell, row }) => {
                     const contractStateValue = translateContractState(cell.getValue());
+                    const role = row.original.contract_type;
                     return <div style={{ textAlign: 'right' }}>
-                        <Chip label={contractStateValue} onClick={() => {
-                            setCurrentRow(row.original);
-                            setPopupOpen(true);
-                        }} />
+                        <ContractStateChip
+                            label={contractStateValue}
+                            onClick={() => {
+                                if (cell.getValue() =='draft' || cell.getValue() =='rejected_to_financial_officer' ) {
+                                    setCurrentRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                }
+                            }}
+                            avatar={role}
+                        />
                     </div>
                 },
             },
@@ -148,25 +139,16 @@ function CfoTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
-                        {/*<CustomIconButton*/}
-                        {/*    color={"error"}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        toast.warning('این قابلیت هنوز افزوده نشده است');*/}
-                        {/*    }}*/}
-                        {/*    className={"rounded-full"}*/}
-                        {/*>*/}
-                        {/*    <i className='ri-delete-bin-7-line'/>*/}
-                        {/*</CustomIconButton>*/}
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                router.push(`/dehyari/form/edit?param=${row.original.nid}`);
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-edit-box-line'/>
+                            <i className='ri-edit-box-line' />
                         </CustomIconButton>
                         <CustomIconButton
                             color={"secondary"}
@@ -175,13 +157,13 @@ function CfoTable(props) {
                             }}
                             className={"rounded-full"}
                         >
-                            < i class="ri-printer-line"/>
+                            <i className="ri-printer-line" />
                         </CustomIconButton>
                     </div>
                 ),
             },
         ],
-        [anchorEl, currentRow]
+        [currentRow]
     );
 
     const table = useMaterialReactTable({
@@ -197,11 +179,7 @@ function CfoTable(props) {
                 lineHeight: '1',
             },
         }
-    })
-
-    if (loading) {
-        return <Loading/>
-    }
+    });
 
     return (
         <div>
@@ -224,8 +202,8 @@ function CfoTable(props) {
                     />
                 </span>
                 <span>طرف قرارداد</span></Typography>
-            <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.human_resource_id}/>
+            <MaterialReactTable table={table} />
+            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id} contractState={currentRow?.contract_state} setLoading={setLoading} />
         </div>
     );
 }

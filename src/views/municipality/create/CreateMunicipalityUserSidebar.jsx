@@ -24,6 +24,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             last_name: "",
             nid: '',
             role: '',
+            geo_region:'',
             covered_villages: [],
         },
     });
@@ -50,6 +51,9 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         setValue('first_name', sidebarDetails.defaultValues.first_name);
         setValue('last_name', sidebarDetails.defaultValues.last_name);
         setValue('role', sidebarDetails.defaultValues.work_group);
+        setValue('geo_state', sidebarDetails.defaultValues.geo_state);
+        setValue('geo_city', sidebarDetails.defaultValues.geo_city);
+        setValue('geo_region', sidebarDetails.defaultValues.geo_region);
         setValue('covered_villages', sidebarDetails.defaultValues.covered_villages);
         setValues(prevValues => ({ ...prevValues, role: `${sidebarDetails.defaultValues.work_group}` }));
     }, [sidebarDetails]);
@@ -81,6 +85,8 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             />
         </FormControl>
     );
+
+    console.log("sidebar => ", sidebarDetails);
 
     return (
         <CustomDrawer
@@ -140,8 +146,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
                         isLoading={values.role == "14" && isRegionsLoading || values.role == "13" && isVillagesLoading || isCitiesLoading}
                         options={values.role == "14" && regions || values.role == "13" && villages || cities}
                         selectedOptions={values.role == '14' && sidebarDetails.defaultValues.geo_region || values.role == "13" && sidebarDetails.defaultValues.covered_villages || sidebarDetails.defaultValues.geo_state}
-                        sidebarDetails={sidebarDetails}
-                        setSidebarDetails={setSidebarDetails}
+                        setValue={setValue}
                     />
                     <SidebarFooter
                         sidebarStatus={sidebarDetails.status}

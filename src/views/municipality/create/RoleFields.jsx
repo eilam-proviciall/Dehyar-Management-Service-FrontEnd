@@ -4,11 +4,12 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, sidebarDetails, setSidebarDetails }) => {
+const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, setValue }) => {
 
     // if (role && (!options || options.length === 0)) {
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
+
 
     switch (role) {
         case "14":
@@ -30,14 +31,10 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        sidebarDetails.status == 'edit' && (setSidebarDetails(prevState => ({
-                                            ...prevState,
-                                            defaultValues: {
-                                                ...prevState.defaultValues,
-                                                geo_region: newValue.hierarchy_code
-                                            }
-                                        })));
-                                        onChange(newValue || null);
+                                        setValue('geo_state',newValue.city.geo_state)
+                                        setValue('geo_city',newValue.geo_cities)
+                                        setValue('geo_region',newValue.hierarchy_code)
+                                        onChange(newValue.hierarchy_code || null);
                                     }}
                                     defaultValue={
                                         selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
@@ -77,13 +74,8 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        sidebarDetails.status == 'edit' && (setSidebarDetails(prevState => ({
-                                            ...prevState,
-                                            defaultValues: {
-                                                ...prevState.defaultValues,
-                                                covered_villages: newValue.map(item => item.hierarchy_code || [])
-                                            }
-                                        })));
+                                        setValue('geo_state', newValue && newValue[0].geo_state)
+                                        setValue('covered_villages',newValue.map(item => item.hierarchy_code || []));
                                         onChange(newValue.map(item => item || []));
                                     }}
                                     defaultValue={
@@ -121,13 +113,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                 options={options}
                                 getOptionLabel={(option) => `${option.approved_name}`}
                                 onChange={(event, newValue) => {
-                                    sidebarDetails.status == 'edit' && (setSidebarDetails(prevState => ({
-                                        ...prevState,
-                                        defaultValues: {
-                                            ...prevState.defaultValues,
-                                            geo_state: newValue ? newValue.hierarchy_code : null,
-                                        }
-                                    })));
+                                    setValue('geo_state', newValue ? newValue.hierarchy_code : null);
                                     onChange(newValue ? newValue.hierarchy_code : null);
                                 }}
                                 defaultValue={

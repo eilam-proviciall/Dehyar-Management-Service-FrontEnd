@@ -18,6 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import {translateContractState} from "@utils/contractStateTranslator";
+import ContractStateChip from "@components/badges/ContractStateChip";
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -30,6 +31,7 @@ const HistoryTable = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const open = Boolean(anchorEl);
+    console.log("Data =>",data);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -53,10 +55,13 @@ const HistoryTable = () => {
         handleCloseMenu();
     };
 
+    const queryParams = new URLSearchParams(window.location.search);
+    const param = queryParams.get('param');
+    const userId = queryParams.get('id');
+    const salaryId = queryParams.get('salary_id');
     const handleDownloadPdf = async (row) => {
         try {
-            console.log("Row => ", row);
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.id}`, { requiresAuth: true });
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}`, { requiresAuth: true });
             const humanResourceData = response.data;
             console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
@@ -72,9 +77,6 @@ const HistoryTable = () => {
             return error
         }
     };
-
-    const queryParams = new URLSearchParams(window.location.search);
-    const param = queryParams.get('param');
 
     useEffect(() => {
         setLoading(true);
@@ -120,12 +122,15 @@ const HistoryTable = () => {
             size: 150,
             Cell: ({ cell, row }) => {
                 const contractStateValue = translateContractState(cell.getValue());
+                const role = row.original.contract_type;
                 return <div style={{ textAlign: 'right' }}>
-                    <Chip label={contractStateValue} onClick={() => {
-                        console.log("Data => ", data);
-                        setData(row.original);
-                        setDialogOpen(true);
-                    }} />
+                    <ContractStateChip
+                        label={contractStateValue}
+                        onClick={() => {
+                            setDialogOpen(true);
+                        }}
+                        avatar={role}
+                    />
                 </div>
             },
         },
@@ -173,7 +178,7 @@ const HistoryTable = () => {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                handleDownloadPdf(row.original)
+                                handleDownloadPdf(row);
                             }}
                             className={"rounded-full"}
                         >
@@ -244,7 +249,7 @@ const HistoryTable = () => {
                 mode={editMode ? 'edit' : 'create'}
                 editId={editId}
             />
-            <WorkFlowPopup open={dialogOpen} setOpen={setDialogOpen} id={data.id}/>
+            <WorkFlowPopup open={dialogOpen} setOpen={setDialogOpen} id={salaryId}/>
 
         </div>
     );

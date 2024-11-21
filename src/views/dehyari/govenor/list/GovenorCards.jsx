@@ -10,6 +10,7 @@ const GovenorCards = ({ loading, setLoading, userGeoState }) => {
     const [userList, setUserList] = useState([]);
     const [CFODetails, setCFODetails] = useState([]);
     const [bakhshdarDetails, setBakhshdarDetails] = useState([]);
+    const [shouldFetch, setShouldFetch] = useState(true);
 
     // Vars
     const data = [
@@ -63,18 +64,27 @@ const GovenorCards = ({ loading, setLoading, userGeoState }) => {
                 setUserList(filteredUsers);
                 setCFODetails(filteredUsers.filter(item => item.work_group === 13));
                 setBakhshdarDetails(filteredUsers.filter(item => item.work_group === 14));
-                setLoading(false);
             })
             .catch(() => {
+                // Handle error if needed
+            })
+            .finally(() => {
                 setLoading(false);
+                setShouldFetch(false);
             });
     }
 
     useEffect(() => {
-        if (userGeoState) {
+        if (userGeoState && shouldFetch) {
             fetchData();
         }
-    }, [userGeoState]);
+    }, [userGeoState, shouldFetch]);
+
+    useEffect(() => {
+        if (loading) {
+            setShouldFetch(true);
+        }
+    }, [loading]);
 
     return (
         <Grid container spacing={6}>

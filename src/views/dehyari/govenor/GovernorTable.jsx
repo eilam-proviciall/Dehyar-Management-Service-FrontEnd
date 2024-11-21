@@ -4,7 +4,7 @@ import {useRouter} from 'next/navigation';
 import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import {IconButton, Menu, MenuItem} from '@mui/material';
-import {GetHumanResourcesForBakhshdar} from "@/Services/humanResources";
+import {GetHumanResourcesForGovernor} from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
@@ -14,6 +14,8 @@ import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
 import {translateContractState} from "@utils/contractStateTranslator";
+import ContractStateChip from "@components/badges/ContractStateChip";
+import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -22,6 +24,7 @@ function GovernorTable(props) {
     const [selectedRow, setSelectedRow] = useState(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
+    const [popupOpen, setPopupOpen] = useState(false);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -32,22 +35,22 @@ function GovernorTable(props) {
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await api.get(`${GetHumanResourcesForBakhshdar()}`, {requiresAuth: true});
-                console.log("Response => ", response);
+    const fetchData = async () => {
+        try {
+            const response = await api.get(`${GetHumanResourcesForGovernor()}`, { requiresAuth: true });
+            setData(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
 
-                setData(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.log("Error => ", error);
-                setLoading(false);
-                return error;
-            }
-        };
-        fetchData();
-    }, []);
+    useEffect(() => {
+        if (loading) {
+            fetchData();
+        }
+    }, [loading]);
 
     const columns = useMemo(
         () => [
@@ -61,7 +64,13 @@ function GovernorTable(props) {
                 accessorKey: 'full_name',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ row }) => {
+                    const { first_name, last_name } = row.original;
+                    return <div className={'flex items-center gap-2'}>
+                        <img className={'rounded-full h-7'} src="/images/avatars/1.png" alt="پروفایل" />
+                        {`${first_name ?? " "} ${last_name ?? " "}`}
+                    </div>;
+                },
             },
             {
                 accessorKey: 'nid',
@@ -70,31 +79,25 @@ function GovernorTable(props) {
                 Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
             },
             {
-                accessorKey: 'contract_type',
-                header: 'نوع قرار داد',
-                size: 150,
-                Cell: ({cell}) => {
-                    const role = cell.getValue();
-                    return (
-                        <div style={{textAlign: 'right'}}>
-                            <Chip label={contractType[role] || "بدون قرارداد"}
-                                  className={`h-7 w-[75%] rounded-full ${role === 30 && "bg-green-700 text-white" || !role && "bg-error text-gray-200" || "bg-backgroundDefault text-textPrimary"}`}
-                            />
-                        </div>
-                    );
-                },
-            },
-            {
                 accessorKey: 'contract_state',
                 header: 'وضعیت قرارداد',
                 size: 150,
                 Cell: ({ cell, row }) => {
                     const contractStateValue = translateContractState(cell.getValue());
+                    const role = row.original.contract_type;
                     return <div style={{ textAlign: 'right' }}>
-                        <Chip label={contractStateValue} onClick={() => {
-                            setCurrentRow(row.original);
-                            setPopupOpen(true);
-                        }} />
+                        <ContractStateChip
+                            label={contractStateValue}
+                            onClick={() => {
+                                if (cell.getValue() =='approved' || cell.getValue() =='pending_governor' ) {
+                                    setSelectedRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                }
+                            }}
+                            avatar={role}
+                        />
                     </div>
                 },
             },
@@ -114,13 +117,13 @@ function GovernorTable(props) {
                         {/*    <i className='ri-delete-bin-7-line'/>*/}
                         {/*</CustomIconButton>*/}
                         <CustomIconButton
-                            color={"primary"}
+                            color={"secondary"}
                             onClick={() => {
-                                router.push(`/dehyari/form?mode=edit&id=${row.original.id}`);
+                                router.push(`/dehyari/form?mode=edit&id=${row.original.uuid}`);
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-edit-box-line'/>
+                            <i className='ri-eye-line'/>
                         </CustomIconButton>
                     </div>
                 ),
@@ -185,12 +188,12 @@ function GovernorTable(props) {
     }
 
     return (
-        <MaterialReactTable
-            columns={columns}
-            data={data}
-
-        />
-    );
+    <div>
+        <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={selectedRow?.salary_id} contractState={selectedRow?.contract_state} setLoading={setLoading}/>
+        <MaterialReactTable columns={columns} data={data}/>
+    </div>
+)
+    ;
 }
 
 export default GovernorTable;

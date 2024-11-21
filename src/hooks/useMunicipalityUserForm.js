@@ -12,7 +12,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         role: '',
         villages: [],
     });
-
     const resetToStoredValues = useCallback(() => {
         if (calendarStore.selectedEvent !== null) {
             const event = calendarStore.selectedEvent;
@@ -55,39 +54,20 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     };
 
     const onSubmit = data => {
-        console.log("Data => ", data);
-        console.log("Sidebar Details => ", sidebarDetails);
-        console.log("Data Covered Villages => ", sidebarDetails.defaultValues.covered_villages);
-        const finallyVillages = sidebarDetails.defaultValues.covered_villages
-            ? sidebarDetails.defaultValues.covered_villages.map(village => {
-                return village.village_code ? `${village.village_code}` : `${village}`;
-            })
-            : data.covered_villages && data.covered_villages.map(village => {
-                return `${village.hierarchy_code}`;
+        const finallyVillages = data.covered_villages && data.covered_villages.map(village => {
+                return `${village.hierarchy_code && village.hierarchy_code || village.village_code }`;
             });
-        console.log("Finally villages => ", finallyVillages);
 
         let processedData = {
             nid: data.nid,
             work_group: data.role,
-            geo_state: data.covered_villages[0].geo_state,
-            ...data // include other necessary data
+            geo_state: data.covered_villages && data.covered_villages.length && data.covered_villages[0].geo_state || data.geo_state || null,
+            geo_city: data.geo_city || null,
+            geo_region: data.geo_region || null,
+            villages: finallyVillages,
+            ...data
         };
 
-        if (values.role === "14") {
-            processedData.geo_state = data.geo_region.city.geo_state;
-            processedData.geo_city = data.geo_region.geo_cities;
-            processedData.geo_region = sidebarDetails.defaultValues.geo_region
-                ? sidebarDetails.defaultValues.geo_region
-                : data.geo_region.hierarchy_code;
-            processedData.covered_villages = undefined;
-            processedData.villages = undefined;
-            // processedData.city = data.city; // or appropriate key
-        } else if (values.role === "13") {
-            processedData.geo_region = undefined;
-            processedData.villages = finallyVillages;
-        }
-        console.log(processedData);
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
