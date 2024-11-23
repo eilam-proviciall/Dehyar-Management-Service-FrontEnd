@@ -78,7 +78,6 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                             Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                         },
                     });
-                    console.log("Contract => ", response.data);
                     const mappedData = {
                         contractStart: response.data.contract_start,
                         contractType: response.data.contract_type,
@@ -115,6 +114,7 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
+        console.log("Formated Data => ", formData)
         setLoading(true);
         const dto = HumanContractDTO.fromForm(formData, param);
         console.log("DTO => ", dto);
