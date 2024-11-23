@@ -31,8 +31,7 @@ const Forms = ({ invoiceData }) => {
             setLoading(true);
             api.get(GetHumanResource(id), { requiresAuth: true })
                 .then(response => {
-                    // methods.reset(dtoToEmployee(response.data));
-                    console.log(dtoToEmployee(response.data))
+                    methods.reset(dtoToEmployee(response.data));
                     setLoading(false);
                 })
                 .catch(error => {
@@ -43,12 +42,10 @@ const Forms = ({ invoiceData }) => {
     }, [methods]);
 
     const onSubmit = data => {
-        console.log("Data => ", data)
         const formattedData = salaryToDTO(data);
         const queryParams = new URLSearchParams(window.location.search);
         const mode = queryParams.get('mode') || 'create';
         const id = queryParams.get('id');
-        console.log("formattedData => ", formattedData);
 
         if (!data.profilePicture) {
             toast.error('تصویر پروفایل باید بارگذاری شود');

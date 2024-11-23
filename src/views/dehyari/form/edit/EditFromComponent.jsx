@@ -36,14 +36,11 @@ function EditFromComponent() {
                 setError(false);
                 try {
                     const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, {requiresAuth: true});
-                    console.log("Response => ", response.data);
                     const dto = new EditHumanResourceFormDTO(response.data);
-                    console.log("DTO =>", dto);
                     setDefaultValue(dto);
                     methods.reset(dto);
                 } catch (error) {
-                    console.log("Error => ", error);
-                    return error
+                    console.error("Error => ", error);
                 } finally {
                     setLoading(false)
                 }
@@ -72,8 +69,6 @@ function EditFromComponent() {
 
     if (loading) return <Loading/>
     if (error) return <div>خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.</div>;
-
-    console.log("Default Value => ", defaultValue)
 
 
     return (
