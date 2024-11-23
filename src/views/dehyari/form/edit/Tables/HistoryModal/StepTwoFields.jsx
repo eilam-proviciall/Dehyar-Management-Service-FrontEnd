@@ -8,10 +8,7 @@ import {convertUnixToJalali} from "@utils/dateConverter";
 
 const StepTwoFields = ({validation}) => {
     const {control,watch, formState: {errors}, getValues} = useFormContext();
-    console.log("Start Date => ", getValues('contractStart'));
-    console.log("End Date => ", getValues('contractEnd'));
     const jobTitle = watch('jobTitle');
-    console.log("Job title => ", jobTitle)
 
     const contractTitles = {
         1: 'انجام وظایف تعیین شده برای دهیار در چارچوب قوانین و مقررات موضوعه',

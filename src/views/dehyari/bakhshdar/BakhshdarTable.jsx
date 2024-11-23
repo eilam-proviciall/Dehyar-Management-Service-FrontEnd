@@ -116,7 +116,7 @@ function BakhshdarTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                router.push(`/dehyari/form?mode=edit&id=${row.original.uuid}`);
+                                router.push(`/dehyari/form?mode=edit&id=${row.original.human_resource_id}`);
                             }}
                             className={"rounded-full"}
                         >

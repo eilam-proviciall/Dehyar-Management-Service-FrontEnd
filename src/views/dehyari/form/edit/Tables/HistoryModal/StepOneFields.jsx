@@ -28,16 +28,13 @@ const StepOneFields = ({ validation, mode }) => {
     const [villages, setVillages] = useState([]);
     const [employerVillage, setEmployerVillage] = useState('');
     const [chipsKey, setChipsKey] = useState(0);
-    console.log("Value => ", getValues());
 
     const handleJobTitleChange = (event, value) => {
         const jobTitle = value?.value || '';
         setSelectedJobTitle(jobTitle);
         setValue('jobTitle', jobTitle);
+        fetchVillages(getValues('jobTitle'));
     };
-
-    console.log("Village Employer => ", getValues('villageEmployer'));
-    console.log("Covered Villages => ", getValues('coveredVillages'));
 
     const fetchVillages = useCallback(async (jobTitle) => {
         if (jobTitle) {
@@ -51,13 +48,15 @@ const StepOneFields = ({ validation, mode }) => {
                 console.error('Error fetching villages:', error);
             }
         }
-    }, []);
+    }, [getValues('jobTitle'),selectedJobTitle]);
 
     useEffect(() => {
         if (selectedJobTitle) {
             fetchVillages(selectedJobTitle);
+        } else {
+            fetchVillages(getValues('jobTitle'));
         }
-    }, [selectedJobTitle, fetchVillages]);
+    }, []);
 
     useEffect(() => {
         if (mode === 'edit') {
@@ -163,7 +162,7 @@ const StepOneFields = ({ validation, mode }) => {
                 </FormControl>
             </div>
             <div className='grid grid-cols-1 w-full gap-5'>
-                <FormControl fullWidth variant="outlined" className=''>
+                <FormControl fullWidth variant="outlined">
                     <InputLabel shrink>نوع قرارداد</InputLabel>
                     <OutlinedInput
                         notched
