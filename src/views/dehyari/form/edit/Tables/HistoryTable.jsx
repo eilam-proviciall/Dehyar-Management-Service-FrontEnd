@@ -31,7 +31,6 @@ const HistoryTable = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const open = Boolean(anchorEl);
-    console.log("Data =>",data);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -61,9 +60,8 @@ const HistoryTable = () => {
     const salaryId = queryParams.get('salary_id');
     const handleDownloadPdf = async (row) => {
         try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}`, { requiresAuth: true });
+            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}&human_contract_id=${row.original.human_contract_id}`, { requiresAuth: true });
             const humanResourceData = response.data;
-            console.log(humanResourceData)
             const data = new HumanResourceDTO(humanResourceData);
             const doc = <MyDocument data={data} />;
             const asPdf = pdf([]);
@@ -85,7 +83,6 @@ const HistoryTable = () => {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             }
         }).then((response) => {
-            console.log(response.data)
             setData(response.data);
             setLoading(false);
         }).catch(() => {
