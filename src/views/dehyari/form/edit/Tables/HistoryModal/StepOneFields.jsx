@@ -36,17 +36,13 @@ const StepOneFields = ({ validation, mode }) => {
         fetchVillages(getValues('jobTitle'));
     };
 
-    console.log(getValues('jobTitle'));
-
     const fetchVillages = useCallback(async (jobTitle) => {
         if (jobTitle) {
-        console.log("Job Title => ", jobTitle);
             try {
                 const response = await api.get(GetHumanCoverdVillageForCfo(), {
                     params: { job_title: jobTitle },
                     requiresAuth: true
                 });
-                console.log("Response => ", response.data);
                 setVillages(response.data);
             } catch (error) {
                 console.error('Error fetching villages:', error);

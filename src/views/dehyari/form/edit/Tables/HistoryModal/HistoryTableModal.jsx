@@ -114,10 +114,8 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
     const queryParams = new URLSearchParams(window.location.search);
     const param = queryParams.get('param');
     const handleSubmit = async (formData) => {
-        console.log("Formated Data => ", formData)
         setLoading(true);
         const dto = HumanContractDTO.fromForm(formData, param);
-        console.log("DTO => ", dto);
         try {
             let response;
             if (mode === 'edit') {
