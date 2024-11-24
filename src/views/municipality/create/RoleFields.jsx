@@ -19,33 +19,42 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='geo_region'
                         control={control}
                         rules={{ required: true }}
-                        defaultValue={
-                            selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
-                        }
+                        defaultValue={[]}
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
                             ) : (
                                 <Autocomplete
+                                    multiple
                                     options={options}
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
-                                    onChange={(event, newValue) => {
-                                        setValue('geo_state',newValue.city.geo_state)
-                                        setValue('geo_city',newValue.geo_cities)
-                                        setValue('geo_region',newValue.hierarchy_code)
-                                        onChange(newValue.hierarchy_code || null);
+                                    onChange={(event, newValues) => {
+                                        // اگر هیچ مقداری انتخاب نشده باشد
+                                        if (newValues.length === 0) {
+                                            setValue('geo_state', '');
+                                            setValue('geo_city', '');
+                                            setValue('geo_region', []);
+                                            onChange([]);
+                                            return;
+                                        }
+                                        
+                                        setValue('geo_state', newValues[0]?.city.geo_state);
+                                        setValue('geo_city', newValues[0]?.geo_cities);
+                                        setValue('geo_region', newValues.map(item => item.hierarchy_code));
+                                        onChange(newValues.map(item =>item.hierarchy_code));
                                     }}
                                     defaultValue={
-                                        selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
+                                        Array.isArray(selectedOptions) 
+                                            ? options.filter(option => selectedOptions.includes(option.hierarchy_code))
+                                            : selectedOptions 
+                                                ? [options.find(option => selectedOptions === option.hierarchy_code)].filter(Boolean)
+                                                : []
                                     }
-                                    getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             label='منطقه'
-                                            value={value}
-                                            onChange={onChange}
                                             error={!!errors.geo_region}
                                             helperText={errors.geo_region ? 'منطقه الزامی است' : ''}
                                         />
