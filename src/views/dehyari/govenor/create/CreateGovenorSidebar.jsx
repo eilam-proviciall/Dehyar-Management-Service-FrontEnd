@@ -27,8 +27,6 @@ const CreateGovenorSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEve
         },
     });
 
-    console.log("sidebar => ", sidebarDetails);
-
     const {
         values, setValues, handleSidebarClose, handleDeleteButtonClick,
         onSubmit, resetToStoredValues
