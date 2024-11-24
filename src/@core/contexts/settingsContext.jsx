@@ -26,7 +26,7 @@ export const SettingsProvider = props => {
     navbarContentWidth: themeConfig.navbar.contentWidth,
     contentWidth: themeConfig.contentWidth,
     footerContentWidth: themeConfig.footer.contentWidth,
-    primaryColor: primaryColorConfig[0].main,
+    primaryColor: primaryColorConfig[themeConfig.mode === 'dark' ? 2 : 1].main,
     ...(demoName && demoConfigurations)
   }
 
