@@ -65,7 +65,7 @@ const UserDivisionChip = ({ workGroup, geoState, geoCity, geoRegion }) => {
                 }
             }}
             avatar={
-                <p className={`flex items-center rounded-full bg-backgroundPaper p-1 text-textPrimary`}>
+                <p className={`flex items-center rounded-full bg-backgroundPaper p-1 text-textPrimary px-2`}>
                     {workGroup || ''}
                 </p>
             }

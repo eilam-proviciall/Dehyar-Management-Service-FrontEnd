@@ -25,6 +25,7 @@ const GovenorList = ({ userData }) => {
     useEffect(() => {
         const fetchUserData = async () => {
             const response = await api.get(`${me()}`, { requiresAuth: true });
+            console.log(response);
             setUserGeoState(response.data.data.user.original.geo_state);
         };
         fetchUserData();
