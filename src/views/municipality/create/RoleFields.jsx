@@ -6,8 +6,6 @@ import TextField from "@mui/material/TextField";
 
 const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions, setValue }) => {
 
-    console.log("Selected ", selectedOptions);
-    
     // if (role && (!options || options.length === 0)) {
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
@@ -21,37 +19,38 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='geo_region'
                         control={control}
                         rules={{ required: true }}
-                        defaultValue={
-                            selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
-                        }
+                        defaultValue=""
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
                             ) : (
                                 <Autocomplete
                                     options={options}
-                                    disableCloseOnSelect
                                     getOptionLabel={(option) => `${option.city.approved_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        setValue('geo_state',newValue.city.geo_state)
-                                        setValue('geo_city',newValue.geo_cities)
-                                        setValue('geo_region',newValue.hierarchy_code)
-                                        onChange(newValue.hierarchy_code || null);
+                                        // اگر هیچ مقداری انتخاب نشده باشد
+                                        if (!newValue) {
+                                            setValue('geo_state', '');
+                                            setValue('geo_city', '');
+                                            setValue('geo_region', '');
+                                            onChange('');
+                                            return;
+                                        }
+                                        
+                                        setValue('geo_state', newValue.city.geo_state);
+                                        setValue('geo_city', newValue.geo_cities);
+                                        setValue('geo_region', newValue.hierarchy_code);
+                                        onChange(newValue.hierarchy_code);
                                     }}
-                                    defaultValue={
-                                        selectedOptions && options.find(option => selectedOptions === option.hierarchy_code) || null
-                                    }
-                                    getOptionSelected={(option, value) => option.hierarchy_code === value}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label='منطقه'
-                                            value={value}
-                                            onChange={onChange}
-                                            error={!!errors.geo_region}
-                                            helperText={errors.geo_region ? 'منطقه الزامی است' : ''}
+                                            label='بخش'
+                                            error={Boolean(errors.geo_region)}
+                                            helperText={errors.geo_region?.message}
                                         />
                                     )}
+                                    value={options.find(option => option.hierarchy_code === value) || null}
                                 />
                             )
                         )}
@@ -77,7 +76,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
                                         setValue('geo_state', newValue && newValue[0].geo_state)
-                                        setValue('covered_villages', newValue.map(item => item.hierarchy_code || []));
+                                        setValue('covered_villages',newValue.map(item => item.hierarchy_code || []));
                                         onChange(newValue.map(item => item || []));
                                     }}
                                     defaultValue={
@@ -99,7 +98,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                     />
                 </FormControl>
             );
-        case "16": return (
+        case "16" : return (
             <FormControl fullWidth className='mbe-5'>
                 <Controller
                     name='geo_state'
