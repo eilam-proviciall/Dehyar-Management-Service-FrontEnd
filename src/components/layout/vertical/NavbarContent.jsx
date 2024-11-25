@@ -15,7 +15,7 @@ const NavbarContent = () => {
     const [userDetails, setUserDetails] = useState(null);
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await api.get(`${me()}`, { requiresAuth: true });
+            const response = await api.get(`${me()}`, { requiresAuth: true });            
             setUserDetails(response.data.data.user.original);
         };
         fetchUserData();

@@ -51,7 +51,7 @@ const UserDivisionChip = ({ workGroup, geoState, geoCity, geoRegion }) => {
 
     return (
         <Chip
-            className='mx-2'
+            className='mx-2 gap-1'
             sx={{
                 height: 'auto',
                 '& .MuiChip-avatar': {
