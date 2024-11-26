@@ -12,9 +12,7 @@ import CreateMunicipalityUserSidebar from "../create/CreateMunicipalityUserSideb
 const UserList = ({ userData }) => {
     const [calendarApi, setCalendarApi] = useState(null)
     const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
-    const [sidebarDetails, setSidebarDetails] = useState({
-        status: 'add', defaultValues: {}
-    });
+    const [sidebarDetails, setSidebarDetails] = useState({ status: 'add', defaultValues: {} });
     const [loading, setLoading] = useState(false);
     const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
     const calendarStore = useSelector(state => state.calendarReducer)

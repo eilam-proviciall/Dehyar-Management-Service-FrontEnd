@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
+import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -123,12 +124,8 @@ function CfoTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                if (cell.getValue() =='draft' || cell.getValue() =='rejected_to_financial_officer' ) {
                                     setCurrentRow(row.original);
                                     setPopupOpen(true);
-                                } else {
-                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
-                                }
                             }}
                             avatar={role}
                         />
@@ -203,7 +200,8 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id} contractState={currentRow?.contract_state} setLoading={setLoading} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={2} setLoading={setLoading} />
+            {/* <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id} contractState={currentRow?.contract_state} setLoading={setLoading} /> */}
         </div>
     );
 }

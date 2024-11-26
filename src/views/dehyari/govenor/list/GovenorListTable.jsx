@@ -20,6 +20,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     const open = Boolean(anchorEl);
 
     const fetchUsers = async () => {
+        console.log(userGeoState);
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
@@ -27,24 +28,35 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
             );
             const usersData = filteredUsers;
+            console.log(usersData);
 
             const geoStates = [];
             const geoCities = [];
             const geoRegions = [];
 
             usersData.forEach(user => {
-                geoStates.push({
-                    geo_type: 'state',
-                    geo_code: `${user.geo_state}`,
-                });
-                geoCities.push({
-                    geo_type: 'city',
-                    geo_code: `${user.geo_city}`,
-                });
-                geoRegions.push({
-                    geo_type: 'region',
-                    geo_code: `${user.geo_region}`,
-                });
+                if (user.geo_state) {
+                    geoStates.push({
+                        geo_type: 'state',
+                        geo_code: user.geo_state.toString(), // تبدیل به string با toString()
+                    });
+                }
+                if (user.geo_city) {
+                    geoCities.push({
+                        geo_type: 'city',
+                        geo_code: user.geo_city.toString(), // تبدیل به string با toString()
+                    });
+                }
+                if (user.geo_region) {
+                    user.geo_region.forEach(region => {
+                        if (region.hierarchy_code) {
+                            geoRegions.push({
+                                geo_type: 'region',
+                                geo_code: region.hierarchy_code.toString(),
+                            });
+                        }
+                    });
+                }
             });
 
             const geoDetails = [
@@ -59,12 +71,28 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
             const usersWithGeo = usersData.map(user => {
                 const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
                 const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-                const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_region);
+                
+                // برای geo_region
+                let regionNames = [];
+                if (Array.isArray(user.geo_region)) {
+                    regionNames = user.geo_region.map(region => {
+                        const regionInfo = geoData.find(geo => 
+                            geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
+                        );
+                        return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
+                    });
+                } else if (user.geo_region) {
+                    const regionInfo = geoData.find(geo => 
+                        geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
+                    );
+                    regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
+                }
+            
                 return {
                     ...user,
                     geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
                     geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region_name: regionInfo && regionInfo.info[0].approved_name || user.geo_region,
+                    geo_region_name: regionNames.join(' - ') || '-', // نمایش همه بخش‌ها با جداکننده
                 };
             });
 

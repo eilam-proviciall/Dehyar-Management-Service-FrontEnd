@@ -86,8 +86,6 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
         </FormControl>
     );
 
-    console.log("sidebar => ", sidebarDetails);
-
     return (
         <CustomDrawer
             anchor='right'
