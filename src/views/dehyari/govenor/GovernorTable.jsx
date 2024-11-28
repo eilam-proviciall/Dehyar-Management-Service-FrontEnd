@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
+import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
