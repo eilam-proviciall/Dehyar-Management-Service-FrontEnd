@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import { getGeoDetails } from "@/Services/CountryDivision";
+import useCustomTable from '@/hooks/useCustomTable';
+
 
 const UserListTable = ({
     dispatch,
@@ -292,89 +294,24 @@ const UserListTable = ({
         [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
-            <Box
-                sx={{
-                    display: 'flex',
-                    padding: '8px',
-                    flexWrap: 'wrap',
-                }}
+    const table = useCustomTable(columns, tableData, {
+        // تنظیمات اختصاصی این جدول
+        enableRowSelection: true,
+        renderTopToolbarCustomActions: () => (
+            <Button
+                variant="contained"
+                onClick={handleSidebarToggleSidebar}
+                startIcon={<i className="ri-add-line" />}
             >
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
-                >
-                    افزودن کاربر
-                </Button>
-            </Box>
+                افزودن کاربر جدید
+            </Button>
         ),
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
-            </Box>
-        ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
-        initialState: {
-            density: 'compact',
-            pagination: {
-                pageIndex: page,
-                pageSize: perPage,
-            }
-        },
-        rowCount: users.length,
-        state: {
-            isLoading: loading,
-            showProgressBars: loading,
-        },
-        muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
-        },
-        muiLinearProgressProps: {
-            color: 'primary',
-        },
-        muiCircularProgressProps: {
-            color: 'secondary',
-        },
-        muiPaginationProps: {
-            color: 'primary',
-            shape: 'rounded',
-            showRowsPerPage: true,
-            variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%',
-                },
-            },
-        },
-        paginationDisplayMode: 'pages',
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable
+            table={table}
+        />
     );
 }
 
