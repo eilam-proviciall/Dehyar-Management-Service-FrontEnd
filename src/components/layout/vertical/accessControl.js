@@ -87,11 +87,6 @@ const accessControl = {
             href: '/dehyari/form/upgrade-village-rank'
         },
         {
-            label: "لیست پرسنل مسئول مالی",
-            icon: < i className="ri-group-line" />,
-            href: '/dehyari/cfo/table'
-        },
-        {
             label: "تشکیلات دهیاری",
             icon: < i className="ri-organization-chart" />,
             href: '/dehyari'
@@ -118,19 +113,9 @@ const accessControl = {
             href: '/dehyari/form/grading-information-registration'
         },
         {
-            label: "لیست پرسنل استاندار",
-            icon: < i className="ri-group-line" />,
-            href: '/dehyari/governor/table'
-        },
-        {
             label: "مدیریت کاربران",
             icon: <i className="ri-team-line" />,
             href: '/municipality/list'
-        },
-        {
-            label: "لیست پرسنل بخشدار",
-            icon: < i className="ri-group-line" />,
-            href: '/dehyari/bakhshdar/table'
         },
         {
             label: "صفحه عمومی",
