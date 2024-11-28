@@ -23,6 +23,7 @@ import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
+import FilterChip from '@/@core/components/mui/FilterButton';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -170,10 +171,10 @@ function CfoTable(props) {
 
     const table = useCustomTable(columns, tableData, {
         isLoading: loading,
+        // renderTopToolbarCustomActions: () => (),
+    },
 
-        // تنظیمات اختصاصی این جدول
-        enableRowSelection: true,
-    });
+    );
 
     return (
         <div>

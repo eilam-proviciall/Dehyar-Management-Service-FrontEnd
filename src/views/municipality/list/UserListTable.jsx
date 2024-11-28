@@ -298,7 +298,6 @@ const UserListTable = ({
         isLoading: loading,
 
         // تنظیمات اختصاصی این جدول
-        enableRowSelection: true,
         renderTopToolbarCustomActions: () => (
             <Button
                 variant="contained"

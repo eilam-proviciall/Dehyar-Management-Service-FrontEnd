@@ -100,6 +100,7 @@ const useCustomTable = (columns, data, { isLoading = false, ...options } = {}) =
     // ترکیب تنظیمات پیش‌فرض با تنظیمات سفارشی
     const mergedOptions = {
         ...defaultOptions,
+        ...options,
         muiTablePaperProps: {
             ...defaultOptions.muiTablePaperProps,
             sx: {
