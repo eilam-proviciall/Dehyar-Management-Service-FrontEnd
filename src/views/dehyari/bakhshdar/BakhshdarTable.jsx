@@ -135,7 +135,6 @@ function BakhshdarTable(props) {
         isLoading: loading,
 
         // تنظیمات اختصاصی این جدول
-        enableRowSelection: true,
     });
 
     return (

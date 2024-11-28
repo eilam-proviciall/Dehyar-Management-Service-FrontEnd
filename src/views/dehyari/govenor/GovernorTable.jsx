@@ -138,7 +138,6 @@ function GovernorTable(props) {
         isLoading: loading,
 
         // تنظیمات اختصاصی این جدول
-        enableRowSelection: true,
     });
 
     return (
