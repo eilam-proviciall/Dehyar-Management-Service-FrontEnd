@@ -184,7 +184,7 @@ function BakhshdarTable(props) {
     return (
         <div>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} nextState={'pending_governor'} />
         </div>
     );
 }

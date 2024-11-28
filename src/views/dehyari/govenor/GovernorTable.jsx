@@ -191,7 +191,7 @@ function GovernorTable(props) {
     return (
         <div>
             <MaterialReactTable columns={columns} data={data} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={2} setLoading={setLoading} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={2} setLoading={setLoading} nextState={'approved'} />
         </div>
     )
         ;
