@@ -204,7 +204,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
         </div>
     );
 }

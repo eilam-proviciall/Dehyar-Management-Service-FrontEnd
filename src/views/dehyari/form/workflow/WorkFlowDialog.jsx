@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { convertUnixToJalali } from "@/utils/dateConverter";
 import useWorkflow from "@/hooks/useWorkflowState";
 
-const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading }) => {
+const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
     const [selectedRejectType, setSelectedRejectType] = useState(null);
 
@@ -38,7 +38,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
     const handleApprove = async () => {
         setLoading(true);
         try {
-            await changeStateWorkflow(details.salary_id, 'pending_supervisor', '');
+            await changeStateWorkflow(details.salary_id, nextState, '');
             toast.success("عملیات با موفقیت انجام شد");
             handleClose();
         } catch (err) {
