@@ -117,11 +117,6 @@ const accessControl = {
             icon: <i className="ri-team-line" />,
             href: '/municipality/list'
         },
-        {
-            label: "صفحه عمومی",
-            icon: < i className="ri-account-box-line" />,
-            href: '/profile/complete'
-        },
     ],
     [WORK_GROUPS.GOVERNOR]: [
         {

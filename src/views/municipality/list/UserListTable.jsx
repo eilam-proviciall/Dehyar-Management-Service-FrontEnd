@@ -78,23 +78,23 @@ const UserListTable = ({
             const usersWithGeo = usersData.map(user => {
                 const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
                 const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-                
+
                 // برای geo_region
                 let regionNames = [];
                 if (Array.isArray(user.geo_region)) {
                     regionNames = user.geo_region.map(region => {
-                        const regionInfo = geoData.find(geo => 
+                        const regionInfo = geoData.find(geo =>
                             geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
                         );
                         return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
                     });
                 } else if (user.geo_region) {
-                    const regionInfo = geoData.find(geo => 
+                    const regionInfo = geoData.find(geo =>
                         geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
                     );
                     regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
                 }
-            
+
                 return {
                     ...user,
                     geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
@@ -266,6 +266,24 @@ const UserListTable = ({
                             className={"rounded-full"}
                         >
                             <i className='ri-edit-box-line' />
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"warning"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-key-2-line" />
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"success"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-login-circle-line" />
                         </CustomIconButton>
                     </div>
                 )
