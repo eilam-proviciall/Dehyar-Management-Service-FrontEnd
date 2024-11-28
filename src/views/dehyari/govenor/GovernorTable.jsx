@@ -17,6 +17,7 @@ import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
+import useCustomTable from '@/hooks/useCustomTable';
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -133,60 +134,12 @@ function GovernorTable(props) {
         [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: data,
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
-            </Box>
-        ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
-        initialState: {
-            density: 'compact',
-        },
-        muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
-        },
-        muiLinearProgressProps: {
-            color: 'primary',
-        },
-        muiPaginationProps: {
-            color: 'primary',
-            shape: 'rounded',
-            showRowsPerPage: false,
-            variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%',
-                },
-            },
-        },
-        paginationDisplayMode: 'pages',
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
-    });
+    const table = useCustomTable(columns, data, {
+        isLoading: loading,
 
-    if (loading) {
-        return <Loading />
-    }
+        // تنظیمات اختصاصی این جدول
+        enableRowSelection: true,
+    });
 
     return (
         <div>
