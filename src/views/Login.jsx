@@ -1,11 +1,11 @@
 'use client'
 
 // React Imports
-import {useContext, useState, useEffect} from 'react'
+import { useContext, useState, useEffect } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
@@ -16,13 +16,13 @@ import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Box from '@mui/material/Box'
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 // Third-party Imports
-import {Controller, useForm} from 'react-hook-form'
-import {valibotResolver} from '@hookform/resolvers/valibot'
-import {object, minLength, string} from 'valibot'
-import {AuthContext} from '@/contexts/AuthContext'
+import { Controller, useForm } from 'react-hook-form'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { object, minLength, string } from 'valibot'
+import { AuthContext } from '@/contexts/AuthContext'
 
 // Component Imports
 import Logo from '@components/layout/shared/Logo'
@@ -31,9 +31,9 @@ import Logo from '@components/layout/shared/Logo'
 import themeConfig from '@configs/themeConfig'
 
 // Util Imports
-import {useImageVariant} from '@core/hooks/useImageVariant'
+import { useImageVariant } from '@core/hooks/useImageVariant'
 import accessControl from "@components/layout/vertical/accessControl";
-import {LoadingButton} from '@mui/lab'
+import { LoadingButton } from '@mui/lab'
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -49,7 +49,7 @@ const schema = object({
     ])
 })
 
-const Login = ({mode}) => {
+const Login = ({ mode }) => {
     // States
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [errorState, setErrorState] = useState(null);
@@ -71,7 +71,7 @@ const Login = ({mode}) => {
     const {
         control,
         handleSubmit,
-        formState: {errors}
+        formState: { errors }
     } = useForm({
         resolver: valibotResolver(schema),
         defaultValues: {
@@ -137,10 +137,10 @@ const Login = ({mode}) => {
                 className='flex flex-1 h-full justify-center items-start bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
                 <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset]'>
                     <div>
-                        <Box sx={{mb: 3, textAlign: 'center'}}>
+                        <Box sx={{ mb: 3, textAlign: 'center' }}>
                             {/* <Logo component /> */}
                             <img className='w-[40%] mb-2' src={theme.palette.mode === 'light' ? "images/logos/logo.svg" : "images/logos/logo_white.svg"}
-                                 alt="لوگو سایت"/>
+                                alt="لوگو سایت" />
                             <Typography variant='h5'> <span>پنجره واحد خدمات الکترونیک</span></Typography>
                         </Box>
                     </div>
@@ -154,8 +154,8 @@ const Login = ({mode}) => {
                         <Controller
                             name='email'
                             control={control}
-                            rules={{required: true}}
-                            render={({field}) => (
+                            rules={{ required: true }}
+                            render={({ field }) => (
                                 <TextField
                                     {...field}
                                     fullWidth
@@ -164,7 +164,7 @@ const Login = ({mode}) => {
                                     label='نام کاربری'
                                     InputProps={{
                                         inputProps: {
-                                            style: {textAlign: 'center'}  // مرکزچین کردن متن داخل فیلد ورودی
+                                            style: { textAlign: 'center' }  // مرکزچین کردن متن داخل فیلد ورودی
                                         }
                                     }}
                                     onChange={(e) => {
@@ -183,12 +183,12 @@ const Login = ({mode}) => {
                         <Controller
                             name='password'
                             control={control}
-                            rules={{required: true}}
-                            render={({field}) => (
+                            rules={{ required: true }}
+                            render={({ field }) => (
                                 <TextField
                                     {...field}
                                     fullWidth
-                                    style={{textAlign: 'center'}}
+                                    style={{ textAlign: 'center' }}
                                     label='رمز عبور'
                                     id='login-password'
                                     type={isPasswordShown ? 'text' : 'password'}
@@ -198,7 +198,7 @@ const Login = ({mode}) => {
                                     }}
                                     InputProps={{
                                         inputProps: {
-                                            style: {textAlign: 'center'}  // مرکزچین کردن متن داخل فیلد ورودی
+                                            style: { textAlign: 'center' }  // مرکزچین کردن متن داخل فیلد ورودی
                                         },
                                         endAdornment: (
                                             <InputAdornment position='end'>
@@ -208,17 +208,17 @@ const Login = ({mode}) => {
                                                     onMouseDown={e => e.preventDefault()}
                                                     aria-label='toggle password visibility'
                                                 >
-                                                    <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'}/>
+                                                    <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
                                                 </IconButton>
                                             </InputAdornment>
                                         )
                                     }}
-                                    {...(errors.password && {error: true, helperText: errors.password.message})}
+                                    {...(errors.password && { error: true, helperText: errors.password.message })}
                                 />
                             )}
                         />
                         <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
-                            <FormControlLabel control={<Checkbox defaultChecked/>} label='به خاطر سپردن'/>
+                            <FormControlLabel control={<Checkbox defaultChecked />} label='به خاطر سپردن' />
                             <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
                                 فراموشی رمز عبور
                             </Typography>
@@ -231,6 +231,10 @@ const Login = ({mode}) => {
                             loadingIndicator={<span className='text-backgroundPaper'>در حال پردازش...</span>}>
                             ورود
                         </LoadingButton>
+                        <div className='flex gap-5 justify-center'>
+                            <Button variant='contained' color='info'>درگاه وزارت کشور</Button>
+                            <Button variant='contained' color='info'>درگاه دولت هوشمند</Button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -244,7 +248,7 @@ const Login = ({mode}) => {
                     لذا در راستای تسریع و تهسیل در فرایند نظارتی و پایش عملکرد شهرداری ها و دهیاری ها سامانه مذکور طراحی
                     گردیده است.
                 </Typography>
-                <img className='mt-auto' src="images/cards/smartCity.svg" alt="بنر شهرستان ها"/>
+                <img className='mt-auto' src="images/cards/smartCity.svg" alt="بنر شهرستان ها" />
             </div>
         </div>
     )
