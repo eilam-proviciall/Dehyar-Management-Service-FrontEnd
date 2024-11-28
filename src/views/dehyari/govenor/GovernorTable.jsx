@@ -1,19 +1,19 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import {IconButton, Menu, MenuItem} from '@mui/material';
-import {GetHumanResourcesForGovernor} from "@/Services/humanResources";
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { GetHumanResourcesForGovernor } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
-import {translateContractState} from "@utils/contractStateTranslator";
+import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
@@ -58,7 +58,7 @@ function GovernorTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'full_name',
@@ -76,7 +76,7 @@ function GovernorTable(props) {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_state',
@@ -89,11 +89,11 @@ function GovernorTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                if (cell.getValue() =='approved' || cell.getValue() =='pending_governor' ) {
+                                if (cell.getValue() == 'approved' || cell.getValue() == 'pending_governor') {
                                     setSelectedRow(row.original);
                                     setPopupOpen(true);
                                 } else {
-                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
                                 }
                             }}
                             avatar={role}
@@ -105,8 +105,8 @@ function GovernorTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         {/*<CustomIconButton*/}
                         {/*    color={"error"}*/}
                         {/*    onClick={() => {*/}
@@ -123,7 +123,7 @@ function GovernorTable(props) {
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-eye-line'/>
+                            <i className='ri-eye-line' />
                         </CustomIconButton>
                     </div>
                 ),
@@ -145,7 +145,7 @@ function GovernorTable(props) {
                 color: 'text.secondary',
                 padding: "25px"
             }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
                 <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
             </Box>
         ),
@@ -184,16 +184,16 @@ function GovernorTable(props) {
     });
 
     if (loading) {
-        return <Loading/>
+        return <Loading />
     }
 
     return (
-    <div>
-        <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={selectedRow?.salary_id} contractState={selectedRow?.contract_state} setLoading={setLoading}/>
-        <MaterialReactTable columns={columns} data={data}/>
-    </div>
-)
-    ;
+        <div>
+            <MaterialReactTable columns={columns} data={data} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={2} setLoading={setLoading} />
+        </div>
+    )
+        ;
 }
 
 export default GovernorTable;

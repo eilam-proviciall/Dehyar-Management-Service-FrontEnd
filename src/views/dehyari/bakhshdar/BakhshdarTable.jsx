@@ -1,13 +1,13 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
-import {GetHumanResourcesForBakhshdar} from "@/Services/humanResources";
-import {toast} from "react-toastify";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { GetHumanResourcesForBakhshdar } from "@/Services/humanResources";
+import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
-import {translateContractState} from "@utils/contractStateTranslator";
+import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 
@@ -67,13 +67,13 @@ function BakhshdarTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_state',
@@ -86,11 +86,11 @@ function BakhshdarTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                if (cell.getValue() =='pending_supervisor' || cell.getValue() =='rejected_to_supervisor' ) {
+                                if (cell.getValue() == 'pending_supervisor' || cell.getValue() == 'rejected_to_supervisor') {
                                     setSelectedRow(row.original);
                                     setPopupOpen(true);
                                 } else {
-                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
                                 }
                             }}
                             avatar={role}
@@ -102,8 +102,8 @@ function BakhshdarTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         {/*<CustomIconButton*/}
                         {/*    color={"error"}*/}
                         {/*    onClick={() => {*/}
@@ -120,7 +120,7 @@ function BakhshdarTable(props) {
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-eye-line'/>
+                            <i className='ri-eye-line' />
                         </CustomIconButton>
                     </div>
                 ),
@@ -131,7 +131,7 @@ function BakhshdarTable(props) {
 
     const table = useMaterialReactTable({
         columns,
-        data:data,
+        data: data,
         renderEmptyRowsFallback: () => (
             <Box sx={{
                 display: 'flex',
@@ -142,7 +142,7 @@ function BakhshdarTable(props) {
                 color: 'text.secondary',
                 padding: "25px"
             }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
                 <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
             </Box>
         ),
@@ -182,8 +182,8 @@ function BakhshdarTable(props) {
 
     return (
         <div>
-            <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={selectedRow?.salary_id} contractState={selectedRow?.contract_state} setLoading={setLoading} />
+            <MaterialReactTable table={table} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} />
         </div>
     );
 }
