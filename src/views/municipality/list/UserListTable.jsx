@@ -295,6 +295,8 @@ const UserListTable = ({
     );
 
     const table = useCustomTable(columns, tableData, {
+        isLoading: loading,
+
         // تنظیمات اختصاصی این جدول
         enableRowSelection: true,
         renderTopToolbarCustomActions: () => (
