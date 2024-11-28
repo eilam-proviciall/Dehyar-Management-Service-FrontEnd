@@ -124,8 +124,8 @@ function CfoTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
+                                setCurrentRow(row.original);
+                                setPopupOpen(true);
                             }}
                             avatar={role}
                         />
@@ -200,8 +200,7 @@ function CfoTable(props) {
                 </span>
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={2} setLoading={setLoading} />
-            {/* <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={currentRow?.salary_id} contractState={currentRow?.contract_state} setLoading={setLoading} /> */}
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={1} setLoading={setLoading} />
         </div>
     );
 }

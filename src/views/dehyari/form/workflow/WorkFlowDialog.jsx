@@ -38,12 +38,9 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
     const handleApprove = async () => {
         setLoading(true);
         try {
-            const result = await submitWorkflow(details.salary_id);
-            if (result.success) {
-                await changeStateWorkflow(details.salary_id, 'pending_supervisor', '');
-                toast.success("عملیات با موفقیت انجام شد");
-                handleClose();
-            }
+            await changeStateWorkflow(details.salary_id, 'pending_supervisor', '');
+            toast.success("عملیات با موفقیت انجام شد");
+            handleClose();
         } catch (err) {
             toast.error(err.message || 'خطا در انجام عملیات');
         } finally {
@@ -61,7 +58,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
         try {
             const result = await submitWorkflow(details.salary_id, true);
             if (result.success) {
-                const rejectState = rejectApprovalLevel === 2 ? selectedRejectType : 'rejected';
+                const rejectState = rejectApprovalLevel === 2 ? selectedRejectType : 'rejected_to_financial_officer';
                 await changeStateWorkflow(details.salary_id, rejectState, result.description);
                 toast.success("عملیات با موفقیت انجام شد");
                 handleClose();
@@ -203,11 +200,11 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     تایید
                 </Button>
 
-                {canReject && !showRejectOptions && (
+                {rejectApprovalLevel > 0 && canReject && !showRejectOptions && (
                     <Button
                         onClick={() => {
                             setShowRejectOptions(true);
-                            handleStateChange('rejected', true);
+                            handleStateChange('rejected_to_financial_officer', true);
                         }}
                         color="error"
                         variant="contained"
