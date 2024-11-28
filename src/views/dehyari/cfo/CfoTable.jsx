@@ -22,6 +22,7 @@ import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
+import useCustomTable from '@/hooks/useCustomTable';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -167,19 +168,11 @@ function CfoTable(props) {
         [currentRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: tableData,
-        initialState: {
-            density: 'compact'
-        },
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
+    const table = useCustomTable(columns, tableData, {
+        isLoading: loading,
+
+        // تنظیمات اختصاصی این جدول
+        enableRowSelection: true,
     });
 
     return (
