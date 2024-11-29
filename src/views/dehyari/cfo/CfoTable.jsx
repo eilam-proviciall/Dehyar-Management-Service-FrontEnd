@@ -1,9 +1,9 @@
 "use client"
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem } from '@mui/material';
 import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
@@ -33,6 +33,17 @@ function CfoTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
+    const [filterStatus, setFilterStatus] = useState('');
+    const buttonRefs = useRef([]);
+
+    useEffect(() => {
+        // Set initial highlight on the "همه" button
+        if (buttonRefs.current[0]) {
+            const { offsetWidth, offsetLeft } = buttonRefs.current[0];
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    }, []);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -62,6 +73,15 @@ function CfoTable(props) {
         setCurrentRow(null);
     };
 
+    const handleFilterChange = (status, index) => {
+        setFilterStatus(status);
+        const button = buttonRefs.current[index];
+        if (button) {
+            const { offsetWidth, offsetLeft } = button;
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    };
+
     const fetchData = async () => {
         try {
             const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
@@ -79,7 +99,12 @@ function CfoTable(props) {
         }
     }, [loading]);
 
-    const tableData = useMemo(() => data, [data]);
+    const tableData = useMemo(() => {
+        if (!filterStatus) {
+            return data;
+        }
+        return data.filter(item => item.contract_state === filterStatus);
+    }, [data, filterStatus]);
 
     const columns = useMemo(
         () => [
@@ -171,7 +196,43 @@ function CfoTable(props) {
 
     const table = useCustomTable(columns, tableData, {
         isLoading: loading,
-        // renderTopToolbarCustomActions: () => (),
+        renderTopToolbarCustomActions: () => (
+            <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+                <Box
+                    className={'bg-backgroundPaper rounded-full'}
+                    sx={{
+                        position: 'absolute',
+                        height: '90%',
+                        transition: 'width 0.3s, right 0.3s',
+                        ...highlightStyle,
+                    }}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[0] = el)}
+                    label="همه"
+                    onClick={() => handleFilterChange('', 0)}
+                    clickable
+                    variant={filterStatus === '' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[1] = el)}
+                    label="پیش‌نویس"
+                    onClick={() => handleFilterChange('draft', 1)}
+                    clickable
+                    variant={filterStatus === 'draft' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[2] = el)}
+                    label="نیازمند اصلاح"
+                    onClick={() => handleFilterChange('rejected_to_financial_officer', 2)}
+                    clickable
+                    variant={filterStatus === 'rejected_to_financial_officer' ? 'outlined' : 'filled'}
+                />
+            </Box>
+        ),
     },
 
     );

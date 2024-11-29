@@ -1,12 +1,13 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {MaterialReactTable, useMaterialReactTable} from "material-react-table";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from "material-react-table";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import FilterChip from "@core/components/mui/FilterButton";
+import TableFilterChips from '@/components/common/TableFilterChips';
 
-const TimeOffTable = ({handleToggle, setMode}) => {
+const TimeOffTable = ({ handleToggle, setMode }) => {
     const [timeOffs, setTimeOffs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [filterStatus, setFilterStatus] = useState('');
@@ -14,6 +15,8 @@ const TimeOffTable = ({handleToggle, setMode}) => {
     const [perPage, setPerPage] = useState(10);
     const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
     const buttonRefs = useRef([]);
+    console.log("Time Offs => ", buttonRefs);
+    
 
     const fetchTimeOffs = async () => {
         console.log("Refresh");
@@ -24,7 +27,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
         //         setTimeOffs(response.data.data)
         //         console.log(response.data);
         //         setLoading(false);
-        //     })
+        //     })   
     }
 
     useEffect(() => {
@@ -54,54 +57,54 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                 accessorKey: 'type',
                 header: 'نام و نام خانوادگی',
                 size: 150,
-                Cell: ({row}) => {
-                    const {first_name, last_name} = row.original;
-                    return <div style={{textAlign: 'right'}}>{`${first_name} ${last_name}`}</div>;
+                Cell: ({ row }) => {
+                    const { first_name, last_name } = row.original;
+                    return <div style={{ textAlign: 'right' }}>{`${first_name} ${last_name}`}</div>;
                 },
             },
             {
                 accessorKey: 'start_date',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'duration',
                 header: 'استان',
                 size: 150,
-                Cell: ({cell}) => <div></div>
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'attachment_file',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({cell}) => <div></div>
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'user_id',
                 header: 'بخش',
                 size: 150,
-                Cell: ({cell}) => <div></div>
+                Cell: ({ cell }) => <div></div>
             },
             {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"error"}
                             onClick={() => handleDeleteTimeOff(row)}
                             className={"rounded-full"}
                         >
-                            <i className='ri-delete-bin-7-line'/>
+                            <i className='ri-delete-bin-7-line' />
                         </CustomIconButton>
                         <CustomIconButton
                             color={"primary"}
                             onClick={() => handleEditTimeOff(row)}
                             className={"rounded-full"}
                         >
-                            <i className='ri-edit-box-line'/>
+                            <i className='ri-edit-box-line' />
                         </CustomIconButton>
                     </div>
                 ),
@@ -119,7 +122,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
             columnFilters: filterStatus ? [{ id: 'status', value: filterStatus }] : [],
         },
         renderTopToolbarCustomActions: ({ table }) => (
-            <Box sx={{ position: 'relative', display: 'flex', alignItems:'center', gap:1 }}>
+            <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Box
                     className={'bg-backgroundPaper rounded-full'}
                     sx={{
@@ -138,8 +141,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
                     clickable
-                    variant={filterStatus === '' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === '' ? 'white' : 'black' }}
+                    variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
                     avatarValue="0"
@@ -147,8 +149,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="پیش‌نویس"
                     onClick={() => handleFilterChange('draft', 1)}
                     clickable
-                    variant={filterStatus === 'draft' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'draft' ? 'white' : 'black' }}
+                    variant={filterStatus === 'draft' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
                     avatarValue="0"
@@ -156,8 +157,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="در حال بررسی"
                     onClick={() => handleFilterChange('reviewing', 2)}
                     clickable
-                    variant={filterStatus === 'reviewing' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'reviewing' ? 'white' : 'black' }}
+                    variant={filterStatus === 'reviewing' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
                     avatarValue="0"
@@ -165,8 +165,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="تایید شده"
                     onClick={() => handleFilterChange('approved', 3)}
                     clickable
-                    variant={filterStatus === 'approved' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'approved' ? 'white' : 'black' }}
+                    variant={filterStatus === 'approved' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
                     avatarValue="0"
@@ -174,14 +173,13 @@ const TimeOffTable = ({handleToggle, setMode}) => {
                     label="رد شده"
                     onClick={() => handleFilterChange('rejected', 4)}
                     clickable
-                    variant={filterStatus === 'rejected' ? 'filled' : 'outlined'}
-                    sx={{ color: filterStatus === 'rejected' ? 'white' : 'black' }}
+                    variant={filterStatus === 'rejected' ? 'outlined' : 'filled'}
                 />
             </Box>
         ),
         renderEmptyRowsFallback: () => (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'text.secondary', padding: "25px" }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
+                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
                 <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
             </Box>
         ),
@@ -225,7 +223,7 @@ const TimeOffTable = ({handleToggle, setMode}) => {
 
     return (
         <Box>
-            <MaterialReactTable table={table}/>
+            <MaterialReactTable table={table} />
         </Box>
     );
 }
