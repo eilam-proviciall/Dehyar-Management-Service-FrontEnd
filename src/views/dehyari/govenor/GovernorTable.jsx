@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
@@ -18,6 +18,7 @@ import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
+import FilterChip from '@/@core/components/mui/FilterButton';
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -27,6 +28,17 @@ function GovernorTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
+    const [filterStatus, setFilterStatus] = useState('');
+    const buttonRefs = useRef([]);
+
+    useEffect(() => {
+        // Set initial highlight on the "همه" button
+        if (buttonRefs.current[0]) {
+            const { offsetWidth, offsetLeft } = buttonRefs.current[0];
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    }, []);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -36,6 +48,16 @@ function GovernorTable(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleFilterChange = (status, index) => {
+        setFilterStatus(status);
+        const button = buttonRefs.current[index];
+        if (button) {
+            const { offsetWidth, offsetLeft } = button;
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    };
+
 
     const fetchData = async () => {
         try {
@@ -53,6 +75,13 @@ function GovernorTable(props) {
             fetchData();
         }
     }, [loading]);
+
+    const tableData = useMemo(() => {
+        if (!filterStatus) {
+            return data;
+        }
+        return data.filter(item => item.contract_state === filterStatus);
+    }, [data, filterStatus]);
 
     const columns = useMemo(
         () => [
@@ -109,15 +138,6 @@ function GovernorTable(props) {
                 size: 150,
                 Cell: ({ row }) => (
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
-                        {/*<CustomIconButton*/}
-                        {/*    color={"error"}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        handleDeleteTimeOff(row);*/}
-                        {/*    }}*/}
-                        {/*    className={"rounded-full"}*/}
-                        {/*>*/}
-                        {/*    <i className='ri-delete-bin-7-line'/>*/}
-                        {/*</CustomIconButton>*/}
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
@@ -134,11 +154,47 @@ function GovernorTable(props) {
         [anchorEl, selectedRow]
     );
 
-    const table = useCustomTable(columns, data, {
+    const table = useCustomTable(columns, tableData, {
         isLoading: loading,
-
-        // تنظیمات اختصاصی این جدول
-    });
+        renderTopToolbarCustomActions: () => (
+            <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+                <Box
+                    className={'bg-backgroundPaper rounded-full'}
+                    sx={{
+                        position: 'absolute',
+                        height: '90%',
+                        transition: 'width 0.3s, right 0.3s',
+                        ...highlightStyle,
+                    }}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[0] = el)}
+                    label="همه"
+                    onClick={() => handleFilterChange('', 0)}
+                    clickable
+                    variant={filterStatus === '' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[1] = el)}
+                    label="در انتظار تایید استانداری"
+                    onClick={() => handleFilterChange('pending_governor', 1)}
+                    clickable
+                    variant={filterStatus === 'pending_governor' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[2] = el)}
+                    label="تایید شده"
+                    onClick={() => handleFilterChange('approved', 2)}
+                    clickable
+                    variant={filterStatus === 'approved' ? 'outlined' : 'filled'}
+                />
+            </Box>
+        ),
+    },
+    );
 
     return (
         <div>
