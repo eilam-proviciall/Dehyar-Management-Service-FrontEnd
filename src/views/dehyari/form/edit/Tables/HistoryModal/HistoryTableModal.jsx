@@ -1,13 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import {Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton} from '@mui/material';
-import {FormProvider, useForm} from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { Backdrop, Box, Button, Modal, Step, StepLabel, Stepper, Typography, IconButton } from '@mui/material';
+import { FormProvider, useForm } from 'react-hook-form';
 import StepOneFields from './StepOneFields';
 import StepTwoFields from './StepTwoFields';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
-import {HumanContract} from "@/Services/humanResources";
-import {toast} from "react-toastify";
+import { HumanContract } from "@/Services/humanResources";
+import { toast } from "react-toastify";
 import HumanContractDTO from "@utils/HumanContractDTO";
+import { DateObject } from 'react-multi-date-picker';
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+
 
 const modalStyle = {
     position: 'absolute',
@@ -56,10 +60,32 @@ const validationSchemas = {
 
 const steps = ['ساختار تشکیلاتی', 'اطلاعات قرارداد'];
 
-const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
-    const methods = useForm(); // Initialize useForm
+const HistoryTableModal = ({ open, handleClose, refreshData, mode, editId }) => {
     const [activeStep, setActiveStep] = useState(0); // Initialize step state
     const [loading, setLoading] = useState(false);
+    const today = new DateObject({ calendar: persian, locale: persian_fa });
+    const firstDayOfYear = new DateObject({
+        calendar: persian,
+        locale: persian_fa,
+        year: today.year,
+        month: 1,
+        day: 1
+    });
+    const lastDayOfYear = new DateObject({
+        calendar: persian,
+        locale: persian_fa,
+        year: today.year,
+        month: 12,
+        day: 29
+    });
+    const methods = useForm({
+        defaultValues: {
+            contractStart: firstDayOfYear.unix,
+            contractEnd: lastDayOfYear.unix,
+            contractExecute: today.unix,
+        }
+    }
+    );
 
     useEffect(() => {
         if (open === false) {
@@ -89,7 +115,7 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                         jobTitle: response.data.job_type_id,
                         currentJob: response.data.main_work,
                         coveredVillages: response.data.cover_villages.map(village => village.village_code),
-                        villageEmployer : response.data.village_employer,
+                        villageEmployer: response.data.village_employer,
                     };
                     methods.reset(mappedData); // Populate the form with fetched data
                 } catch (error) {
@@ -161,7 +187,7 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
-                sx: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
             }}
         >
             <Box sx={modalStyle}>
@@ -175,14 +201,14 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
 
                 {/* <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
                     {mode === 'edit' ? 'ویرایش قرارداد' : 'ثبت اطلاعات حکم کارگزینی'}
                 </Typography> */}
 
-                <Stepper activeStep={activeStep} sx={{width: "50%", margin: '0 auto', paddingBottom: '16px'}}>
+                <Stepper activeStep={activeStep} sx={{ width: "50%", margin: '0 auto', paddingBottom: '16px' }}>
                     {steps.map((label, index) => (
                         <Step key={index}>
                             <StepLabel>{label}</StepLabel>
@@ -192,10 +218,10 @@ const HistoryTableModal = ({open, handleClose, refreshData, mode, editId}) => {
 
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(handleSubmit)}>
-                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode}/>}
-                        {activeStep === 1 && <StepTwoFields validation={validationSchemas}/>}
+                        {activeStep === 0 && <StepOneFields validation={validationSchemas} mode={mode} />}
+                        {activeStep === 1 && <StepTwoFields validation={validationSchemas} />}
 
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', pt: 7}}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 7 }}>
                             <Button
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
