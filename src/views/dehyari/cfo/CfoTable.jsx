@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import { Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
@@ -199,6 +199,9 @@ function CfoTable(props) {
         isLoading: loading,
         renderTopToolbarCustomActions: () => (
             <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+                <Button variant='contained' onClick={() => router.push('/dehyari/form')} className={"rounded-full h-8"}>
+                    <i className='ri-add-line' />
+                </Button>
                 <Box
                     className={'bg-backgroundPaper rounded-full'}
                     sx={{

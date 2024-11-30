@@ -17,7 +17,7 @@ import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
 import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
-import {translateContractState} from "@utils/contractStateTranslator";
+import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 
 const HistoryTable = () => {
@@ -29,6 +29,9 @@ const HistoryTable = () => {
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [contractStateApprovedExists, setContractStateApprovedExists] = useState(false);
+
+
 
     const open = Boolean(anchorEl);
 
@@ -42,9 +45,13 @@ const HistoryTable = () => {
     };
 
     const handleOpenModal = () => {
-        setEditMode(false);
-        setEditId(null);
-        setOpenModal(true);
+        if (contractStateApprovedExists) {
+            toast.warning('بعد از تایید نهایی حکم جاری امکان ثبت قرارداد جدید وجود خواهد داشت.');
+        } else {
+            setEditMode(false);
+            setEditId(null);
+            setOpenModal(true);
+        }
     };
 
     const handleEdit = (row) => {
@@ -83,6 +90,8 @@ const HistoryTable = () => {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             }
         }).then((response) => {
+            const contractStateApproved = response.data.some(record => record.contract_state === 'approved');
+            setContractStateApprovedExists(contractStateApproved);  // Update state if there's a record with 'approved'
             setData(response.data);
             setLoading(false);
         }).catch(() => {
@@ -203,7 +212,12 @@ const HistoryTable = () => {
         data,
         renderTopToolbarCustomActions: () => (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenModal}
+                    // disabled={contractStateApprovedExists}
+                >
                     افزودن قرارداد
                 </Button>
             </Box>
@@ -246,7 +260,7 @@ const HistoryTable = () => {
                 mode={editMode ? 'edit' : 'create'}
                 editId={editId}
             />
-            <WorkFlowPopup open={dialogOpen} setOpen={setDialogOpen} id={salaryId}/>
+            <WorkFlowPopup open={dialogOpen} setOpen={setDialogOpen} id={salaryId} />
 
         </div>
     );

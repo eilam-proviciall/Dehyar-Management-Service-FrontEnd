@@ -58,11 +58,6 @@ const accessControl = {
             icon: < i className="ri-organization-chart" />,
             href: '/dehyari'
         },
-        {
-            label: "ثبت اطلاعات پرسنلی",
-            icon: < i className="ri-upload-line" />,
-            href: '/dehyari/form'
-        },
         { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
     ],
     [WORK_GROUPS.Admin]: [
@@ -91,11 +86,11 @@ const accessControl = {
             icon: < i className="ri-organization-chart" />,
             href: '/dehyari'
         },
-        {
-            label: "ثبت اطلاعات پرسنلی",
-            icon: < i className="ri-upload-line" />,
-            href: '/dehyari/form'
-        },
+        // {
+        //     label: "ثبت اطلاعات پرسنلی",
+        //     icon: < i className="ri-upload-line" />,
+        //     href: '/dehyari/form'
+        // },
         { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
         {
             label: "جدول خطا ها",
