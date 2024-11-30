@@ -1,3 +1,15 @@
+const validateNotFutureDate = (value) => {
+    if (!value) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Convert timestamp to date if value is in seconds (Unix timestamp)
+    const selectedDate = typeof value === 'number' ? new Date(value * 1000) : new Date(value);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return selectedDate <= today || 'تاریخ نمی‌تواند به آینده اشاره کند';
+};
+
 const validationSchemas = {
     jobDetails: {
         jobTitle: {
@@ -50,6 +62,7 @@ const validationSchemas = {
         },
         birthDate: {
             required: 'این فیلد الزامی است',
+            validate: validateNotFutureDate
         },
         postalCode: {
             required: 'این فیلد الزامی است',
@@ -68,7 +81,7 @@ const validationSchemas = {
                 message: 'شماره تماس ثابت باید ۱۱ رقم باشد'
             }
         },
-        insuranceIdentifier:{
+        insuranceIdentifier: {
 
         }
     },
@@ -92,10 +105,10 @@ const validationSchemas = {
         graduationDate: {
             validate: (value, allValues) => {
                 const { degree, fieldOfStudy } = allValues;
-                if (degree === 41) return true; // If the degree is "بی سواد"
+                if (degree === 41) return true;
                 const anyFieldFilled = value || degree || fieldOfStudy;
                 if (anyFieldFilled && !value) return 'این فیلد الزامی است';
-                return true;
+                return validateNotFutureDate(value);
             }
         },
     },
@@ -145,20 +158,22 @@ const validationSchemas = {
             }
         },
         birthDate: {
-            validate: (value, { nationalCode, fullName, gender, maritalStatus, marriageDate, endOfStudyExemption, deathDate }) => {
-                if (maritalStatus === 'متاهل') {
-                    const anyFieldFilled = value || nationalCode || fullName || gender || marriageDate || endOfStudyExemption || deathDate;
-                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
-                }
+            validate: (value, allValues) => {
+                const baseValidation = validateNotFutureDate(value);
+                if (baseValidation !== true) return baseValidation;
+                const { nationalCode, fullName, gender, maritalStatus, marriageDate, endOfStudyExemption, deathDate } = allValues;
+                const anyFieldFilled = nationalCode || fullName || gender || maritalStatus || marriageDate || endOfStudyExemption || deathDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
                 return true;
             }
         },
         marriageDate: {
-            validate: (value, { nationalCode, fullName, gender, birthDate, maritalStatus, endOfStudyExemption, deathDate }) => {
-                if (maritalStatus === 'متاهل') {
-                    const anyFieldFilled = value || nationalCode || fullName || gender || birthDate || endOfStudyExemption || deathDate;
-                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
-                }
+            validate: (value, allValues) => {
+                const baseValidation = validateNotFutureDate(value);
+                if (baseValidation !== true) return baseValidation;
+                const { nationalCode, fullName, gender, birthDate, maritalStatus, endOfStudyExemption, deathDate } = allValues;
+                const anyFieldFilled = nationalCode || fullName || gender || birthDate || maritalStatus || endOfStudyExemption || deathDate;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
                 return true;
             }
         },
@@ -172,11 +187,12 @@ const validationSchemas = {
             }
         },
         deathDate: {
-            validate: (value, { nationalCode, fullName, gender, birthDate, maritalStatus, marriageDate, endOfStudyExemption }) => {
-                if (maritalStatus === 'متاهل') {
-                    const anyFieldFilled = value || nationalCode || fullName || gender || birthDate || marriageDate || endOfStudyExemption;
-                    if (anyFieldFilled && !value) return 'این فیلد الزامی است';
-                }
+            validate: (value, allValues) => {
+                const baseValidation = validateNotFutureDate(value);
+                if (baseValidation !== true) return baseValidation;
+                const { nationalCode, fullName, gender, birthDate, maritalStatus, marriageDate, endOfStudyExemption } = allValues;
+                const anyFieldFilled = nationalCode || fullName || gender || birthDate || maritalStatus || marriageDate || endOfStudyExemption;
+                if (anyFieldFilled && !value) return 'این فیلد الزامی است';
                 return true;
             }
         },

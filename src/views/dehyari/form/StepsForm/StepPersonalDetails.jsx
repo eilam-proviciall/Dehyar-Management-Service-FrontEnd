@@ -1,19 +1,19 @@
 import React from 'react';
-import {Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material';
-import {Controller, useFormContext} from 'react-hook-form';
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from '@components/common/Divider/DividerSimple';
 import Autocomplete from '@mui/material/Autocomplete';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import {useFetchCities} from '@hooks/useFetchCities';
+import { useFetchCities } from '@hooks/useFetchCities';
 import Chip from '@mui/material/Chip';
 import PersonalOptions from '@data/PersonalOption.json';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
-const StepPersonalDetails = ({validation}) => {
-    const {control, register, getValues, setValue, formState: {errors}} = useFormContext();
-    const {cities, isLoading, error} = useFetchCities(true);
+const StepPersonalDetails = ({ validation }) => {
+    const { control, register, getValues, setValue, formState: { errors } } = useFormContext();
+    const { cities, isLoading, error } = useFetchCities(true);
 
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
@@ -21,6 +21,25 @@ const StepPersonalDetails = ({validation}) => {
             toast.error('شماره تلفن باید حداکثر ۱۱ رقم و فقط شامل اعداد انگلیسی باشد');
             return false;
         }
+        return true;
+    };
+
+    const validateBirthDate = (value) => {
+        const today = new Date();
+        // تبدیل تاریخ به تاریخ میلادی از Unix timestamp
+        const birthDate = value ? new Date(value * 1000) : null; // تبدیل از ثانیه به میلی‌ثانیه
+        if (!birthDate) {
+            return "تاریخ تولد وارد شده معتبر نیست.";
+        }
+
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const month = today.getMonth() - birthDate.getMonth();
+
+        // اگر سن کمتر از ۱۸ سال باشد، خطا را برمی‌گرداند
+        if (age < 18 || (age === 18 && month < 0)) {
+            return "شما باید حداقل ۱۸ سال سن داشته باشید.";
+        }
+
         return true;
     };
 
@@ -35,7 +54,7 @@ const StepPersonalDetails = ({validation}) => {
         <>
             <Grid container spacing={4} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات شخصی'/>
+                    <DividerSimple title='اطلاعات شخصی' />
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
@@ -44,7 +63,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.firstName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -64,7 +83,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.lastName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -84,7 +103,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.fatherName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -105,7 +124,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.nationalCode}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -128,8 +147,8 @@ const StepPersonalDetails = ({validation}) => {
                             name="birthDate"
                             control={control}
                             defaultValue=""
-                            rules={validation.birthDate}
-                            render={({field: {onChange, value}}) => (
+                            rules={{ ...validation.birthDate, validate: validateBirthDate }}
+                            render={({ field: { onChange, value } }) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}
                                     onChange={(date) => onChange(date ? date.toUnix() : "")}
@@ -144,7 +163,7 @@ const StepPersonalDetails = ({validation}) => {
                                             error={!!errors.birthDate}
                                             helperText={errors.birthDate && errors.birthDate.message}
                                             inputProps={{
-                                                style: {textAlign: 'end'}
+                                                style: { textAlign: 'end' }
                                             }}
                                         />
                                     }
@@ -161,7 +180,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.personalId}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -182,7 +201,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.birthPlace}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -213,7 +232,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.issuancePlace}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -246,7 +265,7 @@ const StepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.gender}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="جنسیت"
@@ -274,7 +293,7 @@ const StepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.maritalStatus}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="وضعیت تاهل"
@@ -302,7 +321,7 @@ const StepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.veteranStatus}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="وضعیت ایثارگری"
@@ -330,7 +349,7 @@ const StepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.militaryService}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="نظام وظیفه"
@@ -355,7 +374,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.postalCode}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -375,7 +394,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.insuranceIdentifier}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -396,7 +415,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.landlineNumber}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -417,7 +436,7 @@ const StepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.residenceAddress}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
