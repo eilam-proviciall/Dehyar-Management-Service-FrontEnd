@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import { getGeoDetails } from "@/Services/CountryDivision";
+import useCustomTable from '@/hooks/useCustomTable';
+
 
 const UserListTable = ({
     dispatch,
@@ -78,23 +80,23 @@ const UserListTable = ({
             const usersWithGeo = usersData.map(user => {
                 const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
                 const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-                
+
                 // برای geo_region
                 let regionNames = [];
                 if (Array.isArray(user.geo_region)) {
                     regionNames = user.geo_region.map(region => {
-                        const regionInfo = geoData.find(geo => 
+                        const regionInfo = geoData.find(geo =>
                             geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
                         );
                         return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
                     });
                 } else if (user.geo_region) {
-                    const regionInfo = geoData.find(geo => 
+                    const regionInfo = geoData.find(geo =>
                         geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
                     );
                     regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
                 }
-            
+
                 return {
                     ...user,
                     geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
@@ -267,6 +269,24 @@ const UserListTable = ({
                         >
                             <i className='ri-edit-box-line' />
                         </CustomIconButton>
+                        <CustomIconButton
+                            color={"warning"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-key-2-line" />
+                        </CustomIconButton>
+                        <CustomIconButton
+                            color={"success"}
+                            onClick={() => {
+                                toast.warning('این قابلیت هنوز افزوده نشده است');
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-login-circle-line" />
+                        </CustomIconButton>
                     </div>
                 )
             },
@@ -274,89 +294,25 @@ const UserListTable = ({
         [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
-            <Box
-                sx={{
-                    display: 'flex',
-                    padding: '8px',
-                    flexWrap: 'wrap',
-                }}
+    const table = useCustomTable(columns, tableData, {
+        isLoading: loading,
+
+        // تنظیمات اختصاصی این جدول
+        renderTopToolbarCustomActions: () => (
+            <Button
+                variant="contained"
+                onClick={handleSidebarToggleSidebar}
+                startIcon={<i className="ri-add-line" />}
             >
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
-                >
-                    افزودن کاربر
-                </Button>
-            </Box>
+                افزودن کاربر جدید
+            </Button>
         ),
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"} />
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
-            </Box>
-        ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
-        initialState: {
-            density: 'compact',
-            pagination: {
-                pageIndex: page,
-                pageSize: perPage,
-            }
-        },
-        rowCount: users.length,
-        state: {
-            isLoading: loading,
-            showProgressBars: loading,
-        },
-        muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
-        },
-        muiLinearProgressProps: {
-            color: 'primary',
-        },
-        muiCircularProgressProps: {
-            color: 'secondary',
-        },
-        muiPaginationProps: {
-            color: 'primary',
-            shape: 'rounded',
-            showRowsPerPage: true,
-            variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%',
-                },
-            },
-        },
-        paginationDisplayMode: 'pages',
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
     });
 
     return (
-        <MaterialReactTable table={table} />
+        <MaterialReactTable
+            table={table}
+        />
     );
 }
 

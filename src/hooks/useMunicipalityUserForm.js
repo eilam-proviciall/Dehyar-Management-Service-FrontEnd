@@ -13,16 +13,15 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
         villages: [],
     });
     const resetToStoredValues = useCallback(() => {
-        if (calendarStore.selectedEvent !== null) {
-            const event = calendarStore.selectedEvent;
-            setValue('title', event.title || '');
-            setValue('nid', event.nid || '');
-            setValues({
-                title: '',
-                nid: '',
-                role: '',
-            });
-        }
+        const event = calendarStore.selectedEvent;
+        setValue('title', '');
+        setValue('nid', '');
+        setValues({
+            title: '',
+            nid: '',
+            role: '',
+        });
+        setSidebarDetails({ status: 'add', defaultValues: {} });
     }, [setValue, calendarStore.selectedEvent]);
 
     const resetToEmptyValues = useCallback(() => {
@@ -55,8 +54,8 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
 
     const onSubmit = data => {
         const finallyVillages = data.covered_villages && data.covered_villages.map(village => {
-                return `${village.hierarchy_code && village.hierarchy_code || village.village_code }`;
-            });
+            return `${village.hierarchy_code && village.hierarchy_code || village.village_code}`;
+        });
 
         let processedData = {
             nid: data.nid,

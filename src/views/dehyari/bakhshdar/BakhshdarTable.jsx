@@ -1,15 +1,18 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
-import {useRouter} from 'next/navigation';
-import {MaterialReactTable, useMaterialReactTable} from 'material-react-table';
-import {GetHumanResourcesForBakhshdar} from "@/Services/humanResources";
-import {toast} from "react-toastify";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { GetHumanResourcesForBakhshdar } from "@/Services/humanResources";
+import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import Box from "@mui/material/Box";
-import {translateContractState} from "@utils/contractStateTranslator";
+import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
+import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
+import useCustomTable from '@/hooks/useCustomTable';
+import FilterChip from '@/@core/components/mui/FilterButton';
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -19,7 +22,17 @@ function BakhshdarTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
+    const [filterStatus, setFilterStatus] = useState('');
+    const buttonRefs = useRef([]);
 
+    useEffect(() => {
+        // Set initial highlight on the "همه" button
+        if (buttonRefs.current[0]) {
+            const { offsetWidth, offsetLeft } = buttonRefs.current[0];
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    }, []);
 
     const handleClick = (event, row) => {
         setAnchorEl(event.currentTarget);
@@ -28,6 +41,15 @@ function BakhshdarTable(props) {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleFilterChange = (status, index) => {
+        setFilterStatus(status);
+        const button = buttonRefs.current[index];
+        if (button) {
+            const { offsetWidth, offsetLeft } = button;
+            setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
     };
 
     const fetchData = async () => {
@@ -47,7 +69,12 @@ function BakhshdarTable(props) {
         }
     }, [loading]);
 
-    const tableData = useMemo(() => data, [data]);
+    const tableData = useMemo(() => {
+        if (!filterStatus) {
+            return data;
+        }
+        return data.filter(item => item.contract_state === filterStatus);
+    }, [data, filterStatus]);
 
     const columns = useMemo(
         () => [
@@ -67,13 +94,13 @@ function BakhshdarTable(props) {
                 accessorKey: 'village',
                 header: 'دهیاری',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue().approved_name}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'nid',
                 header: 'کدملی',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue()}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue()}</div>,
             },
             {
                 accessorKey: 'contract_state',
@@ -86,11 +113,11 @@ function BakhshdarTable(props) {
                         <ContractStateChip
                             label={contractStateValue}
                             onClick={() => {
-                                if (cell.getValue() =='pending_supervisor' || cell.getValue() =='rejected_to_supervisor' ) {
+                                if (cell.getValue() == 'pending_supervisor' || cell.getValue() == 'rejected_to_supervisor') {
                                     setSelectedRow(row.original);
                                     setPopupOpen(true);
                                 } else {
-                                    toast.warning("امکان تغییر وضعیت قرارداد از سوی شما وجود ندارد!!!");
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
                                 }
                             }}
                             avatar={role}
@@ -102,8 +129,8 @@ function BakhshdarTable(props) {
                 accessorKey: 'actions',
                 header: 'عملیات',
                 size: 150,
-                Cell: ({row}) => (
-                    <div style={{display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%'}}>
+                Cell: ({ row }) => (
+                    <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         {/*<CustomIconButton*/}
                         {/*    color={"error"}*/}
                         {/*    onClick={() => {*/}
@@ -120,7 +147,7 @@ function BakhshdarTable(props) {
                             }}
                             className={"rounded-full"}
                         >
-                            <i className='ri-eye-line'/>
+                            <i className='ri-eye-line' />
                         </CustomIconButton>
                     </div>
                 ),
@@ -129,61 +156,52 @@ function BakhshdarTable(props) {
         [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data:data,
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
+    const table = useCustomTable(columns, tableData, {
+        isLoading: loading,
+        renderTopToolbarCustomActions: () => (
+            <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+                <Box
+                    className={'bg-backgroundPaper rounded-full'}
+                    sx={{
+                        position: 'absolute',
+                        height: '90%',
+                        transition: 'width 0.3s, right 0.3s',
+                        ...highlightStyle,
+                    }}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[0] = el)}
+                    label="همه"
+                    onClick={() => handleFilterChange('', 0)}
+                    clickable
+                    variant={filterStatus === '' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[1] = el)}
+                    label="در انتظار تایید بخشدار"
+                    onClick={() => handleFilterChange('approved_by_supervisor', 1)}
+                    clickable
+                    variant={filterStatus === 'approved_by_supervisor' ? 'outlined' : 'filled'}
+                />
+                <FilterChip
+                    avatarValue="0"
+                    ref={(el) => (buttonRefs.current[2] = el)}
+                    label="نیازمند اصلاح"
+                    onClick={() => handleFilterChange('rejected_to_supervisor', 2)}
+                    clickable
+                    variant={filterStatus === 'rejected_to_supervisor' ? 'outlined' : 'filled'}
+                />
             </Box>
         ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
-        initialState: {
-            density: 'compact',
-        },
-        muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
-        },
-        muiLinearProgressProps: {
-            color: 'primary',
-        },
-        muiPaginationProps: {
-            color: 'primary',
-            shape: 'rounded',
-            showRowsPerPage: false,
-            variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%',
-                },
-            },
-        },
-        paginationDisplayMode: 'pages',
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
-    });
+    },
+    );
 
     return (
         <div>
-            <MaterialReactTable table={table}/>
-            <WorkFlowPopup open={popupOpen} setOpen={setPopupOpen} id={selectedRow?.salary_id} contractState={selectedRow?.contract_state} setLoading={setLoading} />
+            <MaterialReactTable table={table} />
+            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} nextState={'pending_governor'} />
         </div>
     );
 }

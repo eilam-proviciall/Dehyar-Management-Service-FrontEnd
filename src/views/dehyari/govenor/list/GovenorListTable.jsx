@@ -38,7 +38,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 if (user.geo_state) {
                     geoStates.push({
                         geo_type: 'state',
-                        geo_code: user.geo_state.toString(), // تبدیل به string با toString()
+                        geo_code: user.geo_state.toString(),
                     });
                 }
                 if (user.geo_city) {
