@@ -171,6 +171,7 @@ function CfoTable(props) {
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"secondary"}
+                            disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
                                 router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
