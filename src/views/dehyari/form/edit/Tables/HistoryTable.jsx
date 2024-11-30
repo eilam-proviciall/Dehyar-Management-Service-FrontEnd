@@ -90,14 +90,15 @@ const HistoryTable = () => {
                 Authorization: `Bearer ${window.localStorage.getItem('token')}`,
             }
         }).then((response) => {
-            const contractStateApproved = response.data.some(record => record.contract_state === 'approved');
-            setContractStateApprovedExists(contractStateApproved);  // Update state if there's a record with 'approved'
+            const allContractsApproved = response.data.every(record => record.contract_state === 'approved');
+            setContractStateApprovedExists(allContractsApproved);  // بروزرسانی وضعیت اگر تمام قراردادها تایید شده باشند
             setData(response.data);
             setLoading(false);
         }).catch(() => {
             setLoading(false);
         });
     }, []);
+
 
     const fetchData = async () => {
         setLoading(true);
@@ -216,7 +217,7 @@ const HistoryTable = () => {
                     variant="contained"
                     color="primary"
                     onClick={handleOpenModal}
-                    // disabled={contractStateApprovedExists}
+                    disabled={!contractStateApprovedExists}
                 >
                     افزودن قرارداد
                 </Button>
