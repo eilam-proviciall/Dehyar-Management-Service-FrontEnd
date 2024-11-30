@@ -24,25 +24,6 @@ const StepPersonalDetails = ({ validation }) => {
         return true;
     };
 
-    const validateBirthDate = (value) => {
-        const today = new Date();
-        // تبدیل تاریخ به تاریخ میلادی از Unix timestamp
-        const birthDate = value ? new Date(value * 1000) : null; // تبدیل از ثانیه به میلی‌ثانیه
-        if (!birthDate) {
-            return "تاریخ تولد وارد شده معتبر نیست.";
-        }
-
-        const age = today.getFullYear() - birthDate.getFullYear();
-        const month = today.getMonth() - birthDate.getMonth();
-
-        // اگر سن کمتر از ۱۸ سال باشد، خطا را برمی‌گرداند
-        if (age < 18 || (age === 18 && month < 0)) {
-            return "شما باید حداقل ۱۸ سال سن داشته باشید.";
-        }
-
-        return true;
-    };
-
     const textFieldStyle = {
         height: '45px',
         '& .MuiInputBase-root': {
@@ -147,7 +128,7 @@ const StepPersonalDetails = ({ validation }) => {
                             name="birthDate"
                             control={control}
                             defaultValue=""
-                            rules={{ ...validation.birthDate, validate: validateBirthDate }}
+                            rules={{ ...validation.birthDate }}
                             render={({ field: { onChange, value } }) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}

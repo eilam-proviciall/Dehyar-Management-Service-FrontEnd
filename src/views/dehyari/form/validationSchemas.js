@@ -1,3 +1,22 @@
+const validateBirthDate = (value) => {
+    const today = new Date();
+    // تبدیل تاریخ به تاریخ میلادی از Unix timestamp
+    const birthDate = value ? new Date(value * 1000) : null; // تبدیل از ثانیه به میلی‌ثانیه
+    if (!birthDate) {
+        return "تاریخ تولد وارد شده معتبر نیست.";
+    }
+
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+
+    // اگر سن کمتر از ۱۸ سال باشد، خطا را برمی‌گرداند
+    if (age < 18 || (age === 18 && month < 0)) {
+        return "شما باید حداقل ۱۸ سال سن داشته باشید.";
+    }
+
+    return true;
+};
+
 const validateNotFutureDate = (value) => {
     if (!value) return true;
     const today = new Date();
@@ -62,7 +81,7 @@ const validationSchemas = {
         },
         birthDate: {
             required: 'این فیلد الزامی است',
-            validate: validateNotFutureDate
+            validate: { validateNotFutureDate, validateBirthDate }
         },
         postalCode: {
             required: 'این فیلد الزامی است',

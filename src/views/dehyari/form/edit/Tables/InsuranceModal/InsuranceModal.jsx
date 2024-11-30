@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Backdrop,
     Box,
@@ -12,13 +12,14 @@ import {
     InputLabel, Select, MenuItem
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {useForm, Controller, FormProvider} from 'react-hook-form';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import axios from 'axios';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import {InsuranceHistory} from "@/Services/humanResources";
+import DateObject from "react-date-object";
+import { InsuranceHistory } from "@/Services/humanResources";
 
 const modalStyle = {
     position: 'absolute',
@@ -41,63 +42,153 @@ const validationSchemas = {
     },
     day: {
         required: 'تعداد ماه الزامی است',
-        min: {value: 1, message: 'حداقل ۱ ماه'},
+        min: { value: 1, message: 'حداقل ۱ ماه' },
     },
     insuranceWorkshop: {
         required: 'انتخاب کارگاه الزامی است',
     },
 };
 
-const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId = null}) => {
+// تابع تبدیل تاریخ شمسی به timestamp
+const convertPersianDateToTimestamp = (persianDate) => {
+    if (!persianDate) return null;
+    const [year, month, day] = persianDate.split('/');
+    const date = new DateObject({
+        calendar: persian,
+        date: `${year}/${month}/${day}`,
+        format: "YYYY/MM/DD"
+    });
+    return date.toUnix() * 1000; // تبدیل به میلی‌ثانیه
+};
+
+const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editId = null }) => {
     const methods = useForm();
     const [loading, setLoading] = useState(false);
+    const [existingRecords, setExistingRecords] = useState([]);
 
-    // اگر در حالت ویرایش هستیم، اطلاعات رکورد را دریافت می‌کنیم
+    // دریافت تمام سوابق بیمه برای بررسی تداخل
     useEffect(() => {
-        if (mode === 'edit' && editId) {
-            setLoading(true);
-            axios.get(`${InsuranceHistory()}/show/${editId}`, {
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
-                },
-            })
-                .then((response) => {
-                    methods.reset({
-                        start_date: response.data.data.start_date,
-                        end_date: response.data.data.end_date,
-                        month: response.data.data.month,
-                        days: response.data.data.days,
-                        dehyari_title: response.data.data.dehyari_title,
-                        insurance_workshop: response.data.data.insurance_workshop, // اطمینان از استفاده از نام صحیح فیلد
-                    });
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    toast.error('خطا در دریافت اطلاعات');
-                    setLoading(false);
+        const fetchExistingRecords = async () => {
+            try {
+                const humanResourceId = new URLSearchParams(window.location.search).get('param');
+                const response = await axios.get(`${InsuranceHistory()}/${humanResourceId}`, {
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                    },
                 });
-        } else if (mode === 'create') {
-            console.log("AAAAAAAAAAAA")
-            methods.reset({
-                start_date: null,
-                end_date: null,
-                month: '',
-                days: '',
-                dehyari_title: '',
-                insurance_workshop: '',
-            });
+                // حذف رکورد فعلی در حالت ویرایش
+                setExistingRecords(response.data.filter(record => record.id !== editId));
+            } catch (error) {
+                console.error('Error fetching existing records:', error);
+            }
+        };
+
+        if (open) {
+            fetchExistingRecords();
         }
-    }, [mode, editId, methods]);
+    }, [open, editId]);
+
+    // تابع بررسی تداخل تاریخ‌ها
+    const checkDateOverlap = (newStartDate, newEndDate) => {
+        console.log('New dates:', { newStartDate, newEndDate });
+        console.log('Existing records:', existingRecords);
+
+        if (!newStartDate || !newEndDate || existingRecords.length === 0) {
+            return { hasOverlap: false };
+        }
+
+        // تبدیل تاریخ‌های جدید به timestamp
+        const newStartTimestamp = newStartDate * 1000;
+        const newEndTimestamp = newEndDate * 1000;
+
+        console.log('New timestamps:', {
+            newStartTimestamp,
+            newEndTimestamp,
+            newStartDate: new Date(newStartTimestamp),
+            newEndDate: new Date(newEndTimestamp)
+        });
+
+        // مرتب کردن رکوردها بر اساس تاریخ شروع
+        const sortedRecords = [...existingRecords].sort((a, b) => {
+            const aTime = convertPersianDateToTimestamp(a.start_date);
+            const bTime = convertPersianDateToTimestamp(b.start_date);
+            return aTime - bTime;
+        });
+
+        console.log('Sorted records:', sortedRecords);
+
+        for (const record of sortedRecords) {
+            const existingStartTimestamp = convertPersianDateToTimestamp(record.start_date);
+            const existingEndTimestamp = convertPersianDateToTimestamp(record.end_date);
+
+            console.log('Checking overlap with record:', {
+                title: record.dehyari_title,
+                start: record.start_date,
+                end: record.end_date,
+                startTimestamp: existingStartTimestamp,
+                endTimestamp: existingEndTimestamp,
+                newStartTimestamp,
+                newEndTimestamp
+            });
+
+            // حالت‌های تداخل
+            const case1 = newStartTimestamp >= existingStartTimestamp && newStartTimestamp <= existingEndTimestamp;
+            const case2 = newEndTimestamp >= existingStartTimestamp && newEndTimestamp <= existingEndTimestamp;
+            const case3 = newStartTimestamp <= existingStartTimestamp && newEndTimestamp >= existingEndTimestamp;
+
+            console.log('Overlap cases:', { case1, case2, case3 });
+
+            if (case1 || case2 || case3) {
+                console.log('Overlap detected!');
+                return {
+                    hasOverlap: true,
+                    message: `این بازه زمانی با سابقه بیمه ${record.dehyari_title} تداخل دارد`
+                };
+            }
+        }
+
+        // اگر رکورد قبلی وجود دارد، تاریخ جدید باید بعد از آخرین تاریخ پایان باشد
+        if (sortedRecords.length > 0) {
+            const lastRecord = sortedRecords[sortedRecords.length - 1];
+            const lastEndTimestamp = convertPersianDateToTimestamp(lastRecord.end_date);
+
+            console.log('Checking last record:', {
+                lastEnd: lastRecord.end_date,
+                lastEndTimestamp,
+                newStartTimestamp
+            });
+
+            if (newStartTimestamp < lastEndTimestamp) {
+                console.log('Start date before last end date!');
+                return {
+                    hasOverlap: true,
+                    message: 'تاریخ شروع باید بعد از تاریخ پایان آخرین سابقه بیمه باشد'
+                };
+            }
+        }
+
+        return { hasOverlap: false };
+    };
 
     const handleSubmit = async (formData) => {
-        formData.human_resource_nid = new URLSearchParams(window.location.search).get('param')
+        formData.human_resource_nid = new URLSearchParams(window.location.search).get('param');
         setLoading(true);
+
         try {
             const isValid = await methods.trigger();
             if (!isValid) {
                 setLoading(false);
                 return;
             }
+
+            // بررسی تداخل تاریخ‌ها
+            const { hasOverlap, message } = checkDateOverlap(formData.start_date, formData.end_date);
+            if (hasOverlap) {
+                toast.error(message);
+                setLoading(false);
+                return;
+            }
+
             if (mode === 'create') {
                 console.log(formData)
                 // حالت ایجاد
@@ -148,7 +239,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
             BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500,
-                sx: {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+                sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
             }}
         >
             <Box sx={modalStyle}>
@@ -162,10 +253,10 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                         color: (theme) => theme.palette.grey[500],
                     }}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
 
-                <Typography variant="h5" sx={{textAlign: 'center', marginBottom: '20px'}}>
+                <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: '20px' }}>
                     {mode === 'create' ? 'ثبت سابقه بیمه' : 'ویرایش سابقه بیمه'}
                 </Typography>
 
@@ -180,7 +271,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                                         control={methods.control}
                                         defaultValue={null}
                                         rules={validationSchemas.start_date}
-                                        render={({field}) => (
+                                        render={({ field }) => (
                                             <DatePicker
                                                 value={field.value ? new Date(field.value * 1000) : null}
                                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -210,7 +301,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                                         control={methods.control}
                                         defaultValue={null}
                                         rules={validationSchemas.end_date}
-                                        render={({field}) => (
+                                        render={({ field }) => (
                                             <DatePicker
                                                 value={field.value ? new Date(field.value * 1000) : null}
                                                 onChange={(date) => field.onChange(date ? date.toUnix() : null)}
@@ -239,7 +330,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                                     control={methods.control}
                                     defaultValue=""
                                     rules={validationSchemas.days}
-                                    render={({field}) => (
+                                    render={({ field }) => (
                                         <TextField
                                             {...field}
                                             label="تعداد روز"
@@ -256,7 +347,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                                     name="dehyari_title"
                                     control={methods.control}
                                     defaultValue=""
-                                    render={({field}) => (
+                                    render={({ field }) => (
                                         <TextField
                                             {...field}
                                             label="عنوان محل کار"
@@ -276,7 +367,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                                     <Controller
                                         name="insurance_workshop"
                                         control={methods.control}
-                                        render={({field}) => (
+                                        render={({ field }) => (
                                             <Select {...field} label="کارگاه بیمه" size="small">
                                                 <MenuItem value="1">دهیاری</MenuItem>
                                                 <MenuItem value="2">سایر کارگاه‌ها</MenuItem>
@@ -288,7 +379,7 @@ const InsuranceModal = ({open, handleClose, refreshData, mode = 'create', editId
                         </Grid>
 
                         <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}
-                                sx={{marginTop: 3}}>
+                            sx={{ marginTop: 3 }}>
                             {loading ? 'در حال ارسال...' : 'ثبت'}
                         </Button>
                     </form>
