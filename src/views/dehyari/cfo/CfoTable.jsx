@@ -24,6 +24,7 @@ import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
+import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -33,6 +34,7 @@ function CfoTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [popupWorkflow, setPopupWorkflow] = useState(false);
     const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
     const [filterStatus, setFilterStatus] = useState('');
     const buttonRefs = useRef([]);
@@ -81,6 +83,16 @@ function CfoTable(props) {
             setHighlightStyle({ width: offsetWidth, right: offsetLeft });
         }
     };
+
+    const handleWorkflowHistory = (row) => {
+        if (row?.salary_id) {
+            setCurrentRow(row);  // مقداردهی صحیح به currentRow
+            setPopupWorkflow(true);  // باز کردن پنجره تاریخچه
+        } else {
+            toast.error("اطلاعات تاریخچه موجود نیست.");
+        }
+    };
+
 
     const fetchData = async () => {
         try {
@@ -188,6 +200,15 @@ function CfoTable(props) {
                         >
                             <i className="ri-printer-line" />
                         </CustomIconButton>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleWorkflowHistory(row.original);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-history-line" />
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -264,6 +285,16 @@ function CfoTable(props) {
                 <span>طرف قرارداد</span></Typography>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
+            <HistoryWorkflowPopup
+                open={popupWorkflow}
+                onClose={() => setPopupWorkflow(false)}
+                salaryId={currentRow?.salary_id}
+                employeeInfo={{
+                    fullName: `${currentRow?.first_name} ${currentRow?.last_name}`,
+                    position: currentRow?.job_type,
+                }}
+            />
+
         </div>
     );
 }

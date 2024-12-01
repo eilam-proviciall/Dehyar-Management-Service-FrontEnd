@@ -5,4 +5,8 @@ const getSalary = (HrId) => {
     return `${BaseUrl}/ahkam/salary/show?hr=${HrId}`
 }
 
-export {getSalary}
+const getHistoryWorkflow = (salaryId) => {
+    return `${BaseUrl}/salaries/${salaryId}/workflow-transitions`
+}
+
+export { getSalary, getHistoryWorkflow }
