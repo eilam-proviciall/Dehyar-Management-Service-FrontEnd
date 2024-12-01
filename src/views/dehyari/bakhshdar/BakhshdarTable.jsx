@@ -13,6 +13,7 @@ import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
+import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
 
 function BakhshdarTable(props) {
     const [data, setData] = useState([]);
@@ -22,6 +23,7 @@ function BakhshdarTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [popupWorkflow, setPopupWorkflow] = useState(false);
     const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
     const [filterStatus, setFilterStatus] = useState('');
     const buttonRefs = useRef([]);
@@ -49,6 +51,15 @@ function BakhshdarTable(props) {
         if (button) {
             const { offsetWidth, offsetLeft } = button;
             setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    };
+
+    const handleWorkflowHistory = (row) => {
+        if (row?.salary_id) {
+            setSelectedRow(row);  // مقداردهی صحیح به currentRow
+            setPopupWorkflow(true);  // باز کردن پنجره تاریخچه
+        } else {
+            toast.error("اطلاعات تاریخچه موجود نیست.");
         }
     };
 
@@ -149,6 +160,15 @@ function BakhshdarTable(props) {
                         >
                             <i className='ri-eye-line' />
                         </CustomIconButton>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleWorkflowHistory(row.original);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-history-line" />
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -202,6 +222,15 @@ function BakhshdarTable(props) {
         <div>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} nextState={'pending_governor'} />
+            <HistoryWorkflowPopup
+                open={popupWorkflow}
+                onClose={() => setPopupWorkflow(false)}
+                salaryId={selectedRow?.salary_id}
+                employeeInfo={{
+                    fullName: `${selectedRow?.first_name} ${selectedRow?.last_name}`,
+                    position: selectedRow?.job_type,
+                }}
+            />
         </div>
     );
 }
