@@ -1,30 +1,74 @@
 import React from 'react';
-import { Button, Card, CardContent } from '@mui/material';
+import { Button, Card, CardContent, Box } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
+    const handleReturn = () => {
+        window.history.back();
+    };
+
     return (
         <Card>
             <CardContent className="flex flex-col gap-4">
-                <AnimatePresence>
-                    <motion.div whileHover={{ scale: 0.9 }} whileTap={{ scale: 0.8 }}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            color={showTable ? "primary" : "error"} // تغییر رنگ دکمه
-                            startIcon={<PictureAsPdfIcon />}
-                            onClick={onSwitch}
-                        >
-                            {showTable ? "اطلاعات فردی" : "اطلاعات منابع انسانی"} {/* تغییر متن دکمه */}
-                        </Button>
-                    </motion.div>
-                </AnimatePresence>
-
-                {!showTable && ( // دکمه ذخیره فقط زمانی نمایش داده شود که در حالت فرم باشیم
+                <Box
+                    sx={{
+                        display: 'grid',
+                        backgroundColor: 'primary.main',
+                        p: 4,
+                        borderRadius: 1,
+                        gap: 2
+                    }}
+                >
                     <AnimatePresence>
-                        <motion.div whileHover={{ scale: 0.9 }} whileTap={{ scale: 0.8 }}>
+                        <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
+                            <Button
+                                fullWidth
+                                variant={!showTable ? "contained" : "text"}
+                                color="inherit"
+                                startIcon={<PersonIcon />}
+                                onClick={() => onSwitch(false)}
+                                sx={{
+                                    backgroundColor: !showTable ? 'white' : 'transparent',
+                                    color: !showTable ? 'primary.main' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: !showTable ? 'white' : 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }}
+                            >
+                                اطلاعات فردی
+                            </Button>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
+                            <Button
+                                fullWidth
+                                variant={showTable ? "contained" : "text"}
+                                color="inherit"
+                                startIcon={<GroupIcon />}
+                                onClick={() => onSwitch(true)}
+                                sx={{
+                                    backgroundColor: showTable ? 'white' : 'transparent',
+                                    color: showTable ? 'primary.main' : 'inherit',
+                                    '&:hover': {
+                                        backgroundColor: showTable ? 'white' : 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }}
+                            >
+                                اطلاعات منابع انسانی
+                            </Button>
+                        </motion.div>
+                    </AnimatePresence>
+                </Box>
+
+                {!showTable && (
+                    <AnimatePresence>
+                        <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
                             <Button
                                 type="submit"
                                 fullWidth
@@ -38,6 +82,26 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                         </motion.div>
                     </AnimatePresence>
                 )}
+
+                <AnimatePresence>
+                    <motion.div whileHover={{ scale: 0.95 }} whileTap={{ scale: 0.9 }}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="inherit"
+                            startIcon={<KeyboardReturnIcon />}
+                            onClick={handleReturn}
+                            sx={{
+                                backgroundColor: 'grey.300',
+                                '&:hover': {
+                                    backgroundColor: 'grey.400'
+                                }
+                            }}
+                        >
+                            بازگشت به کارتابل
+                        </Button>
+                    </motion.div>
+                </AnimatePresence>
             </CardContent>
         </Card>
     );
