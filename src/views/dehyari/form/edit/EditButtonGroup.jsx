@@ -33,7 +33,7 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                                 onClick={() => onSwitch(false)}
                                 sx={{
                                     backgroundColor: !showTable ? 'white' : 'transparent',
-                                    color: !showTable ? 'primary.main' : 'inherit',
+                                    color: !showTable ? 'primary.main' : '#fff',
                                     '&:hover': {
                                         backgroundColor: !showTable ? 'white' : 'rgba(255, 255, 255, 0.1)'
                                     }
@@ -54,7 +54,7 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                                 onClick={() => onSwitch(true)}
                                 sx={{
                                     backgroundColor: showTable ? 'white' : 'transparent',
-                                    color: showTable ? 'primary.main' : 'inherit',
+                                    color: showTable ? 'primary.main' : '#fff',
                                     '&:hover': {
                                         backgroundColor: showTable ? 'white' : 'rgba(255, 255, 255, 0.1)'
                                     }
