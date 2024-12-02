@@ -22,8 +22,8 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     const [totalRows, setTotalRows] = useState(0);
 
     const fetchUsers = async () => {
-        console.log(userGeoState);
-        setLoading(true);
+        if (!userGeoState) return;
+
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}&geo_state=${userGeoState}`, { requiresAuth: true });
             const responseData = response.data.data;
@@ -33,14 +33,18 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
             setUsers(usersWithGeo);
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchUsers();
-    }, [page, perPage]);
+    }, [page, perPage, userGeoState]);
+
+    useEffect(() => {
+        if (loading) {
+            fetchUsers();
+        }
+    }, [loading]);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -220,7 +224,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 pageSize: perPage,
             },
         },
-        
+
         // تنظیمات اختصاصی این جدول
         renderTopToolbarCustomActions: () => (
             <Button
