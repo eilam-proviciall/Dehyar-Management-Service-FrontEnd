@@ -11,6 +11,7 @@ import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import { getGeoDetails } from "@/Services/CountryDivision";
 import useCustomTable from '@/hooks/useCustomTable';
+import GeoService from '@/Services/GeoService';
 
 
 const UserListTable = ({
@@ -26,85 +27,16 @@ const UserListTable = ({
     const [selectedRow, setSelectedRow] = useState(null);
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(10);
-    const open = Boolean(anchorEl);
+    const [totalRows, setTotalRows] = useState(0);
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
-            const usersData = response.data.data;
-            console.log(usersData);
-
-
-            const geoStates = [];
-            const geoCities = [];
-            const geoRegions = [];
-
-            usersData.forEach(user => {
-                if (user.geo_state) {
-                    geoStates.push({
-                        geo_type: 'state',
-                        geo_code: user.geo_state.toString(), // تبدیل به string با toString()
-                    });
-                }
-                if (user.geo_city) {
-                    geoCities.push({
-                        geo_type: 'city',
-                        geo_code: user.geo_city.toString(), // تبدیل به string با toString()
-                    });
-                }
-                if (user.geo_region) {
-                    user.geo_region.forEach(region => {
-                        if (region.hierarchy_code) {
-                            geoRegions.push({
-                                geo_type: 'region',
-                                geo_code: region.hierarchy_code.toString(),
-                            });
-                        }
-                    });
-                }
-            });
-
-            const geoDetails = [
-                ...geoStates,
-                ...geoCities,
-                ...geoRegions,
-            ];
-
-            console.log(geoDetails);
-
-
-            const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
-            const geoData = geoResponse.data;
-
-            const usersWithGeo = usersData.map(user => {
-                const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
-                const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-
-                // برای geo_region
-                let regionNames = [];
-                if (Array.isArray(user.geo_region)) {
-                    regionNames = user.geo_region.map(region => {
-                        const regionInfo = geoData.find(geo =>
-                            geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
-                        );
-                        return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
-                    });
-                } else if (user.geo_region) {
-                    const regionInfo = geoData.find(geo =>
-                        geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
-                    );
-                    regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
-                }
-
-                return {
-                    ...user,
-                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region_name: regionNames.join(' - ') || '-', // نمایش همه بخش‌ها با جداکننده
-                };
-            });
-
+            const responseData = response.data.data;
+            const usersData = responseData.data;
+            setTotalRows(responseData.total);
+            const usersWithGeo = await GeoService.translateGeoData(usersData);
             setUsers(usersWithGeo);
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
@@ -114,10 +46,14 @@ const UserListTable = ({
     };
 
     useEffect(() => {
+        fetchUsers();
+    }, [page, perPage]);
+
+    useEffect(() => {
         if (loading) {
             fetchUsers();
         }
-    }, [loading, page, perPage]);
+    }, [loading]);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -240,7 +176,7 @@ const UserListTable = ({
                     const rowId = row.id;
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
+                            {!dehyaries ? '-' : `${dehyaries.length || 0} روستا`}
                         </div>
                     );
                 }
@@ -296,6 +232,25 @@ const UserListTable = ({
 
     const table = useCustomTable(columns, tableData, {
         isLoading: loading,
+        enablePagination: true,
+        manualPagination: true,
+        rowCount: totalRows,
+        onPaginationChange: updater => {
+            if (typeof updater === 'function') {
+                const newState = updater({ pageIndex: page, pageSize: perPage });
+                setPage(newState.pageIndex);
+                setPerPage(newState.pageSize);
+            } else {
+                setPage(updater.pageIndex);
+                setPerPage(updater.pageSize);
+            }
+        },
+        state: {
+            pagination: {
+                pageIndex: page,
+                pageSize: perPage,
+            },
+        },
 
         // تنظیمات اختصاصی این جدول
         renderTopToolbarCustomActions: () => (

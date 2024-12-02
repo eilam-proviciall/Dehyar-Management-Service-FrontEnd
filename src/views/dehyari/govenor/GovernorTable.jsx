@@ -19,6 +19,7 @@ import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
+import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -28,6 +29,7 @@ function GovernorTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [popupWorkflow, setPopupWorkflow] = useState(false);
     const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
     const [filterStatus, setFilterStatus] = useState('');
     const buttonRefs = useRef([]);
@@ -55,6 +57,15 @@ function GovernorTable(props) {
         if (button) {
             const { offsetWidth, offsetLeft } = button;
             setHighlightStyle({ width: offsetWidth, right: offsetLeft });
+        }
+    };
+
+    const handleWorkflowHistory = (row) => {
+        if (row?.salary_id) {
+            setSelectedRow(row);
+            setPopupWorkflow(true);
+        } else {
+            toast.error("اطلاعات تاریخچه موجود نیست.");
         }
     };
 
@@ -147,6 +158,15 @@ function GovernorTable(props) {
                         >
                             <i className='ri-eye-line' />
                         </CustomIconButton>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleWorkflowHistory(row.original);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-history-line" />
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -200,6 +220,15 @@ function GovernorTable(props) {
         <div>
             <MaterialReactTable columns={columns} data={data} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={2} setLoading={setLoading} nextState={'approved'} />
+            <HistoryWorkflowPopup
+                open={popupWorkflow}
+                onClose={() => setPopupWorkflow(false)}
+                salaryId={selectedRow?.salary_id}
+                employeeInfo={{
+                    fullName: `${selectedRow?.first_name} ${selectedRow?.last_name}`,
+                    position: selectedRow?.job_type,
+                }}
+            />
         </div>
     )
         ;

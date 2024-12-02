@@ -1,19 +1,19 @@
 import React from 'react';
-import {Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material';
-import {Controller, useFormContext} from 'react-hook-form';
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
 import DividerSimple from '@components/common/Divider/DividerSimple';
 import Autocomplete from '@mui/material/Autocomplete';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import {useFetchCities} from '@hooks/useFetchCities';
+import { useFetchCities } from '@hooks/useFetchCities';
 import Chip from '@mui/material/Chip';
 import PersonalOptions from '@data/PersonalOption.json';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
-const EditStepPersonalDetails = ({validation}) => {
-    const {control, register, getValues, setValue, formState: {errors}} = useFormContext();
-    const {cities, isLoading, error} = useFetchCities(true);
+const EditStepPersonalDetails = ({ validation }) => {
+    const { control, register, getValues, setValue, formState: { errors } } = useFormContext();
+    const { cities, isLoading, error } = useFetchCities(true);
 
     const validatePhoneNumber = (phoneNumber) => {
         const phoneRegex = /^[0-9]{1,11}$/;
@@ -35,7 +35,7 @@ const EditStepPersonalDetails = ({validation}) => {
         <>
             <Grid container spacing={4} mt={1}>
                 <Grid item xs={12}>
-                    <DividerSimple title='اطلاعات شخصی'/>
+                    <DividerSimple title='اطلاعات شخصی' />
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
@@ -44,7 +44,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.firstName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -64,7 +64,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.lastName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -84,7 +84,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.fatherName}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -105,7 +105,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.nationalCode}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -128,8 +128,8 @@ const EditStepPersonalDetails = ({validation}) => {
                             name="birthDate"
                             control={control}
                             defaultValue=""
-                            rules={validation.birthDate}
-                            render={({field: {onChange, value}}) => (
+                            rules={{ ...validation.birthDate }}
+                            render={({ field: { onChange, value } }) => (
                                 <DatePicker
                                     value={value ? new Date(value * 1000) : ""}
                                     onChange={(date) => onChange(date ? date.toUnix() : "")}
@@ -144,7 +144,7 @@ const EditStepPersonalDetails = ({validation}) => {
                                             error={!!errors.birthDate}
                                             helperText={errors.birthDate && errors.birthDate.message}
                                             inputProps={{
-                                                style: {textAlign: 'end'}
+                                                style: { textAlign: 'end' }
                                             }}
                                         />
                                     }
@@ -161,7 +161,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.personalId}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -182,7 +182,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.birthPlace}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -213,7 +213,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.issuancePlace}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <Autocomplete
                                 options={cities}
                                 value={cities.find(option => option.hierarchy_code === field.value) || null} // تنظیم مقدار پیش‌فرض
@@ -246,7 +246,7 @@ const EditStepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.gender}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="جنسیت"
@@ -274,7 +274,7 @@ const EditStepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.maritalStatus}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="وضعیت تاهل"
@@ -302,7 +302,7 @@ const EditStepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.veteranStatus}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="وضعیت ایثارگری"
@@ -330,7 +330,7 @@ const EditStepPersonalDetails = ({validation}) => {
                             control={control}
                             defaultValue=""
                             rules={validation.militaryService}
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <Select
                                     {...field}
                                     label="نظام وظیفه"
@@ -355,7 +355,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.postalCode}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -375,7 +375,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.insuranceIdentifier}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -396,7 +396,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.landlineNumber}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}
@@ -417,7 +417,7 @@ const EditStepPersonalDetails = ({validation}) => {
                         control={control}
                         defaultValue=""
                         rules={validation.residenceAddress}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <TextField
                                 fullWidth
                                 sx={textFieldStyle}

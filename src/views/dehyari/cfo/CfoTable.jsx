@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
-import { Box, IconButton, Menu, MenuItem } from '@mui/material';
+import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
@@ -24,6 +24,7 @@ import ContractStateChip from "@components/badges/ContractStateChip";
 import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
+import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -33,6 +34,7 @@ function CfoTable(props) {
     const open = Boolean(anchorEl);
     const router = useRouter();
     const [popupOpen, setPopupOpen] = useState(false);
+    const [popupWorkflow, setPopupWorkflow] = useState(false);
     const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
     const [filterStatus, setFilterStatus] = useState('');
     const buttonRefs = useRef([]);
@@ -81,6 +83,16 @@ function CfoTable(props) {
             setHighlightStyle({ width: offsetWidth, right: offsetLeft });
         }
     };
+
+    const handleWorkflowHistory = (row) => {
+        if (row?.salary_id) {
+            setCurrentRow(row);  // مقداردهی صحیح به currentRow
+            setPopupWorkflow(true);  // باز کردن پنجره تاریخچه
+        } else {
+            toast.error("اطلاعات تاریخچه موجود نیست.");
+        }
+    };
+
 
     const fetchData = async () => {
         try {
@@ -171,6 +183,7 @@ function CfoTable(props) {
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"secondary"}
+                            disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
                                 router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
@@ -187,6 +200,15 @@ function CfoTable(props) {
                         >
                             <i className="ri-printer-line" />
                         </CustomIconButton>
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                handleWorkflowHistory(row.original);
+                            }}
+                            className={"rounded-full"}
+                        >
+                            < i class="ri-history-line" />
+                        </CustomIconButton>
                     </div>
                 ),
             },
@@ -198,6 +220,9 @@ function CfoTable(props) {
         isLoading: loading,
         renderTopToolbarCustomActions: () => (
             <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+                <Button variant='contained' onClick={() => router.push('/dehyari/form')} className={"rounded-full h-8"}>
+                    <i className='ri-add-line' />
+                </Button>
                 <Box
                     className={'bg-backgroundPaper rounded-full'}
                     sx={{
@@ -257,9 +282,19 @@ function CfoTable(props) {
                         }}
                     />
                 </span>
-                <span>طرف قرارداد</span></Typography>
+                <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
+            <HistoryWorkflowPopup
+                open={popupWorkflow}
+                onClose={() => setPopupWorkflow(false)}
+                salaryId={currentRow?.salary_id}
+                employeeInfo={{
+                    fullName: `${currentRow?.first_name} ${currentRow?.last_name}`,
+                    position: currentRow?.job_type,
+                }}
+            />
+
         </div>
     );
 }

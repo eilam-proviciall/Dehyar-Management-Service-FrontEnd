@@ -49,7 +49,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.CFO]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/cfo/table'
         },
@@ -57,11 +57,6 @@ const accessControl = {
             label: "تشکیلات دهیاری",
             icon: < i className="ri-organization-chart" />,
             href: '/dehyari'
-        },
-        {
-            label: "ثبت اطلاعات پرسنلی",
-            icon: < i className="ri-upload-line" />,
-            href: '/dehyari/form'
         },
         { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
     ],
@@ -91,11 +86,11 @@ const accessControl = {
             icon: < i className="ri-organization-chart" />,
             href: '/dehyari'
         },
-        {
-            label: "ثبت اطلاعات پرسنلی",
-            icon: < i className="ri-upload-line" />,
-            href: '/dehyari/form'
-        },
+        // {
+        //     label: "ثبت اطلاعات پرسنلی",
+        //     icon: < i className="ri-upload-line" />,
+        //     href: '/dehyari/form'
+        // },
         { label: 'ویرایش اطلاعات پرسنلی', href: '/dehyari/form/edit', showOnSidebar: false },
         {
             label: "جدول خطا ها",
@@ -120,7 +115,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.GOVERNOR]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/governor/table'
         },
@@ -132,7 +127,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/bakhshdar/table'
         },

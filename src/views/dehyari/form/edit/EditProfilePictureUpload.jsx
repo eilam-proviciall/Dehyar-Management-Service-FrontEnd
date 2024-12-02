@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {useFormContext} from 'react-hook-form';
-import {FilePond, registerPlugin} from 'react-filepond';
+import React, { useState, useRef, useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
@@ -9,19 +9,19 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {styled} from '@mui/material/styles';
-import {toast, ToastContainer} from 'react-toastify';
+import { styled } from '@mui/material/styles';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 registerPlugin(FilePondPluginImagePreview, FilePondPluginFileEncode);
 
-const CustomGrid = styled(Grid)(({theme}) => ({
+const CustomGrid = styled(Grid)(({ theme }) => ({
     maxWidth: '300px',
     minWidth: '350px',
     margin: '0 auto',
 }));
 
-const CenteredGrid = styled(Grid)(({theme}) => ({
+const CenteredGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -29,10 +29,12 @@ const CenteredGrid = styled(Grid)(({theme}) => ({
     textAlign: 'center',
 }));
 
-const EditProfilePictureUpload = ({defaultProfilePicture}) => {
-    const {setValue} = useFormContext();
+const EditProfilePictureUpload = ({ defaultProfilePicture }) => {
+    const { setValue, watch } = useFormContext();
     const [files, setFiles] = useState([]);
     const pondRef = useRef(null);
+    const firstName = watch('firstName');
+    const lastName = watch('lastName');
 
     useEffect(() => {
         if (defaultProfilePicture) {
@@ -102,9 +104,16 @@ const EditProfilePictureUpload = ({defaultProfilePicture}) => {
                         fileValidateSizeLabelMaxFileSizeExceeded="حجم فایل نباید بیشتر از 200KB باشد"
                         fileValidateSizeLabelMaxFileSize="حجم فایل مجاز: {filesize}"
                     />
+                    {firstName && lastName && (
+                        <CenteredGrid item xs={12}>
+                            <Typography variant="body1" color="text.primary" sx={{ mt: 1 }}>
+                                {`${firstName} ${lastName}`}
+                            </Typography>
+                        </CenteredGrid>
+                    )}
                 </CardContent>
             </Card>
-            <ToastContainer/>
+            <ToastContainer />
         </>
     );
 };

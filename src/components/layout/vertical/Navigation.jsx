@@ -53,7 +53,7 @@ const MenuToggleSvg = (
 
 const Navigation = props => {
   // Props
-  const {  mode, systemMode } = props
+  const { mode, systemMode } = props
 
   // Hooks
   const verticalNavOptions = useVerticalNav()
@@ -112,12 +112,13 @@ const Navigation = props => {
       // when semiDark is enabled and the mode or systemMode is light
       {...(isSemiDark &&
         !isDark && {
-          'data-mui-color-scheme': 'dark'
-        })}
+        'data-mui-color-scheme': 'dark'
+      })}
     >
       {/* Nav Header including Logo & nav toggle icons  */}
       <NavHeader>
         <Logo />
+        {!isCollapsed && (<span className='text-base font-medium text-textPrimary'>پنجره واحد خدمات</span>)}
         {!(isCollapsed && !isHovered) && (
           <NavCollapseIcons
             lockedIcon={MenuToggleSvg}
@@ -129,7 +130,7 @@ const Navigation = props => {
         )}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
-      <VerticalMenu  scrollMenu={scrollMenu} />
+      <VerticalMenu scrollMenu={scrollMenu} />
     </VerticalNav>
   )
 }
