@@ -19,20 +19,18 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     const [selectedRow, setSelectedRow] = useState(null);
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(10);
-    const open = Boolean(anchorEl);
+    const [totalRows, setTotalRows] = useState(0);
 
     const fetchUsers = async () => {
         console.log(userGeoState);
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}&geo_state=${userGeoState}`, { requiresAuth: true });
-            const usersData = response.data.data.data;
-            // user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
-
-            // استفاده از سرویس جدید برای ترجمه اطلاعات جغرافیایی
+            const responseData = response.data.data;
+            const usersData = responseData.data;
+            setTotalRows(responseData.total);
             const usersWithGeo = await GeoService.translateGeoData(usersData);
             setUsers(usersWithGeo);
-
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
         } finally {
@@ -41,10 +39,8 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
     };
 
     useEffect(() => {
-        if (loading && userGeoState) {
-            fetchUsers();
-        }
-    }, [loading, page, perPage]);
+        fetchUsers();
+    }, [page, perPage]);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -205,7 +201,26 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
 
     const table = useCustomTable(columns, tableData, {
         isLoading: loading,
-
+        enablePagination: true,
+        manualPagination: true,
+        rowCount: totalRows,
+        onPaginationChange: updater => {
+            if (typeof updater === 'function') {
+                const newState = updater({ pageIndex: page, pageSize: perPage });
+                setPage(newState.pageIndex);
+                setPerPage(newState.pageSize);
+            } else {
+                setPage(updater.pageIndex);
+                setPerPage(updater.pageSize);
+            }
+        },
+        state: {
+            pagination: {
+                pageIndex: page,
+                pageSize: perPage,
+            },
+        },
+        
         // تنظیمات اختصاصی این جدول
         renderTopToolbarCustomActions: () => (
             <Button
