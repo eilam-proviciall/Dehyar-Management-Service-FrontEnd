@@ -32,7 +32,7 @@ const UserListTable = ({
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
-            const usersData = response.data.data;
+            const usersData = response.data.data.data;
             console.log(usersData);
 
 
@@ -44,18 +44,19 @@ const UserListTable = ({
                 if (user.geo_state) {
                     geoStates.push({
                         geo_type: 'state',
-                        geo_code: user.geo_state.toString(), // تبدیل به string با toString()
+                        geo_code: user.geo_state.toString(),
                     });
                 }
                 if (user.geo_city) {
                     geoCities.push({
                         geo_type: 'city',
-                        geo_code: user.geo_city.toString(), // تبدیل به string با toString()
+                        geo_code: user.geo_city.toString(),
                     });
                 }
                 if (user.geo_region) {
-                    user.geo_region.forEach(region => {
-                        if (region.hierarchy_code) {
+                    const regions = Array.isArray(user.geo_region) ? user.geo_region : [user.geo_region];
+                    regions.forEach(region => {
+                        if (region && region.hierarchy_code) {
                             geoRegions.push({
                                 geo_type: 'region',
                                 geo_code: region.hierarchy_code.toString(),
@@ -240,7 +241,7 @@ const UserListTable = ({
                     const rowId = row.id;
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
+                            {!dehyaries ? '-' : `${dehyaries.length || 0} روستا`}
                         </div>
                     );
                 }
