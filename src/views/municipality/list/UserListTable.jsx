@@ -11,6 +11,7 @@ import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
 import { getGeoDetails } from "@/Services/CountryDivision";
 import useCustomTable from '@/hooks/useCustomTable';
+import GeoService from '@/Services/GeoService';
 
 
 const UserListTable = ({
@@ -35,77 +36,7 @@ const UserListTable = ({
             const usersData = response.data.data.data;
             console.log(usersData);
 
-
-            const geoStates = [];
-            const geoCities = [];
-            const geoRegions = [];
-
-            usersData.forEach(user => {
-                if (user.geo_state) {
-                    geoStates.push({
-                        geo_type: 'state',
-                        geo_code: user.geo_state.toString(),
-                    });
-                }
-                if (user.geo_city) {
-                    geoCities.push({
-                        geo_type: 'city',
-                        geo_code: user.geo_city.toString(),
-                    });
-                }
-                if (user.geo_region) {
-                    const regions = Array.isArray(user.geo_region) ? user.geo_region : [user.geo_region];
-                    regions.forEach(region => {
-                        if (region) {
-                            geoRegions.push({
-                                geo_type: 'region',
-                                geo_code: region.toString(),
-                            });
-                        }
-                    });
-                }
-            });
-
-            const geoDetails = [
-                ...geoStates,
-                ...geoCities,
-                ...geoRegions,
-            ];
-
-            console.log(geoDetails);
-
-
-            const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
-            const geoData = geoResponse.data;
-
-            const usersWithGeo = usersData.map(user => {
-                const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
-                const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-
-                // برای geo_region
-                let regionNames = [];
-                if (Array.isArray(user.geo_region)) {
-                    regionNames = user.geo_region.map(region => {
-                        const regionInfo = geoData.find(geo =>
-                            geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
-                        );
-                        return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
-                    });
-                } else if (user.geo_region) {
-                    const regionInfo = geoData.find(geo =>
-                        geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
-                    );
-                    regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
-                }
-
-                return {
-                    ...user,
-                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region_name: regionNames.join(' - ') || '-', // نمایش همه بخش‌ها با جداکننده
-                };
-            });
-
+            const usersWithGeo = await GeoService.translateGeoData(usersData);
             setUsers(usersWithGeo);
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
