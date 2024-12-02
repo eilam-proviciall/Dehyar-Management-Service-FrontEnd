@@ -92,9 +92,10 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                             startIcon={<KeyboardReturnIcon />}
                             onClick={handleReturn}
                             sx={{
-                                backgroundColor: 'grey.300',
+                                backgroundColor: 'secondary.main',
+                                color: 'secondary.contrastText',
                                 '&:hover': {
-                                    backgroundColor: 'grey.400'
+                                    color: 'black'
                                 }
                             }}
                         >
