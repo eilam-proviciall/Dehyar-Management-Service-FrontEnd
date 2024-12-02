@@ -27,15 +27,15 @@ const UserListTable = ({
     const [selectedRow, setSelectedRow] = useState(null);
     const [page, setPage] = useState(0);
     const [perPage, setPerPage] = useState(10);
-    const open = Boolean(anchorEl);
+    const [totalRows, setTotalRows] = useState(0);
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
-            const usersData = response.data.data.data;
-            console.log(usersData);
-
+            const responseData = response.data.data;
+            const usersData = responseData.data;
+            setTotalRows(responseData.total);
             const usersWithGeo = await GeoService.translateGeoData(usersData);
             setUsers(usersWithGeo);
         } catch (error) {
@@ -46,10 +46,14 @@ const UserListTable = ({
     };
 
     useEffect(() => {
+        fetchUsers();
+    }, [page, perPage]);
+
+    useEffect(() => {
         if (loading) {
             fetchUsers();
         }
-    }, [loading, page, perPage]);
+    }, [loading]);
 
     // Handlers
     const handleClick = (event, row) => {
@@ -228,6 +232,25 @@ const UserListTable = ({
 
     const table = useCustomTable(columns, tableData, {
         isLoading: loading,
+        enablePagination: true,
+        manualPagination: true,
+        rowCount: totalRows,
+        onPaginationChange: updater => {
+            if (typeof updater === 'function') {
+                const newState = updater({ pageIndex: page, pageSize: perPage });
+                setPage(newState.pageIndex);
+                setPerPage(newState.pageSize);
+            } else {
+                setPage(updater.pageIndex);
+                setPerPage(updater.pageSize);
+            }
+        },
+        state: {
+            pagination: {
+                pageIndex: page,
+                pageSize: perPage,
+            },
+        },
 
         // تنظیمات اختصاصی این جدول
         renderTopToolbarCustomActions: () => (
