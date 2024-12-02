@@ -68,6 +68,36 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
 
     // دریافت تمام سوابق بیمه برای بررسی تداخل
     useEffect(() => {
+        if (mode === 'edit' && editId) {
+            setLoading(true);
+            axios.get(`${InsuranceHistory()}/show/${editId}`, {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+                },
+            }).then((response) => {
+                methods.reset({
+                    start_date: response.data.data.start_date,
+                    end_date: response.data.data.end_date,
+                    month: response.data.data.month,
+                    days: response.data.data.days,
+                    dehyari_title: response.data.data.dehyari_title,
+                    insurance_workshop: response.data.data.insurance_workshop,
+                });
+                setLoading(false);
+            }).catch((error) => {
+                toast.error('خطا در دریافت اطلاعات');
+                setLoading(false);
+            });
+        } else if (mode === 'create') {
+            methods.reset({
+                start_date: null,
+                end_date: null,
+                month: null,
+                days: null,
+                dehyari_title: null,
+                insurance_workshop: null,
+            });
+        }
         const fetchExistingRecords = async () => {
             try {
                 const humanResourceId = new URLSearchParams(window.location.search).get('param');
