@@ -25,8 +25,9 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
         console.log(userGeoState);
         setLoading(true);
         try {
-            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
+            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}&geo_state=${userGeoState}`, { requiresAuth: true });
             const usersData = response.data.data.data;
+            // user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
 
             // استفاده از سرویس جدید برای ترجمه اطلاعات جغرافیایی
             const usersWithGeo = await GeoService.translateGeoData(usersData);

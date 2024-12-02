@@ -30,6 +30,9 @@ function HistoryWorkflowPopup({ open, onClose, salaryId, employeeInfo }) {
     const fetchHistory = async (salaryId) => {
         setLoading(true);
         try {
+            const response = api.get(getHistoryWorkflow(salaryId), { requiresAuth: true });
+            console.log("Response => ", response);
+            
             const mockData = [
                 {
                     id: 1,
