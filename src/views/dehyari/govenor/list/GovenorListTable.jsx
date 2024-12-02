@@ -9,7 +9,9 @@ import roles from "@data/roles.json";
 import { toast } from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import CustomIconButton from "@core/components/mui/IconButton";
-import {getGeoDetails} from "@/Services/CountryDivision";
+import { getGeoDetails } from "@/Services/CountryDivision";
+import useCustomTable from '@/hooks/useCustomTable';
+import GeoService from '@/Services/GeoService';
 
 const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSidebarOpen, setSidebarDetails, loading, setLoading, userGeoState }) => {
     const [users, setUsers] = useState([]);
@@ -23,80 +25,13 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
         console.log(userGeoState);
         setLoading(true);
         try {
-            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, {requiresAuth: true});
-            const filteredUsers = response.data.data.filter(user =>
-                user.geo_state === userGeoState && (user.work_group === 13 || user.work_group === 14)
-            );
-            const usersData = filteredUsers;
-            console.log(usersData);
+            const response = await api.get(`${user()}?page=${page + 1}&per_page=${perPage}`, { requiresAuth: true });
+            const usersData = response.data.data.data;
 
-            const geoStates = [];
-            const geoCities = [];
-            const geoRegions = [];
-
-            usersData.forEach(user => {
-                if (user.geo_state) {
-                    geoStates.push({
-                        geo_type: 'state',
-                        geo_code: user.geo_state.toString(),
-                    });
-                }
-                if (user.geo_city) {
-                    geoCities.push({
-                        geo_type: 'city',
-                        geo_code: user.geo_city.toString(), // تبدیل به string با toString()
-                    });
-                }
-                if (user.geo_region) {
-                    user.geo_region.forEach(region => {
-                        if (region.hierarchy_code) {
-                            geoRegions.push({
-                                geo_type: 'region',
-                                geo_code: region.hierarchy_code.toString(),
-                            });
-                        }
-                    });
-                }
-            });
-
-            const geoDetails = [
-                ...geoStates,
-                ...geoCities,
-                ...geoRegions,
-            ];
-
-            const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
-            const geoData = geoResponse.data;
-
-            const usersWithGeo = usersData.map(user => {
-                const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_state);
-                const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === user.geo_city);
-                
-                // برای geo_region
-                let regionNames = [];
-                if (Array.isArray(user.geo_region)) {
-                    regionNames = user.geo_region.map(region => {
-                        const regionInfo = geoData.find(geo => 
-                            geo.info.length && geo.info[0].hierarchy_code === region.hierarchy_code
-                        );
-                        return regionInfo ? regionInfo.info[0].approved_name : region.hierarchy_code;
-                    });
-                } else if (user.geo_region) {
-                    const regionInfo = geoData.find(geo => 
-                        geo.info.length && geo.info[0].hierarchy_code === (user.geo_region.hierarchy_code || user.geo_region)
-                    );
-                    regionNames = [regionInfo ? regionInfo.info[0].approved_name : user.geo_region];
-                }
-            
-                return {
-                    ...user,
-                    geo_state_name: stateInfo && stateInfo.info[0].approved_name || user.geo_state,
-                    geo_city_name: cityInfo && cityInfo.info[0].approved_name || user.geo_city,
-                    geo_region_name: regionNames.join(' - ') || '-', // نمایش همه بخش‌ها با جداکننده
-                };
-            });
-
+            // استفاده از سرویس جدید برای ترجمه اطلاعات جغرافیایی
+            const usersWithGeo = await GeoService.translateGeoData(usersData);
             setUsers(usersWithGeo);
+
         } catch (error) {
             console.error("Error fetching users or geo details:", error);
         } finally {
@@ -140,8 +75,8 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 toast.success("کاربر با موفقیت حذف شد");
                 setLoading(true);
             }).catch((error) => {
-            console.error("Error deleting user:", error);
-        });
+                console.error("Error deleting user:", error);
+            });
     };
 
     const handleSidebarToggleSidebar = () => {
@@ -195,19 +130,19 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                 accessorKey: 'geo_state_name',
                 header: 'استان',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'geo_city_name',
                 header: 'شهرستان',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'geo_region_name',
                 header: 'بخش',
                 size: 150,
-                Cell: ({cell}) => <div style={{textAlign: 'right'}}>{cell.getValue() || "-"}</div>,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue() || "-"}</div>,
             },
             {
                 accessorKey: 'work_group',
@@ -231,7 +166,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                     const rowId = row.id;
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {dehyaries.length === 0 ? '-' : `${dehyaries.length} روستا`}
+                            {!dehyaries ? '-' : `${dehyaries.length || 0} روستا`}
                         </div>
                     );
                 }
@@ -267,85 +202,19 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
         [anchorEl, selectedRow]
     );
 
-    const table = useMaterialReactTable({
-        columns,
-        data: tableData,
-        renderTopToolbarCustomActions: ({ table }) => (
-            <Box
-                sx={{
-                    display: 'flex',
-                    padding: '8px',
-                    flexWrap: 'wrap',
-                }}
+    const table = useCustomTable(columns, tableData, {
+        isLoading: loading,
+
+        // تنظیمات اختصاصی این جدول
+        renderTopToolbarCustomActions: () => (
+            <Button
+                variant="contained"
+                onClick={handleSidebarToggleSidebar}
+                startIcon={<i className="ri-add-line" />}
             >
-                <Button
-                    fullWidth
-                    variant='contained'
-                    onClick={handleSidebarToggleSidebar}
-                    startIcon={<i className='ri-add-line' />}
-                >
-                    افزودن کاربر
-                </Button>
-            </Box>
+                افزودن کاربر جدید
+            </Button>
         ),
-        renderEmptyRowsFallback: () => (
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: 'text.secondary',
-                padding: "25px"
-            }}>
-                <img src="/images/icons/no-results.svg" alt="داده ای وجود ندارد" className={"h-36"}/>
-                <div>هیچ داده‌ای جهت نمایش وجود ندارد</div>
-            </Box>
-        ),
-        localization: {
-            filterByColumn: 'اعمال فیلتر',
-        },
-        initialState: {
-            density: 'compact',
-            pagination: {
-                pageIndex: page,
-                pageSize: perPage,
-            }
-        },
-        rowCount: users.length,
-        state: {
-            isLoading: loading,
-            showProgressBars: loading,
-        },
-        muiSkeletonProps: {
-            animation: 'wave',
-            height: 28,
-        },
-        muiLinearProgressProps: {
-            color: 'primary',
-        },
-        muiCircularProgressProps: {
-            color: 'secondary',
-        },
-        muiPaginationProps: {
-            color: 'primary',
-            shape: 'rounded',
-            showRowsPerPage: true,
-            variant: 'outlined',
-            sx: {
-                button: {
-                    borderRadius: '50%',
-                },
-            },
-        },
-        paginationDisplayMode: 'pages',
-        muiTableBodyCellProps: {
-            className: 'bg-backgroundPaper',
-            sx: {
-                padding: '2px 8px',
-                lineHeight: '1',
-            },
-        }
     });
 
     return (
