@@ -49,7 +49,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.CFO]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/cfo/table'
         },
@@ -115,7 +115,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.GOVERNOR]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/governor/table'
         },
@@ -127,7 +127,7 @@ const accessControl = {
     ],
     [WORK_GROUPS.BAKHSHDAR]: [
         {
-            label: "لیست پرسنل دهیاری ها",
+            label: "پرسنل دهیاری ها",
             icon: < i className="ri-group-line" />,
             href: '/dehyari/bakhshdar/table'
         },

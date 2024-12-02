@@ -118,6 +118,7 @@ const Navigation = props => {
       {/* Nav Header including Logo & nav toggle icons  */}
       <NavHeader>
         <Logo />
+        <span className='text-base font-medium text-textPrimary'>پنجره واحد خدمات</span>
         {!(isCollapsed && !isHovered) && (
           <NavCollapseIcons
             lockedIcon={MenuToggleSvg}

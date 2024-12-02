@@ -282,7 +282,7 @@ function CfoTable(props) {
                         }}
                     />
                 </span>
-                <span>طرف قرارداد</span></Typography>
+                <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
             <HistoryWorkflowPopup

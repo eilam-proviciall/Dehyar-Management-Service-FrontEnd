@@ -16,7 +16,7 @@ const FilterChip = forwardRef(({ avatarValue, label, onClick, selected, variant 
                 borderWidth: 1,
                 '&:hover': {
                     backgroundColor: 'primary.main',
-                    color: 'secondary.main',
+                    color: 'white',
                 },
                 ...sx,
             }}

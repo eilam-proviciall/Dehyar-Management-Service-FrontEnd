@@ -50,7 +50,7 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                                 fullWidth
                                 variant={showTable ? "contained" : "text"}
                                 color="inherit"
-                                startIcon={<GroupIcon />}
+                                startIcon={< i class="ri-file-paper-2-line" />}
                                 onClick={() => onSwitch(true)}
                                 sx={{
                                     backgroundColor: showTable ? 'white' : 'transparent',
@@ -73,7 +73,7 @@ const EditButtonGroup = ({ onSubmit, onSwitch, showTable }) => {
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                color="primary"
+                                className='bg-green-800'
                                 startIcon={<SaveIcon />}
                                 onClick={onSubmit}
                             >

@@ -54,7 +54,14 @@ const ContractStateChip = ({ avatar, label, onClick, customStyles }) => {
             label={label}
             onClick={onClick}
             color={color}
-            style={{ textAlign: 'right', height: '28px', ...customStyles }}
+            style={{
+                textAlign: 'right',
+                height: '28px',
+                backgroundColor: `var(--mui-palette-${color}-lightOpacity)`,
+                color: `var(--mui-palette-${color}-main)`,
+                textShadow: '0px 0.5px 0.5px rgba(0, 0, 0, 0.1)',
+                ...customStyles
+            }}
         />
     );
 };
