@@ -56,10 +56,10 @@ const UserListTable = ({
                 if (user.geo_region) {
                     const regions = Array.isArray(user.geo_region) ? user.geo_region : [user.geo_region];
                     regions.forEach(region => {
-                        if (region && region.hierarchy_code) {
+                        if (region) {
                             geoRegions.push({
                                 geo_type: 'region',
-                                geo_code: region.hierarchy_code.toString(),
+                                geo_code: region.toString(),
                             });
                         }
                     });
