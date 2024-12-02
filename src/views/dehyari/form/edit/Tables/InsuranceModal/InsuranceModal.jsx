@@ -76,7 +76,6 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
                         Authorization: `Bearer ${window.localStorage.getItem('token')}`,
                     },
                 });
-                // حذف رکورد فعلی در حالت ویرایش
                 setExistingRecords(response.data.filter(record => record.id !== editId));
             } catch (error) {
                 console.error('Error fetching existing records:', error);
@@ -86,13 +85,10 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
         if (open) {
             fetchExistingRecords();
         }
-    }, [open, editId]);
+    }, [open, mode, editId]);
 
     // تابع بررسی تداخل تاریخ‌ها
     const checkDateOverlap = (newStartDate, newEndDate) => {
-        console.log('New dates:', { newStartDate, newEndDate });
-        console.log('Existing records:', existingRecords);
-
         if (!newStartDate || !newEndDate || existingRecords.length === 0) {
             return { hasOverlap: false };
         }
@@ -101,13 +97,6 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
         const newStartTimestamp = newStartDate * 1000;
         const newEndTimestamp = newEndDate * 1000;
 
-        console.log('New timestamps:', {
-            newStartTimestamp,
-            newEndTimestamp,
-            newStartDate: new Date(newStartTimestamp),
-            newEndDate: new Date(newEndTimestamp)
-        });
-
         // مرتب کردن رکوردها بر اساس تاریخ شروع
         const sortedRecords = [...existingRecords].sort((a, b) => {
             const aTime = convertPersianDateToTimestamp(a.start_date);
@@ -115,31 +104,16 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
             return aTime - bTime;
         });
 
-        console.log('Sorted records:', sortedRecords);
-
         for (const record of sortedRecords) {
             const existingStartTimestamp = convertPersianDateToTimestamp(record.start_date);
             const existingEndTimestamp = convertPersianDateToTimestamp(record.end_date);
-
-            console.log('Checking overlap with record:', {
-                title: record.dehyari_title,
-                start: record.start_date,
-                end: record.end_date,
-                startTimestamp: existingStartTimestamp,
-                endTimestamp: existingEndTimestamp,
-                newStartTimestamp,
-                newEndTimestamp
-            });
 
             // حالت‌های تداخل
             const case1 = newStartTimestamp >= existingStartTimestamp && newStartTimestamp <= existingEndTimestamp;
             const case2 = newEndTimestamp >= existingStartTimestamp && newEndTimestamp <= existingEndTimestamp;
             const case3 = newStartTimestamp <= existingStartTimestamp && newEndTimestamp >= existingEndTimestamp;
 
-            console.log('Overlap cases:', { case1, case2, case3 });
-
             if (case1 || case2 || case3) {
-                console.log('Overlap detected!');
                 return {
                     hasOverlap: true,
                     message: `این بازه زمانی با سابقه بیمه ${record.dehyari_title} تداخل دارد`
@@ -152,14 +126,7 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
             const lastRecord = sortedRecords[sortedRecords.length - 1];
             const lastEndTimestamp = convertPersianDateToTimestamp(lastRecord.end_date);
 
-            console.log('Checking last record:', {
-                lastEnd: lastRecord.end_date,
-                lastEndTimestamp,
-                newStartTimestamp
-            });
-
             if (newStartTimestamp < lastEndTimestamp) {
-                console.log('Start date before last end date!');
                 return {
                     hasOverlap: true,
                     message: 'تاریخ شروع باید بعد از تاریخ پایان آخرین سابقه بیمه باشد'
@@ -190,7 +157,6 @@ const InsuranceModal = ({ open, handleClose, refreshData, mode = 'create', editI
             }
 
             if (mode === 'create') {
-                console.log(formData)
                 // حالت ایجاد
                 const response = await axios.post(InsuranceHistory(), formData, {
                     headers: {
