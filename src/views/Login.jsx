@@ -32,8 +32,11 @@ import themeConfig from '@configs/themeConfig'
 
 // Util Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
+import { validateIranianNationalId } from '@/utils/nidCheck'
 import accessControl from "@components/layout/vertical/accessControl";
 import { LoadingButton } from '@mui/lab'
+import DividerSimple from '@/components/common/Divider/DividerSimple'
+
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -42,8 +45,15 @@ const persianToEnglishDigits = (str) => {
 };
 
 const schema = object({
-    email: string([minLength(1, 'این فیلد الزامی است')]),
-    password: string([
+    email: string([
+        minLength(1, 'این فیلد الزامی است'),
+        (input) => {
+            if (!validateIranianNationalId(input)) {
+                return { error: 'کد ملی نامعتبر است' }
+            }
+            return { success: true }
+        }
+    ]), password: string([
         minLength(1, 'این فیلد الزامی است'),
         minLength(5, 'رمز عبور باید حداقل دارای ۵ کاراکتر باشد')
     ])
@@ -134,7 +144,7 @@ const Login = ({ mode }) => {
     return (
         <div className='flex justify-between h-full'>
             <div
-                className='flex flex-1 h-full justify-center items-start bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
+                className='flex flex-1 h-full justify-center items-start bg-backgroundPaper !min-is-full px-6 md:!min-is-[unset] md:px-12 py-2 md:is-[480px]'>
                 <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset]'>
                     <div>
                         <Box sx={{ mb: 3, textAlign: 'center' }}>
@@ -160,7 +170,7 @@ const Login = ({ mode }) => {
                                     {...field}
                                     fullWidth
                                     autoFocus
-                                    type='email'
+                                    type='text'
                                     label='نام کاربری'
                                     InputProps={{
                                         inputProps: {
@@ -231,6 +241,7 @@ const Login = ({ mode }) => {
                             loadingIndicator={<span className='text-backgroundPaper'>در حال پردازش...</span>}>
                             ورود
                         </LoadingButton>
+                        <DividerSimple title={'سایر روش های احراز هویت'} />
                         <div className='flex gap-5 justify-center'>
                             <Button variant='contained' color='info'>درگاه وزارت کشور</Button>
                             <Button variant='contained' color='info'>درگاه دولت هوشمند</Button>
