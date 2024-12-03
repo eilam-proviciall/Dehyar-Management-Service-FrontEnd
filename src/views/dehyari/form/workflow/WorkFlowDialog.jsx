@@ -184,7 +184,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                         renderRejectOptions={renderRejectOptions}
                     />
                 ) : (
-                    <RequestHistory />
+                    <RequestHistory details={details} />
                 )}
             </DialogContent>
 
