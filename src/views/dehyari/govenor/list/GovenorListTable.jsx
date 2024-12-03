@@ -104,7 +104,7 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
             case 'ناظر فنی':
                 return 'warning';
             default:
-                return 'default';
+                return 'secondary';
         }
     };
 
@@ -153,7 +153,11 @@ const GovenorListTable = ({ dispatch, handleAddEventSidebarToggle, addEventSideb
                     const role = cell.getValue();
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            <Chip sx={{ height: 27.5 }} label={roles[role]} color={getChipColor(roles[role])} />
+                            <Chip sx={{
+                                height: 27.5, backgroundColor: `var(--mui-palette-${getChipColor(roles[role])}-lightOpacity)`,
+                                color: `var(--mui-palette-${getChipColor(roles[role])}-main)`,
+                                textShadow: '0px 0.5px 0.5px rgba(0, 0, 0, 0.1)'
+                            }} label={roles[role]} color={getChipColor(roles[role])} />
                         </div>
                     );
                 },
