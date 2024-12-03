@@ -200,7 +200,7 @@ function CfoTable(props) {
                         >
                             <i className="ri-printer-line" />
                         </CustomIconButton>
-                        <CustomIconButton
+                        {/* <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
                                 handleWorkflowHistory(row.original);
@@ -208,6 +208,20 @@ function CfoTable(props) {
                             className={"rounded-full"}
                         >
                             < i class="ri-history-line" />
+                        </CustomIconButton> */}
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                if (row.original.contract_type == 'draft' || row.original.contract_type == 'rejected_to_financial_officer') {
+                                    setCurrentRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
+                                }
+                            }}
+                            className={"rounded-full animate-pulse"}
+                        >
+                            < i class="ri-send-plane-line" />
                         </CustomIconButton>
                     </div>
                 ),
