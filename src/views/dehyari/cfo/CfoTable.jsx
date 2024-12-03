@@ -185,7 +185,7 @@ function CfoTable(props) {
                             color={"secondary"}
                             disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
-                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
+                                row.original.contract_state !== 'approved' && router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
                             }}
                             className={"rounded-full"}
                         >
@@ -212,12 +212,8 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                if (row.original.contract_type == 'draft' || row.original.contract_type == 'rejected_to_financial_officer') {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
+                                setCurrentRow(row.original);
+                                setPopupOpen(true);
                             }}
                             className={"rounded-full animate-pulse"}
                         >

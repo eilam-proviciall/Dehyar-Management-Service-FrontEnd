@@ -17,6 +17,7 @@ import useWorkflow from "@/hooks/useWorkflowState";
 const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
     const [selectedRejectType, setSelectedRejectType] = useState(null);
+    const [activeTab, setActiveTab] = useState('review'); // Default tab is بررسی حکم
 
     const {
         state,
@@ -113,6 +114,64 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
         );
     };
 
+    const renderContent = () => {
+        if (activeTab === 'review') {
+            return (
+                <Box className={'flex flex-col gap-3'}>
+                    <UserInfoItem icon="ri-user-line" label="نام و نام خانوادگی" value={details ? `${details.first_name} ${details.last_name}` : "نامشخص"} />
+                    <UserInfoItem icon="ri-government-line" label="پست سازمانی" value={details ? details.job_type : 'نامشخص'} />
+                    <UserInfoItem icon="ri-community-line" label="دهیاری" value={details ? details.village.approved_name : "نامشخص"} />
+                    <UserInfoItem icon="ri-file-line" label="نوع قرارداد" value={details ? `${details.contract_type} روز کارکرد` : 'نامشخص'} />
+                    <UserInfoItem icon="ri-calendar-line" label="تاریخ شروع قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
+                    <UserInfoItem icon="ri-calendar-line" label="تاریخ اجرای قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
+                    <UserInfoItem icon="ri-wallet-2-line" label="مبلغ حکم کارگزینی" value="-" />
+
+                    {rejectApprovalLevel > 0 && (
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            label="توضیحات"
+                            placeholder="لطفا دلیل رد درخواست را وارد کنید"
+                            value={description}
+                            onChange={(e) => handleDescriptionChange(e.target.value)}
+                            error={!!error}
+                            helperText={error || 'در صورت رد درخواست، وارد کردن توضیحات الزامی است'}
+                            required
+                            sx={{ mt: 2, direction: 'rtl' }}
+                        />
+                    )}
+                    {renderRejectOptions()}
+                </Box>
+            );
+        } else {
+            return (
+                <Box className={'flex flex-col gap-3'}>
+                    <div className="p-4">
+                        <h3 className="text-lg font-bold mb-4">سوابق درخواست</h3>
+                        {/* Add your request history items here */}
+                        <div className="space-y-4">
+                            <div className="border rounded p-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="font-medium">ثبت درخواست</span>
+                                    <span className="text-sm text-gray-500">1402/08/15</span>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-2">درخواست توسط کاربر ثبت شد</p>
+                            </div>
+                            <div className="border rounded p-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="font-medium">بررسی مسئول مالی</span>
+                                    <span className="text-sm text-gray-500">1402/08/16</span>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-2">درخواست توسط مسئول مالی تایید شد</p>
+                            </div>
+                        </div>
+                    </div>
+                </Box>
+            );
+        }
+    };
+
     return (
         <Drawer
             anchor="right"
@@ -139,13 +198,14 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
             <div className={'flex justify-center gap-5 mt-2'}>
                 <Chip
                     label={"بررسی حکم"}
-                    onClick={() => { }}
+                    onClick={() => setActiveTab('review')}
                     clickable
-                    variant='outlined'
-                    className='text-textPrimary'
+                    variant={activeTab === 'review' ? 'filled' : 'outlined'}
                     sx={{
-                        boxShadow: 2,
+                        boxShadow: activeTab === 'review' ? 2 : 0,
                         borderWidth: 1,
+                        backgroundColor: activeTab === 'review' ? 'primary.main' : 'transparent',
+                        color: activeTab === 'review' ? 'white' : 'inherit',
                         '&:hover': {
                             backgroundColor: 'primary.main',
                             color: 'white',
@@ -154,13 +214,14 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                 />
                 <Chip
                     label={"سوابق درخواست"}
-                    onClick={() => { }}
+                    onClick={() => setActiveTab('history')}
                     clickable
-                    variant='outlined'
-                    className='text-textPrimary'
+                    variant={activeTab === 'history' ? 'filled' : 'outlined'}
                     sx={{
-                        boxShadow: 0,
+                        boxShadow: activeTab === 'history' ? 2 : 0,
                         borderWidth: 1,
+                        backgroundColor: activeTab === 'history' ? 'primary.main' : 'transparent',
+                        color: activeTab === 'history' ? 'white' : 'inherit',
                         '&:hover': {
                             backgroundColor: 'primary.main',
                             color: 'white',
@@ -169,53 +230,27 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                 />
             </div>
             <DialogContent>
-                <Box className={'flex flex-col gap-3'}>
-                    <UserInfoItem icon="ri-user-line" label="نام و نام خانوادگی" value={details ? `${details.first_name} ${details.last_name}` : "نامشخص"} />
-                    <UserInfoItem icon="ri-government-line" label="پست سازمانی" value={details ? details.job_type : 'نامشخص'} />
-                    // اگر مسئول مالی یا ناظرفنی بنویسه دهیاری های تحت پوشش و جلوش تعدادشون رو بنویسه
-                    <UserInfoItem icon="ri-community-line" label="دهیاری" value={details ? details.village.approved_name : "نامشخص"} />
-                    <UserInfoItem icon="ri-file-line" label="نوع قرارداد" value={details ? `${details.contract_type} روز کارکرد` : 'نامشخص'} />
-                    <UserInfoItem icon="ri-calendar-line" label="تاریخ شروع قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
-                    <UserInfoItem icon="ri-calendar-line" label="تاریخ اجرای قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
-                    <UserInfoItem icon="ri-wallet-2-line" label="مبلغ حکم کارگزینی" value="-" />
-                </Box>
-                {rejectApprovalLevel > 0 && (
-                    <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        label="توضیحات"
-                        placeholder="لطفا دلیل رد درخواست را وارد کنید"
-                        value={description}
-                        onChange={(e) => handleDescriptionChange(e.target.value)}
-                        error={!!error}
-                        helperText={error || 'در صورت رد درخواست، وارد کردن توضیحات الزامی است'}
-                        required
-                        sx={{ mt: 2, direction: 'rtl' }}
-                    />
-                )}
-                {renderRejectOptions()}
+                {renderContent()}
             </DialogContent>
 
             <DialogActions>
-                {/* فقط برای مسئول مالی نمایش داده شود */}
-                {/* تایید مجدد اطلاعات و ارسال به بخشداری */}
-                <Button onClick={handleApprove} color="primary" variant="contained">
-                    تایید حکم کارگزینی و ارسال به بخشداری
-                </Button>
-
-                {rejectApprovalLevel > 0 && canReject && !showRejectOptions && (
+                {rejectApprovalLevel > 0 && (
                     <Button
-                        onClick={() => {
-                            setShowRejectOptions(true);
-                            handleStateChange('rejected_to_financial_officer', true);
-                        }}
+                        variant="outlined"
                         color="error"
-                        variant="contained"
+                        onClick={() => setShowRejectOptions(!showRejectOptions)}
+                        sx={{ ml: 2 }}
                     >
-                        رد
+                        رد درخواست
                     </Button>
                 )}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleApprove}
+                >
+                    تایید
+                </Button>
             </DialogActions>
         </Drawer>
     );
