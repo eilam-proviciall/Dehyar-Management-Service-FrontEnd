@@ -54,19 +54,19 @@ const RequestHistory = ({ details }) => {
                             <TimelineContent>
                                 <Box mb={2} sx={{ minWidth: '225px' }}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ flexWrap: 'nowrap', gap: 1 }}>
-                                        <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                                        <Typography variant="subtitle2">
                                             {translateContractState(item.state)}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', ml: 1 }}>
+                                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', ml: 1, fontSize: '0.65rem' }}>
                                             {moment(item.started_at).fromNow()}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body2" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         {item.full_name} - {roles[item.work_group]}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
+                                    {/* <Typography variant="body2" color="text.secondary">
                                         {item.description}
-                                    </Typography>
+                                    </Typography> */}
                                 </Box>
                             </TimelineContent>
                         </TimelineItem>

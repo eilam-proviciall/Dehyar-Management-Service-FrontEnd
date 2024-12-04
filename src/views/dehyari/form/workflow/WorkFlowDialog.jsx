@@ -138,7 +138,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={`بررسی حکم کارگزینی ${details.first_name} ${details.last_name}`} />
+            <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name} ${details?.last_name}`} />
             <div className={'flex justify-center gap-5 mt-2'}>
                 <Chip
                     label={"بررسی حکم"}
@@ -189,23 +189,27 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
             </DialogContent>
 
             <DialogActions>
-                {rejectApprovalLevel > 0 && (
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => setShowRejectOptions(!showRejectOptions)}
-                        sx={{ ml: 2 }}
-                    >
-                        رد درخواست
-                    </Button>
+                {activeTab === 'review' && (
+                    <>
+                        {rejectApprovalLevel > 0 && (
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => setShowRejectOptions(!showRejectOptions)}
+                                sx={{ ml: 2 }}
+                            >
+                                رد درخواست
+                            </Button>
+                        )}
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleApprove}
+                        >
+                            تایید
+                        </Button>
+                    </>
                 )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleApprove}
-                >
-                    تایید
-                </Button>
             </DialogActions>
         </Drawer>
     );
