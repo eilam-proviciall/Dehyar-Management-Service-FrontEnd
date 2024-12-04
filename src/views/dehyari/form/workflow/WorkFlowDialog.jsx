@@ -187,7 +187,6 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     <RequestHistory details={details} />
                 )}
             </DialogContent>
-
             <DialogActions>
                 {activeTab === 'review' && (
                     <>
