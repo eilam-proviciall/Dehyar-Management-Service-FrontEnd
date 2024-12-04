@@ -57,7 +57,7 @@ const RequestHistory = ({ details }) => {
                                         <Typography variant="subtitle2">
                                             {translateContractState(item.state)}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', ml: 1, fontSize: '0.65rem' }}>
+                                        <Typography variant="caption" color="text.inherit" sx={{ whiteSpace: 'nowrap', ml: 1, fontSize: '0.65rem' }}>
                                             {moment(item.started_at).fromNow()}
                                         </Typography>
                                     </Box>
