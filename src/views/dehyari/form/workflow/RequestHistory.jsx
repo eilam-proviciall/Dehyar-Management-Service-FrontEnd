@@ -13,44 +13,16 @@ import api from '@/utils/axiosInstance';
 import { getHistoryWorkflow } from '@/Services/Salary';
 import { translateContractState } from '@/utils/contractStateTranslator';
 import roles from "@data/roles.json";
+import moment from 'moment-jalaali';
 
 const RequestHistory = ({ details }) => {
-    const [historyData, setHistoryData] = useState([
-        // {
-        //     id: 1,
-        //     status: 'ثبت درخواست',
-        //     date: '1402/10/01',
-        //     time: '10:30',
-        //     user: 'علی محمدی',
-        //     position: 'کارشناس امور اداری',
-        //     description: 'درخواست حقوق ثبت شد'
-        // },
-        // {
-        //     id: 2,
-        //     status: 'تایید کارشناس',
-        //     date: '1402/10/02',
-        //     time: '14:15',
-        //     user: 'رضا احمدی',
-        //     position: 'مدیر امور اداری',
-        //     description: 'درخواست توسط کارشناس بررسی و تایید شد'
-        // },
-        // {
-        //     id: 3,
-        //     status: 'تایید نهایی',
-        //     date: '1402/10/03',
-        //     time: '09:45',
-        //     user: 'محمد حسینی',
-        //     position: 'معاون اداری',
-        //     description: 'درخواست تایید نهایی شد'
-        // }
-    ]);
+    const [historyData, setHistoryData] = useState([]);
 
     useEffect(() => {
         if (details) {
             const fetchData = async () => {
                 try {
                     const response = await api.get(getHistoryWorkflow(details.salary_id), { requiresAuth: true });
-                    console.log("Response => ", response);
                     setHistoryData(response.data);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -77,7 +49,13 @@ const RequestHistory = ({ details }) => {
                 <Typography variant="h6" gutterBottom>
                     تاریخچه درخواست
                 </Typography>
-                <Timeline>
+                <Timeline position='right' sx={{
+                    '& .MuiTimelineItem-root': {
+                        '&:before': {
+                            flex: 0
+                        }
+                    }
+                }}>
                     {historyData.map((item) => (
                         <TimelineItem>
                             <TimelineSeparator>
@@ -85,14 +63,16 @@ const RequestHistory = ({ details }) => {
                                 <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent>
-                                <Box mb={2}>
-                                    <Box display="flex" alignItems="center">
-                                        <Typography variant="subtitle1">
-                                            {item.full_name} - {roles[item.work_group]}
+                                <Box mb={2} sx={{ minWidth: '225px' }}>
+                                    <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ flexWrap: 'nowrap', gap: 1 }}>
+                                        <Typography variant="subtitle1" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {item.full_name}
+                                            <br />
+                                            {roles[item.work_group]}
                                         </Typography>
-                                        {/* <Typography variant="caption" color="text.secondary">
-                                            {item.date} - {item.time}
-                                        </Typography> */}
+                                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', ml: 1 }}>
+                                            {moment(item.started_at).fromNow()}
+                                        </Typography>
                                     </Box>
                                     <Typography variant="body2" sx={{ mt: 1 }}>
                                         {translateContractState(item.state)}
