@@ -59,7 +59,7 @@ const RequestHistory = ({ details }) => {
                     {historyData.map((item) => (
                         <TimelineItem>
                             <TimelineSeparator>
-                                <TimelineDot color={`${item.state === 'approved' && 'success' || item.state === 'rejected' && 'error' || 'primary'}`} />
+                                <TimelineDot color={`${item.state === 'approved' && 'success' || item.state.startsWith('rejected') && 'error' || 'primary'}`} />
                                 <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent>
