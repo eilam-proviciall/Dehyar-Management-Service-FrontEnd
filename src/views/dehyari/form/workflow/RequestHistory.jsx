@@ -9,37 +9,56 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import UserInfoItem from '../edit/Tables/UserInfoItem';
 import { convertUnixToJalali } from "@/utils/dateConverter";
+import api from '@/utils/axiosInstance';
+import { getHistoryWorkflow } from '@/Services/Salary';
+import { translateContractState } from '@/utils/contractStateTranslator';
+import roles from "@data/roles.json";
 
 const RequestHistory = ({ details }) => {
     const [historyData, setHistoryData] = useState([
-        {
-            id: 1,
-            status: 'ثبت درخواست',
-            date: '1402/10/01',
-            time: '10:30',
-            user: 'علی محمدی',
-            position: 'کارشناس امور اداری',
-            description: 'درخواست حقوق ثبت شد'
-        },
-        {
-            id: 2,
-            status: 'تایید کارشناس',
-            date: '1402/10/02',
-            time: '14:15',
-            user: 'رضا احمدی',
-            position: 'مدیر امور اداری',
-            description: 'درخواست توسط کارشناس بررسی و تایید شد'
-        },
-        {
-            id: 3,
-            status: 'تایید نهایی',
-            date: '1402/10/03',
-            time: '09:45',
-            user: 'محمد حسینی',
-            position: 'معاون اداری',
-            description: 'درخواست تایید نهایی شد'
-        }
+        // {
+        //     id: 1,
+        //     status: 'ثبت درخواست',
+        //     date: '1402/10/01',
+        //     time: '10:30',
+        //     user: 'علی محمدی',
+        //     position: 'کارشناس امور اداری',
+        //     description: 'درخواست حقوق ثبت شد'
+        // },
+        // {
+        //     id: 2,
+        //     status: 'تایید کارشناس',
+        //     date: '1402/10/02',
+        //     time: '14:15',
+        //     user: 'رضا احمدی',
+        //     position: 'مدیر امور اداری',
+        //     description: 'درخواست توسط کارشناس بررسی و تایید شد'
+        // },
+        // {
+        //     id: 3,
+        //     status: 'تایید نهایی',
+        //     date: '1402/10/03',
+        //     time: '09:45',
+        //     user: 'محمد حسینی',
+        //     position: 'معاون اداری',
+        //     description: 'درخواست تایید نهایی شد'
+        // }
     ]);
+
+    useEffect(() => {
+        if (details) {
+            const fetchData = async () => {
+                try {
+                    const response = await api.get(getHistoryWorkflow(details.salary_id), { requiresAuth: true });
+                    console.log("Response => ", response);
+                    setHistoryData(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchData();
+        }
+    }, [details]);
 
     return (
         <Box className={'flex flex-col gap-3'}>
@@ -58,25 +77,25 @@ const RequestHistory = ({ details }) => {
                 <Typography variant="h6" gutterBottom>
                     تاریخچه درخواست
                 </Typography>
-                <Timeline position="alternate-reverse">
+                <Timeline>
                     {historyData.map((item) => (
-                        <TimelineItem key={item.id}>
+                        <TimelineItem>
                             <TimelineSeparator>
-                                <TimelineDot color="primary" />
+                                <TimelineDot color={`${item.state === 'approved' && 'success' || item.state === 'rejected' && 'error' || 'primary'}`} />
                                 <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent>
                                 <Box mb={2}>
-                                    <Box display="flex" alignItems="center" gap={1}>
+                                    <Box display="flex" alignItems="center">
                                         <Typography variant="subtitle1">
-                                            {item.status}
+                                            {item.full_name} - {roles[item.work_group]}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
+                                        {/* <Typography variant="caption" color="text.secondary">
                                             {item.date} - {item.time}
-                                        </Typography>
+                                        </Typography> */}
                                     </Box>
                                     <Typography variant="body2" sx={{ mt: 1 }}>
-                                        {item.user} - {item.position}
+                                        {translateContractState(item.state)}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {item.description}
