@@ -34,24 +34,13 @@ const RequestHistory = ({ details }) => {
 
     return (
         <Box className={'flex flex-col gap-3'}>
-            {/* اطلاعات کارمند */}
-            <Box mb={3}>
-                <Typography variant="h6" gutterBottom>
-                    اطلاعات کارمند
-                </Typography>
-                <UserInfoItem icon="ri-user-line" label="نام و نام خانوادگی" value={details ? `${details.first_name} ${details.last_name}` : "نامشخص"} />
-                <UserInfoItem icon="ri-government-line" label="پست سازمانی" value={details ? details.job_type : 'نامشخص'} />
-                <UserInfoItem icon="ri-community-line" label="دهیاری" value={details ? details.village.approved_name : "نامشخص"} />
-            </Box>
 
             {/* تاریخچه درخواست */}
             <Box>
-                <Typography variant="h6" gutterBottom>
-                    تاریخچه درخواست
-                </Typography>
                 <Timeline position='right' sx={{
                     '& .MuiTimelineItem-root': {
                         '&:before': {
+                            mr: '-1.5rem',
                             flex: 0
                         }
                     }
@@ -65,17 +54,15 @@ const RequestHistory = ({ details }) => {
                             <TimelineContent>
                                 <Box mb={2} sx={{ minWidth: '225px' }}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ flexWrap: 'nowrap', gap: 1 }}>
-                                        <Typography variant="subtitle1" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {item.full_name}
-                                            <br />
-                                            {roles[item.work_group]}
+                                        <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                                            {translateContractState(item.state)}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', ml: 1 }}>
                                             {moment(item.started_at).fromNow()}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body2" sx={{ mt: 1 }}>
-                                        {translateContractState(item.state)}
+                                    <Typography variant="body2" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {item.full_name} - {roles[item.work_group]}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {item.description}

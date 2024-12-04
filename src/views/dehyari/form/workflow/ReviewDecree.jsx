@@ -7,7 +7,6 @@ import { convertUnixToJalali } from "@/utils/dateConverter";
 const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handleDescriptionChange, renderRejectOptions }) => {
     return (
         <Box className={'flex flex-col gap-3'}>
-            <UserInfoItem icon="ri-user-line" label="نام و نام خانوادگی" value={details ? `${details.first_name} ${details.last_name}` : "نامشخص"} />
             <UserInfoItem icon="ri-government-line" label="پست سازمانی" value={details ? details.job_type : 'نامشخص'} />
             <UserInfoItem icon="ri-community-line" label="دهیاری" value={details ? details.village.approved_name : "نامشخص"} />
             <UserInfoItem icon="ri-file-line" label="نوع قرارداد" value={details ? `${details.contract_type} روز کارکرد` : 'نامشخص'} />

@@ -138,7 +138,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={'بررسی حکم کارگزینی'} />
+            <DividerSimple title={`بررسی حکم کارگزینی ${details.first_name} ${details.last_name}`} />
             <div className={'flex justify-center gap-5 mt-2'}>
                 <Chip
                     label={"بررسی حکم"}
