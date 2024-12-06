@@ -69,10 +69,6 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
             ...data
         };
 
-        console.log("Processed Data => ", processedData);
-        console.log("Data => ", data);
-
-
         sidebarDetails.status == 'edit' ? (
             api.put(`${user()}/${sidebarDetails.defaultValues.id}`, processedData, { requiresAuth: true })
                 .then(() => {
