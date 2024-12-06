@@ -130,14 +130,14 @@ function GovernorTable(props) {
                     return <div style={{ textAlign: 'right' }}>
                         <ContractStateChip
                             label={contractStateValue}
-                            onClick={() => {
-                                if (cell.getValue() == 'approved' || cell.getValue() == 'pending_governor') {
-                                    setSelectedRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
-                            }}
+                            // onClick={() => {
+                            //     if (cell.getValue() == 'approved' || cell.getValue() == 'pending_governor') {
+                            //         setSelectedRow(row.original);
+                            //         setPopupOpen(true);
+                            //     } else {
+                            //         toast.warning('شما به این قرارداد دسترسی ندارید');
+                            //     }
+                            // }}
                             avatar={role}
                         />
                     </div>

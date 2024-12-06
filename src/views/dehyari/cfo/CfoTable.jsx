@@ -162,14 +162,14 @@ function CfoTable(props) {
                     return <div style={{ textAlign: 'right' }}>
                         <ContractStateChip
                             label={contractStateValue}
-                            onClick={() => {
-                                if (cell.getValue() == 'draft' || cell.getValue() == 'rejected_to_financial_officer') {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
-                            }}
+                            // onClick={() => {
+                            //     if (cell.getValue() == 'draft' || cell.getValue() == 'rejected_to_financial_officer') {
+                            //         setCurrentRow(row.original);
+                            //         setPopupOpen(true);
+                            //     } else {
+                            //         toast.warning('شما به این قرارداد دسترسی ندارید');
+                            //     }
+                            // }}
                             avatar={role}
                         />
                     </div>
@@ -212,8 +212,12 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                setCurrentRow(row.original);
-                                setPopupOpen(true);
+                                if (row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') {
+                                    setCurrentRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
+                                }
                             }}
                             className={"rounded-full animate-pulse"}
                         >
@@ -295,16 +299,6 @@ function CfoTable(props) {
                 <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
-            <HistoryWorkflowPopup
-                open={popupWorkflow}
-                onClose={() => setPopupWorkflow(false)}
-                salaryId={currentRow?.salary_id}
-                employeeInfo={{
-                    fullName: `${currentRow?.first_name} ${currentRow?.last_name}`,
-                    position: currentRow?.job_type,
-                }}
-            />
-
         </div>
     );
 }
