@@ -18,7 +18,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='geo_region'
                         control={control}
                         rules={{ required: true }}
-                        defaultValue=""
+                        defaultValue={selectedOptions ? [selectedOptions] : []}
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
@@ -31,15 +31,15 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                         if (!newValue) {
                                             setValue('geo_state', '');
                                             setValue('geo_city', '');
-                                            setValue('geo_region', '');
-                                            onChange('');
+                                            setValue('geo_region', []);
+                                            onChange([]);
                                             return;
                                         }
 
                                         setValue('geo_state', newValue.city.geo_state);
                                         setValue('geo_city', newValue.geo_cities);
-                                        setValue('geo_region', newValue.hierarchy_code);
-                                        onChange(newValue.hierarchy_code);
+                                        setValue('geo_region', [newValue.hierarchy_code]);
+                                        onChange([newValue.hierarchy_code]);
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -49,7 +49,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                             helperText={errors.geo_region?.message}
                                         />
                                     )}
-                                    value={options.find(option => option.hierarchy_code === value) || null}
+                                    value={options.find(option => value && value[0] === option.hierarchy_code) || null}
                                 />
                             )
                         )}
