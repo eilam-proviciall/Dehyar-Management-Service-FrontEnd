@@ -8,17 +8,20 @@ const UserDivisionChip = ({ workGroup, geoState, geoCity, geoRegion }) => {
     const [geoNames, setGeoNames] = useState({
         stateName: '',
         cityName: '',
-        regionName: ''
+        regionNames: []
     });
 
     useEffect(() => {
         const fetchGeoDetails = async () => {
-            if (!geoState && !geoCity && !geoRegion) return;            
+            if (!geoState && !geoCity && !geoRegion) return;
             try {
                 const geoDetails = [
                     { geo_type: 'state', geo_code: `${geoState}` },
                     { geo_type: 'city', geo_code: `${geoCity}` },
-                    { geo_type: 'region', geo_code: `${geoRegion}` }
+                    ...(Array.isArray(geoRegion)
+                        ? geoRegion.map(region => ({ geo_type: 'region', geo_code: region.toString() }))
+                        : geoRegion ? [{ geo_type: 'region', geo_code: geoRegion.toString() }] : []
+                    )
                 ].filter(item => item.geo_code !== 'undefined');
 
                 const geoResponse = await api.post(getGeoDetails(), { geo_data: geoDetails }, { requiresAuth: true });
@@ -26,12 +29,23 @@ const UserDivisionChip = ({ workGroup, geoState, geoCity, geoRegion }) => {
 
                 const stateInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === geoState);
                 const cityInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === geoCity);
-                const regionInfo = geoData.find(geo => geo.info.length && geo.info[0].hierarchy_code === geoRegion);
+                const regionInfos = Array.isArray(geoRegion)
+                    ? geoRegion.map(region => {
+                        const info = geoData.find(geo =>
+                            geo.info.length && geo.info[0].hierarchy_code == region
+                        );
+                        return info?.info[0]?.approved_name || region;
+                    })
+                    : geoRegion
+                        ? [geoData.find(geo =>
+                            geo.info.length && geo.info[0].hierarchy_code == geoRegion
+                        )?.info[0]?.approved_name || geoRegion]
+                        : [];
 
                 setGeoNames({
                     stateName: stateInfo?.info[0]?.approved_name || '',
                     cityName: cityInfo?.info[0]?.approved_name || '',
-                    regionName: regionInfo?.info[0]?.approved_name || ''
+                    regionNames: regionInfos
                 });
             } catch (error) {
                 console.error("Error fetching geo details:", error);
@@ -45,8 +59,8 @@ const UserDivisionChip = ({ workGroup, geoState, geoCity, geoRegion }) => {
         const parts = [];
         if (geoNames.stateName) parts.push(geoNames.stateName);
         if (geoNames.cityName) parts.push(geoNames.cityName);
-        if (geoNames.regionName) parts.push(geoNames.regionName);
-        return parts.length > 0 ? parts.join(' - ') : 'اطلاعاتی یافت نشد!';
+        if (geoNames.regionNames.length) parts.push(geoNames.regionNames.join(' - '));
+        return parts.join(' - ') || 'نامشخص';
     };
 
     return (
