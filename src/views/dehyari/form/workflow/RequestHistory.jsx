@@ -23,7 +23,9 @@ const RequestHistory = ({ details }) => {
             const fetchData = async () => {
                 try {
                     const response = await api.get(getHistoryWorkflow(details.salary_id), { requiresAuth: true });
-                    setHistoryData(response.data);
+                    // Sort data from newest to oldest
+                    const sortedData = response.data.sort((firstDate, lastDate) => moment(lastDate.started_at).valueOf() - moment(firstDate.started_at).valueOf());
+                    setHistoryData(sortedData);
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
@@ -31,6 +33,18 @@ const RequestHistory = ({ details }) => {
             fetchData();
         }
     }, [details]);
+
+    const formatDate = (date) => {
+        const now = moment();
+        const itemDate = moment(date);
+        const diffDays = now.diff(itemDate, 'days');
+
+        if (diffDays > 7) {
+            return moment(date).format('jYYYY/jMM/jDD');
+        }
+        return moment(date).fromNow();
+    };
+
 
     return (
         <Box className={'flex flex-col gap-3'}>
@@ -58,7 +72,7 @@ const RequestHistory = ({ details }) => {
                                             {translateContractState(item.state)}
                                         </Typography>
                                         <Typography variant="caption" color="text.inherit" sx={{ whiteSpace: 'nowrap', ml: 1, fontSize: '0.65rem' }}>
-                                            {moment(item.started_at).fromNow()}
+                                            {formatDate(item.started_at)}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body2" sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
