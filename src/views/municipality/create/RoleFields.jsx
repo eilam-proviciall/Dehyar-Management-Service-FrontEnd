@@ -10,10 +10,6 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
 
-    console.log("Options => ", options);
-    console.log("Selected Options => ", selectedOptions);
-
-
     switch (role) {
         case "14":
             return (

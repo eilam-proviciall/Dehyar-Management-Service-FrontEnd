@@ -57,13 +57,13 @@ class GeoService {
                     .filter(region => region)
                     .map(region => {
                         const regionInfo = geoData.find(geo =>
-                            geo.info.length && geo.info[0].hierarchy_code === region
+                            geo.info.length && geo.info[0].hierarchy_code == region
                         );
                         return regionInfo?.info[0]?.approved_name || region;
                     });
             } else if (user.geo_region) {
                 const regionInfo = geoData.find(geo =>
-                    geo.info.length && geo.info[0].hierarchy_code === user.geo_region
+                    geo.info.length && geo.info[0].hierarchy_code == user.geo_region
                 );
                 regionNames = [regionInfo?.info[0]?.approved_name || user.geo_region];
             }
