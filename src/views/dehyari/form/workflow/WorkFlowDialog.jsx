@@ -15,6 +15,8 @@ import { convertUnixToJalali } from "@/utils/dateConverter";
 import useWorkflow from "@/hooks/useWorkflowState";
 import RequestHistory from "./RequestHistory";
 import ReviewDecree from "./ReviewDecree";
+import TabContent from "@/components/common/Tabs/TabContent";
+import AnimatedTabs from "@/components/common/Tabs/AnimatedTabs";
 
 const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
@@ -116,6 +118,11 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
         );
     };
 
+    const tabs = [
+        { label: "بررسی حکم", value: "review" },
+        { label: "سوابق درخواست", value: "history" }
+    ];
+
     return (
         <Drawer
             anchor="right"
@@ -139,42 +146,13 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                 </Tooltip>
             </div>
             <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name} ${details?.last_name}`} />
-            <div className={'flex justify-center gap-5 mt-2'}>
-                <Chip
-                    label={"بررسی حکم"}
-                    onClick={() => setActiveTab('review')}
-                    clickable
-                    variant={activeTab === 'review' ? 'filled' : 'outlined'}
-                    sx={{
-                        boxShadow: activeTab === 'review' ? 2 : 0,
-                        borderWidth: 1,
-                        backgroundColor: activeTab === 'review' ? 'primary.main' : 'transparent',
-                        color: activeTab === 'review' ? 'white' : 'inherit',
-                        '&:hover': {
-                            backgroundColor: 'primary.main',
-                            color: 'inherit',
-                        },
-                    }}
-                />
-                <Chip
-                    label={"سوابق درخواست"}
-                    onClick={() => setActiveTab('history')}
-                    clickable
-                    variant={activeTab === 'history' ? 'filled' : 'outlined'}
-                    sx={{
-                        boxShadow: activeTab === 'history' ? 2 : 0,
-                        borderWidth: 1,
-                        backgroundColor: activeTab === 'history' ? 'primary.main' : 'transparent',
-                        color: activeTab === 'history' ? 'white' : 'inherit',
-                        '&:hover': {
-                            backgroundColor: 'primary.main',
-                            color: 'inherit',
-                        },
-                    }}
-                />
-            </div>
+            <AnimatedTabs
+                tabs={tabs}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+            />
             <DialogContent>
-                {activeTab === 'review' ? (
+                <TabContent active={activeTab === 'review'}>
                     <ReviewDecree
                         details={details}
                         rejectApprovalLevel={rejectApprovalLevel}
@@ -183,9 +161,10 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                         handleDescriptionChange={handleDescriptionChange}
                         renderRejectOptions={renderRejectOptions}
                     />
-                ) : (
+                </TabContent>
+                <TabContent active={activeTab === 'history'}>
                     <RequestHistory details={details} />
-                )}
+                </TabContent>
             </DialogContent>
             <DialogActions>
                 {activeTab === 'review' && (
