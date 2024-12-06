@@ -10,6 +10,10 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
 
+    console.log("Options => ", options);
+    console.log("Selected Options => ", selectedOptions);
+
+
     switch (role) {
         case "14":
             return (
@@ -64,8 +68,13 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         control={control}
                         rules={{ required: true }}
                         defaultValue={selectedOptions && Array.isArray(selectedOptions) ?
-                            options.filter(option => selectedOptions.includes(option.hierarchy_code)) :
-                            options.filter(option => option.hierarchy_code === selectedOptions) || []
+                            options.filter(option => selectedOptions.some(selected =>
+                                selected.village_code === option.hierarchy_code ||
+                                selected === option.hierarchy_code
+                            )) :
+                            selectedOptions?.village_code ?
+                                options.filter(option => option.hierarchy_code === selectedOptions.village_code) :
+                                options.filter(option => option.hierarchy_code === selectedOptions) || []
                         }
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
@@ -97,8 +106,13 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                         }
                                     }}
                                     defaultValue={selectedOptions && Array.isArray(selectedOptions) ?
-                                        options.filter(option => selectedOptions.includes(option.hierarchy_code)) :
-                                        options.filter(option => option.hierarchy_code === selectedOptions) || []
+                                        options.filter(option => selectedOptions.some(selected =>
+                                            selected.village_code === option.hierarchy_code ||
+                                            selected === option.hierarchy_code
+                                        )) :
+                                        selectedOptions?.village_code ?
+                                            options.filter(option => option.hierarchy_code === selectedOptions.village_code) :
+                                            options.filter(option => option.hierarchy_code === selectedOptions) || []
                                     }
                                     renderInput={(params) => (
                                         <TextField
