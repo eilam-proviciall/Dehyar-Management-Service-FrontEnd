@@ -105,7 +105,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                                     }
                                 }}
                             >
-                                رد به مسئول مالی
+                                عدم تایید و رد به مسئول مالی
                             </Button>
                         </Grid>
                         <Grid item xs={6}>
@@ -130,7 +130,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                                     }
                                 }}
                             >
-                                رد به بخشدار
+                                عدم تایید و رد به بخشداری
                             </Button>
                         </Grid>
                     </Grid>

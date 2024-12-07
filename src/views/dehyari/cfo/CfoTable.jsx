@@ -100,6 +100,9 @@ function CfoTable(props) {
         if (!filterStatus) {
             return data;
         }
+        if (filterStatus === 'my_inbox') {
+            return data.filter(item => item.contract_state === 'draft' || item.contract_state === 'rejected_to_financial_officer');
+        }
         return data.filter(item => item.contract_state === filterStatus);
     }, [data, filterStatus]);
 
@@ -230,7 +233,7 @@ function CfoTable(props) {
                     }}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.length.toString()}
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
@@ -238,20 +241,12 @@ function CfoTable(props) {
                     variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.filter(item => item.contract_state === 'draft' || item.contract_state === 'rejected_to_financial_officer').length.toString()}
                     ref={(el) => (buttonRefs.current[1] = el)}
-                    label="پیش‌نویس"
-                    onClick={() => handleFilterChange('draft', 1)}
+                    label="کارتابل من"
+                    onClick={() => handleFilterChange('my_inbox', 1)}
                     clickable
-                    variant={filterStatus === 'draft' ? 'outlined' : 'filled'}
-                />
-                <FilterChip
-                    avatarValue="0"
-                    ref={(el) => (buttonRefs.current[2] = el)}
-                    label="نیازمند اصلاح"
-                    onClick={() => handleFilterChange('rejected_to_financial_officer', 2)}
-                    clickable
-                    variant={filterStatus === 'rejected_to_financial_officer' ? 'outlined' : 'filled'}
+                    variant={filterStatus === 'my_inbox' ? 'outlined' : 'filled'}
                 />
             </Box>
         ),
