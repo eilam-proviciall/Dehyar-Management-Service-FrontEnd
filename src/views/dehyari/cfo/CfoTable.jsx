@@ -4,15 +4,12 @@ import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
-import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
+import { GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import { toast } from "react-toastify";
-import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
-import HumanResourceDTO from "@/utils/humanResourceDTO";
 import { getJobTitleLabel } from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
@@ -25,6 +22,10 @@ import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
 import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
+import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
+import HumanResourceDTO from "@/utils/humanResourceDTO";
+import MyDocument from "@components/MyDocument";
+import { pdf } from "@react-pdf/renderer";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -53,21 +54,7 @@ function CfoTable(props) {
     };
 
     const handleDownloadPdf = async (row) => {
-        try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}&human_contract_id=${row.human_contract_id}`, { requiresAuth: true });
-            const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
-            const asPdf = pdf([]);
-            asPdf.updateContainer(doc);
-            const blob = await asPdf.toBlob();
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            toast.success('محاسبه موفق بود');
-        } catch (error) {
-            console.error(error);
-        }
+        downloadHumanResourcePdf(row.human_resource_id, row.human_contract_id);
     };
 
     const handleClose = () => {

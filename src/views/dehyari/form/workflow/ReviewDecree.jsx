@@ -3,33 +3,13 @@ import Box from "@mui/material/Box";
 import UserInfoItem from '../edit/Tables/UserInfoItem';
 import TextField from "@mui/material/TextField";
 import { convertUnixToJalali } from "@/utils/dateConverter";
-import { DownloadHumanResourcePdf } from "@/Services/humanResources";
-import HumanResourceDTO from "@/utils/humanResourceDTO";
-import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
-import { toast } from 'react-toastify';
-import api from "@/utils/axiosInstance";
+import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
 import Chip from "@mui/material/Chip";
 import ArticleIcon from '@mui/icons-material/Article';
 
 const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handleDescriptionChange, renderRejectOptions }) => {
-    const handleDownloadPdf = async () => {
-        try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${details.human_resource_id}&human_contract_id=${details.human_contract_id}`, { requiresAuth: true });
-            const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
-            const asPdf = pdf([]);
-            asPdf.updateContainer(doc);
-            const blob = await asPdf.toBlob();
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            toast.success('محاسبه موفق بود');
-        } catch (error) {
-            toast.error('خطا در نمایش حکم کارگزینی');
-            return error;
-        }
+    const handleDownloadPdf = () => {
+        downloadHumanResourcePdf(details.human_resource_id, details.human_contract_id);
     };
 
     return (
@@ -49,6 +29,7 @@ const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handle
                         color="primary"
                         onClick={handleDownloadPdf}
                         sx={{ cursor: 'pointer' }}
+                        size='small'
                     />
                 )}
             </Box>

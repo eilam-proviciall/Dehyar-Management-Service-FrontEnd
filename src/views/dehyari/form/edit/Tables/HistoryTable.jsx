@@ -1,24 +1,19 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Button, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import axios from "axios";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
-import { DownloadHumanResourcePdf, HumanContract } from "@/Services/humanResources";
+import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
 import { getJobTitleLabel } from "@data/jobTitles";
 import { toast } from 'react-toastify';
 import { convertUnixToJalali } from "@utils/dateConverter";
 import CustomIconButton from "@core/components/mui/IconButton";
-import Chip from "@mui/material/Chip";
-import api from "@utils/axiosInstance";
-import HumanResourceDTO from "@/utils/humanResourceDTO";
-import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
 import WorkFlowDialog from "@views/dehyari/form/workflow/WorkFlowDialog";
 import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
+import { HumanContract } from '@/Services/humanResources';
 
 const HistoryTable = () => {
     const [data, setData] = useState([]);
@@ -30,7 +25,6 @@ const HistoryTable = () => {
     const [editId, setEditId] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [contractStateApprovedExists, setContractStateApprovedExists] = useState(false);
-
 
 
     const open = Boolean(anchorEl);
@@ -66,21 +60,7 @@ const HistoryTable = () => {
     const userId = queryParams.get('id');
     const salaryId = queryParams.get('salary_id');
     const handleDownloadPdf = async (row) => {
-        try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${userId}&human_contract_id=${row.original.human_contract_id}`, { requiresAuth: true });
-            const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
-            const asPdf = pdf([]);
-            asPdf.updateContainer(doc);
-            const blob = await asPdf.toBlob();
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            toast.success('محاسبه موفق بود');
-        } catch (error) {
-            return error
-        }
+        downloadHumanResourcePdf(userId, row.original.human_contract_id);
     };
 
     useEffect(() => {
