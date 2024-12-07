@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Button, Divider, FormControl, TextField } from '@mui/material';
 import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { GradingInformationDTO } from "@/utils/GradingInformationDTO";
+import { GradingInformationDTO } from "@/utils/gradingInformationDTO";
 import api from '@/utils/axiosInstance';
 import { getDivisonInformation } from '@/Services/Grading';
 
