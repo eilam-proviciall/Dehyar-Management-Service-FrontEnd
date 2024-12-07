@@ -221,7 +221,7 @@ function CfoTable(props) {
                             }}
                             className={"rounded-full animate-pulse"}
                         >
-                            < i class="ri-send-plane-line" />
+                            < i class="ri-mail-send-line" />
                         </CustomIconButton>
                     </div>
                 ),

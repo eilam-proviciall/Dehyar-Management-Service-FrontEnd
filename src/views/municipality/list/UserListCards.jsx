@@ -3,14 +3,14 @@ import Grid from '@mui/material/Grid'
 
 // Component Imports
 import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle'
-import {useEffect, useState} from 'react'
-import {user} from '@/Services/Auth/AuthService'
-import {set} from 'js-cookie'
-import {Skeleton} from '@mui/material'
+import { useEffect, useState } from 'react'
+import { user } from '@/Services/Auth/AuthService'
+import { set } from 'js-cookie'
+import { Skeleton } from '@mui/material'
 import api from '@/utils/axiosInstance'
 
 
-const UserListCards = ({loading, setLoading}) => {
+const UserListCards = ({ loading, setLoading }) => {
 
     // States
     const [userList, setUserList] = useState([]);
@@ -66,7 +66,7 @@ const UserListCards = ({loading, setLoading}) => {
 
     const fetchData = () => {
         setLoading(true);
-        api.get(user(), {requiresAuth: true})
+        api.get(user(), { requiresAuth: true })
             .then((response) => {
                 const ResponseData = response.data.data;
                 setUserList(ResponseData);
@@ -78,9 +78,9 @@ const UserListCards = ({loading, setLoading}) => {
                     setLoading(false)
                 }
             ).finally(() => {
-            setLoading(false);
-            setShouldFetch(false);
-        });
+                setLoading(false);
+                setShouldFetch(false);
+            });
     }
 
     useEffect(() => {
