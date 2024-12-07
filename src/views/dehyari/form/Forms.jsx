@@ -11,7 +11,7 @@ import { GetHumanResource, humanResources } from '@/Services/humanResources';
 import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 import api from '@/utils/axiosInstance';
-import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
+import EditHumanResourceFormDTO from "@/utils/EditHumanResourceFormDTO";
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();

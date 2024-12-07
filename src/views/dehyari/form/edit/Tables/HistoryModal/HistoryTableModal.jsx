@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 import { HumanContract } from "@/Services/humanResources";
 import { toast } from "react-toastify";
-import HumanContractDTO from "@utils/HumanContractDTO";
+import HumanContractDTO from "@/utils/HumanContractDTO";
 import { DateObject } from 'react-multi-date-picker';
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";

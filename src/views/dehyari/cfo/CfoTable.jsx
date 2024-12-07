@@ -182,9 +182,8 @@ function CfoTable(props) {
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"secondary"}
-                            disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
-                                row.original.contract_state !== 'approved' && router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
                             }}
                             className={"rounded-full"}
                         >
@@ -216,7 +215,7 @@ function CfoTable(props) {
                             }}
                             className={"rounded-full animate-pulse"}
                         >
-                            {(row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') 
+                            {(row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer')
                                 ? <i className="ri-mail-send-line" />
                                 : <i className="ri-history-line" />
                             }
@@ -296,13 +295,13 @@ function CfoTable(props) {
                 </span>
                 <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer 
-                open={popupOpen} 
-                setDialogOpen={setPopupOpen} 
-                details={currentRow} 
-                rejectApprovalLevel={0} 
-                setLoading={setLoading} 
-                nextState={'pending_supervisor'} 
+            <WorkFlowDrawer
+                open={popupOpen}
+                setDialogOpen={setPopupOpen}
+                details={currentRow}
+                rejectApprovalLevel={0}
+                setLoading={setLoading}
+                nextState={'pending_supervisor'}
                 readOnly={!(currentRow?.contract_state == 'draft' || currentRow?.contract_state == 'rejected_to_financial_officer')}
             />
         </div>

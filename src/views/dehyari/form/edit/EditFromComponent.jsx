@@ -10,7 +10,7 @@ import EditTableComponent from "@views/dehyari/form/edit/Tables/EditTableCompone
 import {motion, AnimatePresence} from 'framer-motion';
 import axios from "axios";
 import {humanResources} from "@/Services/humanResources";
-import EditHumanResourceFormDTO from "@utils/EditHumanResourceFormDTO";
+import EditHumanResourceFormDTO from "@/utils/EditHumanResourceFormDTO";
 import {toast} from "react-toastify";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';

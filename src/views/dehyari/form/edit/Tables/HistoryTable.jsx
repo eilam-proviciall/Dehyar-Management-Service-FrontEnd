@@ -11,7 +11,7 @@ import { convertUnixToJalali } from "@utils/dateConverter";
 import CustomIconButton from "@core/components/mui/IconButton";
 import Chip from "@mui/material/Chip";
 import api from "@utils/axiosInstance";
-import HumanResourceDTO from "@utils/HumanResourceDTO";
+import HumanResourceDTO from "@/utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import Tooltip from "@mui/material/Tooltip";
