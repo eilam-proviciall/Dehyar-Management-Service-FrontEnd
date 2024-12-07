@@ -18,7 +18,7 @@ import ReviewDecree from "./ReviewDecree";
 import TabContent from "@/components/common/Tabs/TabContent";
 import AnimatedTabs from "@/components/common/Tabs/AnimatedTabs";
 
-const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState }) => {
+const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState, readOnly = false }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
     const [selectedRejectType, setSelectedRejectType] = useState(null);
     const [activeTab, setActiveTab] = useState('review'); // Default tab is بررسی حکم
@@ -145,7 +145,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name} ${details?.last_name}`} />
+            <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name || ''} ${details?.last_name || ''}`} />
             <AnimatedTabs
                 tabs={tabs}
                 activeTab={activeTab}
@@ -166,25 +166,21 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     <RequestHistory details={details} />
                 </TabContent>
             </DialogContent>
-            <DialogActions>
-                {activeTab === 'review' && (
+            <DialogActions sx={{ justifyContent: 'space-between', px: 5, pb: 3 }}>
+                {!readOnly && (
                     <>
-                        {rejectApprovalLevel > 0 && (
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() => setShowRejectOptions(!showRejectOptions)}
-                                sx={{ ml: 2 }}
-                            >
-                                رد درخواست
-                            </Button>
-                        )}
+                        <Button variant="contained" color="success" onClick={handleApprove}>
+                            تایید
+                        </Button>
                         <Button
                             variant="contained"
-                            color="primary"
-                            onClick={handleApprove}
+                            color="error"
+                            onClick={() => {
+                                setShowRejectOptions(true);
+                                handleStateChange('rejected', true);
+                            }}
                         >
-                            تایید
+                            رد درخواست
                         </Button>
                     </>
                 )}

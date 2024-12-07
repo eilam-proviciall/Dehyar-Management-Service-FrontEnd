@@ -93,7 +93,6 @@ function CfoTable(props) {
         }
     };
 
-
     const fetchData = async () => {
         try {
             const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
@@ -212,16 +211,15 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                if (row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
+                                setCurrentRow(row.original);
+                                setPopupOpen(true);
                             }}
                             className={"rounded-full animate-pulse"}
                         >
-                            < i class="ri-mail-send-line" />
+                            {(row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') 
+                                ? <i className="ri-mail-send-line" />
+                                : <i className="ri-history-line" />
+                            }
                         </CustomIconButton>
                     </div>
                 ),
@@ -298,7 +296,15 @@ function CfoTable(props) {
                 </span>
                 <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
+            <WorkFlowDrawer 
+                open={popupOpen} 
+                setDialogOpen={setPopupOpen} 
+                details={currentRow} 
+                rejectApprovalLevel={0} 
+                setLoading={setLoading} 
+                nextState={'pending_supervisor'} 
+                readOnly={!(currentRow?.contract_state == 'draft' || currentRow?.contract_state == 'rejected_to_financial_officer')}
+            />
         </div>
     );
 }
