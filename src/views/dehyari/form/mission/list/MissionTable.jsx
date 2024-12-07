@@ -9,7 +9,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import {getMissions} from '@/Services/Mission';
-import {MissionDTO} from '@/utils/missionDTO';
+import {MissionDTO} from '@/utils/MissionDTO';
 import CustomIconButton from "@core/components/mui/IconButton";
 
 
