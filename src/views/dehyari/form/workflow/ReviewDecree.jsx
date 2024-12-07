@@ -8,7 +8,7 @@ import Chip from "@mui/material/Chip";
 import ArticleIcon from '@mui/icons-material/Article';
 
 const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handleDescriptionChange, renderRejectOptions }) => {
-    const handleDownloadPdf = () => {
+    const handleDownloadPdf = () => {        
         downloadHumanResourcePdf(details.human_resource_id, details.human_contract_id);
     };
 
@@ -33,7 +33,7 @@ const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handle
                     />
                 )}
             </Box>
-            <UserInfoItem icon="ri-calendar-line" label="تاریخ شروع قرارداد" value={details ? convertUnixToJalali(details.contract_start) : 'نامشخص'} />
+            <UserInfoItem icon="ri-calendar-line" label="تاریخ شروع قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
             <UserInfoItem icon="ri-calendar-line" label="تاریخ اجرای قرارداد" value={details ? convertUnixToJalali(details.contract_end) : 'نامشخص'} />
             <UserInfoItem icon="ri-wallet-2-line" label="مبلغ حکم کارگزینی" value="-" />
 

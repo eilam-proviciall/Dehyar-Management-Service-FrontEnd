@@ -17,6 +17,7 @@ import RequestHistory from "./RequestHistory";
 import ReviewDecree from "./ReviewDecree";
 import TabContent from "@/components/common/Tabs/TabContent";
 import AnimatedTabs from "@/components/common/Tabs/AnimatedTabs";
+import Typography from "@mui/material/Typography";
 
 const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState, readOnly = false }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
@@ -145,7 +146,14 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={`حکم کارگزینی ${details?.first_name || ''} ${details?.last_name || ''}`} />
+            <DividerSimple title={
+                <Typography component="span">
+                    حکم کارگزینی{' '}
+                    <Typography component="span" sx={{ fontWeight: 700 }} display="inline">
+                        {details?.first_name || ''} {details?.last_name || ''}
+                    </Typography>
+                </Typography>
+            } />
             <AnimatedTabs
                 tabs={tabs}
                 activeTab={activeTab}
