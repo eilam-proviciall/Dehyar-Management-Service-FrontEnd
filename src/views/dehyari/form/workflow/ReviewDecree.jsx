@@ -7,7 +7,7 @@ import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
 import Chip from "@mui/material/Chip";
 import ArticleIcon from '@mui/icons-material/Article';
 
-const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handleDescriptionChange, renderRejectOptions }) => {
+const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handleDescriptionChange, renderRejectOptions, readOnly }) => {
     const handleDownloadPdf = () => {        
         downloadHumanResourcePdf(details.human_resource_id, details.human_contract_id);
     };
@@ -49,7 +49,17 @@ const ReviewDecree = ({ details, rejectApprovalLevel, description, error, handle
                     error={!!error}
                     helperText={error || 'در صورت رد درخواست، وارد کردن توضیحات الزامی است'}
                     required
-                    sx={{ mt: 2, direction: 'rtl' }}
+                    disabled={readOnly}
+                    sx={{
+                        mt: 2, 
+                        direction: 'rtl',
+                        '& .MuiInputBase-input': {
+                            textAlign: 'right'
+                        },
+                        '& .MuiFormHelperText-root': {
+                            textAlign: 'right'
+                        }
+                    }}
                 />
             )}
             {renderRejectOptions()}
