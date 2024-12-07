@@ -162,14 +162,14 @@ function CfoTable(props) {
                     return <div style={{ textAlign: 'right' }}>
                         <ContractStateChip
                             label={contractStateValue}
-                            onClick={() => {
-                                if (cell.getValue() == 'draft' || cell.getValue() == 'rejected_to_financial_officer') {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
-                            }}
+                            // onClick={() => {
+                            //     if (cell.getValue() == 'draft' || cell.getValue() == 'rejected_to_financial_officer') {
+                            //         setCurrentRow(row.original);
+                            //         setPopupOpen(true);
+                            //     } else {
+                            //         toast.warning('شما به این قرارداد دسترسی ندارید');
+                            //     }
+                            // }}
                             avatar={role}
                         />
                     </div>
@@ -185,7 +185,7 @@ function CfoTable(props) {
                             color={"secondary"}
                             disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
-                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
+                                row.original.contract_state !== 'approved' && router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
                             }}
                             className={"rounded-full"}
                         >
@@ -200,7 +200,7 @@ function CfoTable(props) {
                         >
                             <i className="ri-printer-line" />
                         </CustomIconButton>
-                        <CustomIconButton
+                        {/* <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
                                 handleWorkflowHistory(row.original);
@@ -208,6 +208,20 @@ function CfoTable(props) {
                             className={"rounded-full"}
                         >
                             < i class="ri-history-line" />
+                        </CustomIconButton> */}
+                        <CustomIconButton
+                            color={"secondary"}
+                            onClick={() => {
+                                if (row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') {
+                                    setCurrentRow(row.original);
+                                    setPopupOpen(true);
+                                } else {
+                                    toast.warning('شما به این قرارداد دسترسی ندارید');
+                                }
+                            }}
+                            className={"rounded-full animate-pulse"}
+                        >
+                            < i class="ri-send-plane-line" />
                         </CustomIconButton>
                     </div>
                 ),
@@ -285,16 +299,6 @@ function CfoTable(props) {
                 <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
-            <HistoryWorkflowPopup
-                open={popupWorkflow}
-                onClose={() => setPopupWorkflow(false)}
-                salaryId={currentRow?.salary_id}
-                employeeInfo={{
-                    fullName: `${currentRow?.first_name} ${currentRow?.last_name}`,
-                    position: currentRow?.job_type,
-                }}
-            />
-
         </div>
     );
 }

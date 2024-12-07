@@ -12,11 +12,11 @@ import SidebarFooter from '@views/municipality/create/SidebarFooter';
 import RoleFields from './RoleFields';
 import { useFetchRegions } from "@hooks/useFetchRegions";
 import CustomDrawer from '@/@core/components/mui/Drawer';
-import {useFetchStates} from "@hooks/useFetchStates";
+import { useFetchStates } from "@hooks/useFetchStates";
 import roles from '@data/roles';
 
 
-const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading,userGeoState }) => {
+const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, handleAddEventSidebarToggle, sidebarDetails, setSidebarDetails, setLoading, userGeoState }) => {
     const { control, setValue, clearErrors, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             title: '',
@@ -24,7 +24,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             last_name: "",
             nid: '',
             role: '',
-            geo_region:'',
+            geo_region: '',
             covered_villages: [],
         },
     });
@@ -85,6 +85,7 @@ const CreateMunicipalityUserSidebar = ({ calendarStore, addEventSidebarOpen, han
             />
         </FormControl>
     );
+
 
     return (
         <CustomDrawer

@@ -10,7 +10,6 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
     //     return <Typography variant='body1'>در حال دریافت داده ها...</Typography>;
     // }
 
-
     switch (role) {
         case "14":
             return (
@@ -19,7 +18,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='geo_region'
                         control={control}
                         rules={{ required: true }}
-                        defaultValue=""
+                        defaultValue={selectedOptions ? [selectedOptions] : []}
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
@@ -32,15 +31,15 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                         if (!newValue) {
                                             setValue('geo_state', '');
                                             setValue('geo_city', '');
-                                            setValue('geo_region', '');
-                                            onChange('');
+                                            setValue('geo_region', []);
+                                            onChange([]);
                                             return;
                                         }
-                                        
+
                                         setValue('geo_state', newValue.city.geo_state);
                                         setValue('geo_city', newValue.geo_cities);
-                                        setValue('geo_region', newValue.hierarchy_code);
-                                        onChange(newValue.hierarchy_code);
+                                        setValue('geo_region', [newValue.hierarchy_code]);
+                                        onChange([newValue.hierarchy_code]);
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -50,7 +49,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                             helperText={errors.geo_region?.message}
                                         />
                                     )}
-                                    value={options.find(option => option.hierarchy_code === value) || null}
+                                    value={options.find(option => value && value[0] === option.hierarchy_code) || null}
                                 />
                             )
                         )}
@@ -64,7 +63,15 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                         name='covered_villages'
                         control={control}
                         rules={{ required: true }}
-                        defaultValue={selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []}
+                        defaultValue={selectedOptions && Array.isArray(selectedOptions) ?
+                            options.filter(option => selectedOptions.some(selected =>
+                                selected.village_code === option.hierarchy_code ||
+                                selected === option.hierarchy_code
+                            )) :
+                            selectedOptions?.village_code ?
+                                options.filter(option => option.hierarchy_code === selectedOptions.village_code) :
+                                options.filter(option => option.hierarchy_code === selectedOptions) || []
+                        }
                         render={({ field: { value, onChange } }) => (
                             isLoading ? (
                                 <Typography variant='body1'>در حال بارگذاری...</Typography>
@@ -75,12 +82,33 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                                     options={options}
                                     getOptionLabel={(option) => `${option.city_name}-${option.approved_name}`}
                                     onChange={(event, newValue) => {
-                                        setValue('geo_state', newValue && newValue[0].geo_state)
-                                        setValue('covered_villages',newValue.map(item => item.hierarchy_code || []));
-                                        onChange(newValue.map(item => item || []));
+                                        if (newValue && newValue[0]) {
+                                            setValue('geo_state', newValue[0].geo_state);
+                                            setValue('geo_city', newValue[0].geo_city);
+
+                                            // جمع‌آوری geo_region‌های منحصر به فرد
+                                            const uniqueGeoRegions = [...new Set(newValue.map(item => item.geo_region))].map(String);
+                                            setValue('geo_region', uniqueGeoRegions);
+
+                                            const villages = newValue.map(item => item.hierarchy_code);
+                                            setValue('covered_villages', villages);
+                                            onChange(villages);
+                                        } else {
+                                            setValue('geo_state', '');
+                                            setValue('geo_region', []);
+                                            setValue('geo_city', '');
+                                            setValue('covered_villages', []);
+                                            onChange([]);
+                                        }
                                     }}
-                                    defaultValue={
-                                        selectedOptions && options.filter(option => selectedOptions.some(selectedOption => selectedOption.village_code === option.hierarchy_code)) || []
+                                    defaultValue={selectedOptions && Array.isArray(selectedOptions) ?
+                                        options.filter(option => selectedOptions.some(selected =>
+                                            selected.village_code === option.hierarchy_code ||
+                                            selected === option.hierarchy_code
+                                        )) :
+                                        selectedOptions?.village_code ?
+                                            options.filter(option => option.hierarchy_code === selectedOptions.village_code) :
+                                            options.filter(option => option.hierarchy_code === selectedOptions) || []
                                     }
                                     renderInput={(params) => (
                                         <TextField
@@ -98,7 +126,7 @@ const RoleFields = ({ role, control, errors, isLoading, options, selectedOptions
                     />
                 </FormControl>
             );
-        case "16" : return (
+        case "16": return (
             <FormControl fullWidth className='mbe-5'>
                 <Controller
                     name='geo_state'
