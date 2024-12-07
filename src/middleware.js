@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { withoutSuffix } from '@/utils/string';
 
 const HOME_PAGE_URL = '/login';
 
