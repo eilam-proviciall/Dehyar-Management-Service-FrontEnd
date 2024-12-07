@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { toast } from "react-toastify";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
-import HumanResourceDTO from "@/utils/HumanResourceDTO";
+import HumanResourceDTO from "@/utils/humanResourceDTO";
 import { getJobTitleLabel } from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';

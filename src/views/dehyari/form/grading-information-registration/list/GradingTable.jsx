@@ -12,7 +12,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {toast} from 'react-toastify';
 import api from '@/utils/axiosInstance';
 import {getDivisonInformation} from '@/Services/Grading';
-import {GradingInformationDTO} from '@/utils/GradingInformationDTO';
+import {GradingInformationDTO} from '@/utils/gradingInformationDTO';
 
 
 const GradingTable = ({handleToggle, setMode, setData, methods}) => {

@@ -1,17 +1,17 @@
 "use client"
-import React, {useEffect, useState} from 'react';
-import {Grid, Card} from '@mui/material';
-import {useForm, FormProvider} from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Grid, Card } from '@mui/material';
+import { useForm, FormProvider } from 'react-hook-form';
 import EditButtonGroup from './EditButtonGroup';
 import EditFormContent from './EditFormContent';
 import EditProfilePictureUpload from "@views/dehyari/form/edit/EditProfilePictureUpload";
 import validationSchemas from "@views/dehyari/form/validationSchemas";
 import EditTableComponent from "@views/dehyari/form/edit/Tables/EditTableComponent";
-import {motion, AnimatePresence} from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from "axios";
-import {humanResources} from "@/Services/humanResources";
-import EditHumanResourceFormDTO from "@/utils/EditHumanResourceFormDTO";
-import {toast} from "react-toastify";
+import { humanResources } from "@/Services/humanResources";
+import EditHumanResourceFormDTO from "@/utils/editHumanResourceFormDTO";
+import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
 
@@ -35,7 +35,7 @@ function EditFromComponent() {
                 setLoading(true);
                 setError(false);
                 try {
-                    const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, {requiresAuth: true});
+                    const response = await api.get(`${humanResources()}/findByIdOrNid/${param}`, { requiresAuth: true });
                     const dto = new EditHumanResourceFormDTO(response.data);
                     setDefaultValue(dto);
                     methods.reset(dto);
@@ -58,7 +58,7 @@ function EditFromComponent() {
     const onSubmit = async (formData) => {
         const apiData = EditHumanResourceFormDTO.fromForm(formData);
         try {
-            const response = await api.put(`${humanResources()}/update/${formData.id}`, apiData, {requiresAuth: true});
+            const response = await api.put(`${humanResources()}/update/${formData.id}`, apiData, { requiresAuth: true });
             toast.success('اطلاعات با موفقیت ذخیره شد');
         } catch (error) {
             return error
@@ -67,7 +67,7 @@ function EditFromComponent() {
 
     const handleSwitch = () => setShowTable(!showTable);
 
-    if (loading) return <Loading/>
+    if (loading) return <Loading />
     if (error) return <div>خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.</div>;
 
 
@@ -78,14 +78,14 @@ function EditFromComponent() {
                     <Card>
                         <AnimatePresence mode="wait">
                             {showTable ? (
-                                <motion.div key="table" initial={{opacity: 0, scale: 0.5}}
-                                            animate={{opacity: 1, scale: 1}} transition={{duration: 0.5}}>
-                                    <EditTableComponent/>
+                                <motion.div key="table" initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+                                    <EditTableComponent />
                                 </motion.div>
                             ) : (
-                                <motion.div key="form" initial={{opacity: 0, scale: 0.5}}
-                                            animate={{opacity: 1, scale: 1}} transition={{duration: 0.5}}>
-                                    <EditFormContent validationSchemas={validationSchemas}/>
+                                <motion.div key="form" initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+                                    <EditFormContent validationSchemas={validationSchemas} />
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -94,11 +94,11 @@ function EditFromComponent() {
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={6}>
                         <Grid item xs={12}>
-                            <EditProfilePictureUpload defaultProfilePicture={defaultValue?.profilePicture}/>
+                            <EditProfilePictureUpload defaultProfilePicture={defaultValue?.profilePicture} />
                         </Grid>
                         <Grid item xs={12}>
                             <EditButtonGroup onSubmit={methods.handleSubmit(onSubmit)} onSwitch={handleSwitch}
-                                             showTable={showTable}/>
+                                showTable={showTable} />
                         </Grid>
                     </Grid>
                 </Grid>
