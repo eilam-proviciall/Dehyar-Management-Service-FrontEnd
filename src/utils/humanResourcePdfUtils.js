@@ -1,5 +1,5 @@
 import { DownloadHumanResourcePdf } from "@/Services/humanResources";
-import HumanResourceDTO from "@/utils/humanResourceDTO";
+import HumanResourceDTO from "@/utils/HumanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 import { toast } from 'react-toastify';

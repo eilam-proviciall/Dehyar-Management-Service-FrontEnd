@@ -8,9 +8,8 @@ import EditProfilePictureUpload from "@views/dehyari/form/edit/EditProfilePictur
 import validationSchemas from "@views/dehyari/form/validationSchemas";
 import EditTableComponent from "@views/dehyari/form/edit/Tables/EditTableComponent";
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from "axios";
 import { humanResources } from "@/Services/humanResources";
-import EditHumanResourceFormDTO from "@/utils/editHumanResourceFormDTO";
+import EditHumanResourceFormDTO from "@/utils/EditHumanResourceFormDTO";
 import { toast } from "react-toastify";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';

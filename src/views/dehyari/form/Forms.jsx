@@ -8,10 +8,9 @@ import { toast } from 'react-toastify';
 import ButtonGroup from './ButtonGroup';
 import FormContent from './FormContent';
 import { GetHumanResource, humanResources } from '@/Services/humanResources';
-import { dtoToEmployee, salaryToDTO } from '@/utils/salaryDTO';
+import { dtoToEmployee, salaryToDTO } from '@/utils/SalaryDTO';
 import ProfilePictureUpload from "@views/dehyari/form/StepsForm/ProfilePictureUpload";
 import api from '@/utils/axiosInstance';
-import EditHumanResourceFormDTO from "@/utils/editHumanResourceFormDTO";
 
 const Forms = ({ invoiceData }) => {
     const router = useRouter();
