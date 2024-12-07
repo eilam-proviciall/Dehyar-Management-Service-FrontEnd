@@ -145,7 +145,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name || ''} ${details?.last_name || ''}`} />
+            <DividerSimple title={`حکم کارگزینی ${details?.first_name || ''} ${details?.last_name || ''}`} />
             <AnimatedTabs
                 tabs={tabs}
                 activeTab={activeTab}
