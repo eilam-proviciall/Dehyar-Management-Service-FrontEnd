@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 // Component Imports
 import DividerSimple from '@/components/common/Divider/DividerSimple'
 import SectionLivingInformation from './SectionLivingInformation';
-import { GradingInformationDTO } from '@/utils/gradingInformationDTO';
+import { GradingInformationDTO } from '@/utils/GradingInformationDTO';
 
 const persianToEnglishDigits = (str) => {
     const persianDigits = "۰۱۲۳۴۵۶۷۸۹";

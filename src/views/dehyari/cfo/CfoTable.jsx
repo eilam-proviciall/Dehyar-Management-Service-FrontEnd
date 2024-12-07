@@ -22,7 +22,7 @@ import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
 import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
-import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
+import { downloadHumanResourcePdf } from "@/utils/HumanResourcePdfUtils";
 import HumanResourceDTO from "@/utils/humanResourceDTO";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";

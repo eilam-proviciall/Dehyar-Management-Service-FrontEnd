@@ -1,7 +1,7 @@
 import DividerSimple from '@/components/common/Divider/DividerSimple'
 import { getMachineBasicInformation } from '@/Services/Machine'
 import api from '@/utils/axiosInstance'
-import { MachineInformationDTO } from '@/utils/machineInformationDTO'
+import { MachineInformationDTO } from '@/utils/MachineInformationDTO'
 import { Box, Button, Grid, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 

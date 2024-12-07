@@ -2,7 +2,7 @@ import React from 'react'
 import {Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField} from '@mui/material';
 import {Controller, useFieldArray, useForm, useFormContext} from 'react-hook-form';
 import {toast} from 'react-toastify';
-import {MachineInformationDTO} from '@/utils/machineInformationDTO';
+import {MachineInformationDTO} from '@/utils/MachineInformationDTO';
 import api from '@/utils/axiosInstance';
 import {getMachineCost, getMachineInformation} from '@/Services/Machine';
 import typePlates from "@data/typePlates"

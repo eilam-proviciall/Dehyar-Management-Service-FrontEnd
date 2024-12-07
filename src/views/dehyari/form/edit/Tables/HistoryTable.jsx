@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Button } from '@mui/material';
+imimport { Box, Button } from '@mui/material';
 import axios from "axios";
 import HistoryTableModal from "@views/dehyari/form/edit/Tables/HistoryModal/HistoryTableModal";
-import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
+import { downloadHumanResourcePdf } from "@/utils/HumanResourcePdfUtils";
 import { getJobTitleLabel } from "@data/jobTitles";
 import { toast } from 'react-toastify';
 import { convertUnixToJalali } from "@utils/dateConverter";
@@ -15,7 +15,7 @@ import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import { HumanContract } from '@/Services/humanResources';
 
-const HistoryTable = () => {
+le = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState(null);

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import UserInfoItem from '../edit/Tables/UserInfoItem';
 import TextField from "@mui/material/TextField";
 import { convertUnixToJalali } from "@/utils/dateConverter";
-import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
+import { downloadHumanResourcePdf } from "@/utils/HumanResourcePdfUtils";
 import Chip from "@mui/material/Chip";
 import ArticleIcon from '@mui/icons-material/Article';
 
