@@ -22,8 +22,7 @@ import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
 import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
-import { downloadHumanResourcePdf } from "@/utils/HumanResourcePdfUtils";
-import HumanResourceDTO from "@/utils/humanResourceDTO";
+import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
 import MyDocument from "@components/MyDocument";
 import { pdf } from "@react-pdf/renderer";
 
@@ -170,7 +169,7 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
                             className={"rounded-full"}
                         >
