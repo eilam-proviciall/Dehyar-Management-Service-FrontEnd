@@ -280,7 +280,7 @@ function CfoTable(props) {
                 open={popupOpen}
                 setDialogOpen={setPopupOpen}
                 details={currentRow}
-                rejectApprovalLevel={2}
+                rejectApprovalLevel={0}
                 setLoading={setLoading}
                 nextState={'pending_supervisor'}
                 readOnly={!(currentRow?.contract_state == 'draft' || currentRow?.contract_state == 'rejected_to_financial_officer')}
