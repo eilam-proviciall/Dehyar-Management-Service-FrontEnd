@@ -69,7 +69,6 @@ function GovernorTable(props) {
         }
     };
 
-
     const fetchData = async () => {
         try {
             const response = await api.get(`${GetHumanResourcesForGovernor()}`, { requiresAuth: true });
@@ -130,14 +129,6 @@ function GovernorTable(props) {
                     return <div style={{ textAlign: 'right' }}>
                         <ContractStateChip
                             label={contractStateValue}
-                            // onClick={() => {
-                            //     if (cell.getValue() == 'approved' || cell.getValue() == 'pending_governor') {
-                            //         setSelectedRow(row.original);
-                            //         setPopupOpen(true);
-                            //     } else {
-                            //         toast.warning('شما به این قرارداد دسترسی ندارید');
-                            //     }
-                            // }}
                             avatar={role}
                         />
                     </div>
@@ -161,11 +152,15 @@ function GovernorTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                handleWorkflowHistory(row.original);
+                                setSelectedRow(row.original);
+                                setPopupOpen(true);
                             }}
-                            className={"rounded-full"}
+                            className={"rounded-full animate-pulse"}
                         >
-                            < i class="ri-history-line" />
+                            {row.original.contract_state === 'pending_governor'
+                                ? <i className="ri-mail-send-line" />
+                                : <i className="ri-history-line" />
+                            }
                         </CustomIconButton>
                     </div>
                 ),
@@ -218,20 +213,18 @@ function GovernorTable(props) {
 
     return (
         <div>
-            <MaterialReactTable columns={columns} data={data} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={2} setLoading={setLoading} nextState={'approved'} />
-            <HistoryWorkflowPopup
-                open={popupWorkflow}
-                onClose={() => setPopupWorkflow(false)}
-                salaryId={selectedRow?.salary_id}
-                employeeInfo={{
-                    fullName: `${selectedRow?.first_name} ${selectedRow?.last_name}`,
-                    position: selectedRow?.job_type,
-                }}
+            <MaterialReactTable table={table} />
+            <WorkFlowDrawer
+                open={popupOpen}
+                setDialogOpen={setPopupOpen}
+                details={selectedRow}
+                rejectApprovalLevel={2}
+                setLoading={setLoading}
+                nextState={'approved'}
+                readOnly={!(selectedRow?.contract_state === 'pending_governor')}
             />
         </div>
-    )
-        ;
+    );
 }
 
 export default GovernorTable;

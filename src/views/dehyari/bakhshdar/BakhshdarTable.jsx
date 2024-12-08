@@ -123,14 +123,6 @@ function BakhshdarTable(props) {
                     return <div style={{ textAlign: 'right' }}>
                         <ContractStateChip
                             label={contractStateValue}
-                            onClick={() => {
-                                if (cell.getValue() == 'pending_supervisor' || cell.getValue() == 'rejected_to_supervisor') {
-                                    setSelectedRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
-                            }}
                             avatar={role}
                         />
                     </div>
@@ -142,15 +134,6 @@ function BakhshdarTable(props) {
                 size: 150,
                 Cell: ({ row }) => (
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
-                        {/*<CustomIconButton*/}
-                        {/*    color={"error"}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        handleDeleteTimeOff(row);*/}
-                        {/*    }}*/}
-                        {/*    className={"rounded-full"}*/}
-                        {/*>*/}
-                        {/*    <i className='ri-delete-bin-7-line'/>*/}
-                        {/*</CustomIconButton>*/}
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
@@ -163,11 +146,15 @@ function BakhshdarTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                handleWorkflowHistory(row.original);
+                                setSelectedRow(row.original);
+                                setPopupOpen(true);
                             }}
-                            className={"rounded-full"}
+                            className={"rounded-full animate-pulse"}
                         >
-                            < i class="ri-history-line" />
+                            {(row.original.contract_state === 'pending_supervisor' || row.original.contract_state === 'rejected_to_supervisor')
+                                ? <i className="ri-mail-send-line" />
+                                : <i className="ri-history-line" />
+                            }
                         </CustomIconButton>
                     </div>
                 ),
@@ -221,15 +208,14 @@ function BakhshdarTable(props) {
     return (
         <div>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={selectedRow} rejectApprovalLevel={1} setLoading={setLoading} nextState={'pending_governor'} />
-            <HistoryWorkflowPopup
-                open={popupWorkflow}
-                onClose={() => setPopupWorkflow(false)}
-                salaryId={selectedRow?.salary_id}
-                employeeInfo={{
-                    fullName: `${selectedRow?.first_name} ${selectedRow?.last_name}`,
-                    position: selectedRow?.job_type,
-                }}
+            <WorkFlowDrawer
+                open={popupOpen}
+                setDialogOpen={setPopupOpen}
+                details={selectedRow}
+                rejectApprovalLevel={1}
+                setLoading={setLoading}
+                nextState={'pending_governor'}
+                readOnly={!(selectedRow?.contract_state === 'pending_supervisor' || selectedRow?.contract_state === 'rejected_to_supervisor')}
             />
         </div>
     );
