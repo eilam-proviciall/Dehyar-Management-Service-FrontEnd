@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle';
-import { user } from '@/Services/Auth/AuthService';
+import { user, usersCount } from '@/Services/Auth/AuthService';
 import api from '@/utils/axiosInstance';
+import { set } from 'js-cookie';
 
 const GovenorCards = ({ loading, setLoading, userGeoState }) => {
 
@@ -16,7 +17,7 @@ const GovenorCards = ({ loading, setLoading, userGeoState }) => {
     const data = [
         {
             title: 'مسئول امور مالی',
-            value: CFODetails.length,
+            value: CFODetails,
             avatarIcon: 'ri-user-add-line',
             avatarColor: 'error',
             trend: 'positive',
@@ -36,7 +37,7 @@ const GovenorCards = ({ loading, setLoading, userGeoState }) => {
         },
         {
             title: 'بخشدار',
-            value: bakhshdarDetails.length,
+            value: bakhshdarDetails,
             avatarIcon: 'ri-user-follow-line',
             avatarColor: 'success',
             trend: 'positive',
@@ -58,15 +59,14 @@ const GovenorCards = ({ loading, setLoading, userGeoState }) => {
 
     const fetchData = () => {
         setLoading(true);
-        api.get(user(), { requiresAuth: true })
+        api.get(usersCount(), { requiresAuth: true })
             .then((response) => {
-                const filteredUsers = response.data.data.filter(item => item.geo_state === userGeoState);
-                setUserList(filteredUsers);
-                setCFODetails(filteredUsers.filter(item => item.work_group === 13));
-                setBakhshdarDetails(filteredUsers.filter(item => item.work_group === 14));
+                setUserList(response.data.data.countAllUsers);
+                setCFODetails(response.data.data.countCFOUsers);
+                setBakhshdarDetails(response.data.data.countBakhshdar);
             })
             .catch(() => {
-                // Handle error if needed
+                console.error('خطا در دریافت اطلاعات کاربران');
             })
             .finally(() => {
                 setLoading(false);

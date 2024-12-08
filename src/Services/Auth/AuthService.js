@@ -12,5 +12,9 @@ const user = () => {
     return `${BaseUrl}/user`
 }
 
+const usersCount = () => {
+    return `${BaseUrl}/users/count`
+}
 
-export {me,login,user}
+
+export { me, login, user, usersCount }
