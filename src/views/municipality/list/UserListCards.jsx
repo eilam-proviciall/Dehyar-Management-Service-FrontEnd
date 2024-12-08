@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid'
 // Component Imports
 import HorizontalWithSubtitle from '@components/card-statistics/HorizontalWithSubtitle'
 import { useEffect, useState } from 'react'
-import { user } from '@/Services/Auth/AuthService'
+import { user, usersCount } from '@/Services/Auth/AuthService'
 import { set } from 'js-cookie'
 import { Skeleton } from '@mui/material'
 import api from '@/utils/axiosInstance'
@@ -24,7 +24,7 @@ const UserListCards = ({ loading, setLoading }) => {
     const data = [
         {
             title: 'کل کاربران',
-            value: userList.length,
+            value: userList,
             avatarIcon: 'ri-group-line',
             avatarColor: 'primary',
             trend: 'positive',
@@ -34,7 +34,7 @@ const UserListCards = ({ loading, setLoading }) => {
         },
         {
             title: ' مسئول امور مالی',
-            value: CFODetails.length,
+            value: CFODetails,
             avatarIcon: 'ri-user-add-line',
             avatarColor: 'error',
             trend: 'positive',
@@ -44,7 +44,7 @@ const UserListCards = ({ loading, setLoading }) => {
         },
         {
             title: 'بخشدار',
-            value: bakhshdarDetails.length,
+            value: bakhshdarDetails,
             avatarIcon: 'ri-user-follow-line',
             avatarColor: 'success',
             trend: 'positive',
@@ -66,12 +66,11 @@ const UserListCards = ({ loading, setLoading }) => {
 
     const fetchData = () => {
         setLoading(true);
-        api.get(user(), { requiresAuth: true })
+        api.get(usersCount(), { requiresAuth: true })
             .then((response) => {
-                const ResponseData = response.data.data;
-                setUserList(ResponseData);
-                setCFODetails(ResponseData.filter(item => item.work_group === 13));
-                setBakhshdarDetails(ResponseData.filter(item => item.work_group === 14));
+                setUserList(response.data.data.countAllUsers);
+                setCFODetails(response.data.data.countCFOUsers);
+                setBakhshdarDetails(response.data.data.countBakhshdar);
             })
             .catch(
                 () => {
