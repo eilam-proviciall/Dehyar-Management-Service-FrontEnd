@@ -80,23 +80,7 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
         if (!showRejectOptions) return null;
 
         // For rejectedLevel 0, we don't show any rejection options
-        if (rejectApprovalLevel === 0) return null;
-
-        // For rejectedLevel 1, we only show rejection without final registration
-        if (rejectApprovalLevel === 1) {
-            return (
-                <Box sx={{ mt: 2 }}>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="error"
-                        onClick={handleReject}
-                    >
-                        عدم تایید حکم
-                    </Button>
-                </Box>
-            );
-        }
+        if (rejectApprovalLevel === 0 || rejectApprovalLevel === 1) return null;
 
         // For rejectedLevel 2, keep the current implementation with both options
         return (
@@ -250,8 +234,12 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                                 variant="contained"
                                 color="error"
                                 onClick={() => {
-                                    setShowRejectOptions(true);
-                                    handleStateChange('rejected', true);
+                                    if (rejectApprovalLevel === 1) {
+                                        handleReject();
+                                    } else {
+                                        setShowRejectOptions(true);
+                                        handleStateChange('rejected', true);
+                                    }
                                 }}
                             >
                                 {getRejectionButtonText()}
