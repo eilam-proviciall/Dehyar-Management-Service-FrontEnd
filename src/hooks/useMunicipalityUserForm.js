@@ -53,11 +53,10 @@ const useMunicipalityUserForm = (calendarStore, setValue, clearErrors, handleAdd
     };
 
     const onSubmit = data => {
-        const finallyVillages = sidebarDetails.status === 'edit'
-            ? data.covered_villages && data.covered_villages.map(village => {
-                return `${village.hierarchy_code && village.hierarchy_code || village.village_code}`;
-            })
-            : data.covered_villages ? data.covered_villages.map(String) : [];
+        const finallyVillages = data.covered_villages ?
+            data.covered_villages.map(village =>
+                String(typeof village === 'object' ? (village.hierarchy_code || village.village_code) : village)
+            ) : [];
 
         let processedData = {
             nid: data.nid,

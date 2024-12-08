@@ -17,8 +17,9 @@ import RequestHistory from "./RequestHistory";
 import ReviewDecree from "./ReviewDecree";
 import TabContent from "@/components/common/Tabs/TabContent";
 import AnimatedTabs from "@/components/common/Tabs/AnimatedTabs";
+import Typography from "@mui/material/Typography";
 
-const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState }) => {
+const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0, setLoading, nextState, readOnly = false }) => {
     const [showRejectOptions, setShowRejectOptions] = useState(false);
     const [selectedRejectType, setSelectedRejectType] = useState(null);
     const [activeTab, setActiveTab] = useState('review'); // Default tab is بررسی حکم
@@ -80,40 +81,69 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
 
         return (
             <Box sx={{ mt: 2 }}>
-                {rejectApprovalLevel > 1 && (
-                    <Grid container spacing={2} sx={{ mb: 2 }}>
+                {rejectApprovalLevel > 1 ? (
+                    <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Button
                                 fullWidth
-                                variant={selectedRejectType === 'rejected_to_financial_officer' ? 'contained' : 'outlined'}
+                                variant="contained"
                                 color="error"
-                                onClick={() => setSelectedRejectType('rejected_to_financial_officer')}
+                                onClick={async () => {
+                                    if (!description) {
+                                        toast.error('لطفا توضیحات را وارد کنید');
+                                        return;
+                                    }
+                                    setLoading(true);
+                                    try {
+                                        await changeStateWorkflow(details.salary_id, 'rejected_to_financial_officer', description);
+                                        toast.success("عملیات با موفقیت انجام شد");
+                                        handleClose();
+                                    } catch (err) {
+                                        toast.error(err.message || 'خطا در انجام عملیات');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}
                             >
-                                رد به مسئول مالی
+                                عدم تایید و رد به مسئول مالی
                             </Button>
                         </Grid>
                         <Grid item xs={6}>
                             <Button
                                 fullWidth
-                                variant={selectedRejectType === 'rejected_to_supervisor' ? 'contained' : 'outlined'}
+                                variant="contained"
                                 color="error"
-                                onClick={() => setSelectedRejectType('rejected_to_supervisor')}
+                                onClick={async () => {
+                                    if (!description) {
+                                        toast.error('لطفا توضیحات را وارد کنید');
+                                        return;
+                                    }
+                                    setLoading(true);
+                                    try {
+                                        await changeStateWorkflow(details.salary_id, 'rejected_to_supervisor', description);
+                                        toast.success("عملیات با موفقیت انجام شد");
+                                        handleClose();
+                                    } catch (err) {
+                                        toast.error(err.message || 'خطا در انجام عملیات');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}
                             >
-                                رد به بخشدار
+                                عدم تایید و رد به بخشداری
                             </Button>
                         </Grid>
                     </Grid>
+                ) : (
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="error"
+                        onClick={handleReject}
+                    >
+                        ثبت رد درخواست
+                    </Button>
                 )}
-
-                <Button
-                    fullWidth
-                    variant="contained"
-                    color="error"
-                    onClick={handleReject}
-                    sx={{ mt: 2 }}
-                >
-                    ثبت رد درخواست
-                </Button>
             </Box>
         );
     };
@@ -145,7 +175,14 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                     </CustomIconButton>
                 </Tooltip>
             </div>
-            <DividerSimple title={`بررسی حکم کارگزینی ${details?.first_name} ${details?.last_name}`} />
+            <DividerSimple title={
+                <Typography component="span">
+                    حکم کارگزینی{' '}
+                    <Typography component="span" sx={{ fontWeight: 700 }} display="inline">
+                        {details?.first_name || ''} {details?.last_name || ''}
+                    </Typography>
+                </Typography>
+            } />
             <AnimatedTabs
                 tabs={tabs}
                 activeTab={activeTab}
@@ -160,31 +197,28 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
                         error={error}
                         handleDescriptionChange={handleDescriptionChange}
                         renderRejectOptions={renderRejectOptions}
+                        readOnly={readOnly}
                     />
                 </TabContent>
                 <TabContent active={activeTab === 'history'}>
                     <RequestHistory details={details} />
                 </TabContent>
             </DialogContent>
-            <DialogActions>
-                {activeTab === 'review' && (
+            <DialogActions sx={{ justifyContent: 'space-between', px: 5, pb: 3 }}>
+                {!readOnly && (
                     <>
-                        {rejectApprovalLevel > 0 && (
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() => setShowRejectOptions(!showRejectOptions)}
-                                sx={{ ml: 2 }}
-                            >
-                                رد درخواست
-                            </Button>
-                        )}
+                        <Button variant="contained" color="success" onClick={handleApprove}>
+                            تایید
+                        </Button>
                         <Button
                             variant="contained"
-                            color="primary"
-                            onClick={handleApprove}
+                            color="error"
+                            onClick={() => {
+                                setShowRejectOptions(true);
+                                handleStateChange('rejected', true);
+                            }}
                         >
-                            تایید
+                            رد درخواست
                         </Button>
                     </>
                 )}

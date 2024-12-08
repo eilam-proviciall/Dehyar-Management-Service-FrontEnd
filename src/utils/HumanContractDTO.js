@@ -11,7 +11,7 @@ class HumanContractDTO {
         this.village_employer = formData.villageEmployer || null;
         this.main_work = formData.mainWork;
         this.human_resource_nid = formData.humanResourceNid;
-        this.coveredVillages = formData.coveredVillages;
+        this.cover_village = formData.coveredVillages;
     }
     static fromForm(formData, nid) {
         return new HumanContractDTO({

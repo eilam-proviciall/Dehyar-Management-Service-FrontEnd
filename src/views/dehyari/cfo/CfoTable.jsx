@@ -4,15 +4,12 @@ import { useRouter } from 'next/navigation';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import Chip from "@mui/material/Chip";
 import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
-import { DownloadHumanResourcePdf, GetHumanResourcesForCfo } from "@/Services/humanResources";
+import { GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 import { toast } from "react-toastify";
-import MyDocument from "@components/MyDocument";
-import { pdf } from "@react-pdf/renderer";
-import HumanResourceDTO from "@/utils/HumanResourceDTO";
 import { getJobTitleLabel } from "@data/jobTitles";
 import api from '@/utils/axiosInstance';
 import Loading from '@/@core/components/loading/Loading';
@@ -25,6 +22,9 @@ import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
 import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
+import { downloadHumanResourcePdf } from "@/utils/humanResourcePdfUtils";
+import MyDocument from "@components/MyDocument";
+import { pdf } from "@react-pdf/renderer";
 
 function CfoTable(props) {
     const [data, setData] = useState([]);
@@ -53,21 +53,7 @@ function CfoTable(props) {
     };
 
     const handleDownloadPdf = async (row) => {
-        try {
-            const response = await api.get(`${DownloadHumanResourcePdf()}?human_resource_id=${row.human_resource_id}&human_contract_id=${row.human_contract_id}`, { requiresAuth: true });
-            const humanResourceData = response.data;
-            const data = new HumanResourceDTO(humanResourceData);
-            const doc = <MyDocument data={data} />;
-            const asPdf = pdf([]);
-            asPdf.updateContainer(doc);
-            const blob = await asPdf.toBlob();
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-
-            toast.success('محاسبه موفق بود');
-        } catch (error) {
-            console.error(error);
-        }
+        downloadHumanResourcePdf(row.human_resource_id, row.human_contract_id);
     };
 
     const handleClose = () => {
@@ -93,7 +79,6 @@ function CfoTable(props) {
         }
     };
 
-
     const fetchData = async () => {
         try {
             const response = await api.get(`${GetHumanResourcesForCfo()}`, { requiresAuth: true });
@@ -114,6 +99,9 @@ function CfoTable(props) {
     const tableData = useMemo(() => {
         if (!filterStatus) {
             return data;
+        }
+        if (filterStatus === 'my_inbox') {
+            return data.filter(item => item.contract_state === 'draft' || item.contract_state === 'rejected_to_financial_officer');
         }
         return data.filter(item => item.contract_state === filterStatus);
     }, [data, filterStatus]);
@@ -183,9 +171,8 @@ function CfoTable(props) {
                     <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
                         <CustomIconButton
                             color={"secondary"}
-                            disabled={row.original.contract_state == 'approved'}
                             onClick={() => {
-                                row.original.contract_state !== 'approved' && router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`) || toast.warning('شما اجازه ویرایش این قرارداد را ندارید');
+                                router.push(`/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`);
                             }}
                             className={"rounded-full"}
                         >
@@ -212,16 +199,15 @@ function CfoTable(props) {
                         <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
-                                if (row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer') {
-                                    setCurrentRow(row.original);
-                                    setPopupOpen(true);
-                                } else {
-                                    toast.warning('شما به این قرارداد دسترسی ندارید');
-                                }
+                                setCurrentRow(row.original);
+                                setPopupOpen(true);
                             }}
                             className={"rounded-full animate-pulse"}
                         >
-                            < i class="ri-send-plane-line" />
+                            {(row.original.contract_state == 'draft' || row.original.contract_state == 'rejected_to_financial_officer')
+                                ? <i className="ri-mail-send-line" />
+                                : <i className="ri-history-line" />
+                            }
                         </CustomIconButton>
                     </div>
                 ),
@@ -247,7 +233,7 @@ function CfoTable(props) {
                     }}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.length.toString()}
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
@@ -255,20 +241,12 @@ function CfoTable(props) {
                     variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.filter(item => item.contract_state === 'draft' || item.contract_state === 'rejected_to_financial_officer').length.toString()}
                     ref={(el) => (buttonRefs.current[1] = el)}
-                    label="پیش‌نویس"
-                    onClick={() => handleFilterChange('draft', 1)}
+                    label="کارتابل من"
+                    onClick={() => handleFilterChange('my_inbox', 1)}
                     clickable
-                    variant={filterStatus === 'draft' ? 'outlined' : 'filled'}
-                />
-                <FilterChip
-                    avatarValue="0"
-                    ref={(el) => (buttonRefs.current[2] = el)}
-                    label="نیازمند اصلاح"
-                    onClick={() => handleFilterChange('rejected_to_financial_officer', 2)}
-                    clickable
-                    variant={filterStatus === 'rejected_to_financial_officer' ? 'outlined' : 'filled'}
+                    variant={filterStatus === 'my_inbox' ? 'outlined' : 'filled'}
                 />
             </Box>
         ),
@@ -298,7 +276,15 @@ function CfoTable(props) {
                 </span>
                 <span>دهیاری ها</span></Typography>
             <MaterialReactTable table={table} />
-            <WorkFlowDrawer open={popupOpen} setDialogOpen={setPopupOpen} details={currentRow} rejectApprovalLevel={0} setLoading={setLoading} nextState={'pending_supervisor'} />
+            <WorkFlowDrawer
+                open={popupOpen}
+                setDialogOpen={setPopupOpen}
+                details={currentRow}
+                rejectApprovalLevel={2}
+                setLoading={setLoading}
+                nextState={'pending_supervisor'}
+                readOnly={!(currentRow?.contract_state == 'draft' || currentRow?.contract_state == 'rejected_to_financial_officer')}
+            />
         </div>
     );
 }
