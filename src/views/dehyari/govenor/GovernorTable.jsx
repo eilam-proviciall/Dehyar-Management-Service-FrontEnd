@@ -90,6 +90,9 @@ function GovernorTable(props) {
         if (!filterStatus) {
             return data;
         }
+        if (filterStatus === 'my_inbox') {
+            return data.filter(item => item.contract_state === 'pending_supervisor' || item.contract_state === 'rejected_to_supervisor');
+        }
         return data.filter(item => item.contract_state === filterStatus);
     }, [data, filterStatus]);
 
@@ -183,7 +186,7 @@ function GovernorTable(props) {
                     }}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.length.toString()}
                     ref={(el) => (buttonRefs.current[0] = el)}
                     label="همه"
                     onClick={() => handleFilterChange('', 0)}
@@ -191,20 +194,12 @@ function GovernorTable(props) {
                     variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
-                    avatarValue="0"
+                    avatarValue={data.filter(item => item.contract_state === 'pending_supervisor' || item.contract_state === 'rejected_to_supervisor').length.toString()}
                     ref={(el) => (buttonRefs.current[1] = el)}
-                    label="در انتظار تایید استانداری"
-                    onClick={() => handleFilterChange('pending_governor', 1)}
+                    label="کارتابل من"
+                    onClick={() => handleFilterChange('my_inbox', 1)}
                     clickable
-                    variant={filterStatus === 'pending_governor' ? 'outlined' : 'filled'}
-                />
-                <FilterChip
-                    avatarValue="0"
-                    ref={(el) => (buttonRefs.current[2] = el)}
-                    label="تایید شده"
-                    onClick={() => handleFilterChange('approved', 2)}
-                    clickable
-                    variant={filterStatus === 'approved' ? 'outlined' : 'filled'}
+                    variant={filterStatus === 'my_inbox' ? 'outlined' : 'filled'}
                 />
             </Box>
         ),
