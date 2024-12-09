@@ -91,7 +91,7 @@ function GovernorTable(props) {
             return data;
         }
         if (filterStatus === 'my_inbox') {
-            return data.filter(item => item.contract_state === 'pending_supervisor' || item.contract_state === 'rejected_to_supervisor');
+            return data.filter(item => item.contract_state === 'approved');
         }
         return data.filter(item => item.contract_state === filterStatus);
     }, [data, filterStatus]);
@@ -194,7 +194,7 @@ function GovernorTable(props) {
                     variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
-                    avatarValue={data.filter(item => item.contract_state === 'pending_supervisor' || item.contract_state === 'rejected_to_supervisor').length.toString()}
+                    avatarValue={data.filter(item => item.contract_state === 'approved').length.toString()}
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="کارتابل من"
                     onClick={() => handleFilterChange('my_inbox', 1)}
