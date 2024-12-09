@@ -91,19 +91,13 @@ function GovernorTable(props) {
             return data;
         }
         if (filterStatus === 'my_inbox') {
-            return data.filter(item => item.contract_state === 'approved');
+            return data.filter(item => item.contract_state === 'pending_governor');
         }
         return data.filter(item => item.contract_state === filterStatus);
     }, [data, filterStatus]);
 
     const columns = useMemo(
         () => [
-            {
-                accessorKey: 'village',
-                header: 'دهیاری',
-                size: 150,
-                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
-            },
             {
                 accessorKey: 'full_name',
                 header: 'نام و نام خانوادگی',
@@ -115,6 +109,12 @@ function GovernorTable(props) {
                         {`${first_name ?? " "} ${last_name ?? " "}`}
                     </div>;
                 },
+            },
+            {
+                accessorKey: 'village',
+                header: 'دهیاری',
+                size: 150,
+                Cell: ({ cell }) => <div style={{ textAlign: 'right' }}>{cell.getValue().approved_name}</div>,
             },
             {
                 accessorKey: 'nid',
@@ -194,7 +194,7 @@ function GovernorTable(props) {
                     variant={filterStatus === '' ? 'outlined' : 'filled'}
                 />
                 <FilterChip
-                    avatarValue={data.filter(item => item.contract_state === 'approved').length.toString()}
+                    avatarValue={data.filter(item => item.contract_state === 'pending_governor').length.toString()}
                     ref={(el) => (buttonRefs.current[1] = el)}
                     label="کارتابل من"
                     onClick={() => handleFilterChange('my_inbox', 1)}
