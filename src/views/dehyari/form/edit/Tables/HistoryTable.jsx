@@ -39,9 +39,16 @@ const HistoryTable = () => {
     };
 
     const handleOpenModal = () => {
-        if (contractStateApprovedExists) {
+        if (data.length === 0) {
+            // اگر هیچ داده‌ای وجود ندارد، اجازه افزودن قرارداد جدید داده می‌شود.
+            setEditMode(false);
+            setEditId(null);
+            setOpenModal(true);
+        } else if (contractStateApprovedExists) {
+            // اگر تمام قراردادها تایید شده باشند، پیام هشدار داده می‌شود.
             toast.warning('بعد از تایید نهایی حکم جاری امکان ثبت قرارداد جدید وجود خواهد داشت.');
         } else {
+            // اگر قراردادهایی وجود دارند که تایید نشده‌اند، اجازه افزودن قرارداد داده می‌شود.
             setEditMode(false);
             setEditId(null);
             setOpenModal(true);
