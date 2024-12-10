@@ -173,7 +173,6 @@ function GovernorTable(props) {
     );
 
     const table = useCustomTable(columns, tableData, {
-        isLoading: loading,
         renderTopToolbarCustomActions: () => (
             <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
                 <Box
