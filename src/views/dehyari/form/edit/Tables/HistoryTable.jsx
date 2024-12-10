@@ -157,17 +157,17 @@ const HistoryTable = () => {
                             <i className='ri-delete-bin-7-line' />
                         </CustomIconButton>
                     </Tooltip>
-                    <Tooltip title="ویرایش" placement={'top'}>
+                    {row.original.contract_state == 'approved' && <Tooltip title="ویرایش" placement={'top'}>
                         <CustomIconButton
                             color={"primary"}
                             onClick={() => {
-                                handleEdit(row);
+                                row.original.contract_state == 'approved' ? handleEdit(row) : toast.error('شما اجازه ویرایش این قرارداد را ندارید');
                             }}
                             className={"rounded-full"}
                         >
                             <i className='ri-edit-box-line' />
                         </CustomIconButton>
-                    </Tooltip>
+                    </Tooltip>}
                     <Tooltip title="دانلود PDF" placement={'top'}>
                         <CustomIconButton
                             color={"secondary"}
