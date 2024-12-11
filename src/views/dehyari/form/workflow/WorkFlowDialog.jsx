@@ -237,11 +237,13 @@ const WorkFlowDrawer = ({
           </Typography>
         }
       />
+      <Box className={"w-full flex justify-center"}>
       <AnimatedTabs
         tabs={tabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
+      </Box>
       <DialogContent>
         <TabContent active={activeTab === "review"}>
           <ReviewDecree
