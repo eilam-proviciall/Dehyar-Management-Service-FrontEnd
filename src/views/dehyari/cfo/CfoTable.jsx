@@ -235,24 +235,26 @@ function CfoTable(props) {
                         >
                             < i class="ri-history-line" />
                         </CustomIconButton> */}
-            <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
-              <CustomIconButton
-                color={"secondary"}
-                onClick={() => {
-                  setCurrentRow(row.original);
-                  setPopupOpen(true);
-                }}
-                className={"rounded-full animate-pulse"}
-              >
-                {row.original.contract_state == "draft" ||
-                row.original.contract_state ==
-                  "rejected_to_financial_officer" ? (
-                  <i className="ri-mail-send-line" />
-                ) : (
-                  <i className="ri-history-line" />
-                )}
-              </CustomIconButton>
-            </Tooltip>
+            {row.original.contract_state && (
+              <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
+                <CustomIconButton
+                  color={"secondary"}
+                  onClick={() => {
+                    setCurrentRow(row.original);
+                    setPopupOpen(true);
+                  }}
+                  className={"rounded-full animate-pulse"}
+                >
+                  {row.original.contract_state == "draft" ||
+                  row.original.contract_state ==
+                    "rejected_to_financial_officer" ? (
+                    <i className="ri-mail-send-line" />
+                  ) : (
+                    <i className="ri-history-line" />
+                  )}
+                </CustomIconButton>
+              </Tooltip>
+            )}
           </div>
         ),
       },
