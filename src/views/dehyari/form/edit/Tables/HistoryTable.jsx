@@ -47,13 +47,11 @@ const HistoryTable = () => {
       setEditMode(false);
       setEditId(null);
       setOpenModal(true);
-    } else if (contractStateApprovedExists) {
-      // اگر تمام قراردادها تایید شده باشند، پیام هشدار داده می‌شود.
+    } else if (!contractStateApprovedExists) {
       toast.warning(
         "بعد از تایید نهایی حکم جاری امکان ثبت قرارداد جدید وجود خواهد داشت."
       );
     } else {
-      // اگر قراردادهایی وجود دارند که تایید نشده‌اند، اجازه افزودن قرارداد داده می‌شود.
       setEditMode(false);
       setEditId(null);
       setOpenModal(true);
@@ -86,8 +84,7 @@ const HistoryTable = () => {
       .then((response) => {
         const allContractsApproved = response.data.every(
           (record) =>
-            record.contract_state === "draft" ||
-            record.contract_state === "rejected_to_financial_officer"
+            record.contract_state === "approved"
         );
         setContractStateApprovedExists(allContractsApproved); // بروزرسانی وضعیت اگر تمام قراردادها تایید شده باشند
         setData(response.data);
