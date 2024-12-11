@@ -52,8 +52,6 @@ const RequestHistory = ({ details }) => {
     return moment(date).fromNow();
   };
 
-  console.log("History Data => ", historyData);
-
   return (
     <Box className={"flex flex-col gap-3"}>
       {/* تاریخچه درخواست */}
@@ -69,50 +67,56 @@ const RequestHistory = ({ details }) => {
             },
           }}
         >
-          {historyData.map((item) => (
-            <TimelineItem>
-              <TimelineSeparator>
-                <TimelineDot
-                  color={`${(item.state === "approved" && "success") || (item.state.startsWith("rejected") && "error") || "primary"}`}
-                />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <Box mb={2} sx={{ minWidth: "225px" }}>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{ flexWrap: "nowrap", gap: 1 }}
-                  >
-                    <Typography variant="subtitle2">
-                      {translateContractState(item.state).title}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="text.inherit"
-                      sx={{ whiteSpace: "nowrap", ml: 1, fontSize: "0.65rem" }}
+          {historyData.map((item) => {
+            return (
+              <TimelineItem>
+                <TimelineSeparator>
+                  <TimelineDot
+                    color={`${(item.state === "approved" && "success") || (item.state.startsWith("rejected") && "error") || "primary"}`}
+                  />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Box mb={2} sx={{ minWidth: "225px" }}>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      sx={{ flexWrap: "nowrap", gap: 1 }}
                     >
-                      {formatDate(item.started_at)}
+                      <Typography variant="subtitle2">
+                        {translateContractState(item.state).title}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.inherit"
+                        sx={{
+                          whiteSpace: "nowrap",
+                          ml: 1,
+                          fontSize: "0.65rem",
+                        }}
+                      >
+                        {formatDate(item.started_at)}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        flex: 1,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.full_name} - {roles[item.work_group]}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.comment}
                     </Typography>
                   </Box>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      flex: 1,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.full_name} - {roles[item.work_group]}
-                  </Typography>
-                  {/* <Typography variant="body2" color="text.secondary">
-                                        {item.description}
-                                    </Typography> */}
-                </Box>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
+                </TimelineContent>
+              </TimelineItem>
+            );
+          })}
         </Timeline>
       </Box>
     </Box>

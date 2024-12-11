@@ -38,7 +38,6 @@ const WorkFlowDrawer = ({
   const [showRejectOptions, setShowRejectOptions] = useState(false);
   const [selectedRejectType, setSelectedRejectType] = useState(null);
   const [activeTab, setActiveTab] = useState("review"); // Default tab is بررسی حکم
-  console.log("Details => ", details);
 
   const {
     state,
@@ -60,7 +59,7 @@ const WorkFlowDrawer = ({
   const handleApprove = async () => {
     setLoading(true);
     try {
-      await changeStateWorkflow(details.salary_id, nextState, "");
+      await changeStateWorkflow(details.salary_id, nextState, description);
       toast.success("عملیات با موفقیت انجام شد");
       handleClose();
     } catch (err) {
@@ -238,11 +237,11 @@ const WorkFlowDrawer = ({
         }
       />
       <Box className={"w-full flex justify-center"}>
-      <AnimatedTabs
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+        <AnimatedTabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
       </Box>
       <DialogContent>
         <TabContent active={activeTab === "review"}>
