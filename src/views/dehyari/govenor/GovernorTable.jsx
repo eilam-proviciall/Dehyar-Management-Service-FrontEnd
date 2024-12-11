@@ -20,6 +20,7 @@ import WorkFlowDrawer from '../form/workflow/WorkFlowDialog';
 import useCustomTable from '@/hooks/useCustomTable';
 import FilterChip from '@/@core/components/mui/FilterButton';
 import HistoryWorkflowPopup from '../form/workflow/HistoryWorkflow';
+import TitleDehyariPanel from '@/components/common/TitleDehyariPanel';
 
 function GovernorTable(props) {
     const [data, setData] = useState([]);
@@ -207,6 +208,7 @@ function GovernorTable(props) {
 
     return (
         <div>
+            <TitleDehyariPanel/>
             <MaterialReactTable table={table} />
             <WorkFlowDrawer
                 open={popupOpen}
