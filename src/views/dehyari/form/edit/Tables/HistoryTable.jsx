@@ -83,8 +83,7 @@ const HistoryTable = () => {
       })
       .then((response) => {
         const allContractsApproved = response.data.every(
-          (record) =>
-            record.contract_state === "approved"
+          (record) => record.contract_state === "approved"
         );
         setContractStateApprovedExists(allContractsApproved); // بروزرسانی وضعیت اگر تمام قراردادها تایید شده باشند
         setData(response.data);
@@ -189,20 +188,25 @@ const HistoryTable = () => {
                 </CustomIconButton>
               </Tooltip>
             )}
-            {row.original.contract_state == "draft" && (
-                <Tooltip title="ویرایش" placement={"top"}>
-                  <CustomIconButton
-                    color={"primary"}
-                    onClick={() => {
-                      row.original.contract_state == "draft" ? handleEdit(row)
-                        : toast.error("شما اجازه ویرایش این قرارداد را ندارید");
-                    }}
-                    className={"rounded-full"}
-                  >
-                    <i className="ri-edit-box-line" />
-                  </CustomIconButton>
-                </Tooltip>
-              )}
+            {(row.original.contract_state == "draft" ||
+              row.original.contract_state ==
+                "rejected_to_financial_officer") && (
+              <Tooltip title="ویرایش" placement={"top"}>
+                <CustomIconButton
+                  color={"primary"}
+                  onClick={() => {
+                    row.original.contract_state == "draft" ||
+                    row.original.contract_state ==
+                      "rejected_to_financial_officer"
+                      ? handleEdit(row)
+                      : toast.error("شما اجازه ویرایش این قرارداد را ندارید");
+                  }}
+                  className={"rounded-full"}
+                >
+                  <i className="ri-edit-box-line" />
+                </CustomIconButton>
+              </Tooltip>
+            )}
             <Tooltip title="دانلود PDF" placement={"top"}>
               <CustomIconButton
                 color={"secondary"}
