@@ -136,10 +136,8 @@ const HistoryTable = () => {
           return (
             <div style={{ textAlign: "right" }}>
               <ContractStateChip
-                label={contractStateValue}
-                onClick={() => {
-                  setDialogOpen(true);
-                }}
+                label={contractStateValue.title}
+                color={contractStateValue.color}
                 avatar={role}
               />
             </div>
