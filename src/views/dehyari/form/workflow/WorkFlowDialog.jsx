@@ -79,73 +79,90 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
     const renderRejectOptions = () => {
         if (!showRejectOptions) return null;
 
+        // For rejectedLevel 0, we don't show any rejection options
+        if (rejectApprovalLevel === 0 || rejectApprovalLevel === 1) return null;
+
+        // For rejectedLevel 2, keep the current implementation with both options
         return (
             <Box sx={{ mt: 2 }}>
-                {rejectApprovalLevel > 1 ? (
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="error"
-                                onClick={async () => {
-                                    if (!description) {
-                                        toast.error('لطفا توضیحات را وارد کنید');
-                                        return;
-                                    }
-                                    setLoading(true);
-                                    try {
-                                        await changeStateWorkflow(details.salary_id, 'rejected_to_financial_officer', description);
-                                        toast.success("عملیات با موفقیت انجام شد");
-                                        handleClose();
-                                    } catch (err) {
-                                        toast.error(err.message || 'خطا در انجام عملیات');
-                                    } finally {
-                                        setLoading(false);
-                                    }
-                                }}
-                            >
-                                عدم تایید و رد به مسئول مالی
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="error"
-                                onClick={async () => {
-                                    if (!description) {
-                                        toast.error('لطفا توضیحات را وارد کنید');
-                                        return;
-                                    }
-                                    setLoading(true);
-                                    try {
-                                        await changeStateWorkflow(details.salary_id, 'rejected_to_supervisor', description);
-                                        toast.success("عملیات با موفقیت انجام شد");
-                                        handleClose();
-                                    } catch (err) {
-                                        toast.error(err.message || 'خطا در انجام عملیات');
-                                    } finally {
-                                        setLoading(false);
-                                    }
-                                }}
-                            >
-                                عدم تایید و رد به بخشداری
-                            </Button>
-                        </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="error"
+                            onClick={async () => {
+                                if (!description) {
+                                    toast.error('لطفا توضیحات را وارد کنید');
+                                    return;
+                                }
+                                setLoading(true);
+                                try {
+                                    await changeStateWorkflow(details.salary_id, 'rejected_to_financial_officer', description);
+                                    toast.success("عملیات با موفقیت انجام شد");
+                                    handleClose();
+                                } catch (err) {
+                                    toast.error(err.message || 'خطا در انجام عملیات');
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        >
+                            عدم تایید و رد به مسئول مالی
+                        </Button>
                     </Grid>
-                ) : (
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="error"
-                        onClick={handleReject}
-                    >
-                        ثبت رد درخواست
-                    </Button>
-                )}
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="error"
+                            onClick={async () => {
+                                if (!description) {
+                                    toast.error('لطفا توضیحات را وارد کنید');
+                                    return;
+                                }
+                                setLoading(true);
+                                try {
+                                    await changeStateWorkflow(details.salary_id, 'rejected_to_supervisor', description);
+                                    toast.success("عملیات با موفقیت انجام شد");
+                                    handleClose();
+                                } catch (err) {
+                                    toast.error(err.message || 'خطا در انجام عملیات');
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        >
+                            عدم تایید و رد به بخشداری
+                        </Button>
+                    </Grid>
+                </Grid>
             </Box>
         );
+    };
+
+    const getApprovalButtonText = () => {
+        switch (rejectApprovalLevel) {
+            case 0:
+                return 'تایید و ارسال به بخشداری';
+            case 1:
+                return 'تایید و ارسال به استانداری';
+            case 2:
+                return 'تایید نهایی';
+            default:
+                return 'تایید';
+        }
+    };
+
+    const getRejectionButtonText = () => {
+        switch (rejectApprovalLevel) {
+            case 0:
+                return null; // No rejection button for level 0
+            case 1:
+                return 'عدم تایید حکم';
+            default:
+                return 'رد درخواست';
+        }
     };
 
     const tabs = [
@@ -207,19 +224,27 @@ const WorkFlowDrawer = ({ open, setDialogOpen, details, rejectApprovalLevel = 0,
             <DialogActions sx={{ justifyContent: 'space-between', px: 5, pb: 3 }}>
                 {!readOnly && (
                     <>
-                        <Button variant="contained" color="success" onClick={handleApprove}>
-                            تایید
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() => {
-                                setShowRejectOptions(true);
-                                handleStateChange('rejected', true);
-                            }}
-                        >
-                            رد درخواست
-                        </Button>
+                        {(!showRejectOptions || rejectApprovalLevel !== 2) && (
+                            <Button variant="contained" color="success" onClick={handleApprove}>
+                                {getApprovalButtonText()}
+                            </Button>
+                        )}
+                        {(!showRejectOptions || rejectApprovalLevel !== 2) && getRejectionButtonText() && (
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                    if (rejectApprovalLevel === 1) {
+                                        handleReject();
+                                    } else {
+                                        setShowRejectOptions(true);
+                                        handleStateChange('rejected', true);
+                                    }
+                                }}
+                            >
+                                {getRejectionButtonText()}
+                            </Button>
+                        )}
                     </>
                 )}
             </DialogActions>

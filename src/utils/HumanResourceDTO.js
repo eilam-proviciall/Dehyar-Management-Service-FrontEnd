@@ -59,7 +59,7 @@ class HumanResourceDTO {
         this.finalNote = "این قرارداد در ۵ نسخه تنظیم و هر نسخه حکم واحد را دارد و پس از امضا و مهر و ثبت معتبر خواهد بود";
         this.executionDate = humanResourceData.last_contract.execute_start;
         this.uniqueId = humanResourceData.salary.unique_identifier || "پیش نویس";
-        this.contractNumber = `۴۰۷ - ${this.executionDate}`;
+        this.contractNumber = `${humanResourceData.last_contract.id} - ${this.executionDate}`;
         this.jobName = getJobTitleLabel(humanResourceData.job_type_id)
         this.contractType = contractType[humanResourceData.last_contract.contract_type]
         this.contract_type_id = humanResourceData.last_contract.contract_type

@@ -387,22 +387,24 @@ const MyDocument = ({ data }) => (
                         flexDirection: 'row-reverse', borderRight: '1px solid #dfdfdf',
                     }]}>
                         <View style={{
-                            width: '40%',
-                            margin: 10,
-                            lineHeight: 2,
-                            direction: 'rtl',
-                            position: 'relative',
-
-                        }}>
-                            <Text style={{
-                                textAlign: 'right',
-                                direction: 'rtl',
-                                writingDirection: 'rtl',
-                                display: 'block',
-                            }}>
-                                {data.contractDescription.split('\n').slice(-1)}
-                            </Text>
-                        </View>
+    width: '40%',
+    margin: 10,
+    lineHeight: 2,
+    direction: 'rtl',
+    position: 'relative',
+    flexDirection: 'row-reverse',
+    flexWrap: 'wrap', 
+    marginBottom: 2,
+}}>
+    <Text style={{
+        textAlign: 'right',
+        direction: 'rtl',
+        writingDirection: 'rtl',
+        width: '100%',
+    }}>
+        {data.contractDescription.split('\n')}
+    </Text>
+</View>
                         <View style={{ width: '60%' }}>
                             <View style={[styles.tableRow, styles.greyBackground]}>
                                 <View
