@@ -15,32 +15,8 @@ import { translateContractState } from "@/utils/contractStateTranslator";
 import roles from "@data/roles.json";
 import moment from "moment-jalaali";
 
-const RequestHistory = ({ details }) => {
-  const [historyData, setHistoryData] = useState([]);
-
-  useEffect(() => {
-    if (details) {
-      const fetchData = async () => {
-        try {
-          const response = await api.get(
-            getHistoryWorkflow(details.salary_id),
-            { requiresAuth: true }
-          );
-          // Sort data from newest to oldest
-          const sortedData = response.data.sort(
-            (firstDate, lastDate) =>
-              moment(lastDate.started_at).valueOf() -
-              moment(firstDate.started_at).valueOf()
-          );
-          setHistoryData(sortedData);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      fetchData();
-    }
-  }, [details]);
-
+const RequestHistory = ({ details, history }) => {
+  
   const formatDate = (date) => {
     const now = moment();
     const itemDate = moment(date);
@@ -67,7 +43,7 @@ const RequestHistory = ({ details }) => {
             },
           }}
         >
-          {historyData.map((item) => {
+          {history?.map((item) => {
             return (
               <TimelineItem>
                 <TimelineSeparator>

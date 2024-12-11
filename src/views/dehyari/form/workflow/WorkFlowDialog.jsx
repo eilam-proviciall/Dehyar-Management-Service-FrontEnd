@@ -1,3 +1,4 @@
+"use client";
 import {
   Button,
   Drawer,
@@ -6,7 +7,7 @@ import {
   Collapse,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomIconButton from "@core/components/mui/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DividerSimple from "@components/common/Divider/DividerSimple";
@@ -25,6 +26,9 @@ import ReviewDecree from "./ReviewDecree";
 import TabContent from "@/components/common/Tabs/TabContent";
 import AnimatedTabs from "@/components/common/Tabs/AnimatedTabs";
 import Typography from "@mui/material/Typography";
+import { getHistoryWorkflow } from "@/Services/Salary";
+import api from "@/utils/axiosInstance";
+import moment from "moment-jalaali";
 
 const WorkFlowDrawer = ({
   open,
@@ -37,7 +41,8 @@ const WorkFlowDrawer = ({
 }) => {
   const [showRejectOptions, setShowRejectOptions] = useState(false);
   const [selectedRejectType, setSelectedRejectType] = useState(null);
-  const [activeTab, setActiveTab] = useState("review"); // Default tab is بررسی حکم
+  const [activeTab, setActiveTab] = useState("review");
+  const [historyData, setHistoryData] = useState([]);
 
   const {
     state,
@@ -97,6 +102,29 @@ const WorkFlowDrawer = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (details) {
+      const fetchData = async () => {
+        try {
+          const response = await api.get(
+            getHistoryWorkflow(details.salary_id),
+            { requiresAuth: true }
+          );
+          // Sort data from newest to oldest
+          const sortedData = response.data.sort(
+            (firstDate, lastDate) =>
+              moment(lastDate.started_at).valueOf() -
+              moment(firstDate.started_at).valueOf()
+          );
+          setHistoryData(sortedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      fetchData();
+    }
+  }, [details]);
 
   const renderRejectOptions = () => {
     if (!showRejectOptions) return null;
@@ -174,9 +202,9 @@ const WorkFlowDrawer = ({
   const getApprovalButtonText = () => {
     switch (rejectApprovalLevel) {
       case 0:
-        return "تایید و ارسال به بخشداری";
+        return "تایید اطلاعات و ارسال به بخشداری";
       case 1:
-        return "تایید و ارسال به استانداری";
+        return "تایید اطلاعات و ارسال به استانداری";
       case 2:
         return "تایید نهایی";
       default:
@@ -197,7 +225,11 @@ const WorkFlowDrawer = ({
 
   const tabs = [
     { label: "بررسی حکم", value: "review" },
-    { label: "سوابق درخواست", value: "history" },
+    {
+      avatar: historyData?.length || 0,
+      label: "سوابق درخواست",
+      value: "history",
+    },
   ];
 
   return (
@@ -256,7 +288,7 @@ const WorkFlowDrawer = ({
           />
         </TabContent>
         <TabContent active={activeTab === "history"}>
-          <RequestHistory details={details} />
+          <RequestHistory details={details} history={historyData} />
         </TabContent>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "space-between", px: 5, pb: 3 }}>
