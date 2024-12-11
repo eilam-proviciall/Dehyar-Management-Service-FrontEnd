@@ -13,7 +13,7 @@ const AnimatedTabs = ({ tabs, activeTab, onTabChange }) => {
                 mt: 2,
                 mb: 1,
                 gap: 1,
-                width: '100%',
+                width: '75%',
                 minHeight: '40px'
             }}
         >
