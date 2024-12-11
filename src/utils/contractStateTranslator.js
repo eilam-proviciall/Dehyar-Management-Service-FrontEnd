@@ -1,7 +1,7 @@
 export const translateContractState = (state) => {
     switch (state) {
         case 'draft':
-            return 'ارسال به بخشداری';
+            return 'پیش نویس';
         case 'pending_supervisor':
             return 'در انتظار تایید بخشدار';
         case 'approved_by_supervisor':
@@ -13,9 +13,9 @@ export const translateContractState = (state) => {
         case 'approved':
             return 'تایید شده';
         case 'rejected_to_supervisor':
-            return 'رد شده به بخشدار';
+            return 'بازگشت به بخشدار';
         case 'rejected_to_financial_officer':
-            return 'نیازمند ارسال مجدد';
+            return 'نیازمند اصلاح مجدد';
         default:
             return 'نامشخص';
     }
