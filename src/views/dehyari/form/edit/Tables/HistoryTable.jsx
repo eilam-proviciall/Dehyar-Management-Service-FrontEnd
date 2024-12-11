@@ -192,17 +192,12 @@ const HistoryTable = () => {
                 </CustomIconButton>
               </Tooltip>
             )}
-            {row.original.contract_state == "draft" ||
-              (row.original.contract_state ==
-                "rejected_to_financial_officer" && (
+            {row.original.contract_state == "draft" && (
                 <Tooltip title="ویرایش" placement={"top"}>
                   <CustomIconButton
                     color={"primary"}
                     onClick={() => {
-                      row.original.contract_state == "draft" ||
-                      row.original.contract_state ==
-                        "rejected_to_financial_officer"
-                        ? handleEdit(row)
+                      row.original.contract_state == "draft" ? handleEdit(row)
                         : toast.error("شما اجازه ویرایش این قرارداد را ندارید");
                     }}
                     className={"rounded-full"}
@@ -210,7 +205,7 @@ const HistoryTable = () => {
                     <i className="ri-edit-box-line" />
                   </CustomIconButton>
                 </Tooltip>
-              ))}
+              )}
             <Tooltip title="دانلود PDF" placement={"top"}>
               <CustomIconButton
                 color={"secondary"}
