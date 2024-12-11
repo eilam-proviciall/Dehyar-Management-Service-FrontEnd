@@ -171,17 +171,20 @@ function GovernorTable(props) {
               height: "100%",
             }}
           >
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-eye-line" />
-            </CustomIconButton>
+            <Tooltip title={"مشاهده اطلاعات"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-eye-line" />
+              </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"مشاهده وضعیت قرارداد"}>
             <CustomIconButton
               color={"secondary"}
               onClick={() => {
@@ -196,6 +199,7 @@ function GovernorTable(props) {
                 <i className="ri-history-line" />
               )}
             </CustomIconButton>
+            </Tooltip>
           </div>
         ),
       },
