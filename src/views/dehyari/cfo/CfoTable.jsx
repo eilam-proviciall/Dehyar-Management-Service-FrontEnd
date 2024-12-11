@@ -6,7 +6,14 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import Chip from "@mui/material/Chip";
-import { Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import { GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
@@ -195,26 +202,30 @@ function CfoTable(props) {
               height: "100%",
             }}
           >
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-edit-box-line" />
-            </CustomIconButton>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                handleDownloadPdf(row.original);
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-printer-line" />
-            </CustomIconButton>
+            <Tooltip title={"ویرایش اطلاعات"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-edit-box-line" />
+              </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"دانلود PDF"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  handleDownloadPdf(row.original);
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-printer-line" />
+              </CustomIconButton>
+            </Tooltip>
             {/* <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
@@ -224,21 +235,24 @@ function CfoTable(props) {
                         >
                             < i class="ri-history-line" />
                         </CustomIconButton> */}
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                setCurrentRow(row.original);
-                setPopupOpen(true);
-              }}
-              className={"rounded-full animate-pulse"}
-            >
-              {row.original.contract_state == "draft" ||
-              row.original.contract_state == "rejected_to_financial_officer" ? (
-                <i className="ri-mail-send-line" />
-              ) : (
-                <i className="ri-history-line" />
-              )}
-            </CustomIconButton>
+            <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  setCurrentRow(row.original);
+                  setPopupOpen(true);
+                }}
+                className={"rounded-full animate-pulse"}
+              >
+                {row.original.contract_state == "draft" ||
+                row.original.contract_state ==
+                  "rejected_to_financial_officer" ? (
+                  <i className="ri-mail-send-line" />
+                ) : (
+                  <i className="ri-history-line" />
+                )}
+              </CustomIconButton>
+            </Tooltip>
           </div>
         ),
       },

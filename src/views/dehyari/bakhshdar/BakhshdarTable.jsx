@@ -169,6 +169,7 @@ function BakhshdarTable(props) {
               height: "100%",
             }}
           >
+            <Tooltip title={"مشاهده اطلاعات"}>
             <CustomIconButton
               color={"secondary"}
               onClick={() => {
@@ -180,6 +181,8 @@ function BakhshdarTable(props) {
             >
               <i className="ri-eye-line" />
             </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
             <CustomIconButton
               color={"secondary"}
               onClick={() => {
@@ -195,6 +198,7 @@ function BakhshdarTable(props) {
                 <i className="ri-history-line" />
               )}
             </CustomIconButton>
+            </Tooltip>
           </div>
         ),
       },
