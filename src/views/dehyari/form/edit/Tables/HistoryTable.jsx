@@ -17,6 +17,7 @@ import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import { HumanContract } from "@/Services/humanResources";
+import useCustomTable from "@/hooks/useCustomTable";
 
 const HistoryTable = () => {
   const [data, setData] = useState([]);
@@ -236,7 +237,7 @@ const HistoryTable = () => {
     [anchorEl, selectedRow]
   );
 
-  const table = useMaterialReactTable({
+  const table = useCustomTable({
     columns,
     data,
     renderTopToolbarCustomActions: () => (
@@ -251,31 +252,9 @@ const HistoryTable = () => {
         </Button>
       </Box>
     ),
-    initialState: { density: "compact" },
     state: {
       isLoading: loading,
       showProgressBars: loading,
-    },
-    muiSkeletonProps: {
-      animation: "wave",
-      height: 28,
-    },
-    muiLinearProgressProps: {
-      color: "primary",
-    },
-    muiPaginationProps: {
-      color: "primary",
-      shape: "rounded",
-      showRowsPerPage: false,
-      variant: "outlined",
-    },
-    paginationDisplayMode: "pages",
-    muiTableBodyCellProps: {
-      className: "bg-backgroundPaper",
-      sx: {
-        padding: "2px 8px",
-        lineHeight: "1",
-      },
     },
   });
 
