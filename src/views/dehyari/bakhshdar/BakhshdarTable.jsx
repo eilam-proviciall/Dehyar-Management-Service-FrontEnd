@@ -32,6 +32,7 @@ function BakhshdarTable(props) {
   const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
   const [filterStatus, setFilterStatus] = useState("my_inbox");
   const buttonRefs = useRef([]);
+  const [tableLoading, setTableLoading] = useState(true);
 
   useEffect(() => {
     // Set initial highlight on the "همه" button
@@ -75,9 +76,11 @@ function BakhshdarTable(props) {
       });
       setData(response.data);
       setLoading(false);
+      setTableLoading(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
+      setTableLoading(false);
     }
   };
 
@@ -216,6 +219,7 @@ function BakhshdarTable(props) {
   );
 
   const table = useCustomTable(columns, tableData, {
+    isLoading: tableLoading,
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", gap: 1, position: "relative" }}>
         <Box
