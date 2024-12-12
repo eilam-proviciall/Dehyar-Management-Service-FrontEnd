@@ -47,3 +47,53 @@ export const translateContractState = (state) => {
       };
   }
 };
+
+export const translateContractStateForHistory = (state) => {
+  switch (state) {
+    //   case "draft":
+    //     return {
+    //       title: "پیش نویس",
+    //       color: "info",
+    //     };
+    case "pending_supervisor":
+      return {
+        title: "ارسال به بخشدار",
+        color: "info",
+      };
+    case "approved_by_supervisor":
+      return {
+        title: "تایید شده توسط بخشدار",
+        color: "primary",
+      };
+    case "rejected_by_supervisor":
+      return {
+        title: "رد شده توسط بخشدار",
+        color: "error",
+      };
+    case "pending_governor":
+      return {
+        title: "ارسال  به استانداری",
+        color: "warning",
+      };
+    case "approved":
+      return {
+        title: "تایید حکم کارگزینی",
+        color: "success",
+      };
+    case "rejected_to_supervisor":
+      return {
+        title: "بازگشت حکم به بخشدار جهت اصلاح",
+        color: "error",
+      };
+    case "rejected_to_financial_officer":
+      return {
+        title: "بازگشت حکم به مسئول مالی جهت اصلاح",
+        color: "error",
+      };
+    default:
+      return {
+        title: "نامشخص",
+        color: "error",
+      };
+  }
+};
