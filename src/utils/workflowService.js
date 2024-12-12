@@ -5,7 +5,7 @@ export const changeStateWorkflow = (humanResourceId, state, message) => {
   const data = {
     state: state,
     comments: message,
-  };  
+  };
   return api.post(ChangeStateSalaries(humanResourceId), data, {
     requiresAuth: true,
   });
