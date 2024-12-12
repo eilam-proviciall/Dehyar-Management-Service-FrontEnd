@@ -237,9 +237,7 @@ const HistoryTable = () => {
     [anchorEl, selectedRow]
   );
 
-  const table = useCustomTable({
-    columns,
-    data,
+  const table = useCustomTable(columns, data, {
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Button
