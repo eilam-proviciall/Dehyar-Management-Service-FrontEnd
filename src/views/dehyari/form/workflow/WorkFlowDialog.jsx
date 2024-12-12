@@ -139,6 +139,7 @@ const WorkFlowDrawer = ({
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Button
+              size="small"
               fullWidth
               variant="contained"
               color="error"
@@ -163,11 +164,12 @@ const WorkFlowDrawer = ({
                 }
               }}
             >
-              عدم تایید و رد به مسئول مالی
+              عدم تایید و بازگشت به مسئول مالی
             </Button>
           </Grid>
           <Grid item xs={6}>
             <Button
+              size="small"
               fullWidth
               variant="contained"
               color="error"
@@ -192,7 +194,7 @@ const WorkFlowDrawer = ({
                 }
               }}
             >
-              عدم تایید و رد به بخشداری
+              عدم تایید و بازگشت به بخشداری
             </Button>
           </Grid>
         </Grid>
