@@ -6,7 +6,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import Chip from "@mui/material/Chip";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { GetHumanResourcesForGovernor } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
