@@ -68,7 +68,7 @@ const ReviewDecree = ({
         value="-"
       />
 
-      {(rejectApprovalLevel > 0 || !readOnly) && (
+      {rejectApprovalLevel > 0 && !readOnly && (
         <TextField
           fullWidth
           multiline
