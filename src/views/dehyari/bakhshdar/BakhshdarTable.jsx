@@ -249,6 +249,16 @@ function BakhshdarTable(props) {
           clickable
           variant={filterStatus === "my_inbox" ? "outlined" : "filled"}
         />
+        <FilterChip
+          avatarValue={data
+            .filter((item) => item.contract_state === "approved")
+            .length.toString()}
+          ref={(el) => (buttonRefs.current[2] = el)}
+          label="تایید شده"
+          onClick={() => handleFilterChange("approved", 2)}
+          clickable
+          variant={filterStatus === "approved" ? "outlined" : "filled"}
+        />
       </Box>
     ),
   });
