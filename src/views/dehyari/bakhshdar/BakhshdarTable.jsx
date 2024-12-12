@@ -122,6 +122,14 @@ function BakhshdarTable(props) {
         },
       },
       {
+        accessorKey: "job_type",
+        header: "پست سازمانی",
+        size: 150,
+        Cell: ({ cell }) => (
+          <div style={{ textAlign: "right" }}>{cell.getValue()}</div>
+        ),
+      },
+      {
         accessorKey: "village",
         header: "دهیاری",
         size: 150,
@@ -171,34 +179,34 @@ function BakhshdarTable(props) {
             }}
           >
             <Tooltip title={"مشاهده اطلاعات"}>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-eye-line" />
-            </CustomIconButton>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-eye-line" />
+              </CustomIconButton>
             </Tooltip>
             <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                setSelectedRow(row.original);
-                setPopupOpen(true);
-              }}
-              className={"rounded-full animate-pulse"}
-            >
-              {row.original.contract_state === "pending_supervisor" ||
-              row.original.contract_state === "rejected_to_supervisor" ? (
-                <i className="ri-mail-send-line" />
-              ) : (
-                <i className="ri-history-line" />
-              )}
-            </CustomIconButton>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  setSelectedRow(row.original);
+                  setPopupOpen(true);
+                }}
+                className={"rounded-full animate-pulse"}
+              >
+                {row.original.contract_state === "pending_supervisor" ||
+                row.original.contract_state === "rejected_to_supervisor" ? (
+                  <i className="ri-mail-send-line" />
+                ) : (
+                  <i className="ri-history-line" />
+                )}
+              </CustomIconButton>
             </Tooltip>
           </div>
         ),

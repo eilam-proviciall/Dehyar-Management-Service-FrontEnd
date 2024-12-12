@@ -47,7 +47,7 @@ function CfoTable(props) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupWorkflow, setPopupWorkflow] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("my_inbox");
   const buttonRefs = useRef([]);
 
   useEffect(() => {
@@ -95,6 +95,8 @@ function CfoTable(props) {
       const response = await api.get(`${GetHumanResourcesForCfo()}`, {
         requiresAuth: true,
       });
+      console.log("Response => ", response);
+
       setData(response.data);
       setLoading(false);
     } catch (error) {
