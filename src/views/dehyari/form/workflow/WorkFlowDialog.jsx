@@ -111,8 +111,7 @@ const WorkFlowDrawer = ({
             getHistoryWorkflow(details.salary_id),
             { requiresAuth: true }
           );
-          console.log("Comment => ", response);
-          
+
           // Sort data from newest to oldest
           const sortedData = response.data.sort(
             (firstDate, lastDate) =>
