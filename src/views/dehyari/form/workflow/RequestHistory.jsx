@@ -11,12 +11,14 @@ import UserInfoItem from "../edit/Tables/UserInfoItem";
 import { convertUnixToJalali } from "@/utils/dateConverter";
 import api from "@/utils/axiosInstance";
 import { getHistoryWorkflow } from "@/Services/Salary";
-import { translateContractState } from "@/utils/contractStateTranslator";
+import {
+  translateContractState,
+  translateContractStateForHistory,
+} from "@/utils/contractStateTranslator";
 import roles from "@data/roles.json";
 import moment from "moment-jalaali";
 
 const RequestHistory = ({ details, history }) => {
-  
   const formatDate = (date) => {
     const now = moment();
     const itemDate = moment(date);
@@ -61,7 +63,7 @@ const RequestHistory = ({ details, history }) => {
                       sx={{ flexWrap: "nowrap", gap: 1 }}
                     >
                       <Typography variant="subtitle2">
-                        {translateContractState(item.state).title}
+                        {translateContractStateForHistory(item.state).title}
                       </Typography>
                       <Typography
                         variant="caption"
