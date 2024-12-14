@@ -3,7 +3,14 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Box, Button, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import axios from "axios";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { InsuranceHistory } from "@/Services/humanResources";
@@ -11,6 +18,7 @@ import InsuranceModal from "@views/dehyari/form/edit/Tables/InsuranceModal/Insur
 import CustomIconButton from "@core/components/mui/IconButton";
 import { toast } from "react-toastify";
 import Chip from "@mui/material/Chip";
+import useCustomTable from "@/hooks/useCustomTable";
 
 function InsuranceTable() {
   const [data, setData] = useState([]);
@@ -153,9 +161,7 @@ function InsuranceTable() {
     ],
     [anchorEl, selectedRow]
   );
-  const table = useMaterialReactTable({
-    columns,
-    data,
+  const table = useCustomTable(columns, data, {
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Button
@@ -171,13 +177,6 @@ function InsuranceTable() {
       </Box>
     ),
     state: { isLoading: loading },
-    muiTableBodyCellProps: {
-      className: "bg-backgroundPaper",
-      sx: {
-        padding: "2px 8px",
-        lineHeight: "1",
-      },
-    },
   });
 
   return (

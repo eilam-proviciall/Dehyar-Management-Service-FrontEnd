@@ -6,7 +6,14 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import Chip from "@mui/material/Chip";
-import { Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import { GetHumanResourcesForCfo } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import PersonalOption from "@data/PersonalOption.json";
@@ -40,8 +47,10 @@ function CfoTable(props) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupWorkflow, setPopupWorkflow] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("my_inbox");
   const buttonRefs = useRef([]);
+  const [tableLoading, setTableLoading] = useState(true);
+
 
   useEffect(() => {
     // Set initial highlight on the "همه" button
@@ -88,11 +97,16 @@ function CfoTable(props) {
       const response = await api.get(`${GetHumanResourcesForCfo()}`, {
         requiresAuth: true,
       });
+      console.log("Response => ", response);
+
       setData(response.data);
       setLoading(false);
+      setTableLoading(false);
+      
     } catch (error) {
       console.error(error);
       setLoading(false);
+      setTableLoading(false);
     }
   };
 
@@ -195,26 +209,30 @@ function CfoTable(props) {
               height: "100%",
             }}
           >
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-edit-box-line" />
-            </CustomIconButton>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                handleDownloadPdf(row.original);
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-printer-line" />
-            </CustomIconButton>
+            <Tooltip title={"ویرایش اطلاعات"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form/edit?param=${row.original.nid}&id=${row.original.human_resource_id}&salary_id=${row.original.salary_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-edit-box-line" />
+              </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"دانلود PDF"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  handleDownloadPdf(row.original);
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-printer-line" />
+              </CustomIconButton>
+            </Tooltip>
             {/* <CustomIconButton
                             color={"secondary"}
                             onClick={() => {
@@ -224,21 +242,26 @@ function CfoTable(props) {
                         >
                             < i class="ri-history-line" />
                         </CustomIconButton> */}
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                setCurrentRow(row.original);
-                setPopupOpen(true);
-              }}
-              className={"rounded-full animate-pulse"}
-            >
-              {row.original.contract_state == "draft" ||
-              row.original.contract_state == "rejected_to_financial_officer" ? (
-                <i className="ri-mail-send-line" />
-              ) : (
-                <i className="ri-history-line" />
-              )}
-            </CustomIconButton>
+            {row.original.contract_state && (
+              <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
+                <CustomIconButton
+                  color={"secondary"}
+                  onClick={() => {
+                    setCurrentRow(row.original);
+                    setPopupOpen(true);
+                  }}
+                  className={"rounded-full animate-pulse"}
+                >
+                  {row.original.contract_state == "draft" ||
+                  row.original.contract_state ==
+                    "rejected_to_financial_officer" ? (
+                    <i className="ri-mail-send-line" />
+                  ) : (
+                    <i className="ri-history-line" />
+                  )}
+                </CustomIconButton>
+              </Tooltip>
+            )}
           </div>
         ),
       },
@@ -247,6 +270,7 @@ function CfoTable(props) {
   );
 
   const table = useCustomTable(columns, tableData, {
+    isLoading: tableLoading,
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", gap: 1, position: "relative" }}>
         <Button
@@ -286,6 +310,16 @@ function CfoTable(props) {
           onClick={() => handleFilterChange("my_inbox", 1)}
           clickable
           variant={filterStatus === "my_inbox" ? "outlined" : "filled"}
+        />
+        <FilterChip
+          avatarValue={data
+            .filter((item) => item.contract_state === "approved")
+            .length.toString()}
+          ref={(el) => (buttonRefs.current[2] = el)}
+          label="تایید شده"
+          onClick={() => handleFilterChange("approved", 2)}
+          clickable
+          variant={filterStatus === "approved" ? "outlined" : "filled"}
         />
       </Box>
     ),

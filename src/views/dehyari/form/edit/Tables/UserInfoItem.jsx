@@ -6,7 +6,7 @@ const UserInfoItem = ({ icon, label, value }) => {
     return (
         <Box className={'flex items-center gap-2'}>
             <i className={icon} style={{ marginRight: 8 }}></i>
-            <Typography variant="body1">{label}: {value}</Typography>
+            <Typography variant="body2">{label}: {value}</Typography>
         </Box>
     );
 };

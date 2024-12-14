@@ -17,6 +17,7 @@ import WorkFlowPopup from "@views/dehyari/form/workflow/WorkFlowPopup";
 import { translateContractState } from "@utils/contractStateTranslator";
 import ContractStateChip from "@components/badges/ContractStateChip";
 import { HumanContract } from "@/Services/humanResources";
+import useCustomTable from "@/hooks/useCustomTable";
 
 const HistoryTable = () => {
   const [data, setData] = useState([]);
@@ -47,13 +48,11 @@ const HistoryTable = () => {
       setEditMode(false);
       setEditId(null);
       setOpenModal(true);
-    } else if (contractStateApprovedExists) {
-      // اگر تمام قراردادها تایید شده باشند، پیام هشدار داده می‌شود.
+    } else if (!contractStateApprovedExists) {
       toast.warning(
         "بعد از تایید نهایی حکم جاری امکان ثبت قرارداد جدید وجود خواهد داشت."
       );
     } else {
-      // اگر قراردادهایی وجود دارند که تایید نشده‌اند، اجازه افزودن قرارداد داده می‌شود.
       setEditMode(false);
       setEditId(null);
       setOpenModal(true);
@@ -85,9 +84,7 @@ const HistoryTable = () => {
       })
       .then((response) => {
         const allContractsApproved = response.data.every(
-          (record) =>
-            record.contract_state === "draft" ||
-            record.contract_state === "rejected_to_financial_officer"
+          (record) => record.contract_state === "approved"
         );
         setContractStateApprovedExists(allContractsApproved); // بروزرسانی وضعیت اگر تمام قراردادها تایید شده باشند
         setData(response.data);
@@ -192,25 +189,25 @@ const HistoryTable = () => {
                 </CustomIconButton>
               </Tooltip>
             )}
-            {row.original.contract_state == "draft" ||
-              (row.original.contract_state ==
-                "rejected_to_financial_officer" && (
-                <Tooltip title="ویرایش" placement={"top"}>
-                  <CustomIconButton
-                    color={"primary"}
-                    onClick={() => {
-                      row.original.contract_state == "draft" ||
-                      row.original.contract_state ==
-                        "rejected_to_financial_officer"
-                        ? handleEdit(row)
-                        : toast.error("شما اجازه ویرایش این قرارداد را ندارید");
-                    }}
-                    className={"rounded-full"}
-                  >
-                    <i className="ri-edit-box-line" />
-                  </CustomIconButton>
-                </Tooltip>
-              ))}
+            {(row.original.contract_state == "draft" ||
+              row.original.contract_state ==
+                "rejected_to_financial_officer") && (
+              <Tooltip title="ویرایش" placement={"top"}>
+                <CustomIconButton
+                  color={"primary"}
+                  onClick={() => {
+                    row.original.contract_state == "draft" ||
+                    row.original.contract_state ==
+                      "rejected_to_financial_officer"
+                      ? handleEdit(row)
+                      : toast.error("شما اجازه ویرایش این قرارداد را ندارید");
+                  }}
+                  className={"rounded-full"}
+                >
+                  <i className="ri-edit-box-line" />
+                </CustomIconButton>
+              </Tooltip>
+            )}
             <Tooltip title="دانلود PDF" placement={"top"}>
               <CustomIconButton
                 color={"secondary"}
@@ -240,9 +237,7 @@ const HistoryTable = () => {
     [anchorEl, selectedRow]
   );
 
-  const table = useMaterialReactTable({
-    columns,
-    data,
+  const table = useCustomTable(columns, data, {
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Button
@@ -255,31 +250,9 @@ const HistoryTable = () => {
         </Button>
       </Box>
     ),
-    initialState: { density: "compact" },
     state: {
       isLoading: loading,
       showProgressBars: loading,
-    },
-    muiSkeletonProps: {
-      animation: "wave",
-      height: 28,
-    },
-    muiLinearProgressProps: {
-      color: "primary",
-    },
-    muiPaginationProps: {
-      color: "primary",
-      shape: "rounded",
-      showRowsPerPage: false,
-      variant: "outlined",
-    },
-    paginationDisplayMode: "pages",
-    muiTableBodyCellProps: {
-      className: "bg-backgroundPaper",
-      sx: {
-        padding: "2px 8px",
-        lineHeight: "1",
-      },
     },
   });
 

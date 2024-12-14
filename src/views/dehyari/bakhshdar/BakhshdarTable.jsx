@@ -18,6 +18,7 @@ import useCustomTable from "@/hooks/useCustomTable";
 import FilterChip from "@/@core/components/mui/FilterButton";
 import HistoryWorkflowPopup from "../form/workflow/HistoryWorkflow";
 import TitleDehyariPanel from "@/components/common/TitleDehyariPanel";
+import { Tooltip } from "@mui/material";
 
 function BakhshdarTable(props) {
   const [data, setData] = useState([]);
@@ -29,8 +30,9 @@ function BakhshdarTable(props) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupWorkflow, setPopupWorkflow] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("my_inbox");
   const buttonRefs = useRef([]);
+  const [tableLoading, setTableLoading] = useState(true);
 
   useEffect(() => {
     // Set initial highlight on the "همه" button
@@ -74,9 +76,11 @@ function BakhshdarTable(props) {
       });
       setData(response.data);
       setLoading(false);
+      setTableLoading(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
+      setTableLoading(false);
     }
   };
 
@@ -119,6 +123,14 @@ function BakhshdarTable(props) {
             </div>
           );
         },
+      },
+      {
+        accessorKey: "job_type",
+        header: "پست سازمانی",
+        size: 150,
+        Cell: ({ cell }) => (
+          <div style={{ textAlign: "right" }}>{cell.getValue()}</div>
+        ),
       },
       {
         accessorKey: "village",
@@ -169,32 +181,36 @@ function BakhshdarTable(props) {
               height: "100%",
             }}
           >
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-eye-line" />
-            </CustomIconButton>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                setSelectedRow(row.original);
-                setPopupOpen(true);
-              }}
-              className={"rounded-full animate-pulse"}
-            >
-              {row.original.contract_state === "pending_supervisor" ||
-              row.original.contract_state === "rejected_to_supervisor" ? (
-                <i className="ri-mail-send-line" />
-              ) : (
-                <i className="ri-history-line" />
-              )}
-            </CustomIconButton>
+            <Tooltip title={"مشاهده اطلاعات"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-eye-line" />
+              </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"مشاهده/تغییر وضعیت قرارداد"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  setSelectedRow(row.original);
+                  setPopupOpen(true);
+                }}
+                className={"rounded-full animate-pulse"}
+              >
+                {row.original.contract_state === "pending_supervisor" ||
+                row.original.contract_state === "rejected_to_supervisor" ? (
+                  <i className="ri-mail-send-line" />
+                ) : (
+                  <i className="ri-history-line" />
+                )}
+              </CustomIconButton>
+            </Tooltip>
           </div>
         ),
       },
@@ -203,6 +219,7 @@ function BakhshdarTable(props) {
   );
 
   const table = useCustomTable(columns, tableData, {
+    isLoading: tableLoading,
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", gap: 1, position: "relative" }}>
         <Box
@@ -235,6 +252,16 @@ function BakhshdarTable(props) {
           onClick={() => handleFilterChange("my_inbox", 1)}
           clickable
           variant={filterStatus === "my_inbox" ? "outlined" : "filled"}
+        />
+        <FilterChip
+          avatarValue={data
+            .filter((item) => item.contract_state === "approved")
+            .length.toString()}
+          ref={(el) => (buttonRefs.current[2] = el)}
+          label="تایید شده"
+          onClick={() => handleFilterChange("approved", 2)}
+          clickable
+          variant={filterStatus === "approved" ? "outlined" : "filled"}
         />
       </Box>
     ),

@@ -6,7 +6,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import Chip from "@mui/material/Chip";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { GetHumanResourcesForGovernor } from "@/Services/humanResources";
 import contractType from "@data/contractType.json";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -35,8 +35,9 @@ function GovernorTable(props) {
   const [popupOpen, setPopupOpen] = useState(false);
   const [popupWorkflow, setPopupWorkflow] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({ width: 0, left: 0 });
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("my_inbox");
   const buttonRefs = useRef([]);
+  const [tableLoading, setTableLoading] = useState(true);
 
   useEffect(() => {
     // Set initial highlight on the "همه" button
@@ -80,9 +81,11 @@ function GovernorTable(props) {
       });
       setData(response.data);
       setLoading(false);
+      setTableLoading(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
+      setTableLoading(false);
     }
   };
 
@@ -121,6 +124,14 @@ function GovernorTable(props) {
             </div>
           );
         },
+      },
+      {
+        accessorKey: "job_type",
+        header: "پست سازمانی",
+        size: 150,
+        Cell: ({ cell }) => (
+          <div style={{ textAlign: "right" }}>{cell.getValue()}</div>
+        ),
       },
       {
         accessorKey: "village",
@@ -171,31 +182,35 @@ function GovernorTable(props) {
               height: "100%",
             }}
           >
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                router.push(
-                  `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
-                );
-              }}
-              className={"rounded-full"}
-            >
-              <i className="ri-eye-line" />
-            </CustomIconButton>
-            <CustomIconButton
-              color={"secondary"}
-              onClick={() => {
-                setSelectedRow(row.original);
-                setPopupOpen(true);
-              }}
-              className={"rounded-full animate-pulse"}
-            >
-              {row.original.contract_state === "pending_governor" ? (
-                <i className="ri-mail-send-line" />
-              ) : (
-                <i className="ri-history-line" />
-              )}
-            </CustomIconButton>
+            <Tooltip title={"مشاهده اطلاعات"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  router.push(
+                    `/dehyari/form?mode=edit&id=${row.original.human_resource_id}`
+                  );
+                }}
+                className={"rounded-full"}
+              >
+                <i className="ri-eye-line" />
+              </CustomIconButton>
+            </Tooltip>
+            <Tooltip title={"مشاهده وضعیت قرارداد"}>
+              <CustomIconButton
+                color={"secondary"}
+                onClick={() => {
+                  setSelectedRow(row.original);
+                  setPopupOpen(true);
+                }}
+                className={"rounded-full animate-pulse"}
+              >
+                {row.original.contract_state === "pending_governor" ? (
+                  <i className="ri-mail-send-line" />
+                ) : (
+                  <i className="ri-history-line" />
+                )}
+              </CustomIconButton>
+            </Tooltip>
           </div>
         ),
       },
@@ -204,6 +219,7 @@ function GovernorTable(props) {
   );
 
   const table = useCustomTable(columns, tableData, {
+    isLoading: tableLoading,
     renderTopToolbarCustomActions: () => (
       <Box sx={{ display: "flex", gap: 1, position: "relative" }}>
         <Box
@@ -232,6 +248,32 @@ function GovernorTable(props) {
           onClick={() => handleFilterChange("my_inbox", 1)}
           clickable
           variant={filterStatus === "my_inbox" ? "outlined" : "filled"}
+        />
+        <FilterChip
+          avatarValue={data
+            .filter(
+              (item) => item.contract_state === "rejected_to_financial_officer"
+            )
+            .length.toString()}
+          ref={(el) => (buttonRefs.current[2] = el)}
+          label="نیازمند اصلاح مجدد"
+          onClick={() => handleFilterChange("rejected_to_financial_officer", 2)}
+          clickable
+          variant={
+            filterStatus === "rejected_to_financial_officer"
+              ? "outlined"
+              : "filled"
+          }
+        />
+        <FilterChip
+          avatarValue={data
+            .filter((item) => item.contract_state === "approved")
+            .length.toString()}
+          ref={(el) => (buttonRefs.current[3] = el)}
+          label="تایید شده"
+          onClick={() => handleFilterChange("approved", 3)}
+          clickable
+          variant={filterStatus === "approved" ? "outlined" : "filled"}
         />
       </Box>
     ),
